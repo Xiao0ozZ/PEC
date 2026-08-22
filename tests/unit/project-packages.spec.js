@@ -78,6 +78,19 @@ describe('project package scanner', () => {
     expect(result.invalidProjects[0].errors).toContain('客户端 admin 的自定义入口页面未登记：missing-page。');
   });
 
+  it('ignores unused client definition skeletons outside the manifest', async () => {
+    const { projectsRoot, packageRoot } = await createProjectFixture();
+    const definitionsPath = path.join(packageRoot, 'page-definitions.js');
+    await fs.writeFile(
+      definitionsPath,
+      `export const clientPageDefinitions = {\n  admin: { sections: [{ id: 'workspace', title: '工作区' }], pages: [{ path: 'home', name: 'admin-home', title: '首页', view: 'admin/HomeView.vue', section: 'workspace', icon: 'House' }] },\n  legacy: { sections: [{ id: 'workspace', title: '旧客户端' }], pages: [] },\n};\n// <generator:admin-pages>\n`,
+      'utf8',
+    );
+    const result = await scanProjectPackages(projectsRoot);
+    expect(result.invalidProjects).toEqual([]);
+    expect(result.projects.map((project) => project.id)).toEqual(['sample-project']);
+  });
+
   it('accepts a PRD directory outside the project package', async () => {
     const { projectsRoot, packageRoot } = await createProjectFixture();
     const externalDocsRoot = path.join(path.dirname(projectsRoot), 'prd-source');

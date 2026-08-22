@@ -156,8 +156,10 @@ async function inspectProject(projectsRoot, project, mounts, htmlCatalog) {
     }
   }
 
-  const routeCount = Object.values(definitions).reduce(
-    (sum, definition) => sum + (Array.isArray(definition?.pages) ? definition.pages.length : 0),
+  const routeCount = (manifest.clients || []).reduce(
+    (sum, client) =>
+      sum +
+      (Array.isArray(definitions[client.id]?.pages) ? definitions[client.id].pages.length : 0),
     0,
   );
   const directHtmlCount = Object.values(htmlCatalog.projects[project.id] || {}).reduce(

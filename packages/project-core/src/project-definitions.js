@@ -17,9 +17,9 @@ export async function validateProjectDefinitions(
   }
 
   const clientIds = new Set((manifest.clients || []).map((client) => client.id));
-  for (const clientId of Object.keys(definitions)) {
-    if (!clientIds.has(clientId)) errors.push(`页面定义包含未登记客户端：${clientId}。`);
-  }
+  // project.json 是客户端入口的唯一登记来源。页面定义文件可能由模板生成，
+  // 因而保留尚未启用的空客户端骨架；这些不可达定义不能阻断实际项目启动。
+  // 已登记客户端仍会在下面严格校验是否存在对应定义。
 
   for (const client of manifest.clients || []) {
     const definition = definitions[client.id];
