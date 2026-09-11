@@ -89,33 +89,6 @@ export default [
     },
   },
   {
-    files: ['html-prototype-shell/public/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'script',
-      globals: {
-        ...globals.browser,
-        ...globals.es2021,
-      },
-    },
-    rules: {
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-    },
-  },
-  {
-    files: ['html-prototype-shell/**/*.mjs'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: {
-        ...globals.node,
-      },
-    },
-    rules: {
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-    },
-  },
-  {
     files: ['tests/**/*.{js,vue}', 'vitest.config.js'],
     languageOptions: {
       ecmaVersion: 'latest',

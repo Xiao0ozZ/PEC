@@ -1,6 +1,6 @@
 # 可迁移 HTML 原型创建提示词
 
-用于需求阶段制作 HTML 原型。页面定案后，将按 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) 迁移为正式 Vue 页面。
+用于需求阶段制作 HTML 原型。页面定案后，将按 [迁移指南](./迁移指南.md) 接入正式 React 平台页面。
 
 使用前填写：
 

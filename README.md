@@ -50,17 +50,19 @@
 ├─ tests/e2e/                  React 正式平台浏览器测试（默认）
 ├─ playwright.config.js        React E2E 配置（默认）
 ├─ vite.config.js              React 构建配置（默认，产出 dist/）
-├─ COMPONENT_GUIDE.md          公共组件、Composables 和新增页面使用规范
-├─ ARCHITECTURE.md             工程分层、轻量外壳边界和后续拆分顺序
-├─ HTML_PROTOTYPE_CREATION_PROMPT.md 需求阶段可迁移 HTML 原型创建提示词
-├─ MIGRATION_GUIDE.md          HTML 原型迁移到本工程的执行规范
-├─ PAGE_TRANSFER_GUIDE.md      HTML 原型导入、回导与独立演示包说明
-├─ PROJECT_PACKAGE_GUIDE.md    项目包结构、配置、插拔和发布规范
-├─ TESTING_GUIDE.md            自动化验收范围、命令和基线更新规则
+├─ docs/                       项目规范、架构、测试、迁移和维护文档
 ├─ 启动React开发环境.cmd       Windows 双击启动 5188 和 8080 环境
-├─ start-preview-8080.cmd      兼容入口，转发到统一启动脚本
 └─ package.json
 ```
+
+常用文档：
+
+- [架构说明](./docs/架构说明.md)
+- [组件规范](./docs/组件规范.md)
+- [迁移指南](./docs/迁移指南.md)
+- [项目包指南](./docs/项目包指南.md)
+- [测试指南](./docs/测试指南.md)
+- [产品功能体验中心开发任务](./docs/产品功能体验中心开发任务.md)
 
 React 是唯一的平台运行入口：开发、构建、测试和正式本地服务都使用 `apps/platform-react` 与 `vite.config.js`。项目包中的历史 Vue SFC 只作为资料兼容和页面传输的输入，不再作为平台运行入口。
 
@@ -68,7 +70,7 @@ React 是唯一的平台运行入口：开发、构建、测试和正式本地�
 
 共用外壳不硬编码实际项目。每个项目至少包含 `project.json`、`page-definitions.js` 和业务页面；既可直接放在 `projects/{project-id}`，也可在项目包管理页选择外部项目文件夹完成本机挂载。外部挂载不复制、不移动、不改写源项目，取消挂载只移除本机记录。生产环境是构建快照，项目包变化后必须重新构建发布。
 
-新项目从 `templates/project-package` 复制，完整字段和边界见 [PROJECT_PACKAGE_GUIDE.md](./PROJECT_PACKAGE_GUIDE.md)。
+新项目从 `templates/project-package` 复制，完整字段和边界见 [项目包指南](./docs/项目包指南.md)。
 
 工程级命名统一使用 `app-*`、`ui-*`、`theme-*`，不得使用具体项目名称作为 CSS 变量、公共类名、插件名、事件名、包名或资源文件名。
 
@@ -84,8 +86,6 @@ React 是唯一的平台运行入口：开发、构建、测试和正式本地�
 4. 使用 `0.0.0.0:8080` 启动局域网访问服务。
 
 本机开发地址为 `http://127.0.0.1:5188`，局域网访问地址为 `http://本机IP:8080`。脚本会分别打开两个服务窗口，关闭对应窗口或按 `Ctrl+C` 可停止服务。
-
-原 `start-preview-8080.cmd` 仍保留作为兼容入口，执行后同样启动两个端口。
 
 ### 命令行启动
 
@@ -172,7 +172,7 @@ npm run project -- build-review --base /review/ --out-dir dist-review
 
 ## 新增页面
 
-页面、路由和菜单统一维护在对应项目包的 `page-definitions.js`。HTML 页面放在项目包的 `html-pages/{client-id}`，可以通过页面导入工具登记，也可以手动维护页面定义；禁止分别修改平台 Router 和菜单数组。详细规则见 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)。
+页面、路由和菜单统一维护在对应项目包的 `page-definitions.js`。HTML 页面放在项目包的 `html-pages/{client-id}`，可以通过页面导入工具登记，也可以手动维护页面定义；禁止分别修改平台 Router 和菜单数组。详细规则见 [迁移指南](./docs/迁移指南.md)。
 
 ## 入口与路由
 
@@ -258,7 +258,7 @@ React 平台保留 i18next 基础设施，但当前只提供简体中文，不�
 - `apps/platform-react/src/ui` 提供平台页面、外壳、表面容器和 Ant Design 组件入口。
 - `apps/platform-react/src/features` 按项目、路由、文档、原型和主题拆分可复用领域能力。
 
-详细规则见 [COMPONENT_GUIDE.md](./COMPONENT_GUIDE.md)。
+详细规则见 [组件规范](./docs/组件规范.md)。
 
 ## 页面迁移规则
 
@@ -272,9 +272,9 @@ React 平台保留 i18next 基础设施，但当前只提供简体中文，不�
 - 页面专属状态保留在 HTML 内；项目级模拟数据放在项目包的 `data`。
 - 页面写入前通过 HTML 模板检查，完成后运行 `npm run audit:migration` 和 `npm run build`。
 
-详细规则见 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)。
+详细规则见 [迁移指南](./docs/迁移指南.md)。
 
-导入导出工具的完整使用规则见 [PAGE_TRANSFER_GUIDE.md](./PAGE_TRANSFER_GUIDE.md)。
+导入导出工具的完整使用规则见 [页面传输指南](./docs/页面传输指南.md)。
 
 ## 代码质量与 CI
 
@@ -297,7 +297,7 @@ HTML 原型保持源文件自身格式，React 平台和工程底座执行严格
 - 高频演示页面可建立固定视口的 Chromium 视觉基线。
 - 已确认的视觉变更才允许更新 React 浏览器测试基线，不得用更新基线掩盖页面回归。
 
-完整规则见 [TESTING_GUIDE.md](./TESTING_GUIDE.md)。
+完整规则见 [测试指南](./docs/测试指南.md)。
 
 ## 验证状态
 
