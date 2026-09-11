@@ -23,7 +23,6 @@ import {
   Divider,
   Empty,
   Flex,
-  Select,
   Spin,
   Tag,
   Typography,
@@ -39,21 +38,10 @@ import {
   UploadOutlined,
 } from '@/ui/ant/icons';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
+import { AnimatedPillNav } from '@/ui/platform/AnimatedPillNav';
 
 const { Text, Title } = Typography;
-const PROJECT_STORAGE_KEY = 'product-experience-center:selected-project';
-const LEGACY_PROJECT_STORAGE_KEY = 'project-platform:home-selected-project';
 const TOOLS_VISIBILITY_KEY = 'project-platform:home-engineering-tools';
-
-function readStoredProjectId() {
-  try {
-    return (
-      localStorage.getItem(PROJECT_STORAGE_KEY) || localStorage.getItem(LEGACY_PROJECT_STORAGE_KEY) || ''
-    );
-  } catch {
-    return '';
-  }
-}
 
 function readToolsVisibility() {
   try {
@@ -69,20 +57,10 @@ export function HomePage() {
   const projectQuery = useProjectManifest();
   const catalogQuery = useHtmlPageCatalog();
   const projects = useMemo(() => visibleProjects(projectQuery.data?.projects ?? []), [projectQuery.data]);
-  const [storedSelectedId, setStoredSelectedId] = useState(
-    () => new URLSearchParams(window.location.search).get('project') || readStoredProjectId(),
-  );
   const [showTools, setShowTools] = useState(readToolsVisibility);
   const requestedProjectId = new URLSearchParams(location.search).get('project') || '';
-  const selectedId = projects.some((project) => project.id === requestedProjectId)
-    ? requestedProjectId
-    : storedSelectedId;
+  const selectedId = projects.some((project) => project.id === requestedProjectId) ? requestedProjectId : '';
   const selectedProject = projects.find((project) => project.id === selectedId) ?? null;
-
-  useEffect(() => {
-    if (!requestedProjectId || !projects.some((project) => project.id === requestedProjectId)) return;
-    rememberProject(requestedProjectId);
-  }, [projects, requestedProjectId]);
 
   useEffect(() => {
     document.title = selectedProject ? `${selectedProject.name} - 产品功能体验中心` : '产品功能体验中心';
@@ -106,23 +84,7 @@ export function HomePage() {
     return () => window.removeEventListener('keydown', handleShortcut);
   }, []);
 
-  function rememberProject(projectId: string) {
-    try {
-      if (projectId) {
-        localStorage.setItem(PROJECT_STORAGE_KEY, projectId);
-        localStorage.setItem(LEGACY_PROJECT_STORAGE_KEY, projectId);
-      } else {
-        localStorage.removeItem(PROJECT_STORAGE_KEY);
-        localStorage.removeItem(LEGACY_PROJECT_STORAGE_KEY);
-      }
-    } catch {
-      // Local storage is optional; URL selection remains available.
-    }
-  }
-
   function selectProject(projectId: string) {
-    setStoredSelectedId(projectId);
-    rememberProject(projectId);
     navigate(projectId ? `/?project=${encodeURIComponent(projectId)}` : '/', { replace: true });
   }
 
@@ -143,63 +105,69 @@ export function HomePage() {
   return (
     <main className="home-page home-page--ant">
       <header className="home-topbar home-topbar--ant">
-        <Button className="home-brand home-brand--ant" type="text" onClick={() => selectProject('')}>
-          <Avatar shape="square" icon={<AppstoreOutlined />} />
-          <span className="home-brand__text">
-            <strong>产品功能体验中心</strong>
-            <small>原型、文档与产品上下文</small>
-          </span>
-        </Button>
+        <div className="home-topbar__capsule">
+          <Button className="home-brand home-brand--ant" type="text" onClick={() => selectProject('')}>
+            <Avatar shape="square" icon={<AppstoreOutlined />} />
+            <span className="home-brand__text">
+              <strong>产品功能体验中心</strong>
+            </span>
+          </Button>
 
-        <Flex className="home-topbar__actions" gap={4} align="center">
-          <ThemeControl />
-          {showTools ? (
-            <>
-              <Button type="text" icon={<AppstoreOutlined />} onClick={() => navigate('/components')}>
-                组件规范
-              </Button>
-              <Button type="text" icon={<FolderOpenOutlined />} onClick={() => navigate('/tools/projects')}>
-                项目管理
-              </Button>
-              <Button
-                type="text"
-                icon={<UploadOutlined />}
-                disabled={!selectedProject}
-                onClick={openPageTransfer}
-              >
-                导入导出
-              </Button>
-              <Button type="text" icon={<SettingOutlined />} onClick={() => navigate('/tools/console')}>
-                控制台
-              </Button>
-            </>
-          ) : null}
-        </Flex>
+          <AnimatedPillNav
+            as="nav"
+            className="home-project-nav"
+            activeKey={selectedId}
+            layoutKey={projects.map((project) => project.id).join('|')}
+            ariaLabel="项目列表"
+          >
+            {projects.length ? (
+              projects.map((project) => (
+                <Button
+                  key={project.id}
+                  type="text"
+                  data-animated-pill-item={project.id}
+                  className={`home-project-nav__item ${selectedProject?.id === project.id ? 'is-selected' : ''}`}
+                  aria-current={selectedProject?.id === project.id ? 'page' : undefined}
+                  onClick={() => selectProject(project.id)}
+                >
+                  {project.name}
+                </Button>
+              ))
+            ) : (
+              <span className="home-project-nav__empty">暂无开放项目</span>
+            )}
+          </AnimatedPillNav>
+
+          <span className="home-topbar__divider" aria-hidden="true" />
+
+          <Flex className="home-topbar__actions" gap={4} align="center">
+            <ThemeControl />
+            {showTools ? (
+              <>
+                <Button type="text" icon={<AppstoreOutlined />} onClick={() => navigate('/components')}>
+                  组件规范
+                </Button>
+                <Button type="text" icon={<FolderOpenOutlined />} onClick={() => navigate('/tools/projects')}>
+                  项目管理
+                </Button>
+                <Button
+                  type="text"
+                  icon={<UploadOutlined />}
+                  disabled={!selectedProject}
+                  onClick={openPageTransfer}
+                >
+                  导入导出
+                </Button>
+                <Button type="text" icon={<SettingOutlined />} onClick={() => navigate('/tools/console')}>
+                  控制台
+                </Button>
+              </>
+            ) : null}
+          </Flex>
+        </div>
       </header>
 
       <div className="home-main">
-        <section className="home-hero home-hero--ant home-hero--compact">
-          <div className="home-project-picker">
-            <div>
-              <Text strong>当前项目</Text>
-              <Text type="secondary">仅显示已开放的项目</Text>
-            </div>
-            <Select
-              value={selectedProject?.id}
-              placeholder={projects.length ? '请选择项目' : '暂无可用项目'}
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              disabled={!projects.length}
-              onChange={(value) => selectProject(value || '')}
-              options={projects.map((project) => ({
-                label: project.name,
-                value: project.id,
-              }))}
-            />
-          </div>
-        </section>
-
         {projectQuery.isError || catalogQuery.isError ? (
           <Alert
             type="error"

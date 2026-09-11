@@ -463,13 +463,24 @@ html[data-theme='glass'] .client-topbar--topnav {
 .client-topnav {
   display: flex;
   min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+}
+
+.client-topnav__track {
+  --animated-pill-nav-height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
+  --animated-pill-nav-radius: var(--ant-menu-horizontal-item-border-radius, 18px);
+  display: flex;
+  width: 100%;
+  min-width: 0;
   align-items: center;
   gap: 2px;
   overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
 }
 
-.client-topnav::-webkit-scrollbar {
+.client-topnav__track::-webkit-scrollbar {
   display: none;
 }
 
@@ -487,6 +498,8 @@ html[data-theme='glass'] .client-topbar--topnav {
 
 .client-topnav--native.ant-menu-horizontal > .ant-menu-item,
 .client-topnav--native.ant-menu-horizontal > .ant-menu-submenu {
+  position: relative;
+  z-index: 1;
   height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
   min-width: max-content;
   margin: 0 2px;
@@ -513,7 +526,7 @@ html[data-theme='glass'] .client-topbar--topnav {
 .client-topnav--native.ant-menu-horizontal > .ant-menu-submenu-selected {
   color: var(--ant-menu-horizontal-item-selected-color, var(--ant-color-primary));
   font-weight: 600;
-  background: var(--ant-menu-horizontal-item-selected-bg, var(--ant-color-primary-bg));
+  background: transparent;
 }
 
 .client-topnav--native .ant-menu-submenu-arrow {

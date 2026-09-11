@@ -29,7 +29,7 @@
       - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
       - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
       - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
-      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="glass"] 或 html[data-theme="dark"] 提供浅色玻璃或深色主题，页面不得删除主题桥接区。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
       - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
       - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
 
@@ -115,7 +115,7 @@
     <!-- PROTOTYPE_THEME_BRIDGE_START -->
     <style data-theme-bridge>
       /* 未设置 data-theme 时保持浅色默认值。 */
-      html[data-theme='glass'] {
+      html[data-theme='light'] {
         --app-color-sidebar: rgb(255 255 255 / 72%);
         --app-color-sidebar-border: rgb(5 5 5 / 10%);
         --app-color-sidebar-text: rgb(0 0 0 / 88%);
@@ -155,8 +155,8 @@
         color-scheme: dark;
       }
 
-      /* 顶栏在深色主题下仍保留轻量玻璃材质，不与内容区混成一块纯黑面板。 */
-      html[data-theme='glass'] .prototype-topbar,
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
       html[data-theme='dark'] .prototype-topbar {
         border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
         background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
@@ -172,7 +172,7 @@
       }
 
       @media (prefers-reduced-transparency: reduce) {
-        html[data-theme='glass'] .prototype-topbar,
+        html[data-theme='light'] .prototype-topbar,
         html[data-theme='dark'] .prototype-topbar {
           background: var(--app-color-surface);
           box-shadow: none;
@@ -1095,9 +1095,10 @@
                   </div>
 
                   <div class="table-wrap">
+                    <!-- 宽表在自身面板内横向滚动；操作列 fixed="right" 冻结在右侧，滚动时保持可见可操作。 -->
                     <el-table :data="pagedRows" row-key="id" stripe table-layout="fixed" style="width: 100%">
                       <el-table-column prop="code" label="编号" width="140"></el-table-column>
-                      <el-table-column label="名称" min-width="220">
+                      <el-table-column label="名称" min-width="280">
                         <template #default="scope">
                           <div class="name-cell">
                             <strong>{{ scope.row.name }}</strong>
@@ -1105,7 +1106,8 @@
                           </div>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="category" label="分类" min-width="150"></el-table-column>
+                      <el-table-column prop="category" label="分类" min-width="180"></el-table-column>
+                      <el-table-column prop="owner" label="负责人" width="120"></el-table-column>
                       <el-table-column label="状态" width="110">
                         <template #default="scope">
                           <el-tag :type="scope.row.status === 'enabled' ? 'success' : 'info'">
@@ -1113,8 +1115,9 @@
                           </el-tag>
                         </template>
                       </el-table-column>
+                      <el-table-column prop="source" label="来源" min-width="200"></el-table-column>
                       <el-table-column prop="updatedAt" label="更新时间" width="170"></el-table-column>
-                      <el-table-column label="操作" width="150" align="right">
+                      <el-table-column label="操作" width="150" align="right" fixed="right">
                         <template #default="scope">
                           <el-button link type="primary" @click="openEditDialog(scope.row)">编辑</el-button>
                           <el-button link type="danger" @click="removeRow(scope.row)">删除</el-button>
@@ -1444,8 +1447,10 @@
             code: 'ITEM-001',
             name: '基础资料 A',
             category: '一般资料',
+            owner: '陈晓',
             status: 'enabled',
             description: '常规业务资料',
+            source: '手动上传',
             updatedAt: '2026-07-13 10:20',
           },
           {
@@ -1453,8 +1458,10 @@
             code: 'ITEM-002',
             name: '重点资料 B',
             category: '重点资料',
+            owner: '林嘉怡',
             status: 'disabled',
             description: '当前已停用',
+            source: '模板生成',
             updatedAt: '2026-07-12 16:40',
           },
           {
@@ -1462,8 +1469,10 @@
             code: 'ITEM-003',
             name: '基础资料 C',
             category: '一般资料',
+            owner: '周建明',
             status: 'enabled',
             description: '最近完成更新',
+            source: '外部导入',
             updatedAt: '2026-07-11 09:15',
           },
         ]);
@@ -1541,8 +1550,10 @@
                 code: `ITEM-${String(nextSequence).padStart(3, '0')}`,
                 name: form.name,
                 category: form.category,
+                owner: '陈晓',
                 status: form.enabled ? 'enabled' : 'disabled',
                 description: form.description || '暂无说明',
+                source: '手动上传',
                 updatedAt: '2026-07-13 14:30',
               });
             } else {

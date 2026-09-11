@@ -23,6 +23,11 @@
   );
   --platform-material-control-shadow: none;
   --platform-material-backdrop-filter: none;
+  --platform-home-radius-surface: 24px;
+  --platform-home-radius-card: 20px;
+  --platform-home-radius-control: 999px;
+  --platform-home-control-height: 40px;
+  --platform-home-content-width: min(720px, calc(100% - 48px));
   --app-header-height: var(--ant-layout-header-height, 56px);
 }
 
@@ -36,36 +41,21 @@ html[data-theme='dark'] {
   );
   --platform-material-border: rgb(255 255 255 / 14%);
   --platform-material-hover-surface: rgb(255 255 255 / 10%);
-  --platform-material-surface-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 8%),
-    0 10px 34px rgb(0 0 0 / 38%);
-  --platform-material-control-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 10%),
-    0 8px 24px rgb(0 0 0 / 26%);
+  --platform-material-surface-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 10px 34px rgb(0 0 0 / 38%);
+  --platform-material-control-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), 0 8px 24px rgb(0 0 0 / 26%);
   --platform-material-backdrop-filter: blur(24px) saturate(140%);
 }
 
 html[data-theme='glass'] {
   --platform-root-canvas: transparent;
   /* Ant 的 bg-container/bg-elevated 默认是实心色，不能直接作为玻璃背景。 */
-  --platform-material-surface: color-mix(
-    in srgb,
-    var(--ant-color-bg-container, #fff) 68%,
-    transparent
-  );
-  --platform-material-surface-strong: color-mix(
-    in srgb,
-    var(--ant-color-bg-elevated, #fff) 82%,
-    transparent
-  );
+  --platform-material-surface: color-mix(in srgb, var(--ant-color-bg-container, #fff) 68%, transparent);
+  --platform-material-surface-strong: color-mix(in srgb, var(--ant-color-bg-elevated, #fff) 82%, transparent);
   --platform-material-border: rgb(255 255 255 / 64%);
   --platform-material-hover-surface: rgb(255 255 255 / 54%);
-  --platform-material-surface-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 54%),
-    0 10px 30px rgb(69 101 141 / 8%);
+  --platform-material-surface-shadow: inset 0 1px 0 rgb(255 255 255 / 54%), 0 10px 30px rgb(69 101 141 / 8%);
   --platform-material-control-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 60%),
-    0 6px 18px -8px rgb(15 23 42 / 20%);
+    inset 0 1px 0 rgb(255 255 255 / 60%), 0 6px 18px -8px rgb(15 23 42 / 20%);
   --platform-material-backdrop-filter: blur(24px) saturate(145%);
 }
 
@@ -750,27 +740,61 @@ html[data-theme='glass'] .system-result-page .ant-result {
 /* Home */
 .home-page--ant,
 .home-loading--ant {
+  position: relative;
   color: var(--ant-color-text);
-  background: var(--ant-color-bg-layout);
+  background: var(--platform-canvas);
 }
 
 .home-topbar--ant {
-  height: var(--app-header-height);
-  padding: 0 24px;
-  border-color: var(--ant-color-border-secondary);
-  background: var(--ant-color-bg-container);
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: auto;
+  min-height: 0;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 20px 0;
+  border: 0 !important;
+  background: transparent !important;
+  pointer-events: none;
+}
+
+.home-topbar__capsule {
+  box-sizing: border-box;
+  display: flex;
+  width: var(--platform-home-content-width);
+  max-width: var(--platform-home-content-width);
+  min-width: 0;
+  min-height: calc(var(--platform-home-control-height) + 12px);
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--platform-material-border);
+  border-radius: var(--platform-home-radius-control);
+  background: var(--platform-material-surface-strong);
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+  pointer-events: auto;
 }
 
 .home-brand--ant.ant-btn {
+  flex: 0 0 auto;
   height: 44px;
-  margin-left: -8px;
-  padding: 6px 8px;
+  margin: 0;
+  padding: 4px 14px 4px 6px;
+  border-radius: var(--platform-home-radius-control);
+  color: var(--ant-color-text);
+  text-align: left;
 }
 
 .home-brand--ant .ant-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: 11px;
 }
 
 .home-brand__text strong {
@@ -782,9 +806,118 @@ html[data-theme='glass'] .system-result-page .ant-result {
   display: none;
 }
 
+.home-project-nav {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.home-project-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.animated-pill-nav {
+  position: relative;
+}
+
+.animated-pill-nav__indicator {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  height: var(
+    --animated-pill-nav-height,
+    var(--platform-home-control-height, var(--ant-menu-item-height, 36px))
+  );
+  border-radius: var(
+    --animated-pill-nav-radius,
+    var(--platform-home-radius-control, var(--ant-border-radius-lg, 8px))
+  );
+  background: var(--ant-color-primary-bg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition: none;
+  will-change: transform, width;
+}
+
+.animated-pill-nav__indicator.is-visible {
+  opacity: 1;
+}
+
+.home-project-nav__item.ant-btn {
+  flex: 0 0 auto;
+  height: var(--platform-home-control-height);
+  padding-inline: 15px;
+  border: 0 !important;
+  border-radius: var(--platform-home-radius-control);
+  color: var(--ant-color-text-secondary);
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.home-project-nav__item.ant-btn:hover,
+.home-project-nav__item.ant-btn:focus,
+.home-project-nav__item.ant-btn:focus-visible,
+.home-project-nav__item.ant-btn:active {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--ant-color-text);
+  background: var(--platform-material-hover-surface);
+}
+
+.home-project-nav__item.ant-btn.is-selected {
+  color: var(--ant-color-primary);
+  background: transparent;
+  font-weight: var(--ant-font-weight-strong, 600);
+}
+
+.home-project-nav__empty {
+  padding-inline: 14px;
+  color: var(--ant-color-text-quaternary);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.home-topbar__divider {
+  width: 1px;
+  height: 24px;
+  flex: 0 0 1px;
+  margin-inline: 4px;
+  background: var(--ant-color-border-secondary);
+}
+
+.home-topbar__actions {
+  flex: 0 0 auto;
+}
+
+.home-topbar__actions .ant-btn,
+.home-topbar__actions .theme-control.ant-btn {
+  min-width: var(--platform-home-control-height);
+  height: var(--platform-home-control-height);
+  padding-inline: 13px;
+  border-radius: var(--platform-home-radius-control);
+  color: var(--ant-color-text-secondary);
+}
+
+.home-topbar__actions .ant-btn:hover,
+.home-topbar__actions .ant-btn:focus-visible {
+  color: var(--ant-color-text);
+  background: var(--platform-material-hover-surface);
+}
+
 .home-main {
-  width: 100%;
-  padding: 0 24px 24px;
+  box-sizing: border-box;
+  width: var(--platform-home-content-width);
+  margin-inline: auto;
+  padding: 88px 0 32px;
 }
 
 .home-hero--ant {
@@ -822,26 +955,63 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .home-workspace--ant,
 .home-entry-card--ant {
   border-color: var(--ant-color-border-secondary);
-  background: var(--ant-color-bg-container);
+  background: var(--platform-material-surface);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 .home-project-picker,
 .home-workspace--ant,
 .home-empty--ant {
-  border-radius: var(--ant-border-radius-lg, 8px);
+  border-radius: var(--platform-home-radius-surface);
 }
 
 .home-project-picker {
-  box-shadow: none;
+  box-shadow: var(--platform-material-surface-shadow);
 }
 
 .home-workspace--ant {
-  box-shadow: none;
+  box-shadow: var(--platform-material-surface-shadow);
+}
+
+.home-workspace__body.has-documents {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.home-entry-section:not(.is-compact) .home-entry-grid {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .home-entry-card--ant:hover,
 .home-entry-card--ant:focus-visible {
-  background: color-mix(in srgb, var(--project-accent) 4%, var(--ant-color-bg-container));
+  border-color: color-mix(in srgb, var(--project-accent) 46%, var(--platform-material-border));
+  background: color-mix(in srgb, var(--project-accent) 6%, var(--platform-material-surface));
+  box-shadow: var(--platform-material-surface-shadow);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.home-entry-card--ant {
+  border-radius: var(--platform-home-radius-card);
+  box-shadow: var(--platform-material-control-shadow);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.home-entry-card--ant > .ant-card-body {
+  min-height: 80px;
+  padding: 12px 16px;
+}
+
+.home-entry-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--project-accent) 10%, var(--platform-material-surface));
 }
 
 /* Client business shell */
@@ -1224,7 +1394,8 @@ html[data-theme='glass'] .system-result-page .ant-result {
 @media (prefers-reduced-motion: reduce) {
   .app-sider__brand-button,
   .app-sider__collapse,
-  .theme-control.ant-btn {
+  .theme-control.ant-btn,
+  .animated-pill-nav__indicator {
     transition: none;
   }
 }
@@ -1337,4 +1508,95 @@ html[data-theme='glass'] .transfer-export-toolbar,
 html[data-theme='glass'] .transfer-export-submit,
 html[data-theme='glass'] .transfer-manifest-preview {
   background: rgb(255 255 255 / 34%) !important;
+}
+
+/* 首页顶栏与业务页顶栏保持同一结构：外层只负责定位，材质只落在内部胶囊。 */
+html[data-theme='dark'] .home-topbar--ant,
+html[data-theme='glass'] .home-topbar--ant {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme='dark'] .home-topbar__capsule,
+html[data-theme='glass'] .home-topbar__capsule {
+  border-color: var(--platform-material-border);
+  background: var(--platform-material-surface-strong);
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --platform-home-content-width: min(720px, calc(100% - 24px));
+  }
+
+  .home-topbar--ant {
+    padding-inline: 12px;
+  }
+
+  .home-topbar__capsule {
+    width: var(--platform-home-content-width);
+    max-width: calc(100vw - 24px);
+  }
+
+  .home-project-nav__item.ant-btn {
+    padding-inline: 12px;
+  }
+
+  .home-workspace__body.has-documents {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  :root {
+    --platform-home-content-width: calc(100% - 28px);
+  }
+
+  .home-topbar--ant {
+    padding-inline: 14px;
+    padding-top: 10px;
+  }
+
+  .home-topbar__capsule {
+    width: var(--platform-home-content-width);
+    max-width: var(--platform-home-content-width);
+    min-height: 0;
+  }
+
+  .home-brand--ant.ant-btn {
+    padding-right: 8px;
+  }
+
+  .home-brand__text strong {
+    display: none;
+  }
+
+  .home-topbar__actions .ant-btn {
+    width: var(--platform-home-control-height);
+    padding-inline: 0;
+  }
+
+  .home-topbar__actions .ant-btn > span:not(.anticon) {
+    display: none;
+  }
+
+  .home-main {
+    padding: 72px 0 24px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .home-topbar__capsule,
+  .home-workspace--ant,
+  .home-empty--ant,
+  .home-entry-card--ant {
+    background: var(--ant-color-bg-container);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }

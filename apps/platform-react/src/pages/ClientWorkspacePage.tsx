@@ -57,6 +57,7 @@ import {
   UserOutlined,
 } from '@/ui/ant/icons';
 import { AppSidebar } from '@/ui/platform/AppSidebar';
+import { AnimatedPillNav } from '@/ui/platform/AnimatedPillNav';
 import { ProjectIcon } from '@/ui/platform/ProjectIcon';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
@@ -389,34 +390,34 @@ function ClientWorkspace({
 
   const syncIframeRoute = useCallback(
     (frame: HTMLIFrameElement) => {
-    try {
-      const current = frame.contentWindow?.location;
-      if (!current) return;
-      const matchingPage = pages.find((page) => {
-        const candidate = platformApi.getHtmlPrototypeUrl(projectId, page.sourceRoot, page.source);
-        return new URL(candidate, window.location.origin).pathname === current.pathname;
-      });
-      if (!matchingPage) return;
-      if (
-        matchingPage.path === selectedPage.path &&
-        current.search === locationSearch &&
-        current.hash === locationHash
-      ) {
-        return;
+      try {
+        const current = frame.contentWindow?.location;
+        if (!current) return;
+        const matchingPage = pages.find((page) => {
+          const candidate = platformApi.getHtmlPrototypeUrl(projectId, page.sourceRoot, page.source);
+          return new URL(candidate, window.location.origin).pathname === current.pathname;
+        });
+        if (!matchingPage) return;
+        if (
+          matchingPage.path === selectedPage.path &&
+          current.search === locationSearch &&
+          current.hash === locationHash
+        ) {
+          return;
+        }
+        const matchingGroup = groups.find((group) =>
+          group.pages.some((page) => page.path === matchingPage.path),
+        );
+        setMenuDisclosure({
+          pagePath: matchingPage.path,
+          openKeys: matchingGroup ? [`section:${matchingGroup.id}`] : [],
+        });
+        const nextOuterUrl = `${routeForPage(projectId, clientId, matchingPage)}${current.search}${current.hash}`;
+        syncRouteRef.current = `${current.pathname}${current.search}${current.hash}`;
+        onNavigate(nextOuterUrl, { replace: true });
+      } catch {
+        // 外部 HTML 目前由同源服务承载；若未来改为跨域，仅停止路由同步，不影响页面显示。
       }
-      const matchingGroup = groups.find((group) =>
-        group.pages.some((page) => page.path === matchingPage.path),
-      );
-      setMenuDisclosure({
-        pagePath: matchingPage.path,
-        openKeys: matchingGroup ? [`section:${matchingGroup.id}`] : [],
-      });
-      const nextOuterUrl = `${routeForPage(projectId, clientId, matchingPage)}${current.search}${current.hash}`;
-      syncRouteRef.current = `${current.pathname}${current.search}${current.hash}`;
-      onNavigate(nextOuterUrl, { replace: true });
-    } catch {
-      // 外部 HTML 目前由同源服务承载；若未来改为跨域，仅停止路由同步，不影响页面显示。
-    }
     },
     [clientId, groups, locationHash, locationSearch, onNavigate, pages, projectId, selectedPage.path],
   );
@@ -661,11 +662,24 @@ function ClientTopNavigation({
     }));
 
     if (children.length === 1) {
-      return { key: group.pages[0].path, label: group.title };
+      return {
+        key: group.pages[0].path,
+        label: <span data-animated-pill-item={group.pages[0].path}>{group.title}</span>,
+      };
     }
 
-    return { key: `section:${group.id}`, label: group.title, children };
+    return {
+      key: `section:${group.id}`,
+      label: <span data-animated-pill-item={`section:${group.id}`}>{group.title}</span>,
+      children,
+    };
   });
+  const activeGroup = groups.find((group) => group.pages.some((page) => page.path === selectedPage.path));
+  const activeKey = activeGroup
+    ? activeGroup.pages.length === 1
+      ? activeGroup.pages[0].path
+      : `section:${activeGroup.id}`
+    : undefined;
 
   useEffect(() => {
     const handleOutsidePointerDown = (event: PointerEvent) => {
@@ -683,24 +697,30 @@ function ClientTopNavigation({
 
   return (
     <div ref={navigationRef} className="client-topnav">
-      <Menu
-        aria-label="客户端主导航"
-        className="client-topnav--native"
-        mode="horizontal"
-        triggerSubMenuAction="click"
-        selectable
-        openKeys={openKeys}
-        onOpenChange={setOpenKeys}
-        selectedKeys={[selectedPage.path]}
-        items={items}
-        onClick={({ key }) => {
-          const page = groups.flatMap((group) => group.pages).find((item) => item.path === key);
-          if (page) {
-            setOpenKeys([]);
-            onNavigatePage(page);
-          }
-        }}
-      />
+      <AnimatedPillNav
+        className="client-topnav__track"
+        activeKey={activeKey}
+        layoutKey={groups.map((group) => `${group.id}:${group.pages.length}`).join('|')}
+        ariaLabel="客户端主导航"
+      >
+        <Menu
+          className="client-topnav--native"
+          mode="horizontal"
+          triggerSubMenuAction="click"
+          selectable
+          openKeys={openKeys}
+          onOpenChange={setOpenKeys}
+          selectedKeys={[selectedPage.path]}
+          items={items}
+          onClick={({ key }) => {
+            const page = groups.flatMap((group) => group.pages).find((item) => item.path === key);
+            if (page) {
+              setOpenKeys([]);
+              onNavigatePage(page);
+            }
+          }}
+        />
+      </AnimatedPillNav>
     </div>
   );
 }
