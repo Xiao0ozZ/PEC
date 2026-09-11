@@ -57,7 +57,8 @@
 ├─ PAGE_TRANSFER_GUIDE.md      HTML 原型导入、回导与独立演示包说明
 ├─ PROJECT_PACKAGE_GUIDE.md    项目包结构、配置、插拔和发布规范
 ├─ TESTING_GUIDE.md            自动化验收范围、命令和基线更新规则
-├─ 启动React开发环境.cmd       Windows 双击启动脚本
+├─ 启动React开发环境.cmd       Windows 双击启动 5188 开发环境
+├─ start-preview-8080.cmd      Windows 双击启动 8080 环境
 └─ package.json
 ```
 
@@ -82,6 +83,8 @@ React 是唯一的平台运行入口：开发、构建、测试和正式本地�
 3. 使用 React Vite 开发服务启动平台，默认端口为 `5188`。
 
 同一局域网如需访问，可执行 `npm run dev:lan`，再通过 `http://本机IP:5188` 访问。关闭脚本窗口或按 `Ctrl+C` 可停止服务。
+
+如需使用 8080 端口，双击 `start-preview-8080.cmd`。它会启动同一套 React 平台并监听 `0.0.0.0:8080`，局域网访问地址为 `http://本机IP:8080`。
 
 ### 命令行启动
 
