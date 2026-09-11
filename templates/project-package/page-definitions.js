@@ -7,9 +7,11 @@ export const clientPageDefinitions = {
         path: 'home',
         name: 'admin-home',
         title: '项目首页',
-        view: 'admin/HomeView.vue',
+        sourceType: 'html-template',
+        source: 'home.html',
+        fileName: 'home.html',
         section: 'workspace',
-        icon: 'House',
+        icon: 'DataBoard',
       },
       // <generator:admin-pages>
     ],

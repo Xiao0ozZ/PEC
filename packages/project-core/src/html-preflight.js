@@ -159,17 +159,17 @@ export function inspectHtmlPrototype(
     );
   }
   const duplicateTopbars = Math.max(
-    countMatches(html, /<header\b[^>]*class=["'][^"']*prototype-topbar/giu),
-    countMatches(html, /\bdata-prototype-topbar(?:\s|=|>)/giu),
+    countMatches(markup, /<header\b[^>]*class=["'][^"']*prototype-topbar/giu),
+    countMatches(markup, /\bdata-prototype-topbar(?:\s|=|>)/giu),
   );
   if (duplicateTopbars > 1) {
     errors.push(issue('duplicate-topbar', `检测到 ${duplicateTopbars} 个原型顶栏，直读时会重复显示。`));
   }
   const duplicateSidebars = Math.max(
-    countMatches(html, SIDEBAR_CLASS_PATTERN),
-    countMatches(html, /\bdata-prototype-shell=["']sidebar["']/giu),
+    countMatches(markup, SIDEBAR_CLASS_PATTERN),
+    countMatches(markup, /<[a-z][^>]*\bdata-prototype-shell=["']sidebar["']/giu),
     // 侧栏 aside 内部通常还嵌套一个导航 nav，属于同一个外壳，不能与侧栏数量相加。
-    countMatches(html, /\bdata-prototype-shell=["']navigation["']/giu),
+    countMatches(markup, /<[a-z][^>]*\bdata-prototype-shell=["']navigation["']/giu),
   );
   if (duplicateSidebars > 1) {
     errors.push(issue('duplicate-sidebar', `检测到 ${duplicateSidebars} 个菜单侧栏外壳，直读时会重复显示。`));

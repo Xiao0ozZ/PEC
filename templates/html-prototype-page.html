@@ -44,7 +44,7 @@
       - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
       - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
       - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
-      - templateVersion 记录本模板的协议版本，跟随协议标题；创建页面时不修改。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
 
       页面结构选择
       - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
@@ -114,7 +114,7 @@
     <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
     <!-- PROTOTYPE_THEME_BRIDGE_START -->
     <style data-theme-bridge>
-      /* 未设置 data-theme 时保持独立预览的浅色默认值。 */
+      /* 未设置 data-theme 时保持浅色默认值。 */
       html[data-theme='glass'] {
         --app-color-sidebar: rgb(255 255 255 / 72%);
         --app-color-sidebar-border: rgb(5 5 5 / 10%);
@@ -917,7 +917,7 @@
     <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
     <script id="prototype-page-manifest" type="application/json">
       {
-        "templateVersion": "1.9",
+        "templateVersion": 1,
         "scriptMode": "composition-api",
         "pageKey": "business-page",
         "pageTitle": "资料管理",

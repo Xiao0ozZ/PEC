@@ -1,6 +1,4 @@
-import { config } from '@vue/test-utils';
 import '@testing-library/jest-dom/vitest';
-import ElementPlus from 'element-plus';
 
 if (typeof window !== 'undefined' && !window.matchMedia) {
   window.matchMedia = () => ({
@@ -17,5 +15,3 @@ if (typeof window !== 'undefined' && !window.ResizeObserver) {
     disconnect() {}
   };
 }
-
-config.global.plugins = [ElementPlus];

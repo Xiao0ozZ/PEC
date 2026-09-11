@@ -15,12 +15,10 @@ packages/project-core       项目包领域规则与纯 Node 文件能力
 packages/platform-client    框架无关的浏览器请求与响应归一化（共享 HTTP 契约）
        └─ apps/platform-react/      React 正式平台、Ant Design、路由和浏览器状态
 
-src/                      观察期保留的 Vue 回退平台
-
 html-prototype-shell/     可整目录单独复制运行的独立 Node + HTML 工具
 ```
 
-`packages/project-core` 不依赖 Vue、Vite、HTTP 或浏览器 API。`packages/platform-transfer` 负责页面定义、备份、路由、导入和导出编排；独立服务直接调用该包，Vite 插件只保留兼容入口和开发期 HTTP 适配。Vue/Vite 编译器只在导出必须编译的 Vue 页面时按需加载，服务启动、项目扫描、路由管理和 HTML 轻量导入不会加载 esbuild。独立本地服务支持平台设置、项目配置、页面级 PRD 关联、组件级 PRD 关联和路由菜单的本机写入；当服务监听局域网地址时，远程请求仍保持只读。`packages/platform-server/src/runtime.js` 负责正式 Node 启动预检、地址提示、监听错误归一化和退出生命周期，Vite 不参与正式本地运行。
+`packages/project-core` 不依赖 Vue、Vite、HTTP 或浏览器 API。`packages/platform-transfer` 负责页面定义、备份、路由、导入和导出编排；独立服务直接调用该包，Vite 插件只保留兼容入口和开发期 HTTP 适配。Vue/Vite 编译器只在导出必须兼容历史 Vue 页面时按需加载，服务启动、项目扫描、路由管理和 HTML 轻量导入不会加载它。独立本地服务支持平台设置、项目配置、页面级 PRD 关联、组件级 PRD 关联和路由菜单的本机写入；当服务监听局域网地址时，远程请求仍保持只读。`packages/platform-server/src/runtime.js` 负责正式 Node 启动预检、地址提示、监听错误归一化和退出生命周期，Vite 不参与正式本地运行。
 
 ## 2. 轻量外壳边界
 

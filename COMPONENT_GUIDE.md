@@ -1,26 +1,26 @@
 # 公共组件与 Composables 使用规范
 
-> 当前正式平台已切换为 `apps/platform-react`，公共页面统一使用 Ant Design。本文件中的 Vue、Element Plus 和 `src/components/ui` 规则仅用于观察期回退代码，不再作为 React 新页面的实现规范。项目业务内容优先使用规范 HTML 模板与托管 HTML 运行方式。
+> 当前平台统一使用 `apps/platform-react` 和 Ant Design v6。本文件约束公共 React 页面、平台外壳和 HTML 原型承载方式；项目业务内容优先使用规范 HTML 模板与托管 HTML 运行方式。
 
 ## 1. 目的
 
-本规范用于统一后续新增 Vue 原型页面的结构、视觉和常见交互。公共组件只抽象稳定、重复且不包含业务判断的部分；业务字段、状态流、按钮权限、接口调用和页面模拟数据仍由页面负责。
+本规范用于统一后续新增 React 公共页面和 HTML 原型承载层的结构、视觉和常见交互。公共组件只抽象稳定、重复且不包含业务判断的部分；业务字段、状态流、按钮权限、接口调用和页面模拟数据仍由页面负责。
 
 历史页面保持当前稳定结构，不因组件库扩充而批量改写。只有产品负责人明确指定历史页面改造时，才进行定点接入。
 
 ## 2. 设计变量
 
-设计变量位于 `src/styles/tokens.css`，包括颜色、字体链、字号、间距、圆角、阴影、控件高度、表格行高和面板标题高度。
+设计变量由 `apps/platform-react/src/features/theme` 和 `apps/platform-react/src/styles` 统一维护，包括颜色、字体链、字号、间距、圆角、阴影、控件高度、表格行高和面板标题高度。
 
 新增公共组件必须使用语义变量，不得在组件内重新定义一套主色、字号和间距体系。
 
-主色只允许在 `tokens.css` 中定义。Vue/CSS 使用 `var(--app-color-primary)`，Tailwind 使用 `theme-primary`，ECharts/Canvas 使用 `src/config/theme.js`；Element Plus 已全局映射，不再填写局部 `color` 属性。
+主色通过 Ant Design `ConfigProvider`、Design Token 和 CSS Variables 统一下发。React 组件使用 Ant Design token，HTML 原型使用 `--app-*` 语义变量；页面不得自行重新定义一套主色、字号和间距体系。
 
 正文和控件统一继承 `var(--app-font-family-sans)`，代码、文件路径和技术标识使用 `var(--app-font-family-mono)`。页面和公共组件不得自行指定 Inter、Noto Sans SC、微软雅黑等单一字体；系统字体链会按 Windows、macOS、Android 和 Linux 的可用字体自动回退。图标字体不属于正文字体链，应限制在对应图标类内使用。
 
 ## 3. 公共组件
 
-统一从 `src/components/ui` 引入。
+统一从 `apps/platform-react/src/ui/ant` 和 `apps/platform-react/src/ui/platform` 引入。
 
 ### 页面与布局
 
@@ -65,7 +65,7 @@
 
 `FileImportDialog` 由页面控制 `idle`、`ready`、`loading`、`success`、`error` 五种状态；组件只负责文件选择、状态反馈、结果摘要和异常明细，实际上传、模板下载及业务校验由页面或接口层处理。
 
-Element Plus 已提供的 `el-input`、`el-select`、`el-table-column`、`el-tabs`、`el-date-picker` 等基础控件直接使用，不再重复封装。
+Ant Design 已提供的 `Input`、`Select`、`Table`、`Tabs`、`DatePicker` 等基础控件直接使用，不再重复封装。只有跨页面重复、且包含稳定交互约束的组合能力才进入 `apps/platform-react/src/ui`。
 
 ## 4. 页面类型组合
 
@@ -82,52 +82,44 @@ Element Plus 已提供的 `el-input`、`el-select`、`el-table-column`、`el-tab
 
 业务页面不需要把所有组件全部使用。按页面类型选择组合，避免为了组件化增加无意义层级。
 
-## 5. PageHeader 历史兼容模式
+## 5. 页面标题与 HTML 原型承载
 
-现有四个试点历史页面使用 `unstyled` 并保留原 class，只复用结构，不改变视觉。后续不再主动扩大历史页面组件化范围。
+React 公共页面使用 `PlatformPage`、Ant Design `Typography` 和 `Space` 组合标题区；业务原型页面不在平台中重写内容，而由 `PrototypeFrame` 承载项目包或外部目录中的 HTML。标题、说明和主要操作按页面实际需求组合，不强制所有页面使用同一种内容区结构。
 
-```vue
-<PageHeader
-  unstyled
-  class="flex justify-between items-end mb-6"
+```tsx
+<PlatformPage
   title="页面标题"
   description="页面说明"
-  title-class="text-2xl font-bold"
+  actions={<Button type="primary">新增</Button>}
 >
-  <template #actions>
-    <el-button type="primary" size="large">新增</el-button>
-  </template>
-</PageHeader>
+  <Surface>{/* 页面内容 */}</Surface>
+</PlatformPage>
 ```
 
-新页面使用默认样式，不得增加 `unstyled` 或 `legacy: true`。
+新增 HTML 原型从 `templates/html-prototype-page.html` 开始，只编辑模板标记的业务内容、逻辑和样式区域。项目包登记使用 `page-definitions.js`，托管页面放在 `html-pages/{client-id}`；不再生成平台 Vue 页面。
 
 ## 6. Composables
 
-| Composable             | 用途                           |
-| ---------------------- | ------------------------------ |
-| `usePagination`        | 当前页、每页数量、偏移量和重置 |
-| `useResettableFilters` | 建立并恢复筛选初始值           |
-| `useSelectableStats`   | 统计卡片选中和再次点击取消     |
-| `useDialogState`       | 弹窗打开、关闭和切换           |
-| `useChartRegistry`     | ECharts resize、卸载和实例销毁 |
+| Hook / 工具                 | 用途                           |
+| --------------------------- | ------------------------------ |
+| 页面内 `useState` / `useMemo` | 页面筛选、分页和派生展示状态   |
+| React Router hooks           | 页面导航、参数和返回           |
+| `usePlatformTheme`           | 读取和切换平台主题             |
+| `usePlatformData`            | 读取项目、客户端和页面目录     |
+| 领域模块中的纯函数           | 排序、校验、格式化和可测试逻辑 |
 
 Composables 不包含具体业务枚举、权限和接口调用。
 
-## 7. 新页面生成与开发顺序
+## 7. 新页面与原型开发顺序
 
-1. 查询目标客户端可用菜单分组。
-2. 使用生成器建立页面并自动登记路由、菜单。
-3. 按页面类型从 `/components` 选择组件组合。
-4. 页面专属样式使用 `<style scoped>`，颜色和间距优先使用设计变量。
-5. 页面业务状态保留在页面；确需跨页面共享的模拟数据放入所属项目包的 `projects/{project-id}/data`。
+1. 查询目标客户端可用菜单分组和页面来源配置。
+2. 需要平台公共页时，在 `apps/platform-react/src/pages` 创建 React 页面并接入正式路由；需要业务原型时复制 `templates/html-prototype-page.html` 创建 HTML。
+3. 按页面类型从 `/components` 选择 Ant Design 组件和平台表面容器。
+4. 页面专属样式使用 CSS Modules 或页面作用域类名，颜色和间距优先使用 Ant Design token 与 `--app-*` 语义变量。
+5. 页面业务状态保留在页面；确需跨页面共享的模拟数据放入所属项目包的 `data`。
 6. 只有两个以上页面存在完全相同的结构与行为时才新增公共组件。
 
-```powershell
-npm run generate:page -- --list-sections operation
-npm run generate:page -- --client operation --path vehicle-inspection --title "车辆验车" --section assets --dry-run
-npm run generate:page -- --client operation --path vehicle-inspection --title "车辆验车" --section assets
-```
+页面 HTML 导入后登记在项目包 `page-definitions.js`，不直接修改平台 Router 或公共菜单数组。需要检查模板契约时运行 `npm run project -- preflight --file <html>`。
 
 ## 8. 示例与验收
 
@@ -138,11 +130,8 @@ npm run generate:page -- --client operation --path vehicle-inspection --title "�
 ```powershell
 npm run format
 npm run lint
-npm run audit:components
-npm run audit:styles
 npm run test:unit
 npm run test:smoke
-npm run test:visual
 npm run build
 ```
 

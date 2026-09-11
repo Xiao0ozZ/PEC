@@ -354,7 +354,7 @@ describe('page transfer', () => {
     const manifest = JSON.parse(manifestSource.trim());
     const htmlWithoutComments = source.replace(/<!--[\s\S]*?-->/gu, '');
 
-    expect(source).toContain('HTML 原型 AI 编写协议 v1.7');
+    expect(source).toContain('HTML 原型 AI 编写协议 v1.9');
     expect(source).toContain('以本模板作为唯一的结构与实现基准');
     expect(source).toContain('可将本模板复制为多个 HTML 文件组成多页面原型');
     expect(source).toContain('<!-- PROTOTYPE_AI_PROTOCOL_START -->');

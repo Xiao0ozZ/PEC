@@ -4,7 +4,7 @@
 
 ## 项目说明
 
-本工程是一套 React 项目资料与原型共用外壳。实际项目可以放在本地 `projects/{project-id}`，也可以通过被 Git 忽略的 `project-mounts.local.json` 原地挂载外部项目文件夹。每个项目独立保存自己的配置、客户端入口、HTML 页面、模拟数据、资源、文档和移动端内容，共用首页、路由外壳、公共组件、主题引擎和工程工具。Vue 旧平台仅作为迁移观察期的内部回退入口。
+本工程是一套 React 项目资料与原型共用外壳。实际项目可以放在本地 `projects/{project-id}`，也可以通过被 Git 忽略的 `project-mounts.local.json` 原地挂载外部项目文件夹。每个项目独立保存自己的配置、客户端入口、HTML 页面、模拟数据、资源、文档和移动端内容，共用首页、路由外壳、公共组件、主题引擎和工程工具。
 
 工程定位为可运行的前端原型，不连接真实后端。页面使用模拟数据呈现业务字段、页面布局、弹窗和主要交互，供产品评审、业务确认、客户演示和前端开发参考。
 
@@ -15,7 +15,7 @@
 - 本地没有项目包时，首页不显示业务项目入口；加入项目包并重新扫描后，才会出现对应项目和客户端入口。
 - 文档中心只读取各项目包 `projects/{project-id}/docs` 下的 Markdown，支持文件夹目录、搜索、Mermaid、相对图片和文档链接。
 - 客户端入口：每个客户端可直接进入默认页、先显示平台演示登录页或进入指定页面，并可选择左侧菜单或无侧栏外壳。
-- 语言：React 正式平台当前只提供简体中文；保留 i18n 基础设施，但不显示无法实际切换的语言入口。由于当前没有任何组件使用 `useTranslation`，`main.tsx` 不再预加载 `src/i18n`，避免把 i18next 打进首屏；真正启用多语言时在 `main.tsx` 顶部加回 `import './i18n';` 即可。只有产品负责人明确提出后才扩展其他语言。
+- 语言：平台当前只提供简体中文；保留 React i18next 基础设施，但不显示无法实际切换的语言入口。由于当前没有任何组件使用 `useTranslation`，`main.tsx` 不再预加载 `apps/platform-react/src/i18n`，避免把 i18next 打进首屏；真正启用多语言时在 `main.tsx` 顶部加回 `import './i18n';` 即可。只有产品负责人明确提出后才扩展其他语言。
 - 界面主题：基于 Ant Design v6 `ConfigProvider`、Design Token 与 CSS Variables；默认主题采用官方 Light 视觉语言和浅蓝布局画布，另提供暗色、玻璃主题；支持跟随系统和独立紧凑密度，用户选择保存在本地浏览器。
 
 ## 技术栈
@@ -48,24 +48,20 @@
 ├─ templates/                  新页面及可迁移 HTML 原型模板
 ├─ tests/unit/                 领域核心与平台单元测试
 ├─ tests/e2e/                  React 正式平台浏览器测试（默认）
-├─ tests/e2e-vue/              观察期 Vue 回退入口测试
-├─ src/                        Vue 旧平台回退代码，观察期内保留
 ├─ playwright.config.js        React E2E 配置（默认）
-├─ playwright.vue.config.js    Vue 回退 E2E 配置
 ├─ vite.config.js              React 构建配置（默认，产出 dist/）
-├─ vite.vue.config.js          Vue 回退构建配置（产出 dist-vue/）
 ├─ COMPONENT_GUIDE.md          公共组件、Composables 和新增页面使用规范
 ├─ ARCHITECTURE.md             工程分层、轻量外壳边界和后续拆分顺序
 ├─ HTML_PROTOTYPE_CREATION_PROMPT.md 需求阶段可迁移 HTML 原型创建提示词
 ├─ MIGRATION_GUIDE.md          HTML 原型迁移到本工程的执行规范
-├─ PAGE_TRANSFER_GUIDE.md      HTML 原型导入与 Vue 页面演示包导出说明
+├─ PAGE_TRANSFER_GUIDE.md      HTML 原型导入、回导与独立演示包说明
 ├─ PROJECT_PACKAGE_GUIDE.md    项目包结构、配置、插拔和发布规范
 ├─ TESTING_GUIDE.md            自动化验收范围、命令和基线更新规则
 ├─ start-preview-8080.cmd      Windows 双击启动脚本
 └─ package.json
 ```
 
-React 是默认平台：不带后缀的命令、配置和测试目录（`npm run dev`、`npm run build`、`npm run test`、`npm run test:e2e`、`vite.config.js`、`playwright.config.js`、`tests/e2e/`）全部指向 React；Vue 回退一律带 `vue` 后缀（`dev:vue`、`build:vue`、`test:e2e:vue`、`vite.vue.config.js`、`playwright.vue.config.js`、`tests/e2e-vue/`）。
+React 是唯一的平台运行入口：开发、构建、测试和正式本地服务都使用 `apps/platform-react` 与 `vite.config.js`。项目包中的历史 Vue SFC 只作为资料兼容和页面传输的输入，不再作为平台运行入口。
 
 ## 项目包配置
 
@@ -73,7 +69,7 @@ React 是默认平台：不带后缀的命令、配置和测试目录（`npm run
 
 新项目从 `templates/project-package` 复制，完整字段和边界见 [PROJECT_PACKAGE_GUIDE.md](./PROJECT_PACKAGE_GUIDE.md)。
 
-工程级命名统一使用 `app-*`、`ui-*`、`theme-*`，不得使用具体项目名称作为 CSS 变量、公共类名、插件名、事件名、包名或资源文件名。`npm run audit:naming` 会检查该规则。
+工程级命名统一使用 `app-*`、`ui-*`、`theme-*`，不得使用具体项目名称作为 CSS 变量、公共类名、插件名、事件名、包名或资源文件名。
 
 ## 本地运行
 
@@ -102,7 +98,6 @@ npm run dev                 # 本机开发预览，默认 127.0.0.1:5188
 npm run dev:lan             # 局域网预览，默认 0.0.0.0:5188
 npm run serve:local         # 使用独立 Node 本地服务读取已构建的 dist
 npm run mcp:serve           # 本地 MCP Server（stdio 只读工具，供 AI 工具接入）
-npm run dev:vue             # 内部 Vue 回退入口，默认 127.0.0.1:5189
 npm run project -- help     # 查看项目包 CLI
 npm run project:example     # 将脱敏样例安装到本地 projects/sample-project
 npm run project:validate    # 使用共享核心校验项目包
@@ -110,18 +105,10 @@ npm run project:health      # 检查项目、HTML 和需求关联健康状态
 npm run quality:core        # 只检查可提交的平台底座与样例，不读取 projects 业务源码
 npm run quality             # React 类型、Lint、单测、迁移审计和正式构建
 npm run build               # 生产构建
-npm run build:vue           # 仅构建 Vue 回退版本到 dist-vue
 npm run audit:projects      # 项目包配置、页面、资源和文档完整性检查
-npm run audit:views         # 全页面迁移、路由、外壳、弹窗及 SFC 审计
-npm run audit:styles        # 样式隔离与外部样式资源审计
-npm run audit:components    # 公共组件、Composables 和示例页审计
-npm run i18n:sync           # 扫描静态界面文案并同步三份词库键
-npm run i18n:traditional    # 使用 OpenCC 在本地生成繁体词库
-npm run audit:i18n          # 检查三份词库结构和未转换数量
+npm run audit:all           # 项目包与 React 迁移边界审计
 npm run test:smoke          # React 正式入口浏览器冒烟测试
 npm run test:ui             # 同上，执行 React E2E 套件
-npm run test:e2e:vue        # 观察期 Vue 回退入口测试
-npm run test:visual         # 观察期 Vue 视觉基线比较
 npm run test:unit           # 公共组件单元测试
 ```
 
@@ -182,15 +169,7 @@ npm run project -- build-review --base /review/ --out-dir dist-review
 
 ## 新增页面
 
-页面、路由和菜单统一维护在对应项目包的 `page-definitions.js`。禁止再分别修改 Router 和菜单数组。
-
-```powershell
-npm run generate:page -- --list-projects
-npm run generate:page -- --project sample-project --list-sections admin
-npm run generate:page -- --project sample-project --client admin --path vehicle-inspection --title "车辆验车" --section assets --dry-run
-```
-
-生成器会创建使用公共组件和 scoped 样式的 Vue 页面，并同时登记路由与菜单。使用 `--hidden` 时只登记路由，不显示在侧栏。详细规则见 [COMPONENT_GUIDE.md](./COMPONENT_GUIDE.md) 和 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)。
+页面、路由和菜单统一维护在对应项目包的 `page-definitions.js`。HTML 页面放在项目包的 `html-pages/{client-id}`，可以通过页面导入工具登记，也可以手动维护页面定义；禁止分别修改平台 Router 和菜单数组。详细规则见 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)。
 
 ## 入口与路由
 
@@ -213,11 +192,11 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 
 ## 开发模式与 PRD 对照
 
-开发模式用于 PM、开发人员和内部评审。开启后，已登记 PRD 关联的业务页面会在统一外壳顶栏显示“查看 PRD”，默认以固定分屏方式同时查看原型和 PRD；也可以切换为浮层或新窗口。PRD 面板还可以下载当前页面对应的 Vue 源文件，便于开发人员辅助定位；该下载接口仅在本机 Vite 开发服务中开放。客户演示时保持关闭，不显示开发信息。
+开发模式用于 PM、开发人员和内部评审。开启后，已登记 PRD 关联的业务页面会在统一外壳顶栏显示“查看 PRD”，默认以固定分屏方式同时查看原型和 PRD；也可以切换为浮层或新窗口。PRD 面板还可以下载当前页面对应的 HTML 原型源文件，便于开发人员辅助定位；该下载接口仅在本机开发服务中开放。客户演示时保持关闭，不显示开发信息。
 
 页面与 PRD 文件的对应关系保存在项目包 `.platform/page-prd-links.json`，可在“路由菜单管理”的页面列表中直接选择、修改或清除；历史项目中的 `page-prd-links.js` 仍作为兼容读取来源。没有关联 PRD 的页面不会显示入口。开发模式可以在 `/tools/console` 开启，也可以通过业务页面 URL 的 `?__dev=1` 开启当前浏览器会话。
 
-页面来源支持两种模式：现有 HTML 导入继续生成 Vue 页面；启用项目的 `prototype` 后，也可以按客户端分别扫描 HTML 文件夹并运行原 HTML，HTML 直读页面不生成 Vue 副本。外部 HTML 默认由平台外壳承载并只显示模板内容区，也可按客户端选择保留 HTML 自身的完整外壳。
+页面来源支持两种 HTML 模式：页面导入会写入项目包的托管 HTML，启用项目的 `prototype` 后也可以按客户端扫描外部 HTML 文件夹并直接运行原 HTML。HTML 页面不再生成平台 Vue 副本；外部 HTML 默认由平台外壳承载并只显示模板内容区，也可按客户端选择保留 HTML 自身的完整外壳。历史 Vue 页面仅在页面传输需要时作为输入兼容。
 
 业务页面开发模式状态保存在工程根目录的 `platform-settings.json`，该文件已加入 `.gitignore`，只作为当前服务实例的本地配置。本机通过 Vite 开发服务保存配置，局域网访问者读取同一份配置，刷新后即可看到 PRD 和源文件入口。静态生产包只能读取构建时写入的 `platform-settings.json` 快照，不能在线修改；需要修改时应更新配置后重新构建发布。首页控制台及首页管理工具仍只保存在当前浏览器的 `sessionStorage`，不写入配置文件；`?__dev=1` 仅作为当前浏览器的临时开发模式覆盖，不会修改共享配置。
 
@@ -226,7 +205,7 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 `/tools/ai-context` 将现有项目配置、客户端页面、PRD 文档、页面级关联和组件级关联汇总为统一交付上下文。它是本地确定性分析能力，不调用外部大模型，也不会上传项目资料。
 
 - “项目概览”检查页面缺少 PRD、关联文件失效、组件关联目标失效和文档正文读取失败。
-- “页面上下文”可选择任意 Vue 或 HTML 直读页面，复制该页面及其关联需求的 JSON 上下文；业务页面在开发模式下也可从账号菜单直接打开当前页面上下文。
+- “页面上下文”可选择任意历史 Vue 或 HTML 页面，复制该页面及其关联需求的 JSON 上下文；业务页面在开发模式下也可从账号菜单直接打开当前页面上下文。
 - “关联建议”根据页面标题、路由、源文件名、菜单分组和 PRD 文件信息生成候选，只有本机开发环境中由用户确认后才写入 `.platform/page-prd-links.json`。
 - “PRD 影响分析”把当前文档摘要与浏览器本地基线比较，并通过已有页面/组件关联列出潜在影响范围；基线只存入 `localStorage`，不写入 PRD 或项目包。
 - “追溯矩阵”按页面汇总页面来源、页面级 PRD、组件级章节关联和待处理问题，并支持导出 JSON。
@@ -268,30 +247,13 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 
 ## 多语言机制
 
-当前工程采用两套机制：
-
-1. 统一外壳、首页、登录页和文档中心使用 Vue I18n 结构化 key。
-2. 历史迁移业务页面保留简体中文原文，由 `legacy-localizer.js` 按精确文案从词库映射替换，并处理 Element Plus Teleport 弹窗。
-
-- `src/i18n/catalog/zh-CN.json`：静态界面原文。
-- `src/i18n/catalog/zh-TW.json`：离线 OpenCC 生成的繁体文案。
-- `src/i18n/catalog/en-US.json`：英文静态文案。
-- `src/i18n/legacy-localizer.js`：处理历史页面及 Element Plus Teleport 弹窗。
-
-后续新页面只需完成简体中文页面，不要求同步繁中、英文词库，也不要求把全部页面文字改写为 `$t()`。只有明确提出某个页面需要翻译时，才执行 `npm run i18n:sync`、补充该页面目标语言并运行 `npm run audit:i18n`。
-
-精确文案映射适合静态标题、按钮、表头、提示和常见属性，通常不需要改动原 Vue 页面。以下情况需要定点调整 Vue：包含变量的动态句子、同一中文文案在不同语境需要不同译法、ECharts/Canvas 内文字、由接口返回的业务内容，以及翻译后长度变化导致的布局问题。模拟数据、姓名、车牌、订单号和业务记录默认不翻译。
-
-`npm run i18n:translate:english` 会调用公共翻译服务，因此脚本默认拒绝执行。仅在项目负责人明确允许发送静态界面文案后，设置 `ALLOW_PUBLIC_TRANSLATION=yes` 才可运行。
+React 平台保留 i18next 基础设施，但当前只提供简体中文，不显示无法实际切换的语言入口。项目 HTML 原型中的业务模拟数据、姓名、车牌、订单号和业务记录默认不翻译；只有产品负责人明确提出某个页面和目标语言后，才扩展对应的语言资源。
 
 ## 组件化底座
 
-- `src/styles/tokens.css` 统一颜色、字号、间距、边框、圆角和控件尺寸。
-- 工程主色只在 `src/styles/tokens.css` 定义，并统一驱动 Element Plus、Tailwind、CSS 和图表颜色；`npm run audit:theme` 用于阻止页面重新写死主色。
-- `src/components/ui` 提供页面标题、内容面板、筛选栏、统计卡片、表格工具栏、分页、状态标签和弹窗底部。
-- `src/composables` 提供分页、筛选重置、统计选择、弹窗状态和 ECharts 生命周期逻辑。
-- `/components` 集中展示组件状态和交互，供新页面开发及评审使用。
-- 历史迁移页面可使用 `PageHeader` 无样式模式接入公共页面结构，同时保持原页面视觉基线。
+- `apps/platform-react/src/features/theme` 统一维护 Ant Design Design Token、项目主题色和主题模式。
+- `apps/platform-react/src/ui` 提供平台页面、外壳、表面容器和 Ant Design 组件入口。
+- `apps/platform-react/src/features` 按项目、路由、文档、原型和主题拆分可复用领域能力。
 
 详细规则见 [COMPONENT_GUIDE.md](./COMPONENT_GUIDE.md)。
 
@@ -315,28 +277,28 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 
 ```powershell
 npm run lint:app      # React 正式平台 ESLint
-npm run lint          # 全工程 ESLint；包含观察期 Vue 回退代码和本地项目包
-npm run format        # Prettier：仅格式化工程底座和公共组件
+npm run lint          # 全工程 ESLint；包含平台底座、核心包和本地项目包
+npm run format        # Prettier：格式化平台底座、核心包和模板
 npm run format:check  # 检查格式，不写文件
-npm run audit:all     # 页面、样式、组件、多语言和保真审计
+npm run audit:all     # 项目包与 React 迁移边界审计
 npm run quality:check # Lint、格式、审计和生产构建
 npm run ci:check      # React 静态门禁和专用浏览器冒烟测试
 ```
 
-历史迁移页面不执行 Prettier 批量格式化，ESLint 对其采用兼容规则；新页面和工程底座执行严格规则。仓库 CI 位于 `.github/workflows/prototype-quality.yml`，提交涉及本工程或 PRD 文档时会自动执行质量检查、构建、组件单元测试和浏览器冒烟测试。
+HTML 原型保持源文件自身格式，React 平台和工程底座执行严格规则。仓库 CI 位于 `.github/workflows/prototype-quality.yml`，提交涉及本工程或 PRD 文档时会自动执行质量检查、构建、组件单元测试和浏览器冒烟测试。
 
 ## 自动化验收
 
 - 路由冒烟测试自动扫描全部有效项目包及其 `page-definitions.js`，检查页面可见性、内容区和浏览器运行错误。
 - 关键交互覆盖登录、客户端切换、退出、弹窗、抽屉、统计卡片、分页和文档搜索。
 - 高频演示页面可建立固定视口的 Chromium 视觉基线。
-- 已确认的视觉变更才允许执行 `npm run test:visual:update`，不得用更新基线掩盖页面回归。
+- 已确认的视觉变更才允许更新 React 浏览器测试基线，不得用更新基线掩盖页面回归。
 
 完整规则见 [TESTING_GUIDE.md](./TESTING_GUIDE.md)。
 
 ## 验证状态
 
-- 工程提供严格 SFC 编译、路由、菜单、外壳、弹窗和样式审计能力。
+- 工程提供 React 路由、菜单、外壳、弹窗和原型承载审计能力。
 - 自动化测试覆盖公共组件、项目包扫描、路由冒烟、关键交互和视觉基线。
 - 文档中心和移动端演示支持本地资源构建，不依赖外部 CDN。
 - 生产构建和质量检查命令已纳入本地脚本及 GitHub Actions。

@@ -34,9 +34,6 @@ npx playwright install chromium
 ```powershell
 npm run test:smoke          # React 正式入口浏览器冒烟测试
 npm run test:ui             # 同上，执行 React E2E 套件
-npm run test:e2e:vue        # 观察期 Vue 回退入口测试
-npm run test:visual         # 观察期 Vue 视觉截图基线比较
-npm run test:visual:update  # 重新生成视觉基线，仅限已确认的视觉变更
 npm run test:unit           # 公共组件 Props、Slots、事件和交互状态单元测试
 npm run test                # React 平台组件与纯逻辑测试
 npm run test:e2e            # React 正式入口浏览器冒烟测试
@@ -47,7 +44,7 @@ npm run project -- health [--project <id>] # 项目包、HTML 和追溯健康检
 
 失败时的截图、Trace 和 HTML 报告输出到 `output/playwright/`，该目录不提交 Git。
 
-视觉基线保存在 `tests/visual/baselines/`，需要纳入版本管理。
+视觉基线保存在 `tests/visual/baselines/`，需要纳入版本管理；当前正式入口为 React。
 
 ## 4. 当前覆盖
 
@@ -57,7 +54,7 @@ npm run project -- health [--project <id>] # 项目包、HTML 和追溯健康检
 
 ### 组件单元测试
 
-React 单元测试位于 `apps/platform-react`，使用 Vitest、Testing Library 和 jsdom；框架无关核心测试位于 `tests/unit`。两类测试都不需要启动浏览器。Vue Test Utils 仅用于观察期回退代码。
+React 单元测试位于 `apps/platform-react`，使用 Vitest、Testing Library 和 jsdom；框架无关核心测试位于 `tests/unit`。两类测试都不需要启动浏览器。
 
 新增或调整公共组件时，必须补充对应测试并执行 npm run test:unit。业务页面的具体字段、模拟数据和视觉保真仍由 Playwright 冒烟与视觉基线覆盖。
 
@@ -88,15 +85,15 @@ React 单元测试位于 `apps/platform-react`，使用 Vitest、Testing Library
 
 1. 新增页面并接入正式路由。
 2. 执行 `npm run test:smoke`，确认页面可打开且无脚本错误。
-3. 高频演示页面、公共页面或高风险页面加入 `tests/e2e-vue/visual.spec.js`。
-4. 页面存在关键弹窗或业务操作时，在 `tests/e2e-vue/interactions.spec.js` 增加交互检查。
-5. 执行 `npm run test:visual` 和 `npm run build`。
+3. 高频演示页面、公共页面或高风险页面加入 React E2E 视觉检查。
+4. 页面存在关键弹窗或业务操作时，在 `tests/e2e/` 对应测试中增加交互检查。
+5. 执行 `npm run test:e2e` 和 `npm run build`。
 
 ## 6. 视觉基线更新规则
 
 视觉测试失败时，先查看失败报告中的期望图、实际图和差异图。
 
-只有以下条件全部满足时才允许执行 `npm run test:visual:update`：
+只有以下条件全部满足时才允许更新视觉基线：
 
 1. 页面变化属于已经确认的需求或设计调整。
 2. 按钮、弹窗、文字、边框、间距和响应式布局均已人工确认。
@@ -117,7 +114,7 @@ npm run quality:core
 
 `quality:check` 执行 ESLint、Prettier 检查、全部静态审计和生产构建；`ci:check` 在此基础上增加组件单元测试和浏览器冒烟测试。
 
-`quality:core` 是开源仓库和平台底座的稳定门禁，只检查可提交的 `src`、`plugins`、`packages`、脚本、测试、模板和脱敏样例，不扫描被 Git 忽略的真实 `projects` 业务源码。真实项目包应另外执行 `npm run lint`、`npm run project:health` 和相应的业务验收；两类结果不能混为一谈。
+`quality:core` 是开源仓库和平台底座的稳定门禁，只检查可提交的 `apps`、`plugins`、`packages`、脚本、测试、模板和脱敏样例，不扫描被 Git 忽略的真实 `projects` 业务源码。真实项目包应另外执行 `npm run lint`、`npm run project:health` 和相应的业务验收；两类结果不能混为一谈。
 
 GitHub Actions 配置位于仓库根目录 `.github/workflows/prototype-quality.yml`，会执行 `quality:core`。由于真实项目包不提交到仓库，CI 不假定存在客户资料，也不会上传项目 PRD。
 

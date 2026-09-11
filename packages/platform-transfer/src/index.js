@@ -2301,10 +2301,110 @@ async function writeExportWorkspace({
   );
   const i18nImport = relativeModuleImport(workDir, path.join(exportI18nDir, 'index.js'));
   const localizerImport = relativeModuleImport(workDir, path.join(exportI18nDir, 'legacy-localizer.js'));
-  const appShellSource = await fsp.readFile(
-    path.join(PLATFORM_ROOT, 'src', 'components', 'AppShell.vue'),
-    'utf8',
-  );
+  const appShellSource = `<template>
+  <div class="export-shell" :class="{ 'is-topnav': layoutType === 'topnav', 'is-bare': layoutType === 'bare' }">
+    <aside v-if="hasSidebar" class="export-sidebar">
+      <div class="export-brand" :title="appName">
+        <span class="export-brand-mark">{{ appName.slice(0, 1) }}</span>
+        <div>
+          <strong>{{ appName }}</strong>
+          <small>{{ clientName }}</small>
+        </div>
+      </div>
+      <nav class="export-sidebar-nav" aria-label="页面导航">
+        <section v-for="section in menus" :key="section.title" class="export-menu-section">
+          <h2>{{ section.title }}</h2>
+          <a
+            v-for="item in section.items"
+            :key="item.path"
+            :href="exportFileFor(item.path)"
+            class="export-menu-item"
+            :class="{ 'is-active': route.path === item.path }"
+            @click="handleNavigate"
+          >
+            <el-icon v-if="item.icon"><component :is="item.icon" /></el-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        </section>
+      </nav>
+    </aside>
+    <main class="export-main">
+      <header v-if="hasPlatformTopbar" class="export-topbar">
+        <strong>{{ appName }}</strong>
+        <span>{{ clientName }}</span>
+      </header>
+      <div class="export-page-container"><RouterView /></div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  appName: { type: String, default: '页面演示' },
+  clientName: { type: String, default: '' },
+  layoutType: { type: String, default: 'sidebar' },
+  menus: { type: Array, default: () => [] },
+});
+
+const route = useRoute();
+const appName = computed(() => props.appName);
+const clientName = computed(() => props.clientName);
+const layoutType = computed(() => props.layoutType);
+const menus = computed(() => props.menus);
+const hasSidebar = computed(() => !['topnav', 'none', 'bare'].includes(layoutType.value));
+const hasPlatformTopbar = computed(() => layoutType.value !== 'bare');
+
+function exportFileFor(target) {
+  const normalized = String(target || '').replace(/^\\/+|\\/+$/g, '');
+  const entry = window.__PROJECT_EXPORT__?.pages?.find((page) => page.path === normalized || page.routePath === normalized);
+  return entry?.file ? './' + entry.file + '#' + normalized : '#' + normalized;
+}
+
+function handleNavigate() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+<style>
+:root {
+  --export-primary: var(--app-color-primary, #1677ff);
+  --export-surface: var(--app-color-surface, #ffffff);
+  --export-page: var(--app-color-page, #f5f7fa);
+  --export-text: var(--app-color-text-primary, rgb(0 0 0 / 88%));
+  --export-muted: var(--app-color-text-secondary, rgb(0 0 0 / 65%));
+  --export-border: var(--app-color-border-light, #f0f0f0);
+}
+
+html, body, #app { min-height: 100%; margin: 0; }
+body { background: var(--export-page); color: var(--export-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.export-shell { display: flex; min-height: 100vh; background: var(--export-page); }
+.export-shell.is-topnav, .export-shell.is-bare { display: block; }
+.export-sidebar { display: flex; width: 240px; flex: 0 0 240px; flex-direction: column; border-right: 1px solid var(--export-border); background: var(--export-surface); }
+.export-brand { display: flex; gap: 10px; align-items: center; min-height: 64px; padding: 12px 18px; border-bottom: 1px solid var(--export-border); }
+.export-brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 8px; background: var(--export-primary); color: #fff; font-weight: 700; }
+.export-brand strong, .export-brand small { display: block; }
+.export-brand small { margin-top: 3px; color: var(--export-muted); font-size: 12px; }
+.export-sidebar-nav { flex: 1; overflow: auto; padding: 14px 10px; }
+.export-menu-section + .export-menu-section { margin-top: 14px; }
+.export-menu-section h2 { margin: 0 10px 5px; color: var(--export-muted); font-size: 12px; font-weight: 500; }
+.export-menu-item { display: flex; gap: 8px; align-items: center; min-height: 36px; padding: 0 10px; border-radius: 6px; color: var(--export-text); text-decoration: none; }
+.export-menu-item:hover { background: color-mix(in srgb, var(--export-primary) 8%, transparent); }
+.export-menu-item.is-active { background: color-mix(in srgb, var(--export-primary) 14%, transparent); color: var(--export-primary); font-weight: 600; }
+.export-main { min-width: 0; flex: 1; }
+.export-topbar { display: flex; min-height: 56px; align-items: center; gap: 12px; padding: 0 24px; border-bottom: 1px solid var(--export-border); background: var(--export-surface); }
+.export-topbar span { color: var(--export-muted); }
+.export-page-container { min-height: calc(100vh - 57px); }
+.is-topnav .export-topbar { justify-content: center; }
+.is-topnav .export-page-container, .is-bare .export-page-container { min-height: 100vh; }
+@media (max-width: 800px) {
+  .export-sidebar { width: 200px; flex-basis: 200px; }
+  .export-topbar { padding: 0 16px; }
+}
+</style>
+`;
   await fsp.writeFile(
     path.join(workDir, 'PrdReviewPanel.vue'),
     '<template><span class="export-prd-placeholder" aria-hidden="true"></span></template>\n',
@@ -2334,10 +2434,23 @@ export async function setPlatformDeveloperMode() { return platformSettings; }
     'utf8',
   );
   const exportProjectNavigationImport = './export-project-navigation.js';
-  await fsp.copyFile(
-    path.join(PLATFORM_ROOT, 'src', 'services', 'project-navigation.js'),
-    path.join(workDir, 'export-project-navigation.js'),
-  );
+  const exportProjectNavigationSource = `
+export function normalizePagePath(value) {
+  return String(value || '').trim().replace(/^\\/+|\\/+$/g, '');
+}
+export function getClientDefaultPagePath(client) {
+  const pages = Array.isArray(client?.definition?.pages) ? client.definition.pages : [];
+  const configured = normalizePagePath(client?.defaultPage);
+  if (configured && pages.some((page) => normalizePagePath(page?.path) === configured)) return configured;
+  return normalizePagePath(pages.find((page) => page?.menu !== false)?.path || pages[0]?.path || '');
+}
+export function getProjectClientEntryPath(projectId, client) {
+  const root = '/p/' + projectId + '/' + (client?.id || '');
+  const page = getClientDefaultPagePath(client);
+  return page ? root + '/' + page : root;
+}
+`;
+  await fsp.writeFile(path.join(workDir, 'export-project-navigation.js'), exportProjectNavigationSource, 'utf8');
   await fsp.writeFile(
     path.join(workDir, 'export-router.js'),
     `const projectId = ${JSON.stringify(projectPackage.projectId)};
@@ -2376,20 +2489,31 @@ export default router;
     'utf8',
   );
   const exportSourceRoot = path.join(workDir, 'export-src');
-  await fsp.cp(
-    path.join(PLATFORM_ROOT, 'src', 'components', 'ui'),
-    path.join(exportSourceRoot, 'components', 'ui'),
-    { recursive: true },
+  await fsp.mkdir(path.join(exportSourceRoot, 'components', 'ui'), { recursive: true });
+  await fsp.mkdir(path.join(exportSourceRoot, 'services'), { recursive: true });
+  await fsp.writeFile(
+    path.join(exportSourceRoot, 'services', 'project-navigation.js'),
+    exportProjectNavigationSource,
+    'utf8',
   );
   await fsp.mkdir(path.join(exportSourceRoot, 'config'), { recursive: true });
-  await fsp.copyFile(
-    path.join(PLATFORM_ROOT, 'src', 'config', 'theme.js'),
-    path.join(exportSourceRoot, 'config', 'theme.js'),
-  );
+  await fsp.writeFile(path.join(exportSourceRoot, 'config', 'theme.js'), 'export const theme = Object.freeze({});\n', 'utf8');
   await fsp.mkdir(path.join(exportSourceRoot, 'composables'), { recursive: true });
-  await fsp.copyFile(
-    path.join(PLATFORM_ROOT, 'src', 'composables', 'useChartRegistry.js'),
+  await fsp.writeFile(
     path.join(exportSourceRoot, 'composables', 'useChartRegistry.js'),
+    'export function useChartRegistry() { return { registerChart() {}, unregisterChart() {} }; }\n',
+    'utf8',
+  );
+  await fsp.mkdir(path.join(exportSourceRoot, 'styles'), { recursive: true });
+  await fsp.writeFile(
+    path.join(exportSourceRoot, 'styles', 'tokens.css'),
+    ':root { --app-color-primary: #1677ff; --app-color-page: #f5f7fa; --app-color-surface: #ffffff; --app-color-text-primary: rgb(0 0 0 / 88%); --app-color-text-secondary: rgb(0 0 0 / 65%); --app-color-border-light: #f0f0f0; }\n',
+    'utf8',
+  );
+  await fsp.writeFile(
+    path.join(exportSourceRoot, 'styles', 'base.css'),
+    '*, *::before, *::after { box-sizing: border-box; } body { margin: 0; }\n',
+    'utf8',
   );
   await fsp.mkdir(path.join(exportSourceRoot, 'router'), { recursive: true });
   await fsp.writeFile(
@@ -2407,11 +2531,8 @@ export default router;
     .replace("'../services/platform-settings'", JSON.stringify(exportPlatformSettingsImport));
   await fsp.writeFile(path.join(workDir, 'ExportAppShell.vue'), exportAppShellSource, 'utf8');
   const appShellImport = './ExportAppShell.vue';
-  const tokensImport = relativeModuleImport(workDir, path.join(PLATFORM_ROOT, 'src', 'styles', 'tokens.css'));
-  const baseStyleImport = relativeModuleImport(
-    workDir,
-    path.join(PLATFORM_ROOT, 'src', 'styles', 'base.css'),
-  );
+  const tokensImport = relativeModuleImport(workDir, path.join(exportSourceRoot, 'styles', 'tokens.css'));
+  const baseStyleImport = relativeModuleImport(workDir, path.join(exportSourceRoot, 'styles', 'base.css'));
 
   const layoutImports = [];
   const routeGroups = [];

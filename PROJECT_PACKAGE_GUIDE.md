@@ -20,7 +20,7 @@ projects/{project-id}/
 ├─ .platform/
 │  └─ page-prd-links.json       页面级 PRD 文件关联配置（工具页维护）
 ├─ html-pages/{client-id}/      React 平台导入并管理的 HTML 页面
-├─ views/{client-id}/           可选：观察期遗留 Vue 页面，React 不执行
+├─ views/{client-id}/           可选：历史 Vue 页面资料，React 不执行
 ├─ assets/                      Logo、登录背景和项目图片
 ├─ data/                        可选的项目级模拟数据
 ├─ docs/                        可选的项目文档
@@ -89,7 +89,7 @@ npm run project:example
 每个客户端在 `page-definitions.js` 中维护：
 
 - `sections`：侧栏菜单分组和顺序。
-- `pages`：路由片段、页面名、标题、Vue 文件、菜单分组和图标。
+- `pages`：路由片段、页面名、标题、HTML 来源或历史 Vue 文件、菜单分组和图标。
 - `// <generator:{client-id}-pages>`：页面生成器和 HTML 导入工具的写入位置。
 
 开发模式下，页面对应的 PRD 在项目包 `.platform/page-prd-links.json` 中维护，按客户端和页面名称关联项目 `docs` 目录下的 Markdown 文件。可进入“路由菜单管理”，在页面列表中点击“关联 PRD”完成选择、修改和清除；历史项目中的 `page-prd-links.js` 仍作为兼容读取来源。页面进入统一内部外壳后，可在不离开原型的情况下查看对应 PRD；没有登记关联文档的页面不显示 PRD 入口。
@@ -101,15 +101,7 @@ npm run project:example
 /p/{project-id}/{client-id}/{page-path}
 ```
 
-新增页面优先使用生成器：
-
-```powershell
-npm run generate:page -- --list-projects
-npm run generate:page -- --project sample-project --list-sections admin
-npm run generate:page -- --project sample-project --client admin --path example-page --title "示例页面" --section workspace
-```
-
-生成页面会写入 `projects/{project-id}/views/{client-id}`，并同步登记菜单和路由。
+新增业务页面优先复制 `templates/html-prototype-page.html` 制作 HTML，再通过“页面导入导出”登记；也可以在路由菜单管理中新增 HTML 占位页面。页面文件写入 `projects/{project-id}/html-pages/{client-id}`，并同步登记菜单和路由。历史 Vue 页面仍可被项目扫描和页面传输工具识别，但不作为 React 平台运行入口。
 
 ## 5. 插拔行为
 
@@ -117,7 +109,7 @@ npm run generate:page -- --project sample-project --client admin --path example-
 
 生产构建是项目包的发布快照：
 
-- 构建时存在的项目包会被编译到 `dist`。
+    - 构建时存在的项目包会生成到 `dist` 的项目快照。
 - 构建完成后仅移动源码项目文件夹，不会改变已经生成的 `dist`。
 - 服务器需要增加、移除或更新项目包时，必须重新执行 `npm run build` 并发布新的 `dist`。
 
@@ -169,7 +161,7 @@ npm run project -- mounts
 - 开发模式只面向 PM、开发人员和内部评审，不影响客户演示页面。
 - 在控制台开启开发模式后，进入已关联 PRD 的业务页面，顶栏会显示“查看 PRD”。
 - 默认采用固定分屏；PRD 面板也可以切换为浮层或新窗口打开。
-- PRD 面板提供“下载源文件”，按当前页面定义中的 `view` 自动下载对应的 Vue 文件，仅在本机 Vite 开发服务中开放，用于开发辅助，不会把项目源码发布到生产构建。
+- PRD 面板提供“下载源文件”，按当前页面定义中的 HTML 来源下载对应的原型文件，仅在本机开发服务中开放，用于开发辅助，不会把项目源码发布到生产构建；历史 Vue 页面只在兼容读取场景下保留原始来源。
 - 直接访问业务页面并附加 `?__dev=1` 也可以开启当前浏览器会话的开发模式。
 - 页面与 PRD 的关联文件不存在或未登记时，页面不显示无效入口。
 
@@ -178,7 +170,7 @@ npm run project -- mounts
 页面导入导出工具会先选择目标项目：
 
 - 导入时，客户端、菜单分组和目标目录都来自所选项目包。
-- 导入后的 Vue 页面写入所选项目的 `views`，页面登记写入该项目的 `page-definitions.js`。
+- 导入后的 HTML 页面写入所选项目的 `html-pages/{client-id}`，页面登记写入该项目的 `page-definitions.js`。
 - 导出时只展示所选项目的页面，输出目录按项目隔离。
 - 单页输出独立 HTML，多页输出 ZIP；导出包不包含其他项目页面。
 
@@ -219,7 +211,7 @@ npm run project -- preflight --file D:\prototypes\page.html
 
 项目级综合检查使用 `npm run project:health`，会同时报告挂载目录、HTML 基础契约、页面 PRD 覆盖率和失效关联。
 
-项目包不得修改外壳的 `src/components`、`src/layouts`、`src/router` 或公共主题底座。确实可跨项目复用的能力才进入公共组件；项目业务字段、模拟数据和专属资源留在项目包内。
+项目包不得修改外壳的 `apps/platform-react/src/ui`、`apps/platform-react/src/app`、平台路由或公共主题底座。确实可跨项目复用的能力才进入公共组件；项目业务字段、模拟数据和专属资源留在项目包内。
 
 ## 版本记录
 

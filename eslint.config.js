@@ -56,7 +56,7 @@ export default [
     },
   },
   {
-    files: ['src/**/*.{js,vue}', 'projects/*/page-definitions.js', 'projects/*/views/**/*.{js,vue}'],
+    files: ['projects/*/page-definitions.js', 'projects/*/views/**/*.{js,vue}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -75,9 +75,7 @@ export default [
       'scripts/**/*.{js,cjs,mjs}',
       'plugins/**/*.js',
       'vite.config.js',
-      'vite.vue.config.js',
       'playwright.config.js',
-      'playwright.vue.config.js',
     ],
     languageOptions: {
       ecmaVersion: 'latest',
@@ -133,8 +131,6 @@ export default [
   },
   {
     files: [
-      'src/views/operation/**/*.vue',
-      'src/views/enterprise/**/*.vue',
       'projects/*/views/operation/**/*.vue',
       'projects/*/views/enterprise/**/*.vue',
     ],
