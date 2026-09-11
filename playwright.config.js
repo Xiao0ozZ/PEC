@@ -7,13 +7,9 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 8_000 },
   outputDir: 'output/playwright/test-results',
-  snapshotPathTemplate: '{testDir}/../visual/baselines/{projectName}/{arg}{ext}',
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'output/playwright/report', open: 'never' }],
-  ],
+  reporter: [['list'], ['html', { outputFolder: 'output/playwright/report', open: 'never' }]],
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: 'http://127.0.0.1:4174',
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1440, height: 900 },
@@ -25,11 +21,10 @@ export default defineConfig({
     video: 'off',
   },
   webServer: {
-    command: 'npm run dev:vue -- --host 127.0.0.1 --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173',
+    command: 'npm run dev -- --host 127.0.0.1 --port 4174 --strictPort',
+    url: 'http://127.0.0.1:4174',
     reuseExistingServer: true,
     timeout: 120_000,
   },
   projects: [{ name: 'chromium' }],
 });
-

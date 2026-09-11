@@ -5,7 +5,10 @@ import path from 'node:path';
 import process from 'node:process';
 
 import { loadProjectMounts } from '../../project-core/src/index.js';
+import { formatPlatformServerAddresses } from './addresses.js';
 import { createPlatformServer } from './index.js';
+
+export { formatPlatformServerAddresses };
 
 const OPTION_NAMES = new Set([
   '--host',
@@ -127,32 +130,6 @@ export async function validatePlatformServerRuntime(
     }
   }
   return options;
-}
-
-function lanAddresses(networkInterfaces) {
-  const addresses = [];
-  for (const entries of Object.values(networkInterfaces || {})) {
-    for (const item of entries || []) {
-      if (item?.family !== 'IPv4' || item.internal || !item.address) continue;
-      addresses.push(item.address);
-    }
-  }
-  return [...new Set(addresses)].sort();
-}
-
-export function formatPlatformServerAddresses(
-  host,
-  port,
-  { networkInterfaces = os.networkInterfaces() } = {},
-) {
-  if (host === '0.0.0.0' || host === '::') {
-    return {
-      local: `http://127.0.0.1:${port}`,
-      lan: lanAddresses(networkInterfaces).map((address) => `http://${address}:${port}`),
-    };
-  }
-  const displayHost = host === '::1' ? '[::1]' : host;
-  return { local: `http://${displayHost}:${port}`, lan: [] };
 }
 
 export async function startPlatformServerRuntime(

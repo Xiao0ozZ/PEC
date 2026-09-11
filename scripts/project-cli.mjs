@@ -7,25 +7,24 @@ import { fileURLToPath } from 'node:url';
 
 import {
   PROJECT_ID_PATTERN,
+  REVIEW_SNAPSHOT_FILE_NAME,
+  applyProjectMigration,
   createContextBaseline,
-  createDocumentManifest,
+  createPageContextPackage,
   createProjectHealthReport,
-  createProjectContext,
+  createReviewSnapshotManifest,
   createTraceabilityReport,
   inspectHtmlPrototype,
-  importJavaScriptFile,
+  loadProjectAiContext,
   loadProjectMounts,
-  migrateProjectManifest,
   normalizeProjectMounts,
-  normalizePagePrdLinks,
-  normalizePrdBindings,
+  planProjectMigration,
   readJsonFile,
-  resolveProjectDocsRoot,
   resolveProjectRoot,
   scanProjectPackages,
+  scanProjectSchemaVersions,
   writeJsonAtomic,
 } from '../packages/project-core/src/index.js';
-import { scanHtmlPrototypePages } from '../packages/project-core/src/index.js';
 
 const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -59,13 +58,14 @@ function printHelp() {
   npm run project -- validate [--projects-root projects] [--json]
   npm run project -- init --id sample --name "示例项目" [--projects-root projects]
   npm run project -- install-example [--id sample-project] [--projects-root projects]
-  npm run project -- migrate --project sample [--write]
+  npm run project -- migrate [--project sample] [--scan] [--json] [--write]
   npm run project -- mounts [--json]
   npm run project -- mount --project sample [--root D:\\project] [--docs D:\\docs] [--prototype admin=D:\\html]
   npm run project -- health [--project sample] [--json]
   npm run project -- preflight --file prototypes/page.html [--json]
   npm run project -- snapshot --project sample [--output output/context-baseline.json]
   npm run project -- trace --project sample [--baseline output/context-baseline.json] [--output output/traceability.json]
+  npm run project -- context --project sample --page admin/dashboard [--output output/page-context.json]
   npm run project -- serve [--host 127.0.0.1] [--port 5188]
   npm run project -- build-review [--base /] [--out-dir dist]
 
@@ -73,13 +73,14 @@ function printHelp() {
   validate      校验全部项目包，不写入文件。
   init          从标准模板创建最小项目包，目标目录存在时拒绝覆盖。
   install-example 安装仓库内置的可运行示例，目标目录存在时拒绝覆盖。
-  migrate       预览项目配置迁移；只有 --write 才写回 project.json。
+  migrate       扫描项目包 schemaVersion；指定 --project 时展示差异和备份位置，只有 --write 才写回。
   mounts        查看仅保存在本机的项目资料挂载。
   mount         设置或清除完整项目、PRD 或 HTML 外部目录，不修改源文件。
   health        检查项目包、挂载目录、HTML 原型和需求关联健康状态。
   preflight     检查单个 HTML 是否符合独立预览、直读和导入的基础契约。
   snapshot      保存项目 PRD 上下文基线，用于后续差异和影响分析。
   trace         导出页面、PRD、组件关联覆盖率和相对基线的影响清单。
+  context       导出单个页面的完整交付上下文（主题、来源、PRD、组件关联与章节）。
   serve         启动当前工程的 Vite 开发服务。
   build-review  生成静态评审快照，不修改项目包。`);
 }
@@ -92,96 +93,49 @@ async function loadWorkspaceMounts() {
   return loadProjectMounts(mountsPath());
 }
 
-async function readDefinitions(projectRoot, manifest) {
-  const definitionsPath = path.resolve(projectRoot, manifest.pageDefinitions || 'page-definitions.js');
-  const module = await importJavaScriptFile(definitionsPath, { cacheKey: `cli-${Date.now()}` });
-  return module.clientPageDefinitions || module.default;
-}
-
-function mergeClientPages(definitions, htmlPages = {}) {
-  return Object.fromEntries(
-    Object.entries(definitions || {}).map(([clientId, definition]) => {
-      const pages = [...(definition.pages || [])];
-      const existingPaths = new Set(pages.map((page) => page.path));
-      for (const page of htmlPages[clientId] || []) {
-        if (!existingPaths.has(page.path)) pages.push(page);
-      }
-      return [clientId, { ...definition, pages }];
-    }),
-  );
-}
-
-function mergePageLinks(baseLinks, overrideLinks) {
-  const merged = Object.fromEntries(
-    Object.entries(baseLinks || {}).map(([clientId, pages]) => [clientId, { ...(pages || {}) }]),
-  );
-  for (const [clientId, pages] of Object.entries(overrideLinks || {})) {
-    merged[clientId] ||= {};
-    for (const [pageName, documentPath] of Object.entries(pages || {})) {
-      if (documentPath === null || documentPath === '') delete merged[clientId][pageName];
-      else merged[clientId][pageName] = documentPath;
-    }
-  }
-  return merged;
-}
-
-async function readLegacyPageLinks(projectRoot) {
-  const filePath = path.join(projectRoot, 'page-prd-links.js');
-  const exists = await fs
-    .stat(filePath)
-    .then(() => true)
-    .catch(() => false);
-  if (!exists) return {};
-  const module = await importJavaScriptFile(filePath, { cacheKey: `legacy-links-${Date.now()}` });
-  return module.default || module.pagePrdLinks || {};
-}
-
 async function loadContextInput(projectsRoot, projectId) {
-  const mounts = await loadWorkspaceMounts();
-  const projectRoot = resolveProjectRoot(projectsRoot, projectId, mounts);
-  const manifest = await readJsonFile(path.join(projectRoot, 'project.json'));
-  const definitions = mergeClientPages(
-    await readDefinitions(projectRoot, manifest),
-    (await scanHtmlPrototypePages(projectsRoot, { mounts })).projects[projectId],
-  );
-  const docsRoot = manifest.docs?.enabled ? resolveProjectDocsRoot(manifest, projectRoot, mounts) : '';
-  const documentManifest = docsRoot
-    ? await createDocumentManifest(docsRoot)
-    : { generatedAt: new Date().toISOString(), documents: [] };
-  const documentSources = {};
-  for (const document of documentManifest.documents) {
-    documentSources[document.path] = await fs.readFile(
-      path.join(docsRoot, ...document.path.split('/')),
-      'utf8',
-    );
+  // 上下文装载统一走 project-core 共享加载器，CLI 只补充本机挂载来源。
+  return loadProjectAiContext(projectsRoot, projectId, { mounts: await loadWorkspaceMounts() });
+}
+
+async function contextCommand(args) {
+  const projectId = String(args.project || '').trim();
+  if (!PROJECT_ID_PATTERN.test(projectId)) throw new Error('context 需要有效的 --project。');
+  const pageReference = String(args.page || '').trim();
+  if (!pageReference) {
+    throw new Error('context 需要 --page，例如 admin/dashboard 或页面 name。');
   }
-  const platformRoot = path.join(projectRoot, '.platform');
-  const linksPayload = normalizePagePrdLinks(
-    projectId,
-    await readJsonFile(path.join(platformRoot, 'page-prd-links.json'), { fallback: {} }),
-  );
-  const pagePrdLinks = mergePageLinks(await readLegacyPageLinks(projectRoot), linksPayload.links);
-  const bindingsPayload = normalizePrdBindings(
-    projectId,
-    await readJsonFile(path.join(platformRoot, 'prd-bindings.json'), { fallback: {} }),
-  );
-  return createProjectContext({
-    project: {
-      ...manifest,
-      clients: (manifest.clients || []).map((client) => ({ ...client, definition: definitions[client.id] })),
-      pagePrdLinks,
-    },
-    documentManifest,
-    documentSources,
-    bindings: bindingsPayload.bindings,
-  });
+  const projectsRoot = resolveFromWorkspace(args['projects-root'], 'projects');
+  const context = await loadContextInput(projectsRoot, projectId);
+  const fullPath = pageReference.startsWith('/p/')
+    ? pageReference
+    : pageReference.includes('/')
+      ? `/p/${projectId}/${pageReference}`
+      : pageReference;
+  const payload = createPageContextPackage(context, fullPath);
+  if (!payload) throw new Error(`找不到页面：${pageReference}`);
+  if (args.output) {
+    const output = resolveFromWorkspace(args.output, '');
+    await writeJsonAtomic(output, payload);
+    console.log(`页面交付上下文已生成：${output}`);
+  } else {
+    console.log(JSON.stringify(payload, null, 2));
+  }
 }
 
 async function preflightCommand(args) {
   const filePath = resolveFromWorkspace(args.file, '');
   if (!args.file) throw new Error('preflight 需要 --file。');
+  // 互链存在性按同目录兄弟页面判断；单文件场景（如粘贴内容）没有目录上下文时跳过。
+  const fileDirectory = path.dirname(filePath);
+  const knownFiles = new Set(
+    (await fs.readdir(fileDirectory))
+      .filter((name) => /\.(?:html?|htm)$/iu.test(name))
+      .map((name) => path.relative(fileDirectory, path.join(fileDirectory, name)).split(path.sep).join('/')),
+  );
   const result = inspectHtmlPrototype(await fs.readFile(filePath, 'utf8'), {
     fileName: path.basename(filePath),
+    knownFiles,
   });
   if (args.json) console.log(JSON.stringify(result, null, 2));
   else {
@@ -405,32 +359,100 @@ async function installExampleCommand(args) {
   console.log(`示例项目已安装：${targetRoot}`);
 }
 
-async function migrateCommand(args) {
-  const projectId = String(args.project || '').trim();
-  if (!PROJECT_ID_PATTERN.test(projectId)) throw new Error('--project 必须使用有效的项目 ID。');
-  const projectsRoot = resolveFromWorkspace(args['projects-root'], 'projects');
-  const manifestPath = path.join(projectsRoot, projectId, 'project.json');
-  const current = await readJsonFile(manifestPath);
-  const migrated = migrateProjectManifest(current);
-  if (args.write) {
-    await writeJsonAtomic(manifestPath, migrated);
-    console.log(`项目配置已迁移并写回：${manifestPath}`);
-  } else {
-    console.log(JSON.stringify(migrated, null, 2));
-    console.log('\n当前为预览模式；确认后添加 --write 才会写回文件。');
-  }
+function describeMigrationChange(change) {
+  const value = (input) => JSON.stringify(input);
+  if (change.kind === 'added') return `  + ${change.path} = ${value(change.after)}`;
+  if (change.kind === 'removed') return `  - ${change.path}（原值 ${value(change.before)}）`;
+  return `  ~ ${change.path}：${value(change.before)} → ${value(change.after)}`;
 }
 
-function runNpm(arguments_, environment = {}) {
-  const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const MIGRATION_STATUS_TEXT = {
+  current: '已是当前版本',
+  upgradable: '可升级',
+  unsupported: '版本高于当前支持',
+  blocked: '缺少迁移器',
+  invalid: 'schemaVersion 非法',
+  unreadable: 'project.json 不可读',
+};
+
+async function migrateScan(projectsRoot, mounts, asJson) {
+  const report = await scanProjectSchemaVersions(projectsRoot, { mounts });
+  if (asJson) {
+    console.log(JSON.stringify(report, null, 2));
+    return;
+  }
+  console.log(`当前支持的 schemaVersion：${report.targetVersion}`);
+  if (!report.projects.length) {
+    console.log('未发现项目包。');
+    return;
+  }
+  for (const project of report.projects) {
+    const version = project.version === null ? '未知' : `v${project.version}`;
+    const label = MIGRATION_STATUS_TEXT[project.status] || project.status;
+    console.log(`${project.canMigrate ? '↑' : '·'} ${project.id}（${version}，${label}）`);
+    if (project.error) console.log(`    ${project.error}`);
+  }
+  const { total, current, upgradable, unsupported, blocked, invalid, unreadable } = report.summary;
+  console.log(
+    `\n共 ${total} 个：${current} 个已是当前版本，${upgradable} 个可升级，${unsupported} 个版本过高，${blocked} 个缺少迁移器，${invalid} 个版本非法，${unreadable} 个不可读。`,
+  );
+  if (upgradable) console.log('使用 migrate --project <id> 查看差异，确认后加 --write 才会写回。');
+}
+
+async function migrateCommand(args) {
+  const projectsRoot = resolveFromWorkspace(args['projects-root'], 'projects');
+  const mounts = await loadWorkspaceMounts();
+
+  if (args.scan || !args.project) {
+    if (!args.project && !args.scan) console.log('未指定 --project，改为扫描全部项目包版本。\n');
+    await migrateScan(projectsRoot, mounts, Boolean(args.json));
+    return;
+  }
+
+  const projectId = String(args.project).trim();
+  if (!PROJECT_ID_PATTERN.test(projectId)) throw new Error('--project 必须使用有效的项目 ID。');
+
+  const plan = await planProjectMigration(projectsRoot, projectId, { mounts });
+  if (!plan.canMigrate) {
+    console.log(
+      `项目 ${projectId} 当前 schemaVersion ${plan.fromVersion ?? '未知'}，状态：${MIGRATION_STATUS_TEXT[plan.status] || plan.status}。`,
+    );
+    console.log('无需迁移或无法自动迁移，未修改任何文件。');
+    return;
+  }
+
+  console.log(`项目 ${projectId}：schemaVersion v${plan.fromVersion} → v${plan.targetVersion}`);
+  console.log(`配置文件：${plan.manifestPath}`);
+  console.log(`备份位置：${plan.backupDirectory}`);
+  console.log(plan.changes.length ? '\n将发生以下变更：' : '\n没有字段变更，仅更新版本标记。');
+  for (const change of plan.changes) console.log(describeMigrationChange(change));
+
+  if (!args.write) {
+    console.log('\n当前为预览模式，未修改任何文件；确认后添加 --write 才会写回。');
+    return;
+  }
+
+  const result = await applyProjectMigration(projectsRoot, projectId, { mounts });
+  console.log(`\n已迁移并写回：${result.manifestPath}`);
+  console.log(`原文件已备份到：${result.backupManifestPath}`);
+}
+
+// 直接以 node 运行本地 Vite 入口：Node 20.12 起 spawn 不再允许直接执行 npm.cmd
+// （CVE-2024-27980 修复），而 shell:true 会带来参数注入风险。
+function runVite(arguments_, environment = {}) {
+  const viteBin = path.join(workspaceRoot, 'node_modules', 'vite', 'bin', 'vite.js');
   return new Promise((resolve, reject) => {
-    const child = spawn(npmCommand, arguments_, {
+    const child = spawn(process.execPath, [viteBin, ...arguments_], {
       cwd: workspaceRoot,
       env: { ...process.env, ...environment },
       stdio: 'inherit',
       windowsHide: true,
     });
-    child.once('error', reject);
+    child.once('error', (error) =>
+      reject(
+        error.code === 'ENOENT' ? new Error(`找不到本地 Vite：${viteBin}。请先执行 npm install。`) : error,
+      ),
+    );
     child.once('exit', (code, signal) => {
       if (signal) reject(new Error(`子进程被信号 ${signal} 终止。`));
       else resolve(code ?? 1);
@@ -442,43 +464,36 @@ async function serveCommand(args) {
   const host = String(args.host || '127.0.0.1');
   const port = Number(args.port || 5188);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('--port 必须是有效端口。');
-  process.exitCode = await runNpm([
-    'run',
-    'dev',
-    '--',
-    '--host',
-    host,
-    '--port',
-    String(port),
-    '--strictPort',
-  ]);
+  process.exitCode = await runVite(['--host', host, '--port', String(port), '--strictPort']);
 }
 
 async function buildReviewCommand(args) {
   const base = String(args.base || '/');
-  const buildArguments = ['run', 'build'];
-  if (args['out-dir']) buildArguments.push('--', '--outDir', String(args['out-dir']));
-  const exitCode = await runNpm(buildArguments, { VITE_BASE_PATH: base });
+  // Vite 会把相对 outDir 解析到 config 的 root（apps/platform-react），
+  // 因此这里统一解析成绝对路径，保证构建产物与评审清单落在同一目录。
+  const outputRoot = resolveFromWorkspace(args['out-dir'], 'dist');
+  const buildArguments = ['build'];
+  if (args['out-dir']) buildArguments.push('--outDir', outputRoot);
+  const exitCode = await runVite(buildArguments, { VITE_BASE_PATH: base });
   process.exitCode = exitCode;
   if (exitCode) return;
-  const outputRoot = resolveFromWorkspace(args['out-dir'], 'dist');
-  const scan = await scanProjectPackages(path.join(workspaceRoot, 'projects'), {
+
+  const projectsRoot = resolveFromWorkspace(args['projects-root'], 'projects');
+  const manifest = await createReviewSnapshotManifest(projectsRoot, {
     mounts: await loadWorkspaceMounts(),
-  });
-  await writeJsonAtomic(path.join(outputRoot, 'review-manifest.json'), {
-    schemaVersion: 1,
-    artifactType: 'static-review-snapshot',
-    generatedAt: new Date().toISOString(),
     base,
-    editable: false,
-    projects: scan.projects.map((project) => ({
-      id: project.id,
-      name: project.name,
-      version: project.version,
-      clients: (project.clients || []).map((client) => ({ id: client.id, name: client.name })),
-    })),
   });
-  console.log(`静态评审清单已生成：${path.join(outputRoot, 'review-manifest.json')}`);
+  const manifestPath = path.join(outputRoot, REVIEW_SNAPSHOT_FILE_NAME);
+  await writeJsonAtomic(manifestPath, manifest);
+
+  console.log(`静态评审清单已生成：${manifestPath}`);
+  console.log(
+    `快照时间 ${manifest.generatedAt}；范围：${manifest.scope.projects} 个项目、${manifest.scope.clients} 个客户端、${manifest.scope.pages} 个页面、${manifest.scope.documents} 份 PRD、${manifest.scope.pageLinks} 条页面关联、${manifest.scope.componentBindings} 条组件关联。`,
+  );
+  if (manifest.invalidProjects.length) {
+    console.log(`注意：${manifest.invalidProjects.length} 个项目包无效，未纳入快照范围。`);
+  }
+  console.log('评审包为只读快照，直接用浏览器打开 index.html 即可查看，不需要 Node 环境。');
 }
 
 const args = parseArguments(process.argv.slice(2));
@@ -496,6 +511,7 @@ try {
   else if (command === 'preflight') await preflightCommand(args);
   else if (command === 'snapshot') await snapshotCommand(args);
   else if (command === 'trace') await traceCommand(args);
+  else if (command === 'context') await contextCommand(args);
   else if (command === 'serve') await serveCommand(args);
   else if (command === 'build-review') await buildReviewCommand(args);
   else throw new Error(`未知命令：${command}`);

@@ -8,6 +8,7 @@
 packages/project-core       项目包领域规则与纯 Node 文件能力
        ├─ packages/platform-transfer 页面定义、导入、备份、路由与导出编排
        ├─ packages/platform-server   独立 Node 本地服务（本机可写、局域网只读）
+       ├─ packages/platform-mcp      本地 MCP Server（stdio 只读工具，供 AI 工具接入）
        ├─ plugins/                   Vite 开发接口、热更新与生产构建适配
        └─ scripts/project-cli.mjs    命令行入口
 

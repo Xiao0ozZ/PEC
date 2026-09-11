@@ -65,7 +65,7 @@ export function ProjectHealthPage() {
       }
     >
       {query.isError ? (
-        <Alert type="error" showIcon message="健康检查失败" description={query.error.message} />
+        <Alert type="error" showIcon title="健康检查失败" description={query.error.message} />
       ) : null}
       {query.isPending ? (
         <div className="page-loading">
@@ -81,12 +81,12 @@ export function ProjectHealthPage() {
               <Statistic
                 title="错误"
                 value={report.summary.errors || 0}
-                valueStyle={{ color: report.summary.errors ? '#cf1322' : undefined }}
+                styles={{ content: { color: report.summary.errors ? '#cf1322' : undefined } }}
               />
               <Statistic
                 title="提醒"
                 value={report.summary.warnings || 0}
-                valueStyle={{ color: report.summary.warnings ? '#d46b08' : undefined }}
+                styles={{ content: { color: report.summary.warnings ? '#d46b08' : undefined } }}
               />
             </Flex>
           </Surface>

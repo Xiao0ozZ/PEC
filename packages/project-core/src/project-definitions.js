@@ -16,7 +16,6 @@ export async function validateProjectDefinitions(
     return ['page-definitions.js 必须导出 clientPageDefinitions 对象。'];
   }
 
-  const clientIds = new Set((manifest.clients || []).map((client) => client.id));
   // project.json 是客户端入口的唯一登记来源。页面定义文件可能由模板生成，
   // 因而保留尚未启用的空客户端骨架；这些不可达定义不能阻断实际项目启动。
   // 已登记客户端仍会在下面严格校验是否存在对应定义。

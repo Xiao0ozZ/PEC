@@ -1,8 +1,41 @@
+import { isSupportedPlatformExportFormat } from './html-export-format.js';
+
 const INLINE_EVENT_PATTERN = /\son[a-z]+\s*=/giu;
 const EXTERNAL_RESOURCE_PATTERN = /<(?:script|link|img)\b[^>]+(?:src|href)=["']https?:\/\//giu;
+const SIDEBAR_CLASS_PATTERN = /<aside\b[^>]*class=["'][^"']*prototype-sidebar/giu;
+const LOCATION_NAVIGATION_PATTERN =
+  /window\.location(?:\.href)?\s*=(?!=)|window\.location\.(?:assign|replace)\s*\(/gu;
+const DIALOG_TAG_PATTERN = /<(?:el-dialog|el-drawer)\b/giu;
+const RELATIVE_HTML_LINK_PATTERN = /<a\b[^>]*href=["']([^"'#][^"']*)["'][^>]*>/giu;
 
 function countMatches(source, pattern) {
   return [...String(source || '').matchAll(new RegExp(pattern.source, pattern.flags))].length;
+}
+
+function normalizeRelativePath(value) {
+  const segments = [];
+  for (const part of String(value || '')
+    .replaceAll('\\', '/')
+    .split('/')) {
+    if (!part || part === '.') continue;
+    if (part === '..') segments.pop();
+    else segments.push(part);
+  }
+  return segments.join('/');
+}
+
+function collectRelativeHtmlLinks(html) {
+  const links = [];
+  for (const match of html.matchAll(RELATIVE_HTML_LINK_PATTERN)) {
+    const raw = String(match[1] || '').trim();
+    if (!raw || /^(?:[a-z]+:|\/\/|#)/iu.test(raw)) continue;
+    // 目标地址允许携带查询参数与 Hash，存在性判断只看路径部分。
+    const withoutHash = raw.split('#', 1)[0];
+    const pathname = withoutHash.split('?', 1)[0];
+    if (!/\.(?:html?|htm)$/iu.test(pathname)) continue;
+    links.push({ raw, pathname });
+  }
+  return links;
 }
 
 function readManifest(source) {
@@ -22,7 +55,10 @@ function issue(code, message, detail = '') {
   return { code, message, ...(detail ? { detail } : {}) };
 }
 
-export function inspectHtmlPrototype(source, { fileName = '', requireDocument = true } = {}) {
+export function inspectHtmlPrototype(
+  source,
+  { fileName = '', requireDocument = true, knownFiles = null } = {},
+) {
   const html = String(source || '');
   const errors = [];
   const warnings = [];
@@ -54,6 +90,14 @@ export function inspectHtmlPrototype(source, { fileName = '', requireDocument = 
       if (!String(manifest[field] || '').trim()) {
         errors.push(issue('manifest-field-missing', `页面 Manifest 缺少 ${field}。`, field));
       }
+    }
+    if (manifest.exportFormat !== undefined && !isSupportedPlatformExportFormat(manifest.exportFormat)) {
+      errors.push(
+        issue(
+          'unsupported-export-format',
+          `Manifest 的 exportFormat「${manifest.exportFormat}」不受支持，回导时会被拒绝。`,
+        ),
+      );
     }
   }
 
@@ -87,11 +131,32 @@ export function inspectHtmlPrototype(source, { fileName = '', requireDocument = 
         errors.push(issue('template-marker-missing', `模板编辑边界缺失：${marker}`, marker));
       }
     }
+    const overlaysRegion =
+      /\[AI-EDIT\] PAGE_OVERLAYS_START([\s\S]*?)PAGE_OVERLAYS_END/u.exec(html)?.[1] || '';
+    const dialogTotal = countMatches(markup, DIALOG_TAG_PATTERN);
+    const dialogInsideOverlays = countMatches(overlaysRegion, DIALOG_TAG_PATTERN);
+    if (dialogTotal > dialogInsideOverlays) {
+      errors.push(
+        issue(
+          'dialog-outside-overlays',
+          `检测到 ${dialogTotal - dialogInsideOverlays} 个弹窗/抽屉写在 PAGE_OVERLAYS 区域之外，直读和导入时不会按弹窗处理。`,
+        ),
+      );
+    }
   }
 
   const inlineEvents = countMatches(html, INLINE_EVENT_PATTERN);
   if (inlineEvents) {
     errors.push(issue('inline-events', `检测到 ${inlineEvents} 个内联事件，请改用页面逻辑区事件绑定。`));
+  }
+  const locationNavigation = countMatches(html, LOCATION_NAVIGATION_PATTERN);
+  if (locationNavigation) {
+    warnings.push(
+      issue(
+        'location-navigation',
+        `检测到 ${locationNavigation} 处 window.location 跳转，请改用标准相对链接（<a href="./目标页面.html">）。`,
+      ),
+    );
   }
   const duplicateTopbars = Math.max(
     countMatches(html, /<header\b[^>]*class=["'][^"']*prototype-topbar/giu),
@@ -99,6 +164,15 @@ export function inspectHtmlPrototype(source, { fileName = '', requireDocument = 
   );
   if (duplicateTopbars > 1) {
     errors.push(issue('duplicate-topbar', `检测到 ${duplicateTopbars} 个原型顶栏，直读时会重复显示。`));
+  }
+  const duplicateSidebars = Math.max(
+    countMatches(html, SIDEBAR_CLASS_PATTERN),
+    countMatches(html, /\bdata-prototype-shell=["']sidebar["']/giu),
+    // 侧栏 aside 内部通常还嵌套一个导航 nav，属于同一个外壳，不能与侧栏数量相加。
+    countMatches(html, /\bdata-prototype-shell=["']navigation["']/giu),
+  );
+  if (duplicateSidebars > 1) {
+    errors.push(issue('duplicate-sidebar', `检测到 ${duplicateSidebars} 个菜单侧栏外壳，直读时会重复显示。`));
   }
   const externalResources = countMatches(html, EXTERNAL_RESOURCE_PATTERN);
   if (externalResources) {
@@ -108,6 +182,24 @@ export function inspectHtmlPrototype(source, { fileName = '', requireDocument = 
   }
   if (/href=["'](?:javascript:|file:)/iu.test(html)) {
     errors.push(issue('unsafe-link', '检测到 javascript: 或 file: 链接，无法安全导入或发布。'));
+  }
+  if (knownFiles) {
+    const knownPaths = knownFiles instanceof Set ? knownFiles : new Set(knownFiles);
+    const currentDirectory = normalizeRelativePath(fileName).split('/').slice(0, -1).join('/');
+    for (const link of collectRelativeHtmlLinks(markup)) {
+      const target = normalizeRelativePath(
+        currentDirectory ? `${currentDirectory}/${link.pathname}` : link.pathname,
+      );
+      if (!knownPaths.has(target)) {
+        errors.push(
+          issue(
+            'broken-relative-link',
+            `互链目标不存在：${link.raw}（按当前文件目录解析为 ${target || '.'}）。`,
+            link.raw,
+          ),
+        );
+      }
+    }
   }
   if (isEditableTemplate && !/--app-color-primary\s*:/u.test(html)) {
     warnings.push(

@@ -38,9 +38,15 @@ async function inspectProject(projectsRoot, project, mounts, htmlCatalog) {
   const roots = htmlCatalog.roots[project.id] || [];
 
   for (const source of roots) {
-    for (const filePath of await walkFiles(source.root, { extensions: new Set(['.html', '.htm']) })) {
+    const filePaths = await walkFiles(source.root, { extensions: new Set(['.html', '.htm']) });
+    const knownFiles = new Set(
+      filePaths.map((filePath) => path.relative(source.root, filePath).split(path.sep).join('/')),
+    );
+    const pageKeyCounts = new Map();
+    for (const filePath of filePaths) {
       const result = inspectHtmlPrototype(await fs.readFile(filePath, 'utf8'), {
         fileName: path.relative(source.root, filePath).split(path.sep).join('/'),
+        knownFiles,
       });
       htmlResults.push(result);
       for (const item of result.errors) {
@@ -67,6 +73,21 @@ async function inspectProject(projectsRoot, project, mounts, htmlCatalog) {
           ),
         );
       }
+      const pageKey = String(result.manifest?.pageKey || '').trim();
+      if (pageKey) pageKeyCounts.set(pageKey, (pageKeyCounts.get(pageKey) || 0) + 1);
+    }
+    for (const [pageKey, count] of pageKeyCounts) {
+      if (count < 2) continue;
+      issues.push(
+        issue(
+          'html',
+          'error',
+          'duplicate-manifest-page-key',
+          pageKey,
+          `${count} 个 HTML 页面使用了相同的 Manifest pageKey：${pageKey}。`,
+          '为每个页面分配唯一的 pageKey 后重新扫描。',
+        ),
+      );
     }
   }
 
@@ -158,8 +179,7 @@ async function inspectProject(projectsRoot, project, mounts, htmlCatalog) {
 
   const routeCount = (manifest.clients || []).reduce(
     (sum, client) =>
-      sum +
-      (Array.isArray(definitions[client.id]?.pages) ? definitions[client.id].pages.length : 0),
+      sum + (Array.isArray(definitions[client.id]?.pages) ? definitions[client.id].pages.length : 0),
     0,
   );
   const directHtmlCount = Object.values(htmlCatalog.projects[project.id] || {}).reduce(

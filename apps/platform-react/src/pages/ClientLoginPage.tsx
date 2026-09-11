@@ -73,14 +73,14 @@ export function ClientLoginPage() {
               <Alert
                 showIcon
                 type="info"
-                message="该客户端没有可运行页面"
+                title="该客户端没有可运行页面"
                 description="旧 Vue 页面未启用，React 入口不会执行模拟登录。"
               />
             ) : runtimeStatus.state === 'index-missing' || runtimeStatus.state === 'empty' ? (
               <Alert
                 showIcon
                 type={runtimeStatus.state === 'index-missing' ? 'error' : 'info'}
-                message={runtimeStatus.state === 'index-missing' ? 'HTML 页面索引异常' : '客户端暂无页面'}
+                title={runtimeStatus.state === 'index-missing' ? 'HTML 页面索引异常' : '客户端暂无页面'}
                 description="请先在项目包中登记可运行的 HTML 页面。"
               />
             ) : (

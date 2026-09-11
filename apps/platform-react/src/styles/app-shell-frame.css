@@ -1,0 +1,410 @@
+/*
+ * 整页框架与侧栏框架：平台外壳和客户端外壳共用。
+ *
+ * 结构分两层：
+ *   1. 最外层留白与整页圆角卡片由 .app-frame-stage / .app-frame 提供（见 ant-v6.css）。
+ *   2. 卡片内部是「通高侧栏 + 独立内容面板」的双面板，由本文件负责。
+ *
+ * 类名统一使用工程级 app-* 前缀，两个外壳共用同一套 DOM 结构与样式，
+ * 避免同一套视觉在平台页和客户端页各写一份后慢慢长歪。
+ */
+
+:root {
+  --app-sider-width: 240px;
+  --app-sider-collapsed-width: 64px;
+  --app-frame-gap: 6px;
+  --app-workspace-radius: 12px;
+  --app-sider-bg: #f7f7f7;
+}
+
+/* 深色沿用外壳底色；玻璃主题交给底层背景透出，侧栏不再叠一层实体色。 */
+html[data-theme='dark'] {
+  --app-sider-bg: var(--ant-color-bg-layout);
+}
+
+html[data-theme='glass'] {
+  --app-sider-bg: transparent;
+}
+
+/* 卡片内部：左侧通高侧栏 + 右侧独立内容面板。 */
+.app-shell-body {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.app-workspace-panel {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  /* 左侧不留间隙：侧栏与面板靠底色差和 1px 描边分界，与参照实现一致。 */
+  margin: var(--app-frame-gap) var(--app-frame-gap) var(--app-frame-gap) 0;
+  overflow: hidden;
+  border: 1px solid var(--ant-color-border-secondary);
+  border-radius: var(--app-workspace-radius);
+  background: var(--ant-color-bg-container);
+}
+
+.app-workspace-panel > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* --- 侧栏 --- */
+
+.app-sider,
+.app-sider-shell {
+  background: var(--app-sider-bg);
+}
+
+.app-sider {
+  height: 100%;
+  min-height: 0;
+  background: var(--app-sider-bg) !important;
+}
+
+/* 宽度过渡会迫使右侧内容区（业务 iframe、大表格）逐帧重排，收起/展开瞬时完成。 */
+.app-sider,
+.app-sider .ant-layout-sider-children {
+  transition: none !important;
+}
+
+.app-sider .ant-layout-sider-children {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.app-sider-shell {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.app-sider__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 48px;
+  flex: 0 0 auto;
+  padding: 0 12px 0 16px;
+}
+
+/* 收起态只有 64px，logo 与折叠按钮并排会互相压住，改成上下两行居中。 */
+.app-sider-shell--collapsed .app-sider__brand {
+  height: auto;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0 2px;
+}
+
+.app-sider__brand-button {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-sider__brand-mark {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  place-items: center;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--ant-color-primary);
+  font-size: 16px;
+}
+
+.app-sider__brand-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.app-sider__brand-copy b {
+  overflow: hidden;
+  color: var(--ant-color-text);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-sider__brand-copy small {
+  overflow: hidden;
+  color: var(--ant-color-text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-sider__collapse {
+  flex: none;
+  color: var(--ant-color-text-secondary) !important;
+}
+
+/* 选择器槽位：白底控件，与侧栏灰底形成「浮起」的观感，不另加描边。 */
+.app-sider__slot {
+  flex: 0 0 auto;
+  padding: 4px 12px 12px;
+}
+
+.app-sider__slot .ant-select {
+  width: 100%;
+}
+
+.app-sider__slot .ant-select-selector {
+  min-height: 40px;
+  border-color: transparent !important;
+  border-radius: 8px !important;
+  background: var(--ant-color-bg-container) !important;
+  box-shadow: none !important;
+}
+
+.app-sider__slot .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  background: var(--ant-color-fill-tertiary) !important;
+}
+
+.app-sider__nav {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 8px;
+  /* 二级常显后菜单必然超过一屏，滚动条要看得见，否则没人知道下面还有内容。 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--ant-color-border) transparent;
+}
+
+.app-sider__nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-sider__nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-sider__nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--ant-color-border);
+}
+
+.app-sider__nav::-webkit-scrollbar-thumb:hover {
+  background: var(--ant-color-text-quaternary);
+}
+
+.app-sider__nav .ant-menu {
+  padding-inline: 8px;
+  border-inline-end: 0 !important;
+  background: transparent !important;
+}
+
+/* 一级是分组标题而不是可点项：弱化字色，缩进与二级文字对齐。 */
+.app-sider__nav .ant-menu-item-group-title {
+  padding: 14px 8px 6px;
+  color: var(--ant-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* 分组之间画细线：二级全部常显时，只靠标题的字号差不足以断句。第一组不画。 */
+.app-sider__nav .ant-menu-item-group + .ant-menu-item-group {
+  margin-top: 8px;
+  border-top: 1px solid var(--ant-color-border-secondary);
+}
+
+.app-sider__nav .ant-menu-item {
+  margin-block: 2px;
+}
+
+/* 选中项是一块实心主色圆角方块，白字白图标；主色随主题自动分叉，不写死色值。 */
+.app-sider__nav .ant-menu-item-selected {
+  color: #fff !important;
+  font-weight: 600;
+  background: var(--ant-color-primary) !important;
+  box-shadow: none;
+}
+
+.app-sider__nav .ant-menu-item-selected .ant-menu-item-icon {
+  color: #fff;
+}
+
+/* 底部工具区：逐行「图标 + 文案」或「图标 + 文案 + 尾部控件」，与上方菜单用细线断开。 */
+.app-sider__tools {
+  display: grid;
+  gap: 2px;
+  flex: 0 0 auto;
+  padding: 8px;
+  border-top: 1px solid var(--ant-color-border-secondary);
+}
+
+/* 三行同构，因此行样式只写一份：工具区里的按钮统一退化成一整行。 */
+.app-sider__tools .ant-btn {
+  display: flex;
+  width: 100%;
+  height: auto;
+  min-height: 36px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ant-color-text-secondary) !important;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.app-sider__tools .ant-btn:hover:not(:disabled) {
+  color: var(--ant-color-text) !important;
+  background: var(--ant-color-fill-tertiary) !important;
+}
+
+.app-sider__tools .ant-btn:disabled {
+  color: var(--ant-color-text-quaternary) !important;
+  background: transparent !important;
+}
+
+.app-sider-shell--collapsed .app-sider__tools .ant-btn {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.app-sider__account {
+  flex: 0 0 auto;
+  padding: 8px 12px 12px;
+}
+
+/* 账号卡与选择器同构：白底、无描边，悬浮转灰。 */
+.app-account-card {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  color: inherit;
+  background: var(--ant-color-bg-container);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.app-account-card:hover {
+  background: var(--ant-color-fill-tertiary);
+}
+
+.app-sider-shell--collapsed .app-account-card {
+  justify-content: center;
+  padding-inline: 6px;
+}
+
+.app-account-card__avatar {
+  color: var(--ant-color-primary) !important;
+  background: var(--ant-color-primary-bg) !important;
+  font-weight: 600;
+}
+
+.app-account-card__copy {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 auto;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.app-account-card__copy b {
+  overflow: hidden;
+  color: var(--ant-color-text);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-account-card__copy small {
+  overflow: hidden;
+  color: var(--ant-color-text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-account-card__more {
+  flex: none;
+  color: var(--ant-color-text-quaternary);
+}
+
+/* --- 窄屏：侧栏收进抽屉，用悬浮按钮唤出 --- */
+
+.app-sider-drawer-trigger {
+  position: fixed;
+  z-index: 30;
+  top: 14px;
+  left: 14px;
+  border: 1px solid var(--ant-color-border-secondary) !important;
+  background: var(--ant-color-bg-container) !important;
+}
+
+.app-sider-drawer .ant-drawer-body {
+  padding: 0;
+}
+
+/* 没有常驻侧栏时，内容面板四边等距。 */
+@media (max-width: 991px) {
+  .app-workspace-panel {
+    margin: var(--app-frame-gap);
+  }
+}
+
+/* 小屏取消整页外框：留白、描边、圆角一并归零，把宽度还给内容。 */
+@media (max-width: 640px) {
+  .app-frame-stage {
+    padding: 0;
+  }
+
+  .app-frame {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .app-workspace-panel {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .app-sider-drawer-trigger {
+    top: 8px;
+    left: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-account-card,
+  .app-sider__tools .ant-btn {
+    transition: none;
+  }
+}

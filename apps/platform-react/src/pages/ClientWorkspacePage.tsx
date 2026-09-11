@@ -146,7 +146,7 @@ export function ClientWorkspacePage() {
           <Alert
             showIcon
             type={runtimeNotice.type}
-            message={runtimeNotice.message}
+            title={runtimeNotice.message}
             description={runtimeNotice.description}
           />
         ) : (

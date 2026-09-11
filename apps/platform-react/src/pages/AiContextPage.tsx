@@ -109,7 +109,6 @@ export function AiContextPage() {
 
   return (
     <PlatformPage
-      eyebrow="AI DELIVERY CONTEXT"
       title="AI 上下文中心"
       description="汇总项目页面、PRD、功能关联和变更影响，生成可追溯的交付上下文。"
       actions={
@@ -144,7 +143,6 @@ export function AiContextPage() {
         <>
           <Surface className="context-summary">
             <div>
-              <Text className="console-eyebrow">PROJECT CONTEXT</Text>
               <Title level={2}>{context.project.name}</Title>
               <Text type="secondary">页面与 PRD 覆盖率</Text>
             </div>

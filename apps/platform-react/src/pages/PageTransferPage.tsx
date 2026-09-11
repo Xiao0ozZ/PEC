@@ -292,7 +292,6 @@ export function PageTransferPage() {
   );
   return (
     <PlatformPage
-      eyebrow="PAGE TRANSFER"
       title="页面导入导出"
       description="检查并导入规范 HTML，或将已登记页面导出为可独立运行、可再次回导的文件。"
       actions={
@@ -307,10 +306,10 @@ export function PageTransferPage() {
       <Alert
         type="info"
         showIcon
-        message="导入支持规范 HTML 和本平台导出的可回导 HTML；导出演示区与可编辑源文件区分开。"
+        title="导入支持规范 HTML 和本平台导出的可回导 HTML；导出演示区与可编辑源文件区分开。"
       />
       {!platformApi.development ? (
-        <Alert type="warning" showIcon message="页面导入导出仅允许在运行开发服务的本机使用。" />
+        <Alert type="warning" showIcon title="页面导入导出仅允许在运行开发服务的本机使用。" />
       ) : null}
       <Segmented
         block
@@ -344,7 +343,7 @@ export function PageTransferPage() {
               检查模板
             </Button>
           </div>
-          {inspectError ? <Alert type="error" showIcon message={inspectError} /> : null}
+          {inspectError ? <Alert type="error" showIcon title={inspectError} /> : null}
           {inspection ? <InspectionPanel inspection={inspection} /> : null}
           {inspection?.valid ? (
             <>
@@ -450,10 +449,10 @@ export function PageTransferPage() {
                 <strong>{inspection.manifest.pageKey}</strong>
               </div>
               {routeConflict ? (
-                <Alert type="error" showIcon message={`路由 ${proposedPath} 已存在，请更换路由片段。`} />
+                <Alert type="error" showIcon title={`路由 ${proposedPath} 已存在，请更换路由片段。`} />
               ) : null}
               {importMode === 'replace' && !replacePagePath ? (
-                <Alert type="warning" showIcon message="请选择要替换的原页面。" />
+                <Alert type="warning" showIcon title="请选择要替换的原页面。" />
               ) : null}
               <Button
                 type="primary"
@@ -559,7 +558,7 @@ export function PageTransferPage() {
           ) : (
             <Empty description="当前筛选条件下没有可导出的工程页面" />
           )}
-          {exportError ? <Alert type="error" showIcon message={exportError} /> : null}
+          {exportError ? <Alert type="error" showIcon title={exportError} /> : null}
           <div className="transfer-export-submit">
             <Input
               value={packageName}
@@ -664,10 +663,10 @@ function InspectionPanel({ inspection }: { inspection: Inspection }) {
         <span>页面逻辑 {inspection.stats.logicLength ? '已识别' : '缺失'}</span>
       </div>
       {inspection.errors.length ? (
-        <Alert type="error" showIcon message={inspection.errors.join('；')} />
+        <Alert type="error" showIcon title={inspection.errors.join('；')} />
       ) : null}
       {inspection.warnings.length ? (
-        <Alert type="warning" showIcon message={inspection.warnings.join('；')} />
+        <Alert type="warning" showIcon title={inspection.warnings.join('；')} />
       ) : null}
     </div>
   );

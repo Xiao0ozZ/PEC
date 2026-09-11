@@ -1,15 +1,19 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests/e2e-react',
+  testDir: './tests/e2e-vue',
   fullyParallel: false,
   workers: 1,
   timeout: 30_000,
   expect: { timeout: 8_000 },
-  outputDir: 'output/playwright-react/test-results',
-  reporter: [['list'], ['html', { outputFolder: 'output/playwright-react/report', open: 'never' }]],
+  outputDir: 'output/playwright-vue/test-results',
+  snapshotPathTemplate: '{testDir}/../visual/baselines/{projectName}/{arg}{ext}',
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: 'output/playwright-vue/report', open: 'never' }],
+  ],
   use: {
-    baseURL: 'http://127.0.0.1:4174',
+    baseURL: 'http://127.0.0.1:4173',
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1440, height: 900 },
@@ -21,10 +25,11 @@ export default defineConfig({
     video: 'off',
   },
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 4174 --strictPort',
-    url: 'http://127.0.0.1:4174',
+    command: 'npm run dev:vue -- --host 127.0.0.1 --port 4173 --strictPort',
+    url: 'http://127.0.0.1:4173',
     reuseExistingServer: true,
     timeout: 120_000,
   },
   projects: [{ name: 'chromium' }],
 });
+

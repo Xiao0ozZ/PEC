@@ -4,8 +4,8 @@
     {
       "name": "react-platform",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:react"],
-      "port": 5190
+      "runtimeArgs": ["run", "dev"],
+      "port": 5188
     }
   ]
 }

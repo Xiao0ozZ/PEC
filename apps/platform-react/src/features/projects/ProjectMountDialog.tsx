@@ -110,12 +110,12 @@ export function ProjectMountDialog({
             </Space.Compact>
           </Form.Item>
         </Form>
-        {error ? <Alert type="error" showIcon message="目录不可挂载" description={error} /> : null}
+        {error ? <Alert type="error" showIcon title="目录不可挂载" description={error} /> : null}
         {candidate ? (
           <Alert
             type="success"
             showIcon
-            message={`${candidate.name}（${candidate.id}）`}
+            title={`${candidate.name}（${candidate.id}）`}
             description={
               <Text type="secondary">
                 已通过项目配置、页面定义和资源检查。客户端 {candidate.clients.length} 个。

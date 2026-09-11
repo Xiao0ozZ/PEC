@@ -160,7 +160,6 @@ export function ProjectPackagesPage() {
 
   return (
     <PlatformPage
-      eyebrow="PROJECT LIBRARY"
       title="项目包管理"
       description="查看本地项目资料状态，维护项目入口、主题和客户端配置。"
       actions={
@@ -200,29 +199,27 @@ export function ProjectPackagesPage() {
       }
     >
       {manifestQuery.isError ? (
-        <Alert type="error" showIcon message="项目包读取失败" description={manifestQuery.error.message} />
+        <Alert type="error" showIcon title="项目包读取失败" description={manifestQuery.error.message} />
       ) : null}
       {notice ? (
-        <Alert type="success" showIcon closable message={notice} onClose={() => setNotice('')} />
+        <Alert type="success" showIcon closable={{ onClose: () => setNotice('') }} title={notice} />
       ) : null}
       {saveProject.isError ? (
         <Alert
           type="error"
           showIcon
-          closable
-          message="项目配置保存失败"
+          closable={{ onClose: saveProject.reset }}
+          title="项目配置保存失败"
           description={saveProject.error.message}
-          onClose={saveProject.reset}
         />
       ) : null}
       {unmountProject.isError ? (
         <Alert
           type="error"
           showIcon
-          closable
-          message="取消挂载失败"
+          closable={{ onClose: unmountProject.reset }}
+          title="取消挂载失败"
           description={unmountProject.error.message}
-          onClose={unmountProject.reset}
         />
       ) : null}
 
@@ -233,7 +230,7 @@ export function ProjectPackagesPage() {
             title="异常项目"
             value={invalidProjects.length}
             suffix="个"
-            valueStyle={invalidProjects.length ? { color: '#d46b08' } : undefined}
+            styles={invalidProjects.length ? { content: { color: '#d46b08' } } : undefined}
           />
           <Statistic title="当前权限" value={canManageProjects ? '可管理' : '只读'} />
         </Flex>

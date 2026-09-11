@@ -180,7 +180,6 @@ export function HomePage() {
       <div className="home-main">
         <section className="home-hero home-hero--ant">
           <div className="home-hero__copy">
-            <Text className="home-kicker">PRODUCT EXPERIENCE CENTER</Text>
             <Title>产品功能体验中心</Title>
             <Text type="secondary">选择项目，进入对应的客户端原型、产品文档和移动端内容。</Text>
           </div>
@@ -209,7 +208,7 @@ export function HomePage() {
           <Alert
             type="error"
             showIcon
-            message="项目资料读取失败"
+            title="项目资料读取失败"
             description="请确认 React 开发服务和项目扫描接口可用。"
           />
         ) : selectedProject ? (

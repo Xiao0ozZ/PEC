@@ -1,5 +1,6 @@
 export * from './bindings.js';
 export * from './ai-context.js';
+export * from './ai-context-loader.js';
 export * from './constants.js';
 export * from './documents.js';
 export * from './filesystem.js';
@@ -13,4 +14,6 @@ export * from './project-management.js';
 export * from './project-health.js';
 export * from './project-mounts.js';
 export * from './project-scanner.js';
+export * from './review-snapshot.js';
 export * from './route-order.js';
+export * from './schema-migration.js';

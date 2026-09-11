@@ -13,6 +13,7 @@ import {
 } from '@/ui/ant/icons';
 import { PlatformPage } from '@/ui/platform/PlatformPage';
 import { Surface } from '@/ui/platform/Surface';
+import { ShareControlPanel } from '@/features/projects/ShareControlPanel';
 
 const { Text, Title } = Typography;
 
@@ -65,7 +66,6 @@ export function ConsolePage() {
 
   return (
     <PlatformPage
-      eyebrow="PLATFORM CONSOLE"
       title="控制台"
       description="管理平台级项目资料、页面路由、导入导出和交付上下文。"
       actions={
@@ -73,16 +73,15 @@ export function ConsolePage() {
       }
     >
       {settingsQuery.isError ? (
-        <Alert type="error" showIcon message="开发模式读取失败" description={settingsQuery.error.message} />
+        <Alert type="error" showIcon title="开发模式读取失败" description={settingsQuery.error.message} />
       ) : null}
       {saveSettings.isError ? (
         <Alert
           type="error"
           showIcon
-          closable
-          message="开发模式保存失败"
+          closable={{ onClose: saveSettings.reset }}
+          title="开发模式保存失败"
           description={saveSettings.error.message}
-          onClose={saveSettings.reset}
         />
       ) : null}
 
@@ -104,6 +103,8 @@ export function ConsolePage() {
           onChange={(checked) => saveSettings.mutate(checked)}
         />
       </Surface>
+
+      <ShareControlPanel />
 
       <Surface className="console-tool-list">
         <header className="workspace-section-heading">

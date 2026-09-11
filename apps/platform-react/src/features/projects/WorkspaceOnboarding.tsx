@@ -53,12 +53,12 @@ export function WorkspaceOnboarding() {
             <Alert
               type="warning"
               showIcon
-              message={`发现 ${bootstrap.data.workspace.invalidProjects} 个无效项目`}
+              title={`发现 ${bootstrap.data.workspace.invalidProjects} 个无效项目`}
               description="进入项目包管理或健康检查中心，可以看到具体错误和修复建议。"
             />
           ) : null}
           {example.isError ? (
-            <Alert type="error" showIcon message="示例创建失败" description={example.error.message} />
+            <Alert type="error" showIcon title="示例创建失败" description={example.error.message} />
           ) : null}
           <Flex vertical gap={10}>
             <Button

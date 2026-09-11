@@ -40,6 +40,12 @@
   background: var(--platform-surface) !important;
 }
 
+/* 同 client-sider：宽度过渡会让内容区逐帧回流，收起/展开瞬时完成。 */
+.platform-workspace__sider,
+.platform-workspace__sider .ant-layout-sider-children {
+  transition: none !important;
+}
+
 .platform-workspace__sider .ant-layout-sider-children {
   display: flex;
   flex-direction: column;
@@ -239,6 +245,36 @@
   justify-content: space-between;
   gap: 32px;
   padding: 22px 24px;
+}
+
+.console-share-panel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  padding: 22px 24px;
+}
+
+.console-share-panel h3 {
+  margin: 0 !important;
+  font-size: 18px !important;
+}
+
+.console-share-panel > div:first-child {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+}
+
+.console-share-panel__urls {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.console-share-panel > .ant-alert {
+  flex-basis: 100%;
 }
 
 .console-settings-panel h3 {

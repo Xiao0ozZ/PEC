@@ -67,7 +67,6 @@ export function ComponentGalleryPage() {
 
   return (
     <PlatformPage
-      eyebrow="DESIGN SYSTEM"
       title="组件规范"
       description="React 平台的公共控件统一基于 Ant Design；项目业务页面与项目包内容不在此修改。"
       actions={
@@ -79,7 +78,7 @@ export function ComponentGalleryPage() {
       <Alert
         showIcon
         type="info"
-        message="单一组件来源"
+        title="单一组件来源"
         description="表单、表格、弹窗、反馈与导航控件均从平台 Ant 适配层使用，避免同类交互出现多套样式。"
       />
       <Descriptions
@@ -119,7 +118,6 @@ export function ComponentGalleryPage() {
       <Surface className="gallery-surface">
         <header className="surface-heading">
           <div>
-            <Text className="gallery-kicker">ACTIONS AND FEEDBACK</Text>
             <Title level={3}>操作与状态</Title>
             <Text type="secondary">主操作明确、危险操作可辨认，状态只表达当前业务含义。</Text>
           </div>
@@ -149,7 +147,6 @@ export function ComponentGalleryPage() {
       <Surface className="gallery-surface">
         <header className="surface-heading">
           <div>
-            <Text className="gallery-kicker">FORM PATTERN</Text>
             <Title level={3}>表单与配置</Title>
             <Text type="secondary">字段标签、辅助说明和开关状态保持同一阅读顺序。</Text>
           </div>
@@ -180,7 +177,6 @@ export function ComponentGalleryPage() {
       <Surface className="gallery-surface">
         <header className="surface-heading">
           <div>
-            <Text className="gallery-kicker">DATA PATTERN</Text>
             <Title level={3}>数据表格</Title>
             <Text type="secondary">清单型任务以表格为主；筛选、状态和行操作在同一工作区完成。</Text>
           </div>

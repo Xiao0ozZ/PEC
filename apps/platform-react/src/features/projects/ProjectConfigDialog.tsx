@@ -123,7 +123,7 @@ export function ProjectConfigDialog({
         <Text className="project-config-intro" type="secondary">
           只设置项目内容入口，其他工程参数由平台自动处理。
         </Text>
-        {error ? <Alert showIcon type="error" message={error} /> : null}
+        {error ? <Alert showIcon type="error" title={error} /> : null}
         <div className="project-config-body">
           <aside className="project-config-nav">
             <Menu

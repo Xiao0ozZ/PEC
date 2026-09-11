@@ -6,6 +6,12 @@ import process from 'node:process';
 import { URL } from 'node:url';
 
 import {
+  LOOPBACK_HOST,
+  formatPlatformServerAddresses,
+  isSharedHost,
+  listLanAddresses,
+} from './addresses.js';
+import {
   DOCUMENT_PUBLIC_EXTENSIONS,
   PROJECT_PUBLIC_DIRECTORIES,
   applyContentOnlyMode,
@@ -63,6 +69,7 @@ const DEFAULT_MIME_TYPES = Object.freeze({
 const PROJECT_ASSET_EXTENSIONS = new Set(Object.keys(DEFAULT_MIME_TYPES));
 const LOCAL_RUNTIME_BOOTSTRAP = "<script>window.__PLATFORM_RUNTIME__={mode:'local'};</script>";
 const SETTINGS_BODY_LIMIT = 16 * 1024;
+const SHARE_BODY_LIMIT = 4 * 1024;
 const ASSOCIATION_BODY_LIMIT = 8 * 1024 * 1024;
 const MANAGEMENT_BODY_LIMIT = 8 * 1024 * 1024;
 const TRANSFER_BODY_LIMIT = 12 * 1024 * 1024;
@@ -243,9 +250,128 @@ export function createPlatformServer({
   const settingsFile = settingsPath ? path.resolve(settingsPath) : '';
   const publicRoot = staticRoot ? path.resolve(staticRoot) : '';
 
+  // 启动地址由命令行决定。分享开关只增删「额外的局域网监听」，不动主监听：
+  // 在请求处理中关闭主监听会等待自身连接结束，导致 server.close() 永不回调。
+  const startHost = host;
+  const startedShared = isSharedHost(startHost);
+  let boundPort = port;
+  const shareListeners = new Map();
+
+  function shareUrls() {
+    if (startedShared) return formatPlatformServerAddresses(startHost, boundPort);
+    const displayHost = startHost === '::1' ? `[${startHost}]` : startHost;
+    return {
+      local: `http://${displayHost}:${boundPort}`,
+      lan: [...shareListeners.keys()].sort().map((address) => `http://${address}:${boundPort}`),
+    };
+  }
+
+  function shareStatus(local) {
+    return {
+      sharing: startedShared || shareListeners.size > 0,
+      managedByStartup: startedShared,
+      host: startHost,
+      port: boundPort,
+      urls: shareUrls(),
+      writeEnabled: writeEnabled && local,
+      readOnly: !writeEnabled || !local,
+      canControl: writeEnabled && local && !startedShared,
+    };
+  }
+
+  async function closeShareListeners() {
+    const listeners = [...shareListeners.values()];
+    shareListeners.clear();
+    await Promise.all(
+      listeners.map(
+        (listener) =>
+          new Promise((resolve) => {
+            listener.closeAllConnections?.();
+            listener.close(() => resolve());
+          }),
+      ),
+    );
+  }
+
+  async function setShareEnabled(enabled) {
+    if (startedShared) {
+      throw requestError(
+        `服务以 ${startHost} 启动，分享状态由启动参数决定；改用 --host ${LOOPBACK_HOST} 后即可用界面开关控制。`,
+        409,
+        'SHARE_MANAGED_BY_STARTUP',
+      );
+    }
+    if (!enabled) {
+      await closeShareListeners();
+      return;
+    }
+    const addresses = listLanAddresses();
+    if (!addresses.length) {
+      throw requestError('未检测到可用的局域网地址，无法开启分享。', 409, 'NO_LAN_ADDRESS');
+    }
+    for (const address of addresses) {
+      if (shareListeners.has(address)) continue;
+      const listener = createServer(requestListener);
+      try {
+        await new Promise((resolve, reject) => {
+          const onError = (error) => reject(error);
+          listener.once('error', onError);
+          listener.listen(boundPort, address, () => {
+            listener.removeListener('error', onError);
+            resolve();
+          });
+        });
+      } catch (cause) {
+        await closeShareListeners();
+        throw requestError(
+          `无法在 ${address}:${boundPort} 开启分享监听：${cause.message}`,
+          409,
+          'SHARE_LISTEN_FAILED',
+        );
+      }
+      shareListeners.set(address, listener);
+    }
+  }
+
   async function loadMounts() {
     if (!mountsFile) return { schemaVersion: 1, projects: {} };
     return loadProjectMounts(mountsFile);
+  }
+
+  // 项目与 HTML 扫描会遍历项目目录和外置原型目录，实测分别约 40ms 与 150ms。
+  // 独立服务没有文件监听，因此只做很短的 TTL 合并：既能把一次页面加载里的
+  // 重复扫描收敛成一次，也保证「项目文件是事实来源」在下一次刷新即生效。
+  // 任何通过写权限校验的请求都会立即清空缓存，避免保存后仍读到旧数据。
+  const SCAN_CACHE_TTL_MS = 1000;
+  const scanCache = new Map();
+
+  function invalidateScanCache() {
+    scanCache.clear();
+  }
+
+  async function cachedScan(kind, mounts, load) {
+    const key = `${kind}:${JSON.stringify(mounts?.projects || {})}`;
+    const hit = scanCache.get(key);
+    const now = Date.now();
+    if (hit && now - hit.at < SCAN_CACHE_TTL_MS) return hit.value;
+    const value = await load();
+    scanCache.set(key, { at: now, value });
+    return value;
+  }
+
+  function scanProjects(mounts) {
+    return cachedScan('projects', mounts, () => scanProjectPackages(root, { mounts }));
+  }
+
+  function scanHtmlPages(mounts) {
+    return cachedScan('html', mounts, () => scanHtmlPrototypePages(root, { mounts }));
+  }
+
+  // 写请求一旦获得授权，扫描结果即视为过期。集中在这里失效，避免逐个写入分支遗漏。
+  function denyWrite(request, response) {
+    if (writeAccessError(request, response, writeEnabled, getClientAddress)) return true;
+    invalidateScanCache();
+    return false;
   }
 
   async function resolveProjectRoot(projectId) {
@@ -310,8 +436,9 @@ export function createPlatformServer({
           local,
           writeEnabled: writeEnabled && local,
           readOnly: !writeEnabled || !local,
-          host,
-          port,
+          host: startHost,
+          port: boundPort,
+          share: shareStatus(local),
         },
         workspace: {
           projectsDirectoryReady: true,
@@ -342,7 +469,7 @@ export function createPlatformServer({
       sendJson(response, local ? mounts : normalizeProjectMounts({}));
       return true;
     }
-    if (writeAccessError(request, response, writeEnabled, getClientAddress)) return true;
+    if (denyWrite(request, response)) return true;
     if (request.method !== 'POST') {
       sendJson(response, { code: 'METHOD_NOT_ALLOWED', message: '该接口只支持 POST。' }, 405);
       return true;
@@ -411,7 +538,7 @@ export function createPlatformServer({
       sendJson(response, { message: '项目管理接口只支持 POST。' }, 405);
       return true;
     }
-    if (writeAccessError(request, response, writeEnabled, getClientAddress)) return true;
+    if (denyWrite(request, response)) return true;
 
     try {
       const body = await readJsonBody(request, MANAGEMENT_BODY_LIMIT);
@@ -460,7 +587,7 @@ export function createPlatformServer({
     if (!supported.has(routePath)) return false;
 
     const isRead = routePath === '/__page-transfer/routes' && request.method === 'GET';
-    if (!isRead && writeAccessError(request, response, writeEnabled, getClientAddress)) return true;
+    if (!isRead && denyWrite(request, response)) return true;
 
     try {
       const {
@@ -625,7 +752,7 @@ export function createPlatformServer({
     );
 
     if (request.method === 'POST') {
-      if (writeAccessError(request, response, writeEnabled, getClientAddress)) return true;
+      if (denyWrite(request, response)) return true;
       try {
         const payload = normalizedProjectConfig(
           projectId,
@@ -690,7 +817,7 @@ export function createPlatformServer({
     const sourceId = decodeSegment(pathParts.shift() || '_');
     const relativePath = pathParts.map(decodeSegment).join('/');
     const mounts = await loadMounts();
-    const catalog = await scanHtmlPrototypePages(root, { mounts });
+    const catalog = await scanHtmlPages(mounts);
     const source = (catalog.roots[projectId] || []).find(
       (item) => (item.sourceId || item.clientId || '_') === sourceId,
     );
@@ -790,11 +917,42 @@ export function createPlatformServer({
         service: 'platform-local-server',
         readOnly: !writeEnabled,
         writeEnabled,
+        share: shareStatus(isLocalRequest(request, getClientAddress)),
       });
       return;
     }
+    if (requestUrl.pathname === '/__platform/share') {
+      const local = isLocalRequest(request, getClientAddress);
+      if (request.method === 'GET') {
+        sendJson(response, { ok: true, share: shareStatus(local) });
+        return;
+      }
+      if (request.method === 'POST') {
+        if (denyWrite(request, response)) return;
+        try {
+          const body = await readJsonBody(request, SHARE_BODY_LIMIT);
+          if (typeof body?.enabled !== 'boolean') {
+            throw requestError('enabled 必须是布尔值。', 400, 'INVALID_SHARE_STATE');
+          }
+          await setShareEnabled(body.enabled);          sendJson(response, {
+            ok: true,
+            share: shareStatus(local),
+            message: body.enabled ? '已开启局域网只读分享。' : '已关闭局域网分享。',
+          });
+        } catch (error) {
+          sendJson(
+            response,
+            { code: error.code || 'BAD_REQUEST', message: error.message },
+            error.statusCode || 400,
+          );
+        }
+        return;
+      }
+      sendJson(response, { message: '该接口仅支持 GET 与 POST。' }, 405);
+      return;
+    }
     if (requestUrl.pathname === '/__platform/settings' && request.method === 'POST') {
-      if (writeAccessError(request, response, writeEnabled, getClientAddress)) return;
+      if (denyWrite(request, response)) return;
       if (!settingsFile) {
         sendJson(response, { code: 'SERVER_CONFIG_ERROR', message: '独立服务未配置平台设置文件。' }, 503);
         return;
@@ -822,11 +980,11 @@ export function createPlatformServer({
       return;
     }
     if (requestUrl.pathname === '/__projects/manifest') {
-      sendJson(response, await scanProjectPackages(root, { mounts: await loadMounts() }));
+      sendJson(response, await scanProjects(await loadMounts()));
       return;
     }
     if (requestUrl.pathname === '/__projects/html-pages') {
-      const catalog = await scanHtmlPrototypePages(root, { mounts: await loadMounts() });
+      const catalog = await scanHtmlPages(await loadMounts());
       sendJson(response, {
         generatedAt: new Date().toISOString(),
         projects: catalog.projects,
@@ -852,7 +1010,7 @@ export function createPlatformServer({
     sendJson(response, { message: '资源不存在。' }, 404);
   }
 
-  const server = createServer((request, response) => {
+  function requestListener(request, response) {
     handle(request, response).catch((error) => {
       if (response.headersSent) {
         response.destroy(error);
@@ -860,26 +1018,33 @@ export function createPlatformServer({
       }
       sendJson(response, { message: '本地服务处理失败。', detail: error.message }, 500);
     });
-  });
+  }
+
+  const server = createServer(requestListener);
 
   return {
     server,
     options: {
-      host,
+      host: startHost,
       port,
       projectsRoot: root,
       platformRoot: workspaceRoot,
       staticRoot: publicRoot,
       writeEnabled,
     },
+    shareStatus: () => shareStatus(true),
+    setShareEnabled,
     async start() {
       await new Promise((resolve, reject) => {
         server.once('error', reject);
-        server.listen(port, host, resolve);
+        server.listen(port, startHost, resolve);
       });
-      return server.address();
+      const address = server.address();
+      if (address && typeof address === 'object') boundPort = address.port;
+      return address;
     },
     async close() {
+      await closeShareListeners();
       if (!server.listening) return;
       await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
     },

@@ -48,7 +48,7 @@ export default [
     },
   },
   {
-    files: ['apps/platform-react/vite.config.ts'],
+    files: ['apps/platform-react/vite.chunks.js'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -77,7 +77,7 @@ export default [
       'vite.config.js',
       'vite.vue.config.js',
       'playwright.config.js',
-      'playwright.react.config.js',
+      'playwright.vue.config.js',
     ],
     languageOptions: {
       ecmaVersion: 'latest',

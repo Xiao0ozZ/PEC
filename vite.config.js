@@ -8,6 +8,7 @@ import { platformSettingsPlugin } from './plugins/platform-settings-plugin.js';
 import { prdContentPlugin } from './plugins/prd-content-plugin.js';
 import { projectPackagesPlugin } from './plugins/project-packages-plugin.js';
 import { loadProjectMounts } from './packages/project-core/src/index.js';
+import { manualChunks } from './apps/platform-react/vite.chunks.js';
 
 const appRoot = fileURLToPath(new URL('./apps/platform-react/', import.meta.url));
 const repositoryRoot = fileURLToPath(new URL('./', import.meta.url));
@@ -42,21 +43,7 @@ export default defineConfig({
     outDir: fileURLToPath(new URL('./dist/', import.meta.url)),
     emptyOutDir: true,
     rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (
-            id.includes('/node_modules/react/') ||
-            id.includes('/node_modules/react-dom/') ||
-            id.includes('/node_modules/react-router')
-          ) {
-            return 'react-runtime';
-          }
-          if (id.includes('/node_modules/@tanstack/') || id.includes('/node_modules/i18next/')) {
-            return 'data-runtime';
-          }
-          return undefined;
-        },
-      },
+      output: { manualChunks },
     },
   },
 });

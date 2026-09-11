@@ -858,6 +858,14 @@ html[data-density='compact'] .client-shell {
   background: var(--ant-color-bg-container) !important;
 }
 
+/* 侧栏宽度动画会迫使旁边的内容区（业务 iframe、大表格）逐帧重排：
+   iframe 内的 Element Plus 与 Tailwind 运行时每次都要重建布局，
+   200ms 过渡等于连续几十次全文档重排。收起/展开改为瞬时切换。 */
+.client-sider,
+.client-sider .ant-layout-sider-children {
+  transition: none !important;
+}
+
 .client-sider .ant-layout-sider-children {
   display: flex;
   height: 100%;

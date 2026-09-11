@@ -85,7 +85,7 @@ export function MarkdownReader({
         <Spin size="large" />
       </div>
     );
-  if (error) return <Alert type="error" showIcon message="文档读取失败" description={error} />;
+  if (error) return <Alert type="error" showIcon title="文档读取失败" description={error} />;
   return (
     <article
       ref={articleRef}

@@ -34,12 +34,12 @@ npx playwright install chromium
 ```powershell
 npm run test:smoke          # React 正式入口浏览器冒烟测试
 npm run test:ui             # 同上，执行 React E2E 套件
-npm run test:vue:smoke      # 观察期 Vue 回退入口测试
+npm run test:e2e:vue        # 观察期 Vue 回退入口测试
 npm run test:visual         # 观察期 Vue 视觉截图基线比较
 npm run test:visual:update  # 重新生成视觉基线，仅限已确认的视觉变更
 npm run test:unit           # 公共组件 Props、Slots、事件和交互状态单元测试
-npm run test:react          # React 平台组件与纯逻辑测试
-npm run test:react:e2e      # React 正式入口专用浏览器冒烟测试
+npm run test                # React 平台组件与纯逻辑测试
+npm run test:e2e            # React 正式入口浏览器冒烟测试
 npm run test:unit:watch     # 开发时持续运行组件单元测试
 npm run project -- preflight --file <html> # HTML 独立交付与导入预检
 npm run project -- health [--project <id>] # 项目包、HTML 和追溯健康检查
@@ -88,8 +88,8 @@ React 单元测试位于 `apps/platform-react`，使用 Vitest、Testing Library
 
 1. 新增页面并接入正式路由。
 2. 执行 `npm run test:smoke`，确认页面可打开且无脚本错误。
-3. 高频演示页面、公共页面或高风险页面加入 `tests/e2e/visual.spec.js`。
-4. 页面存在关键弹窗或业务操作时，在 `tests/e2e/interactions.spec.js` 增加交互检查。
+3. 高频演示页面、公共页面或高风险页面加入 `tests/e2e-vue/visual.spec.js`。
+4. 页面存在关键弹窗或业务操作时，在 `tests/e2e-vue/interactions.spec.js` 增加交互检查。
 5. 执行 `npm run test:visual` 和 `npm run build`。
 
 ## 6. 视觉基线更新规则

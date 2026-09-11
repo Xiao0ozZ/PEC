@@ -14,6 +14,7 @@ import {
   normalizeProjectHealthReport,
   normalizeProjectMountsPayload,
   normalizeRouteList,
+  normalizeShareStatus,
 } from '../../platform-contracts/src/index.js';
 
 const JSON_HEADERS = Object.freeze({ 'Content-Type': 'application/json' });
@@ -121,6 +122,25 @@ export function createPlatformClient({
       return requestJson('/__platform/bootstrap', {
         fallbackMessage: '工作区状态读取失败。',
         normalize: normalizeBootstrapState,
+      });
+    },
+
+    loadShareStatus() {
+      requireDevelopment('静态部署不提供局域网分享状态。');
+      return requestJson('/__platform/share', {
+        fallbackMessage: '分享状态读取失败。',
+        normalize: normalizeShareStatus,
+      });
+    },
+
+    saveShareEnabled(enabled) {
+      requireDevelopment('静态部署不支持切换局域网分享。');
+      return requestJson('/__platform/share', {
+        method: 'POST',
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ enabled: Boolean(enabled) }),
+        fallbackMessage: '分享状态切换失败。',
+        normalize: normalizeShareStatus,
       });
     },
 

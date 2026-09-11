@@ -9,6 +9,7 @@ import type {
   ProjectHealthReport,
   ProjectMountsPayload,
   RouteListResult,
+  ShareStatus,
 } from '../../platform-contracts/src/index.js';
 
 export type RouteMutationAction =
@@ -22,6 +23,8 @@ export interface PlatformClient {
   loadBootstrapState(): Promise<BootstrapState>;
   loadProjectMounts(): Promise<ProjectMountsPayload>;
   loadProjectHealth(): Promise<ProjectHealthReport>;
+  loadShareStatus(): Promise<ShareStatus>;
+  saveShareEnabled(enabled: boolean): Promise<ShareStatus>;
   selectProjectDirectory(): Promise<Record<string, unknown>>;
   inspectProjectMount(root: string): Promise<Record<string, unknown>>;
   mountProject(root: string): Promise<Record<string, unknown>>;

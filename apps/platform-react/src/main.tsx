@@ -5,7 +5,8 @@ import 'antd/dist/reset.css';
 import './styles/global.css';
 import './styles/platform-workspace.css';
 import './styles/ant-v6.css';
-import './i18n';
+// 框架样式放在最后，确保侧栏/双面板规则覆盖旧外壳的既有布局写法。
+import './styles/app-shell-frame.css';
 
 import { App } from './app/App';
 

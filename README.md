@@ -15,7 +15,7 @@
 - 本地没有项目包时，首页不显示业务项目入口；加入项目包并重新扫描后，才会出现对应项目和客户端入口。
 - 文档中心只读取各项目包 `projects/{project-id}/docs` 下的 Markdown，支持文件夹目录、搜索、Mermaid、相对图片和文档链接。
 - 客户端入口：每个客户端可直接进入默认页、先显示平台演示登录页或进入指定页面，并可选择左侧菜单或无侧栏外壳。
-- 语言：React 正式平台当前只提供简体中文；保留 i18n 基础设施，但不显示无法实际切换的语言入口。只有产品负责人明确提出后才扩展其他语言。
+- 语言：React 正式平台当前只提供简体中文；保留 i18n 基础设施，但不显示无法实际切换的语言入口。由于当前没有任何组件使用 `useTranslation`，`main.tsx` 不再预加载 `src/i18n`，避免把 i18next 打进首屏；真正启用多语言时在 `main.tsx` 顶部加回 `import './i18n';` 即可。只有产品负责人明确提出后才扩展其他语言。
 - 界面主题：基于 Ant Design v6 `ConfigProvider`、Design Token 与 CSS Variables；默认主题采用官方 Light 视觉语言和浅蓝布局画布，另提供暗色、玻璃主题；支持跟随系统和独立紧凑密度，用户选择保存在本地浏览器。
 
 ## 技术栈
@@ -35,16 +35,25 @@
 
 ```text
 项目资料原型工程/
-├─ plugins/                    项目发现、PRD、导入导出及构建插件
+├─ apps/platform-react/        React 正式平台应用（默认入口）
 ├─ packages/project-core/      项目包 Schema、扫描、校验、文档和关联领域核心
-├─ packages/platform-client/  框架无关的平台数据访问层
-├─ apps/platform-react/       React 正式平台应用
+├─ packages/platform-client/   框架无关的平台数据访问层
+├─ packages/platform-contracts/ 前后端共享的类型与响应归一化契约
+├─ packages/platform-server/   独立 Node 本地服务（本机可写、局域网只读）
+├─ packages/platform-transfer/ 页面定义、导入、备份、路由与导出编排
+├─ plugins/                    项目发现、PRD、导入导出及构建插件
 ├─ projects/                   本地可插拔项目包目录（已加入 Git 忽略，不提交到本仓库）
 ├─ examples/                   可提交、脱敏、可运行的项目包样例
-├─ scripts/                    页面迁移和多语言审计脚本
+├─ scripts/                    项目 CLI、独立服务入口和审计脚本
 ├─ templates/                  新页面及可迁移 HTML 原型模板
-├─ tests/                      路由冒烟、关键交互及视觉截图基线
-├─ src/                       Vue 旧平台回退代码，观察期内保留
+├─ tests/unit/                 领域核心与平台单元测试
+├─ tests/e2e/                  React 正式平台浏览器测试（默认）
+├─ tests/e2e-vue/              观察期 Vue 回退入口测试
+├─ src/                        Vue 旧平台回退代码，观察期内保留
+├─ playwright.config.js        React E2E 配置（默认）
+├─ playwright.vue.config.js    Vue 回退 E2E 配置
+├─ vite.config.js              React 构建配置（默认，产出 dist/）
+├─ vite.vue.config.js          Vue 回退构建配置（产出 dist-vue/）
 ├─ COMPONENT_GUIDE.md          公共组件、Composables 和新增页面使用规范
 ├─ ARCHITECTURE.md             工程分层、轻量外壳边界和后续拆分顺序
 ├─ HTML_PROTOTYPE_CREATION_PROMPT.md 需求阶段可迁移 HTML 原型创建提示词
@@ -55,6 +64,8 @@
 ├─ start-preview-8080.cmd      Windows 双击启动脚本
 └─ package.json
 ```
+
+React 是默认平台：不带后缀的命令、配置和测试目录（`npm run dev`、`npm run build`、`npm run test`、`npm run test:e2e`、`vite.config.js`、`playwright.config.js`、`tests/e2e/`）全部指向 React；Vue 回退一律带 `vue` 后缀（`dev:vue`、`build:vue`、`test:e2e:vue`、`vite.vue.config.js`、`playwright.vue.config.js`、`tests/e2e-vue/`）。
 
 ## 项目包配置
 
@@ -90,13 +101,14 @@ npm run dev -- --host 0.0.0.0 --port 8080 --strictPort
 npm run dev                 # 本机开发预览，默认 127.0.0.1:5188
 npm run dev:lan             # 局域网预览，默认 0.0.0.0:5188
 npm run serve:local         # 使用独立 Node 本地服务读取已构建的 dist
+npm run mcp:serve           # 本地 MCP Server（stdio 只读工具，供 AI 工具接入）
 npm run dev:vue             # 内部 Vue 回退入口，默认 127.0.0.1:5189
 npm run project -- help     # 查看项目包 CLI
 npm run project:example     # 将脱敏样例安装到本地 projects/sample-project
 npm run project:validate    # 使用共享核心校验项目包
 npm run project:health      # 检查项目、HTML 和需求关联健康状态
 npm run quality:core        # 只检查可提交的平台底座与样例，不读取 projects 业务源码
-npm run quality:react       # React 类型、Lint、单测、迁移审计和正式构建
+npm run quality             # React 类型、Lint、单测、迁移审计和正式构建
 npm run build               # 生产构建
 npm run build:vue           # 仅构建 Vue 回退版本到 dist-vue
 npm run audit:projects      # 项目包配置、页面、资源和文档完整性检查
@@ -108,7 +120,7 @@ npm run i18n:traditional    # 使用 OpenCC 在本地生成繁体词库
 npm run audit:i18n          # 检查三份词库结构和未转换数量
 npm run test:smoke          # React 正式入口浏览器冒烟测试
 npm run test:ui             # 同上，执行 React E2E 套件
-npm run test:vue:smoke      # 观察期 Vue 回退入口测试
+npm run test:e2e:vue        # 观察期 Vue 回退入口测试
 npm run test:visual         # 观察期 Vue 视觉基线比较
 npm run test:unit           # 公共组件单元测试
 ```
@@ -124,6 +136,12 @@ npm run serve:local -- --read-only
 
 正式本地入口会在监听端口前检查构建目录、`dist/index.html`、项目目录和本地挂载配置。全新仓库没有被 Git 跟踪的 `projects/` 时会创建空目录；缺少构建会提示执行 `npm run build`；端口冲突会提示使用 `--port` 更换端口。监听 `0.0.0.0` 时会分别输出本机地址和可用的局域网只读地址，`Ctrl+C` 或 `SIGTERM` 会等待服务正常关闭。
 
+### 一键局域网只读分享
+
+以默认的 `127.0.0.1` 启动后，无需重启服务即可在「控制台」页面用开关开启或关闭局域网只读分享。开启时服务会为每个可用的局域网 IPv4 地址额外建立监听并列出可访问 URL，关闭后这些地址立即不再监听；本机监听始终不受影响，切换过程不会中断正在使用的本机页面。
+
+写权限始终只属于服务主机：局域网设备可以查看项目、原型、PRD、路由和已生成的评审文件，所有写接口（含分享开关本身）都返回 403。若服务以 `--host 0.0.0.0` 启动，则分享状态由启动参数决定，界面开关会提示改用 `--host 127.0.0.1`；`--read-only` 模式下不允许切换分享。
+
 项目包、HTML 和 PRD 的日常维护命令：
 
 ```powershell
@@ -136,6 +154,31 @@ npm run project -- build-review --base /prototype/
 ```
 
 `mount` 和项目包管理页的“挂载项目”只写入被 Git 忽略的 `project-mounts.local.json`，不会改 `project.json`、PRD 或 HTML 原文件。挂载项既可指向完整项目根目录，也可只覆盖 PRD 或某个客户端的 HTML 目录。项目健康检查页会集中列出 Manifest、Schema、路由、HTML、PRD、关联、资源和挂载问题。生产构建会把挂载目录复制为本次发布的只读快照；服务器不能借此直接修改本机源资料。
+
+### 项目包 Schema 升级
+
+`migrate` 不带 `--project` 时扫描全部项目包的 `schemaVersion`，按「已是当前版本 / 可升级 / 版本过高 / 缺少迁移器 / 版本非法 / 不可读」分类列出，版本异常的项目包也会被列出而不是笼统归为“项目不可用”。没有 `schemaVersion` 字段的早期项目包按 0 版处理，可迁移到当前版本。
+
+```powershell
+npm run project -- migrate                       # 扫描全部项目包版本
+npm run project -- migrate --scan --json         # 输出机器可读结果
+npm run project -- migrate --project sample      # 预览差异与备份位置，不写文件
+npm run project -- migrate --project sample --write
+```
+
+指定 `--project` 时先展示版本区间、逐字段差异和备份位置；**只有加 `--write` 才写回**。写入前会把原 `project.json` 备份到 `<项目根>/.backups/schema/<迁移标识>/`，并记录 `metadata.json`；写入使用原子替换，任一步失败都会回滚 `project.json` 与备份文件，磁盘保持迁移前状态。已是当前版本的项目包重复执行不会二次迁移。
+
+### 独立评审包
+
+`build-review` 生成只读静态评审快照，并在输出目录写入 `review-manifest.json`：其中记录快照时间、`base`、以及本次快照覆盖的项目、客户端、页面（含可跳转路由与来源文件）、PRD 文档和两类关联（页面级 `pageLinks`、组件级 `componentBindings`），同时给出合计范围与被排除的无效项目包。命令结束时会打印同一份范围摘要。
+
+```powershell
+npm run project -- build-review --base /review/ --out-dir dist-review
+```
+
+评审包只包含静态文件，不需要 Node 或 npm 即可查看，放到任意静态托管（共享目录、IIS、nginx）或用平台自身的局域网只读分享打开即可。生成过程只读取项目资料，不写入 `projects/` 或外置 PRD、原型目录。`--out-dir` 会被解析成绝对路径，保证构建产物与评审清单落在同一目录。
+
+需要注意：平台使用 History 路由，若要让 `/p/<项目>/<客户端>/<页面>` 这类深链直接可访问，静态托管需配置回退到 `index.html`；从评审包首页点击进入不受影响。
 
 ## 新增页面
 
@@ -193,6 +236,28 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 
 关联建议属于规则匹配结果，不等同于已理解业务语义的模型结论；低、中、高可信度都必须由项目负责人确认。静态生产包支持查看、分析和导出，但不允许修改页面关联。
 
+## 本地 MCP Server
+
+`npm run mcp:serve` 启动本地 MCP（Model Context Protocol）stdio 服务，供 Codex、Claude、ZCode 等工具在不解析仓库文件的情况下取得结构化项目上下文：
+
+- 只读工具：`list_projects`、`get_project_overview`、`get_page_context`、`list_documents`、`list_associations`、`list_health_issues`；不提供任何写工具。
+- 仅通过 stdin/stdout 通信，不监听任何网络端口，远程设备无法访问。
+- 响应统一脱敏本机绝对路径；全部能力复用 `packages/project-core` 与 CLI 同一数据源，输出结构与界面导出一致。
+- 单页上下文也可以不经 MCP 直接用 `npm run project -- context --project <id> --page <client/page> [--output 文件]` 导出 JSON。
+
+客户端配置示例（以支持 MCP 的工具为例）：
+
+```json
+{
+  "mcpServers": {
+    "prototype-platform": {
+      "command": "node",
+      "args": ["D:/工作文件/项目资料原型工程/scripts/platform-mcp.mjs"]
+    }
+  }
+}
+```
+
 ## 文档中心机制
 
 - 文档资料源由每个项目包的 `project.json.docs.root` 指定，支持项目包内相对路径，也支持本机可访问的绝对路径；新项目默认使用包内 `docs`。
@@ -240,7 +305,7 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 - 保留源页面字段、模拟数据、按钮、表格、弹窗和交互。
 - 使用统一 React 外壳、路由和菜单，不复制页面自有的旧外壳。
 - 页面专属状态保留在 HTML 内；项目级模拟数据放在项目包的 `data`。
-- 页面写入前通过 HTML 模板检查，完成后运行 `npm run audit:react-migration` 和 `npm run build`。
+- 页面写入前通过 HTML 模板检查，完成后运行 `npm run audit:migration` 和 `npm run build`。
 
 详细规则见 [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)。
 
@@ -249,7 +314,7 @@ npm run generate:page -- --project sample-project --client admin --path vehicle-
 ## 代码质量与 CI
 
 ```powershell
-npm run lint:react    # React 正式平台 ESLint
+npm run lint:app      # React 正式平台 ESLint
 npm run lint          # 全工程 ESLint；包含观察期 Vue 回退代码和本地项目包
 npm run format        # Prettier：仅格式化工程底座和公共组件
 npm run format:check  # 检查格式，不写文件

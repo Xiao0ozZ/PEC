@@ -152,6 +152,26 @@ export function normalizeBootstrapState(payload) {
   };
 }
 
+export function normalizeShareStatus(payload) {
+  const source = assertSuccessPayload(payload, '分享状态读取失败。');
+  const share = isRecord(source.share) ? source.share : {};
+  const urls = isRecord(share.urls) ? share.urls : {};
+  return {
+    sharing: share.sharing === true,
+    managedByStartup: share.managedByStartup === true,
+    canControl: share.canControl === true,
+    readOnly: share.readOnly !== false,
+    writeEnabled: share.writeEnabled === true,
+    host: typeof share.host === 'string' ? share.host : '',
+    port: Number(share.port) || 0,
+    urls: {
+      local: typeof urls.local === 'string' ? urls.local : '',
+      lan: Array.isArray(urls.lan) ? urls.lan.filter((item) => typeof item === 'string') : [],
+    },
+    message: typeof source.message === 'string' ? source.message : '',
+  };
+}
+
 export function normalizeProjectHealthReport(payload) {
   const source = isRecord(payload) ? payload : {};
   return {

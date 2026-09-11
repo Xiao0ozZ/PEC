@@ -84,12 +84,13 @@ function headingId(text, usedIds) {
   return id;
 }
 
-export function extractContextHeadings(source) {
+function scanContextHeadingLines(source) {
   const headings = [];
   const usedIds = new Set();
   let fence = null;
 
-  for (const line of String(source || '').split(/\r?\n/u)) {
+  const lines = String(source || '').split(/\r?\n/u);
+  for (const [lineIndex, line] of lines.entries()) {
     const fenceMatch = /^\s*(`{3,}|~{3,})/u.exec(line);
     if (fenceMatch) {
       const marker = fenceMatch[1];
@@ -102,10 +103,57 @@ export function extractContextHeadings(source) {
     const match = /^(#{1,3})\s+(.+?)\s*#*\s*$/u.exec(line);
     if (!match) continue;
     const text = match[2].replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1').trim();
-    headings.push({ id: headingId(text, usedIds), text, level: match[1].length });
+    headings.push({ id: headingId(text, usedIds), text, level: match[1].length, lineIndex });
   }
 
   return headings;
+}
+
+export function extractContextHeadings(source) {
+  return scanContextHeadingLines(source).map(({ id, text, level }) => ({ id, text, level }));
+}
+
+const SECTION_EXCERPT_MAX_LENGTH = 600;
+
+function stripMarkdownSyntax(text) {
+  return text
+    .replace(/<!--[\s\S]*?-->/gu, '')
+    .replace(/```[\s\S]*?```/gu, '')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/gu, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/gu, '$1')
+    .replace(/<[^>]+>/gu, ' ')
+    .replace(/[|>`*_~]/gu, '')
+    .replace(/\s+/gu, ' ')
+    .trim();
+}
+
+export function extractDocumentSection(source, anchor) {
+  const lines = String(source || '').split(/\r?\n/u);
+  if (!lines.join('').trim()) return null;
+  const anchorId = String(anchor || '')
+    .replace(/^#/, '')
+    .trim();
+  if (!anchorId) return null;
+
+  const headings = scanContextHeadingLines(source);
+  const anchorHeading = headings.find((heading) => heading.id === anchorId);
+  if (!anchorHeading) return null;
+
+  const endIndex = headings.findIndex(
+    (heading) => heading.lineIndex > anchorHeading.lineIndex && heading.level <= anchorHeading.level,
+  );
+  const bodyLines = lines.slice(anchorHeading.lineIndex + 1, endIndex === -1 ? lines.length : endIndex);
+  const excerpt = stripMarkdownSyntax(bodyLines.join('\n'));
+  return {
+    anchor: anchorHeading.id,
+    heading: anchorHeading.text,
+    level: anchorHeading.level,
+    excerpt: excerpt
+      ? excerpt.length > SECTION_EXCERPT_MAX_LENGTH
+        ? `${excerpt.slice(0, SECTION_EXCERPT_MAX_LENGTH)}…`
+        : excerpt
+      : '',
+  };
 }
 
 export function createStableContentHash(source) {
@@ -218,7 +266,20 @@ function createSuggestions(pages, documents) {
     .filter(Boolean);
 }
 
-function createIssues({ project, pages, documents, bindings, documentLoadErrors }) {
+const ISSUE_SUGGESTIONS = {
+  'documents-unavailable': '检查项目 docs.root 配置与文档目录后重新扫描。',
+  'page-without-prd': '在路由菜单管理或 AI 上下文关联建议中确认并登记 PRD 关联。',
+  'missing-linked-document': '重新选择存在的 PRD，或取消失效关联。',
+  'document-without-page': '确认文档仍在使用；已废弃的 PRD 移入归档目录。',
+  'missing-binding-document': '更新组件关联目标，或恢复对应 PRD 文件。',
+  'missing-binding-anchor': '按文档当前章节标题更新锚点，或清除该章节关联。',
+  'missing-binding-page': '更新组件关联指向已登记页面，或删除失效关联。',
+  'document-content-unavailable': '检查文档文件是否可读后重新扫描。',
+  'missing-page-source': '恢复缺失的页面源文件，或修正页面登记的 source/view 路径。',
+  'duplicate-page-identity': '合并或重命名重复的页面 path/name，保证同一客户端内唯一。',
+};
+
+function createIssues({ project, pages, documents, bindings, documentLoadErrors, sourceAvailability }) {
   const issues = [];
   const documentPaths = new Set(documents.map((document) => document.path));
   const documentByPath = new Map(documents.map((document) => [document.path, document]));
@@ -230,6 +291,40 @@ function createIssues({ project, pages, documents, bindings, documentLoadErrors 
       type: 'documents-unavailable',
       subject: project.name,
       message: '项目已启用文档中心，但没有读取到 Markdown 文档。',
+    });
+  }
+
+  const pathsByClient = new Map();
+  const namesByClient = new Map();
+  for (const page of pages) {
+    const pathPages = pathsByClient.get(`${page.clientId}:${page.path}`) || [];
+    pathPages.push(page);
+    pathsByClient.set(`${page.clientId}:${page.path}`, pathPages);
+    const namePages = namesByClient.get(`${page.clientId}:${page.name}`) || [];
+    namePages.push(page);
+    namesByClient.set(`${page.clientId}:${page.name}`, namePages);
+  }
+  const duplicateIdentities = new Map();
+  const collectDuplicates = (pagesByIdentity, kind) => {
+    for (const identityPages of pagesByIdentity.values()) {
+      if (identityPages.length < 2) continue;
+      const first = identityPages[0];
+      duplicateIdentities.set(`${first.clientId}:${kind}:${kind === 'path' ? first.path : first.name}`, {
+        first,
+        kind,
+        count: identityPages.length,
+      });
+    }
+  };
+  collectDuplicates(pathsByClient, 'path');
+  collectDuplicates(namesByClient, 'name');
+  for (const { first, kind, count } of duplicateIdentities.values()) {
+    issues.push({
+      severity: 'error',
+      type: 'duplicate-page-identity',
+      subject: `${first.clientName} · ${kind === 'path' ? first.path : first.name}`,
+      pageKey: first.key,
+      message: `客户端 ${first.clientId} 存在 ${count} 个重复的页面 ${kind === 'path' ? '路径' : 'name'}：${kind === 'path' ? first.path : first.name}。`,
     });
   }
 
@@ -250,6 +345,16 @@ function createIssues({ project, pages, documents, bindings, documentLoadErrors 
         pageKey: page.key,
         documentPath: page.documentPath,
         message: `已关联的 PRD 不存在：${page.documentPath}`,
+      });
+    }
+    if (page.source && sourceAvailability?.[page.key] === false) {
+      issues.push({
+        severity: 'error',
+        type: 'missing-page-source',
+        subject: `${page.clientName} · ${page.title}`,
+        pageKey: page.key,
+        source: page.source,
+        message: `页面源文件不存在：${page.source}`,
       });
     }
   }
@@ -316,7 +421,7 @@ function createIssues({ project, pages, documents, bindings, documentLoadErrors 
     });
   }
 
-  return issues;
+  return issues.map((item) => ({ ...item, suggestion: ISSUE_SUGGESTIONS[item.type] || '' }));
 }
 
 export function createProjectContext({
@@ -325,6 +430,7 @@ export function createProjectContext({
   documentSources = {},
   bindings = [],
   documentLoadErrors = [],
+  sourceAvailability = {},
   generatedAt = new Date().toISOString(),
 }) {
   if (!project?.id) throw new Error('生成项目上下文需要有效的项目配置。');
@@ -359,6 +465,7 @@ export function createProjectContext({
     documents,
     bindings: normalizedBindings,
     documentLoadErrors,
+    sourceAvailability,
   });
   const suggestions = createSuggestions(pages, documents);
   const linkedPages = pages.filter((page) => documentByPath.has(page.documentPath)).length;
@@ -375,6 +482,7 @@ export function createProjectContext({
       version: project.version || '',
       description: project.description || '',
       docsEnabled: Boolean(project.docs?.enabled),
+      theme: project.theme && typeof project.theme === 'object' ? project.theme : {},
     },
     clients: (project.clients || []).map((client) => ({
       id: client.id,
@@ -439,6 +547,7 @@ export function createTraceabilityReport(context, { baseline = null } = {}) {
         target: binding.target || null,
         document: binding.prd.document,
         anchor: binding.prd.anchor || '',
+        section: describeBindingSection(context, binding),
       })),
       issues: issuesByPage.get(page.key) || [],
       status: document ? 'covered' : 'uncovered',
@@ -483,6 +592,19 @@ export function createContextExport(context, { includeDocumentContent = false } 
   };
 }
 
+function describeBindingSection(context, binding) {
+  const document = context.documents.find((item) => item.path === binding.prd.document);
+  if (!document || !binding.prd.anchor) return null;
+  const section = document.contentAvailable
+    ? extractDocumentSection(document.content, binding.prd.anchor)
+    : null;
+  return {
+    document: document.path,
+    contentAvailable: document.contentAvailable,
+    ...(section || { anchor: String(binding.prd.anchor).replace(/^#/, '').trim() }),
+  };
+}
+
 export function createPageContextPackage(context, pageReference) {
   const page = context.pages.find(
     (item) => item.key === pageReference || item.fullPath === pageReference || item.name === pageReference,
@@ -490,8 +612,20 @@ export function createPageContextPackage(context, pageReference) {
   if (!page) return null;
   const requirements = context.documents
     .filter((document) => document.path === page.documentPath)
-    .map((document) => serializeDocument(document, true));
-  const bindings = context.bindings.filter((binding) => binding.pagePath === page.fullPath);
+    .map((document) => ({
+      ...serializeDocument(document, true),
+      outline: (document.headings || []).map(({ id, text, level }) => ({ id, text, level })),
+    }));
+  const bindings = context.bindings
+    .filter((binding) => binding.pagePath === page.fullPath)
+    .map((binding) => ({
+      id: binding.id,
+      label: binding.prd.label || binding.label || '',
+      target: binding.target || null,
+      document: binding.prd.document,
+      anchor: binding.prd.anchor || '',
+      section: describeBindingSection(context, binding),
+    }));
   return {
     schemaVersion: CONTEXT_SCHEMA_VERSION,
     kind: 'page-delivery-context',

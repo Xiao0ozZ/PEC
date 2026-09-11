@@ -164,8 +164,27 @@ export interface RouteListResult {
   [key: string]: unknown;
 }
 
+export interface ShareStatus {
+  sharing: boolean;
+  managedByStartup: boolean;
+  canControl: boolean;
+  readOnly: boolean;
+  writeEnabled: boolean;
+  host: string;
+  port: number;
+  urls: { local: string; lan: string[] };
+  message: string;
+}
+
 export interface BootstrapState {
-  runtime: { local?: boolean; writeEnabled?: boolean; readOnly?: boolean; host?: string; port?: number };
+  runtime: {
+    local?: boolean;
+    writeEnabled?: boolean;
+    readOnly?: boolean;
+    host?: string;
+    port?: number;
+    share?: ShareStatus;
+  };
   workspace: {
     projectsDirectoryReady?: boolean;
     mountsConfigured?: number;
@@ -222,5 +241,6 @@ export function normalizeHtmlPageCatalog(payload: unknown): HtmlPageCatalog;
 export function normalizePlatformSettings(payload: unknown): PlatformSettings;
 export function normalizeRouteList(payload: unknown): RouteListResult;
 export function normalizeBootstrapState(payload: unknown): BootstrapState;
+export function normalizeShareStatus(payload: unknown): ShareStatus;
 export function normalizeProjectHealthReport(payload: unknown): ProjectHealthReport;
 export function normalizeProjectMountsPayload(payload: unknown): ProjectMountsPayload;

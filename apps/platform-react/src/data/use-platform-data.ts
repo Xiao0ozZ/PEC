@@ -12,6 +12,7 @@ export const platformQueryKeys = {
   bootstrap: ['platform', 'bootstrap'] as const,
   mounts: ['platform', 'mounts'] as const,
   health: ['platform', 'health'] as const,
+  share: ['platform', 'share'] as const,
 };
 
 export function useProjectManifest() {
@@ -81,5 +82,14 @@ export function useProjectHealth() {
     queryKey: platformQueryKeys.health,
     queryFn: () => platformApi.loadProjectHealth(),
     enabled: platformApi.development,
+  });
+}
+
+export function useShareStatus() {
+  return useQuery({
+    queryKey: platformQueryKeys.share,
+    queryFn: () => platformApi.loadShareStatus(),
+    enabled: platformApi.development,
+    retry: false,
   });
 }

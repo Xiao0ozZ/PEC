@@ -294,7 +294,6 @@ export function ProjectRoutesPage() {
 
   return (
     <PlatformPage
-      eyebrow="PROJECT ROUTES"
       title="路由菜单管理"
       description="按客户端管理菜单分组、页面顺序、页面路由、PRD 关联和可恢复备份。"
       actions={
@@ -318,19 +317,18 @@ export function ProjectRoutesPage() {
       <Alert
         type="info"
         showIcon
-        message="路由新增会同时生成一个可运行的占位页面；页面内容可继续通过“页面导入导出”中的替换页面功能更新。"
+        title="路由新增会同时生成一个可运行的占位页面；页面内容可继续通过“页面导入导出”中的替换页面功能更新。"
       />
       {routeQuery.isError ? (
-        <Alert type="error" showIcon message="路由读取失败" description={routeQuery.error.message} />
+        <Alert type="error" showIcon title="路由读取失败" description={routeQuery.error.message} />
       ) : null}
       {actionError ? (
         <Alert
           type="error"
           showIcon
-          closable
-          message="操作失败"
+          closable={{ onClose: () => setActionError('') }}
+          title="操作失败"
           description={actionError}
-          onClose={() => setActionError('')}
         />
       ) : null}
       {routeQuery.isPending ? (
@@ -341,7 +339,6 @@ export function ProjectRoutesPage() {
         <>
           <Surface className="routes-overview">
             <div>
-              <Text className="console-eyebrow">ROUTE WORKSPACE</Text>
               <Title level={2}>{routeData.project.name}</Title>
               <Text type="secondary">
                 {routeData.project.id} · {routeData.project.version || '未设置版本'}
@@ -356,7 +353,6 @@ export function ProjectRoutesPage() {
           <Surface className="routes-panel">
             <div className="routes-panel__heading">
               <div>
-                <Text className="console-eyebrow">CLIENT ROUTES</Text>
                 <Title level={2}>客户端路由</Title>
                 <Text type="secondary">按客户端查看页面登记，分组与菜单顺序同实际客户端一致。</Text>
               </div>
