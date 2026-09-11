@@ -178,11 +178,7 @@ export function HomePage() {
       </header>
 
       <div className="home-main">
-        <section className="home-hero home-hero--ant">
-          <div className="home-hero__copy">
-            <Title>产品功能体验中心</Title>
-            <Text type="secondary">选择项目，进入对应的客户端原型、产品文档和移动端内容。</Text>
-          </div>
+        <section className="home-hero home-hero--ant home-hero--compact">
           <div className="home-project-picker">
             <div>
               <Text strong>当前项目</Text>

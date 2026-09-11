@@ -1,36 +1,30 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-export type PlatformThemeMode = 'system' | 'default' | 'dark' | 'glass';
+/**
+ * 用户可见主题只有浅色和深色；`glass` 是浅色主题的兼容内部值，
+ * 这样既能保留已有本地设置，又不再暴露独立的玻璃主题选项。
+ */
+export type PlatformThemeMode = 'system' | 'dark' | 'glass';
 export type ResolvedThemeMode = Exclude<PlatformThemeMode, 'system'>;
 
 interface PlatformThemeContextValue {
   mode: PlatformThemeMode;
   resolvedMode: ResolvedThemeMode;
-  compact: boolean;
   setMode: (mode: PlatformThemeMode) => void;
-  setCompact: (compact: boolean) => void;
 }
 
 const THEME_MODE_KEY = 'product-experience-center:theme-mode';
-const THEME_DENSITY_KEY = 'product-experience-center:theme-compact';
 const PlatformThemeContext = createContext<PlatformThemeContextValue | null>(null);
 
 function readThemeMode(): PlatformThemeMode {
   try {
     const stored = localStorage.getItem(THEME_MODE_KEY);
-    return stored === 'system' || stored === 'default' || stored === 'dark' || stored === 'glass'
-      ? stored
-      : 'default';
+    if (stored === 'system' || stored === 'dark' || stored === 'glass') return stored;
+    // 旧版默认浅色与新版浅色统一，避免升级后继续读取旧的蓝色浅色主题。
+    if (stored === 'default') return 'glass';
+    return 'glass';
   } catch {
-    return 'default';
-  }
-}
-
-function readCompactMode() {
-  try {
-    return localStorage.getItem(THEME_DENSITY_KEY) === '1';
-  } catch {
-    return false;
+    return 'glass';
   }
 }
 
@@ -39,12 +33,11 @@ function prefersDarkTheme() {
 }
 
 export function resolveThemeMode(mode: PlatformThemeMode, prefersDark: boolean): ResolvedThemeMode {
-  return mode === 'system' ? (prefersDark ? 'dark' : 'default') : mode;
+  return mode === 'system' ? (prefersDark ? 'dark' : 'glass') : mode;
 }
 
 export function PlatformThemeProvider({ children }: { children: ReactNode }) {
   const [mode, setModeState] = useState<PlatformThemeMode>(readThemeMode);
-  const [compact, setCompactState] = useState(readCompactMode);
   const [prefersDark, setPrefersDark] = useState(prefersDarkTheme);
   const resolvedMode = resolveThemeMode(mode, prefersDark);
 
@@ -59,15 +52,14 @@ export function PlatformThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = resolvedMode;
     document.documentElement.dataset.themeMode = mode;
-    document.documentElement.dataset.density = compact ? 'compact' : 'comfortable';
     document.documentElement.style.colorScheme = resolvedMode === 'dark' ? 'dark' : 'light';
-  }, [compact, mode, resolvedMode]);
+    delete document.documentElement.dataset.density;
+  }, [mode, resolvedMode]);
 
   const value = useMemo<PlatformThemeContextValue>(
     () => ({
       mode,
       resolvedMode,
-      compact,
       setMode(nextMode) {
         setModeState(nextMode);
         try {
@@ -76,16 +68,8 @@ export function PlatformThemeProvider({ children }: { children: ReactNode }) {
           // Storage is optional; the active session still updates.
         }
       },
-      setCompact(nextCompact) {
-        setCompactState(nextCompact);
-        try {
-          localStorage.setItem(THEME_DENSITY_KEY, nextCompact ? '1' : '0');
-        } catch {
-          // Storage is optional; the active session still updates.
-        }
-      },
     }),
-    [compact, mode, resolvedMode],
+    [mode, resolvedMode],
   );
 
   return <PlatformThemeContext.Provider value={value}>{children}</PlatformThemeContext.Provider>;

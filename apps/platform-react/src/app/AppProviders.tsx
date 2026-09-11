@@ -26,10 +26,10 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 
 function AntDesignProvider({ children }: { children: ReactNode }) {
-  const { resolvedMode, compact } = usePlatformTheme();
+  const { resolvedMode } = usePlatformTheme();
 
   return (
-    <ConfigProvider locale={zhCN} theme={createAntThemeConfig(resolvedMode, compact)}>
+    <ConfigProvider locale={zhCN} theme={createAntThemeConfig(resolvedMode)}>
       <AntApp>{children}</AntApp>
     </ConfigProvider>
   );

@@ -3,13 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { createAntThemeConfig } from './ant-theme-config';
 
 describe('createAntThemeConfig', () => {
-  it('uses the approved Ant Design light layout tokens for the default theme', () => {
-    const config = createAntThemeConfig('default', false);
+  it('uses the glass material as the only light theme', () => {
+    const config = createAntThemeConfig('glass');
 
     expect(config.token).toMatchObject({
       colorPrimary: '#1677FF',
-      colorBgLayout: '#f5f8ff',
-      colorBgContainer: '#ffffff',
+      colorBgLayout: '#f5f7fa',
+      colorBgContainer: 'rgba(255, 255, 255, 0.68)',
       borderRadius: 6,
       borderRadiusLG: 8,
       controlHeight: 32,
@@ -19,37 +19,33 @@ describe('createAntThemeConfig', () => {
         "'SFMono-Regular', 'SF Mono', ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
     });
     expect(config.components?.Layout).toMatchObject({
-      bodyBg: '#f5f8ff',
-      headerBg: '#ffffff',
-      siderBg: '#ffffff',
-      triggerBg: '#f0f5ff',
+      bodyBg: '#f5f7fa',
+      headerBg: 'rgba(255, 255, 255, 0.76)',
+      siderBg: 'rgba(255, 255, 255, 0.72)',
+      triggerBg: 'rgba(255, 255, 255, 0.82)',
     });
     expect(config.components?.Menu).toMatchObject({
       activeBarBorderWidth: 0,
       itemBg: 'transparent',
       subMenuItemBg: 'transparent',
+      itemHeight: 36,
+      itemMarginBlock: 2,
+      itemSelectedBg: 'var(--ant-color-primary)',
+      itemSelectedColor: '#fff',
+      horizontalLineHeight: 36,
+      horizontalItemBorderRadius: 18,
     });
   });
 
-  it('keeps compact density composable with every visual theme', () => {
-    const comfortable = createAntThemeConfig('default', false);
-    const compactDark = createAntThemeConfig('dark', true);
-
-    expect(comfortable.algorithm).toHaveLength(1);
-    expect(compactDark.algorithm).toHaveLength(2);
-  });
-
-  it('keeps glass as a translucent derivative instead of changing component semantics', () => {
-    const config = createAntThemeConfig('glass', false);
+  it('keeps dark mode separate from the light glass material', () => {
+    const config = createAntThemeConfig('dark');
 
     expect(config.token).toMatchObject({
       colorPrimary: '#1677FF',
-      colorBgLayout: '#edf5ff',
-      colorBgContainer: 'rgba(255, 255, 255, 0.68)',
     });
     expect(config.components?.Layout).toMatchObject({
-      bodyBg: 'transparent',
-      headerBg: 'rgba(255, 255, 255, 0.76)',
+      bodyBg: '#000000',
+      headerBg: '#141414',
     });
   });
 });

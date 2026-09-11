@@ -94,7 +94,7 @@ export function PlatformShell() {
 
   return (
     <Layout className="platform-workspace">
-      <Layout className="app-shell-body platform-workspace__body">
+      <div className="app-shell-body platform-workspace__body">
         <AppSidebar
           collapsed={collapsed}
           onToggleCollapsed={toggleCollapsed}
@@ -106,7 +106,6 @@ export function PlatformShell() {
             <Menu
               className="platform-workspace__menu"
               mode="inline"
-              inlineCollapsed={isCollapsed}
               selectedKeys={currentPath ? [currentPath] : []}
               items={buildMenuItems(isCollapsed)}
               onClick={({ key }) => navigate(String(key))}
@@ -128,7 +127,7 @@ export function PlatformShell() {
             </div>
           </Content>
         </div>
-      </Layout>
+      </div>
     </Layout>
   );
 }

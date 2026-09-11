@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -34,6 +43,7 @@ import {
   Menu,
   Select,
   Spin,
+  Tooltip,
   type MenuProps,
 } from '@/ui/ant';
 import {
@@ -44,13 +54,14 @@ import {
   DownloadOutlined,
   HomeOutlined,
   LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
+  UserOutlined,
 } from '@/ui/ant/icons';
+import { AppSidebar } from '@/ui/platform/AppSidebar';
 import { ProjectIcon } from '@/ui/platform/ProjectIcon';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
+const TOPNAV_CONTENT_OFFSET = 72;
 
 function routeForPage(projectId: string, clientId: string, page: HtmlPrototypePage) {
   return `/p/${projectId}/${clientId}/${page.path}`;
@@ -161,34 +172,72 @@ export function ClientWorkspacePage() {
 
   const prdPath = getPagePrdPath(prdLinksQuery.data, clientId, selectedPage) || '';
   const routePath = `/p/${projectId}/${clientId}/${selectedPage.path}`;
-  const pageBindings = (prdBindingsQuery.data?.bindings ?? []).filter((binding) =>
-    [selectedPage.path, routePath].includes(binding.pagePath),
-  );
-  const prdDocuments = [
-    ...(prdPath ? [{ path: prdPath }] : []),
-    ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
-  ].filter(
-    (item, index, items) =>
-      item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
+  const pageBindings = useMemo(() => {
+    const bindings = prdBindingsQuery.data?.bindings ?? [];
+    return bindings.filter((binding) => [selectedPage.path, routePath].includes(binding.pagePath));
+  }, [prdBindingsQuery.data?.bindings, routePath, selectedPage.path]);
+  const prdDocuments = useMemo(
+    () =>
+      [
+        ...(prdPath ? [{ path: prdPath }] : []),
+        ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
+      ].filter(
+        (item, index, items) =>
+          item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
+      ),
+    [pageBindings, prdPath],
   );
   const sourceDownloadUrl =
     developerMode && platformApi.development
       ? platformApi.getHtmlPrototypeSourceDownloadUrl(projectId, selectedPage.sourceRoot, selectedPage.source)
       : '';
+  const projectAccent = project.theme?.primary || '#1677ff';
 
-  function changePrdMode(nextMode: PrdPanelMode) {
+  const changePrdMode = useCallback((nextMode: PrdPanelMode) => {
     setPrdMode(nextMode);
     localStorage.setItem('product-experience-center:prd-panel-mode', nextMode);
-  }
+  }, []);
+
+  const handleClosePrd = useCallback(() => setPrdOpen(false), []);
+  const handleOpenPrd = useCallback(
+    (target?: { documentPath: string; anchor?: string }) => {
+      const documentPath =
+        typeof target?.documentPath === 'string' && target.documentPath.trim() ? target.documentPath : prdPath;
+      setPrdTarget({
+        documentPath,
+        ...(typeof target?.anchor === 'string' && target.anchor ? { anchor: target.anchor } : {}),
+      });
+      setPrdOpen(true);
+    },
+    [prdPath],
+  );
+  const clientTheme = useMemo(
+    () => ({
+      primary: project.theme?.primary || '#1677ff',
+      primaryHover: project.theme?.primaryHover,
+      primaryActive: project.theme?.primaryActive,
+      pageBackground: project.theme?.pageBackground,
+    }),
+    [project.theme?.pageBackground, project.theme?.primary, project.theme?.primaryActive, project.theme?.primaryHover],
+  );
+  const clientConfigTheme = useMemo(
+    () => ({
+      token: {
+        colorPrimary: projectAccent,
+        colorInfo: projectAccent,
+      },
+      components: {
+        Menu: {
+          itemSelectedBg: projectAccent,
+          itemSelectedColor: '#fff',
+        },
+      },
+    }),
+    [projectAccent],
+  );
 
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: project.theme?.primary || '#1677ff',
-        },
-      }}
-    >
+    <ConfigProvider theme={clientConfigTheme}>
       <ClientWorkspace
         projectId={projectId}
         clientId={clientId}
@@ -197,12 +246,7 @@ export function ClientWorkspacePage() {
         pages={pages}
         sections={sections}
         selectedPage={selectedPage}
-        theme={{
-          primary: project.theme?.primary || '#1677ff',
-          primaryHover: project.theme?.primaryHover,
-          primaryActive: project.theme?.primaryActive,
-          pageBackground: project.theme?.pageBackground,
-        }}
+        theme={clientTheme}
         locationSearch={location.search}
         locationHash={location.hash}
         prdPath={prdPath}
@@ -214,18 +258,8 @@ export function ClientWorkspacePage() {
         developerMode={developerMode}
         sourceDownloadUrl={sourceDownloadUrl}
         onPrdModeChange={changePrdMode}
-        onClosePrd={() => setPrdOpen(false)}
-        onOpenPrd={(target) => {
-          const documentPath =
-            typeof target?.documentPath === 'string' && target.documentPath.trim()
-              ? target.documentPath
-              : prdPath;
-          setPrdTarget({
-            documentPath,
-            ...(typeof target?.anchor === 'string' && target.anchor ? { anchor: target.anchor } : {}),
-          });
-          setPrdOpen(true);
-        }}
+        onClosePrd={handleClosePrd}
+        onOpenPrd={handleOpenPrd}
         onNavigate={navigate}
       />
     </ConfigProvider>
@@ -328,9 +362,7 @@ function ClientWorkspace({
 
   const navigatePage = useCallback(
     (page: HtmlPrototypePage) => {
-      const section = groups.find((group) =>
-        group.pages.some((candidate) => candidate.path === page.path),
-      );
+      const section = groups.find((group) => group.pages.some((candidate) => candidate.path === page.path));
       setMenuDisclosure({
         pagePath: page.path,
         openKeys: section ? [`section:${section.id}`] : [],
@@ -340,7 +372,8 @@ function ClientWorkspace({
     [clientId, groups, onNavigate, projectId],
   );
 
-  function syncIframeRoute(frame: HTMLIFrameElement) {
+  const syncIframeRoute = useCallback(
+    (frame: HTMLIFrameElement) => {
     try {
       const current = frame.contentWindow?.location;
       if (!current) return;
@@ -369,11 +402,13 @@ function ClientWorkspace({
     } catch {
       // 外部 HTML 目前由同源服务承载；若未来改为跨域，仅停止路由同步，不影响页面显示。
     }
-  }
+    },
+    [clientId, groups, locationHash, locationSearch, onNavigate, pages, projectId, selectedPage.path],
+  );
 
   const menuItems = useMemo(
-    () => createMenuItems(groups, layoutType, navigatePage),
-    [groups, layoutType, navigatePage],
+    () => createMenuItems(groups, layoutType, navigatePage, collapsed),
+    [collapsed, groups, layoutType, navigatePage],
   );
   const accountItems: MenuProps['items'] = [
     { key: 'home', icon: <HomeOutlined />, label: '回到首页', onClick: () => onNavigate('/') },
@@ -406,6 +441,7 @@ function ClientWorkspace({
           source={frameUrl}
           theme={theme}
           prdBindings={prdBindings}
+          contentTopOffset={layoutType === 'topnav' ? TOPNAV_CONTENT_OFFSET : 0}
           onOpenPrd={onOpenPrd}
           onLoad={syncIframeRoute}
         />
@@ -451,24 +487,21 @@ function ClientWorkspace({
     return (
       <Layout className="client-shell client-shell--topnav" style={workspaceStyle}>
         <Header className="client-topbar client-topbar--topnav">
-          <ClientBrand projectName={project.name} />
-          <Menu
-            aria-label="客户端主导航"
-            className="client-topnav-menu"
-            mode="horizontal"
-            selectedKeys={[selectedPage.path]}
-            items={menuItems}
-            style={{ minWidth: 0, flex: 'auto' }}
-          />
-          <ClientActions
-            clientId={clientId}
-            clientOptions={clientOptions}
-            prdPath={prdPath}
-            sourceDownloadUrl={sourceDownloadUrl}
-            accountItems={accountItems}
-            onClientChange={(value) => onNavigate(`/p/${projectId}/${value}`)}
-            onOpenPrd={onOpenPrd}
-          />
+          <div className="topnav-block topnav-block--main">
+            <ClientBrand projectName={project.name} />
+            <ClientTopNavigation groups={groups} selectedPage={selectedPage} onNavigatePage={navigatePage} />
+            <span className="client-topnav__divider" aria-hidden="true" />
+            <ClientActions
+              clientId={clientId}
+              clientName={client.name}
+              clientOptions={clientOptions}
+              prdPath={prdPath}
+              sourceDownloadUrl={sourceDownloadUrl}
+              accountItems={accountItems}
+              onClientChange={(value) => onNavigate(`/p/${projectId}/${value}`)}
+              onOpenPrd={onOpenPrd}
+            />
+          </div>
         </Header>
         {pageWorkspace}
       </Layout>
@@ -477,72 +510,104 @@ function ClientWorkspace({
 
   return (
     <Layout className="client-shell client-shell--sidebar" style={workspaceStyle}>
-      <Header className="client-topbar client-topbar--sidebar">
-        <ClientBrand projectName={project.name} />
-        <span className="client-topbar__spacer" aria-hidden="true" />
-        <ClientActions
-          clientId={clientId}
-          clientOptions={clientOptions}
-          prdPath={prdPath}
-          sourceDownloadUrl={sourceDownloadUrl}
-          accountItems={accountItems}
-          onClientChange={(value) => onNavigate(`/p/${projectId}/${value}`)}
-          onOpenPrd={onOpenPrd}
+      <div className="app-shell-body client-shell__body">
+        <AppSidebar
+          collapsed={collapsed}
+          onToggleCollapsed={toggleCollapsed}
+          brandMark={<AppstoreOutlined />}
+          brandTitle={project.name}
+          onBrandClick={() => onNavigate('/')}
+          routeKey={selectedPage.path}
+          selector={
+            <Select
+              aria-label="客户端"
+              value={clientId}
+              options={clientOptions}
+              onChange={(value) => onNavigate(`/p/${projectId}/${value}`)}
+            />
+          }
+          nav={(isCollapsed) => (
+            <Menu
+              aria-label="客户端导航"
+              mode="inline"
+              selectedKeys={[selectedPage.path]}
+              openKeys={isCollapsed ? undefined : openMenuKeys}
+              items={menuItems}
+              onOpenChange={(keys) => {
+                const latest = keys.find((key) => !openMenuKeys.includes(String(key)));
+                setMenuDisclosure({
+                  pagePath: selectedPage.path,
+                  openKeys: latest ? [String(latest)] : [],
+                });
+              }}
+            />
+          )}
+          tools={(isCollapsed) => (
+            <>
+              {sourceDownloadUrl ? (
+                <Button type="text" href={sourceDownloadUrl} icon={<DownloadOutlined />}>
+                  {isCollapsed ? null : '下载源文件'}
+                </Button>
+              ) : null}
+              <Button type="text" disabled={!prdPath} icon={<BookOutlined />} onClick={() => onOpenPrd()}>
+                {isCollapsed ? null : '查看 PRD'}
+              </Button>
+              <ThemeControl showLabel={!isCollapsed} />
+            </>
+          )}
+          account={(isCollapsed) => (
+            <Dropdown menu={{ items: accountItems }} trigger={['click']} placement="topLeft">
+              <button className="app-account-card" type="button">
+                <Avatar size={32} className="app-account-card__avatar">
+                  A
+                </Avatar>
+                {isCollapsed ? null : (
+                  <>
+                    <span className="app-account-card__copy">
+                      <b>Admin</b>
+                      <small>{client.name}</small>
+                    </span>
+                    <DownOutlined className="app-account-card__more" />
+                  </>
+                )}
+              </button>
+            </Dropdown>
+          )}
         />
-      </Header>
-      <Layout className="client-shell__body">
-        <Sider className="client-sider" width={216} collapsedWidth={56} collapsed={collapsed} trigger={null}>
-          <Menu
-            aria-label="客户端导航"
-            mode="inline"
-            selectedKeys={[selectedPage.path]}
-            openKeys={collapsed ? undefined : openMenuKeys}
-            items={menuItems}
-            onOpenChange={(keys) => {
-              const latest = keys.find((key) => !openMenuKeys.includes(String(key)));
-              setMenuDisclosure({
-                pagePath: selectedPage.path,
-                openKeys: latest ? [String(latest)] : [],
-              });
-            }}
-          />
-          <div className="client-sider-footer">
-            <Button
-              block
-              className="client-sider-trigger"
-              type="text"
-              onClick={toggleCollapsed}
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            >
-              {collapsed ? null : '收起导航'}
-            </Button>
-          </div>
-        </Sider>
-        {pageWorkspace}
-      </Layout>
+        <div className="app-workspace-panel">{pageWorkspace}</div>
+      </div>
     </Layout>
   );
 }
 
+/**
+ * 侧栏展开态的一级是**不可点的分组标题**，二级页面始终铺开；
+ * 收起态换成只有图标的父项，二级收进悬浮浮层；顶部导航沿用可点父项 + 下拉二级。
+ */
 function createMenuItems(
   groups: ReturnType<typeof groupClientPages>,
   layoutType: string,
   navigatePage: (page: HtmlPrototypePage) => void,
+  collapsed: boolean,
 ): MenuProps['items'] {
-  return groups.map((group) => ({
-    key: `section:${group.id}`,
-    icon:
-      layoutType === 'sidebar' && group.pages[0]?.icon ? (
-        <ProjectIcon name={group.pages[0].icon} />
-      ) : undefined,
-    label: group.title,
-    children: group.pages.map((page) => ({
+  const isSidebar = layoutType === 'sidebar';
+  return groups.map((group) => {
+    const children = group.pages.map((page) => ({
       key: page.path,
       icon: <ProjectIcon name={page.icon} />,
       label: page.title,
       onClick: () => navigatePage(page),
-    })),
-  }));
+    }));
+    if (isSidebar && !collapsed) {
+      return { type: 'group' as const, key: `section:${group.id}`, label: group.title, children };
+    }
+    return {
+      key: `section:${group.id}`,
+      icon: isSidebar && group.pages[0]?.icon ? <ProjectIcon name={group.pages[0].icon} /> : undefined,
+      label: group.title,
+      children,
+    };
+  });
 }
 
 function ClientBrand({ projectName }: { projectName: string }) {
@@ -558,8 +623,76 @@ function ClientBrand({ projectName }: { projectName: string }) {
   );
 }
 
+/**
+ * 顶部导航：一级菜单直接排在主胶囊里，选中一级高亮。
+ * 多页面分组使用 Ant Design Menu 原生子菜单，箭头与交互由 Menu 统一渲染。
+ */
+function ClientTopNavigation({
+  groups,
+  selectedPage,
+  onNavigatePage,
+}: {
+  groups: ReturnType<typeof groupClientPages>;
+  selectedPage: HtmlPrototypePage;
+  onNavigatePage: (page: HtmlPrototypePage) => void;
+}) {
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const items: MenuProps['items'] = groups.map((group) => {
+    const children = group.pages.map((page) => ({
+      key: page.path,
+      icon: <ProjectIcon name={page.icon} />,
+      label: page.title,
+    }));
+
+    if (children.length === 1) {
+      return { key: group.pages[0].path, label: group.title };
+    }
+
+    return { key: `section:${group.id}`, label: group.title, children };
+  });
+
+  useEffect(() => {
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (navigationRef.current?.contains(target)) return;
+      // Ant Menu 的子菜单默认挂到 body，点击浮层选项时不能提前把它卸载。
+      if (target.closest('.ant-menu-submenu-popup')) return;
+      setOpenKeys([]);
+    };
+
+    document.addEventListener('pointerdown', handleOutsidePointerDown);
+    return () => document.removeEventListener('pointerdown', handleOutsidePointerDown);
+  }, []);
+
+  return (
+    <div ref={navigationRef} className="client-topnav">
+      <Menu
+        aria-label="客户端主导航"
+        className="client-topnav--native"
+        mode="horizontal"
+        triggerSubMenuAction="click"
+        selectable
+        openKeys={openKeys}
+        onOpenChange={setOpenKeys}
+        selectedKeys={[selectedPage.path]}
+        items={items}
+        onClick={({ key }) => {
+          const page = groups.flatMap((group) => group.pages).find((item) => item.path === key);
+          if (page) {
+            setOpenKeys([]);
+            onNavigatePage(page);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
 function ClientActions({
   clientId,
+  clientName,
   clientOptions,
   prdPath,
   sourceDownloadUrl,
@@ -568,6 +701,7 @@ function ClientActions({
   onOpenPrd,
 }: {
   clientId: string;
+  clientName: string;
   clientOptions: Array<{ label: string; value: string }>;
   prdPath: string;
   sourceDownloadUrl: string;
@@ -575,25 +709,75 @@ function ClientActions({
   onClientChange: (value: string) => void;
   onOpenPrd: () => void;
 }) {
+  /** 右侧四个功能保留图标表达，文字通过悬浮提示和 aria-label 提供。 */
+  const entries: ReactNode[] = [
+    <Dropdown
+      key="client"
+      trigger={['click']}
+      placement="bottomRight"
+      classNames={{ root: 'app-pill-menu' }}
+      menu={{
+        items: [
+          {
+            type: 'group',
+            label: '切换客户端',
+            children: clientOptions.map((option) => ({ key: option.value, label: option.label })),
+          },
+        ],
+        selectable: true,
+        selectedKeys: [clientId],
+        onClick: ({ key }) => onClientChange(key),
+      }}
+    >
+      <Tooltip title={`切换客户端：${clientName}`}>
+        <button type="button" className="topnav-icon-button" aria-label={`切换客户端，当前 ${clientName}`}>
+          <AppstoreOutlined />
+        </button>
+      </Tooltip>
+    </Dropdown>,
+
+    sourceDownloadUrl ? (
+      <Tooltip key="download" title="下载源文件">
+        <a className="topnav-icon-button" href={sourceDownloadUrl} aria-label="下载源文件">
+          <DownloadOutlined />
+        </a>
+      </Tooltip>
+    ) : null,
+
+    <Tooltip key="prd" title={prdPath ? '查看 PRD' : '当前页面没有关联 PRD'}>
+      <button
+        type="button"
+        className="topnav-icon-button"
+        aria-label="查看 PRD"
+        disabled={!prdPath}
+        onClick={() => onOpenPrd()}
+      >
+        <BookOutlined />
+      </button>
+    </Tooltip>,
+
+    <ThemeControl key="theme" iconOnly />,
+
+    <Dropdown
+      key="account"
+      menu={{ items: accountItems }}
+      trigger={['click']}
+      placement="bottomRight"
+      classNames={{ root: 'app-pill-menu' }}
+    >
+      <Tooltip title="账号：Admin">
+        <button type="button" className="topnav-icon-button" aria-label="账号：Admin">
+          <UserOutlined />
+        </button>
+      </Tooltip>
+    </Dropdown>,
+  ].filter(Boolean);
+
   return (
     <div className="client-actions">
-      <Select aria-label="客户端" value={clientId} options={clientOptions} onChange={onClientChange} />
-      {sourceDownloadUrl ? (
-        <Button type="text" href={sourceDownloadUrl} icon={<DownloadOutlined />}>
-          下载源文件
-        </Button>
-      ) : null}
-      <Button type="text" disabled={!prdPath} icon={<BookOutlined />} onClick={() => onOpenPrd()}>
-        查看 PRD
-      </Button>
-      <ThemeControl />
-      <Dropdown menu={{ items: accountItems }} trigger={['click']}>
-        <Button type="text" className="client-account">
-          <Avatar size={32}>A</Avatar>
-          <strong>Admin</strong>
-          <DownOutlined />
-        </Button>
-      </Dropdown>
+      {entries.map((entry, index) => (
+        <Fragment key={index}>{entry}</Fragment>
+      ))}
     </div>
   );
 }

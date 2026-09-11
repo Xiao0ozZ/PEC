@@ -6,16 +6,20 @@ const FONT_FAMILY =
   "'SF Pro Text', 'SF Pro Display', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif";
 const FONT_FAMILY_CODE =
   "'SFMono-Regular', 'SF Mono', ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+const MENU_ITEM_HEIGHT = 36;
+const MENU_ITEM_MARGIN_BLOCK = 2;
+const MENU_ITEM_BORDER_RADIUS = 8;
+const HORIZONTAL_MENU_ITEM_BORDER_RADIUS = MENU_ITEM_HEIGHT / 2;
 
 const LIGHT_LAYOUT = {
-  bodyBg: '#f5f8ff',
-  footerBg: '#f5f8ff',
-  headerBg: '#ffffff',
+  bodyBg: '#f5f7fa',
+  footerBg: '#f5f7fa',
+  headerBg: 'rgba(255, 255, 255, 0.76)',
   headerColor: 'rgba(0, 0, 0, 0.88)',
-  lightSiderBg: '#ffffff',
-  siderBg: '#ffffff',
-  triggerBg: '#f0f5ff',
-  lightTriggerBg: '#f0f5ff',
+  lightSiderBg: 'rgba(255, 255, 255, 0.72)',
+  siderBg: 'rgba(255, 255, 255, 0.72)',
+  triggerBg: 'rgba(255, 255, 255, 0.82)',
+  lightTriggerBg: 'rgba(255, 255, 255, 0.82)',
   triggerColor: 'rgba(0, 0, 0, 0.88)',
 } as const;
 
@@ -31,25 +35,11 @@ const DARK_LAYOUT = {
   triggerColor: 'rgba(255, 255, 255, 0.85)',
 } as const;
 
-const GLASS_LAYOUT = {
-  bodyBg: 'transparent',
-  footerBg: 'transparent',
-  headerBg: 'rgba(255, 255, 255, 0.76)',
-  headerColor: 'rgba(0, 0, 0, 0.88)',
-  lightSiderBg: 'rgba(255, 255, 255, 0.72)',
-  siderBg: 'rgba(255, 255, 255, 0.72)',
-  triggerBg: 'rgba(240, 245, 255, 0.82)',
-  lightTriggerBg: 'rgba(240, 245, 255, 0.82)',
-  triggerColor: 'rgba(0, 0, 0, 0.88)',
-} as const;
-
-export function createAntThemeConfig(resolvedMode: ResolvedThemeMode, compact: boolean): ThemeConfig {
+export function createAntThemeConfig(resolvedMode: ResolvedThemeMode): ThemeConfig {
   const isDark = resolvedMode === 'dark';
-  const isGlass = resolvedMode === 'glass';
   const algorithms = [isDark ? theme.darkAlgorithm : theme.defaultAlgorithm];
-  if (compact) algorithms.push(theme.compactAlgorithm);
 
-  const layout = isDark ? DARK_LAYOUT : isGlass ? GLASS_LAYOUT : LIGHT_LAYOUT;
+  const layout = isDark ? DARK_LAYOUT : LIGHT_LAYOUT;
   const progressTextColor = isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)';
   const progressRemainingColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.06)';
 
@@ -61,19 +51,12 @@ export function createAntThemeConfig(resolvedMode: ResolvedThemeMode, compact: b
       colorInfo: '#1677FF',
       ...(isDark
         ? {}
-        : isGlass
-          ? {
-              colorBgLayout: '#edf5ff',
-              colorBgContainer: 'rgba(255, 255, 255, 0.68)',
-              colorBgElevated: 'rgba(255, 255, 255, 0.9)',
-              colorBorderSecondary: 'rgba(5, 5, 5, 0.1)',
-            }
-          : {
-              colorBgLayout: '#f5f8ff',
-              colorBgContainer: '#ffffff',
-              colorBgElevated: '#ffffff',
-              colorBorderSecondary: '#f0f0f0',
-            }),
+        : {
+            colorBgLayout: '#f5f7fa',
+            colorBgContainer: 'rgba(255, 255, 255, 0.68)',
+            colorBgElevated: 'rgba(255, 255, 255, 0.9)',
+            colorBorderSecondary: 'rgba(5, 5, 5, 0.1)',
+          }),
       borderRadius: 6,
       borderRadiusLG: 8,
       controlHeight: 32,
@@ -89,9 +72,19 @@ export function createAntThemeConfig(resolvedMode: ResolvedThemeMode, compact: b
         activeBarBorderWidth: 0,
         itemBg: 'transparent',
         subMenuItemBg: 'transparent',
-        itemBorderRadius: 8,
-        itemHeight: 40,
-        subMenuItemBorderRadius: 8,
+        itemBorderRadius: MENU_ITEM_BORDER_RADIUS,
+        itemHeight: MENU_ITEM_HEIGHT,
+        itemMarginBlock: MENU_ITEM_MARGIN_BLOCK,
+        itemSelectedBg: 'var(--ant-color-primary)',
+        itemSelectedColor: '#fff',
+        itemHoverBg: 'var(--ant-color-fill-tertiary)',
+        horizontalLineHeight: MENU_ITEM_HEIGHT,
+        horizontalItemBorderRadius: HORIZONTAL_MENU_ITEM_BORDER_RADIUS,
+        horizontalItemHoverBg: 'var(--ant-color-fill-tertiary)',
+        horizontalItemHoverColor: 'var(--ant-color-text)',
+        horizontalItemSelectedBg: 'var(--ant-color-primary-bg)',
+        horizontalItemSelectedColor: 'var(--ant-color-primary)',
+        subMenuItemBorderRadius: MENU_ITEM_BORDER_RADIUS,
       },
       Button: { borderRadius: 6 },
       Card: { borderRadiusLG: 8, headerHeight: 56, bodyPadding: 24 },

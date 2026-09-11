@@ -17,135 +17,22 @@
   background: var(--platform-canvas);
 }
 
-.platform-workspace__global-header {
-  z-index: 20;
-  display: grid;
-  height: var(--platform-header-height);
-  grid-template-columns: 216px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 24px;
-  padding: 0 24px !important;
-  border-bottom: 1px solid var(--platform-border);
-  background: var(--platform-surface) !important;
-}
-
+/* 侧栏框架（.app-sider / .app-workspace-panel）统一在 app-shell-frame.css，
+   本文件只保留平台外壳自身的内容区布局。 */
 .platform-workspace__body {
   min-height: 0;
   background: var(--platform-canvas);
 }
 
-.platform-workspace__sider {
-  height: 100%;
-  border-right: 1px solid var(--platform-border);
-  background: var(--platform-surface) !important;
-}
-
-/* 同 client-sider：宽度过渡会让内容区逐帧回流，收起/展开瞬时完成。 */
-.platform-workspace__sider,
-.platform-workspace__sider .ant-layout-sider-children {
-  transition: none !important;
-}
-
-.platform-workspace__sider .ant-layout-sider-children {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.platform-workspace__brand {
-  display: inline-flex;
-  width: max-content;
-  align-items: center;
-  gap: 8px;
-  height: 44px;
-  padding: 6px 8px;
-  border: 0;
-  color: inherit;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-}
-
-.platform-workspace__brand > span {
-  display: grid;
-  flex: 0 0 32px;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 6px;
-  color: #fff;
-  background: var(--platform-blue);
-  font-size: 16px;
-}
-
-.platform-workspace__brand > div {
-  display: grid;
-  min-width: 0;
-}
-
-.platform-workspace__brand strong,
-.platform-workspace__brand small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.platform-workspace__brand strong {
-  font-size: 16px;
-  font-weight: 600;
-}
-
 .platform-workspace__menu {
-  flex: 1;
-  padding: 4px 8px 16px;
-  overflow: auto;
   border-inline-end: 0 !important;
   background: transparent !important;
-}
-
-.platform-workspace__menu .ant-menu-item,
-.platform-workspace__menu .ant-menu-submenu-title {
-  margin-block: 4px;
-}
-
-.platform-workspace__menu .ant-menu-item-selected {
-  font-weight: 400;
-}
-
-.platform-workspace__collapse {
-  height: 44px !important;
-  margin: 8px !important;
-  border-top: 1px solid var(--platform-border) !important;
-  border-radius: 0 !important;
-  color: var(--platform-text-secondary) !important;
-}
-
-.platform-workspace__main {
-  min-width: 0;
-  min-height: 0;
-  background: var(--platform-canvas);
-}
-
-.platform-workspace__context {
-  display: flex;
-  align-items: center;
-  min-height: 54px;
-  padding: 0 24px;
-  background: transparent;
-}
-
-.platform-workspace__context .ant-breadcrumb {
-  margin-block: 16px;
-}
-
-.platform-workspace__home {
-  cursor: pointer;
 }
 
 .platform-workspace__content {
   min-width: 0;
   min-height: 0;
-  padding: 0 24px 24px;
+  padding: 24px;
   overflow: auto;
 }
 
@@ -569,55 +456,89 @@
 .docs-header {
   z-index: 5;
   display: grid;
-  height: 60px;
-  grid-template-columns: 1fr auto 1fr;
+  height: var(--app-header-height, 56px);
+  grid-template-columns: minmax(240px, 1fr) auto minmax(240px, 1fr);
   align-items: center;
+  gap: 16px;
   padding: 0 18px;
   border-bottom: 1px solid var(--platform-border);
-  background: #fff !important;
+  background: var(--platform-surface) !important;
   line-height: normal;
 }
 
-.docs-header > .ant-btn {
-  width: max-content;
-  min-width: 0;
-  justify-self: start;
-  margin: 0;
-}
-
-.docs-header > .ant-tag {
-  justify-self: end;
-}
-
-.docs-header__identity {
+.docs-header__brand {
   display: flex;
   min-width: 0;
   align-items: center;
   gap: 10px;
-  justify-self: center;
+  justify-self: start;
 }
 
-.docs-header__identity > span {
+.docs-header__back.ant-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--platform-text-secondary);
+}
+
+.docs-header__back.ant-btn:hover {
+  color: var(--platform-blue);
+  background: var(--platform-blue-soft);
+}
+
+.docs-header__identity-mark {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   place-items: center;
   border-radius: 8px;
-  color: #1677ff;
-  background: #eaf3ff;
+  color: var(--ant-color-primary);
+  background: var(--ant-color-primary-bg);
 }
 
-.docs-header__identity h4 {
-  margin: 0 !important;
-  font-size: 14px !important;
-}
-
-.docs-header__identity > div {
+.docs-header__brand > div {
+  display: grid;
   min-width: 0;
+  gap: 1px;
 }
 
-.docs-header__identity .ant-typography-secondary {
+.docs-header__brand strong {
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.docs-header__brand .ant-typography-secondary {
   font-size: 11px;
+  line-height: 16px;
+}
+
+.docs-header__current {
+  justify-self: center;
+  padding: 6px 14px;
+  border-radius: var(--ant-border-radius-lg, 8px);
+  color: var(--platform-text);
+  background: var(--ant-color-fill-tertiary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.docs-header__actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  justify-self: end;
+}
+
+.docs-header__actions > .ant-tag {
+  margin: 0;
+  color: var(--platform-text-secondary);
+  background: transparent;
 }
 
 .docs-layout {
@@ -628,10 +549,14 @@
 
 .docs-sidebar,
 .docs-outline {
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: hidden;
+  border-color: var(--platform-border);
+  background: var(--platform-surface) !important;
+}
+
+.docs-sidebar {
   border-right: 1px solid var(--platform-border);
-  background: #fff !important;
 }
 
 .docs-outline {
@@ -649,11 +574,31 @@
 .docs-sidebar__heading,
 .docs-outline__heading {
   display: flex;
+  min-height: 54px;
   align-items: center;
   justify-content: space-between;
-  min-height: 48px;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--platform-border);
+}
+
+.docs-sidebar__heading > div,
+.docs-outline__heading > div {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.docs-sidebar__heading .ant-typography-secondary,
+.docs-outline__heading .ant-typography-secondary {
+  font-size: 11px;
+}
+
+.docs-sidebar__heading > .ant-tag,
+.docs-outline__heading > .ant-tag {
+  margin: 0;
+  color: var(--platform-text-secondary);
+  background: var(--ant-color-fill-tertiary);
 }
 
 .docs-sidebar > .ant-layout-sider-children > .ant-input-group-wrapper {
@@ -661,78 +606,174 @@
   margin: 12px 12px 8px;
 }
 
+.docs-sidebar > .ant-layout-sider-children > .ant-input-group-wrapper .ant-input-affix-wrapper {
+  border-radius: var(--ant-border-radius, 6px);
+}
+
 .docs-associated-pages {
-  margin: 0 8px 4px;
+  margin: 0 10px 8px;
 }
 
-.docs-file-list,
-.docs-outline .ant-list {
-  min-height: 0;
-  flex: 1;
-  overflow: auto;
-  padding: 4px 8px 16px;
+.docs-associated-pages .ant-collapse-header {
+  padding: 8px !important;
 }
 
-.docs-file-list .ant-list-item {
-  padding: 2px 0;
+.docs-associated-pages .ant-collapse-content-box {
+  padding: 0 4px 4px !important;
+}
+
+.docs-associated-pages .ant-list-item {
+  padding: 0;
   border: 0;
 }
 
-.docs-file-list .ant-btn {
+.docs-associated-pages .ant-btn {
+  display: flex;
+  width: 100%;
   height: auto;
-  min-height: 48px;
-  justify-content: flex-start;
-  padding: 7px 9px;
+  min-height: 30px;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 8px;
   text-align: left;
 }
 
-.docs-file-list .ant-btn > span {
+.docs-associated-pages .ant-btn > span {
   display: grid;
   min-width: 0;
-  width: 100%;
-  gap: 2px;
+  gap: 1px;
+}
+
+.docs-associated-pages small {
+  color: var(--platform-text-secondary);
+  font-size: 11px;
+}
+
+.docs-file-groups {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 4px 10px 20px;
+}
+
+.docs-file-group + .docs-file-group {
+  margin-top: 14px;
+}
+
+.docs-file-group__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 8px 5px;
+  color: var(--platform-text-secondary);
+  font-size: 12px;
+}
+
+.docs-file-group__heading .ant-typography-secondary {
+  font-size: 11px;
+}
+
+.docs-file-list {
+  margin: 0;
+  padding: 0;
+}
+
+.docs-file-list .ant-list-item {
+  padding: 1px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.docs-file-list .ant-btn {
+  display: flex;
+  height: auto;
+  min-height: 34px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 6px 9px;
+  border-radius: var(--ant-border-radius, 6px);
+  color: var(--platform-text-secondary);
+  text-align: left;
+}
+
+.docs-file-list .ant-btn .anticon {
+  flex: none;
+  color: var(--ant-color-text-quaternary, var(--platform-text-secondary));
+  font-size: 14px;
 }
 
 .docs-file-list .docs-file-item__content {
-  display: grid;
+  display: block;
   min-width: 0;
-  width: 100%;
-  gap: 2px;
-}
-
-.docs-file-list .ant-btn strong,
-.docs-file-list .ant-btn small {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.docs-file-list .ant-btn small {
-  color: var(--platform-text-secondary);
-  font-size: 10px;
+.docs-file-list .ant-btn strong {
+  display: block;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .docs-file-list .ant-list-item.is-active .ant-btn {
-  color: #1677ff;
-  background: #eaf3ff;
+  color: var(--platform-blue);
+  background: var(--platform-blue-soft);
   font-weight: 600;
+}
+
+.docs-file-list .ant-list-item.is-active {
+  background: transparent;
+}
+
+.docs-file-list .ant-list-item.is-active .ant-btn .anticon,
+.docs-file-list .ant-list-item.is-active .ant-btn strong {
+  color: var(--platform-blue);
 }
 
 .docs-reader {
   min-width: 0;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
-  padding: 32px clamp(28px, 5vw, 72px) 64px;
-  background: #fff;
+  padding: 28px clamp(28px, 5vw, 84px) 64px;
+  background: var(--platform-surface);
 }
 
-.docs-reader > .markdown-body {
+.docs-reader__inner {
   width: min(860px, 100%);
   margin: 0 auto;
 }
 
+.docs-reader__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  color: var(--platform-text-secondary);
+  font-size: 12px;
+}
+
+.docs-reader > .markdown-body,
+.docs-reader__inner > .markdown-body {
+  width: 100%;
+  margin: 0;
+}
+
+.docs-outline .ant-list {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 14px 12px 24px;
+}
+
 .docs-outline .ant-list-item {
-  padding-block: 1px;
+  padding: 1px 0;
   border: 0;
 }
 
@@ -741,12 +782,19 @@
   min-height: 30px;
   justify-content: flex-start;
   overflow: hidden;
-  padding: 4px 8px;
+  padding: 5px 8px;
+  border-radius: var(--ant-border-radius, 6px);
   color: var(--platform-text-secondary);
   font-size: 12px;
+  line-height: 18px;
   text-align: left;
-  text-overflow: ellipsis;
   white-space: normal;
+}
+
+.docs-outline .ant-list-item.is-active .ant-btn {
+  color: var(--platform-blue);
+  background: var(--platform-blue-soft);
+  font-weight: 600;
 }
 
 .client-page-workspace {
@@ -1088,16 +1136,9 @@
 }
 
 @media (max-width: 900px) {
-  .platform-workspace__sider {
-    position: fixed !important;
-  }
-
-  .platform-workspace__main {
-    margin-left: 72px;
-  }
-
-  .platform-workspace__sider:not(.ant-layout-sider-collapsed) {
-    box-shadow: 16px 0 40px rgb(0 0 0 / 12%);
+  /* 窄屏侧栏收进抽屉，左上角悬浮按钮会盖住内容，正文让出这一条。 */
+  .platform-workspace__content {
+    padding-left: 56px;
   }
 
   .platform-page--ant {
@@ -1155,10 +1196,19 @@
 @media (max-width: 680px) {
   .docs-header {
     grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    padding: 0 10px;
   }
 
-  .docs-header > .ant-btn span:not(.anticon) {
+  .docs-header__actions > .ant-tag {
     display: none;
+  }
+
+  .docs-header__current {
+    overflow: hidden;
+    max-width: 34vw;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .docs-sidebar {

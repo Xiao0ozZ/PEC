@@ -70,12 +70,18 @@ export function AppSidebar({
   routeKey,
 }: AppSidebarProps) {
   const isDesktop = useMinWidth(DESKTOP_QUERY);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerState, setDrawerState] = useState({ open: false, routeKey });
+  const drawerOpen = drawerState.open;
 
-  // 路由变化即关抽屉：窄屏点完菜单还压着一层浮层，等于点了没反应。
-  useEffect(() => {
-    setDrawerOpen(false);
-  }, [routeKey]);
+  /**
+   * 路由变化即关抽屉：窄屏点完菜单还压着一层浮层，等于点了没反应。
+   *
+   * 在渲染期直接归位，而不是放进 effect：effect 里同步 setState 会多触发一次
+   * 级联渲染，而这里本来就是「输入（routeKey）变了就修正派生状态」。
+   */
+  if (drawerState.routeKey !== routeKey) {
+    setDrawerState({ open: false, routeKey });
+  }
 
   function renderShell(inDrawer: boolean) {
     const isCollapsed = collapsed && !inDrawer;
@@ -123,7 +129,7 @@ export function AppSidebar({
           className="app-sider-drawer-trigger"
           aria-label="打开导航"
           icon={<MenuOutlined />}
-          onClick={() => setDrawerOpen(true)}
+          onClick={() => setDrawerState({ open: true, routeKey })}
         />
         <Drawer
           className="app-sider-drawer"
@@ -132,7 +138,7 @@ export function AppSidebar({
           open={drawerOpen}
           closable={false}
           styles={{ body: { padding: 0 } }}
-          onClose={() => setDrawerOpen(false)}
+          onClose={() => setDrawerState({ open: false, routeKey })}
         >
           {renderShell(true)}
         </Drawer>

@@ -6,13 +6,8 @@ import { PlatformThemeProvider, usePlatformTheme } from './platform-theme';
 const STORAGE_KEY = 'product-experience-center:theme-mode';
 
 function ThemeProbe() {
-  const { mode, compact, setMode, setCompact } = usePlatformTheme();
-  return (
-    <>
-      <button onClick={() => setMode('dark')}>{mode}</button>
-      <button onClick={() => setCompact(!compact)}>{compact ? 'compact' : 'comfortable'}</button>
-    </>
-  );
+  const { mode, setMode } = usePlatformTheme();
+  return <button onClick={() => setMode('dark')}>{mode}</button>;
 }
 
 describe('platform theme', () => {
@@ -22,7 +17,8 @@ describe('platform theme', () => {
   });
 
   it('restores and persists the selected Ant theme', async () => {
-    localStorage.setItem(STORAGE_KEY, 'glass');
+    // 旧版本的默认浅色设置应迁移到现在的浅色材质。
+    localStorage.setItem(STORAGE_KEY, 'default');
     render(
       <PlatformThemeProvider>
         <ThemeProbe />
@@ -36,9 +32,6 @@ describe('platform theme', () => {
     expect(screen.getByRole('button', { name: 'dark' })).toBeInTheDocument();
     expect(localStorage.getItem(STORAGE_KEY)).toBe('dark');
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe('dark'));
-
-    fireEvent.click(screen.getByRole('button', { name: 'comfortable' }));
-    expect(localStorage.getItem('product-experience-center:theme-compact')).toBe('1');
-    await waitFor(() => expect(document.documentElement.dataset.density).toBe('compact'));
+    expect(document.documentElement.dataset.density).toBeUndefined();
   });
 });

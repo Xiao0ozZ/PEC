@@ -7,20 +7,66 @@
   --platform-canvas: var(--ant-color-bg-layout, #f5f5f5);
   --platform-surface: var(--ant-color-bg-container, #fff);
   --platform-root-canvas: #f5f8ff;
-  --app-header-height: 56px;
-  --app-sider-width: 232px;
+  /*
+   * 平台材质扩展：颜色、边框和阴影优先读取 Ant Design token；
+   * backdrop-filter 不是 Ant 的内置 token，因此只在这里补充一层平台语义变量。
+   */
+  --platform-material-surface: var(--ant-color-bg-container, #fff);
+  --platform-material-surface-strong: var(--ant-color-bg-elevated, #fff);
+  --platform-material-border: var(--ant-color-border-secondary, #f0f0f0);
+  --platform-material-hover-surface: var(--ant-color-fill-tertiary, #f5f5f5);
+  --platform-material-surface-shadow: var(
+    --ant-box-shadow-secondary,
+    0 6px 16px rgb(0 0 0 / 8%),
+    0 3px 6px -4px rgb(0 0 0 / 12%),
+    0 9px 28px 8px rgb(0 0 0 / 5%)
+  );
+  --platform-material-control-shadow: none;
+  --platform-material-backdrop-filter: none;
+  --app-header-height: var(--ant-layout-header-height, 56px);
 }
 
 html[data-theme='dark'] {
   --platform-root-canvas: #000;
+  --platform-material-surface: color-mix(in srgb, var(--ant-color-bg-container, #141414) 72%, transparent);
+  --platform-material-surface-strong: color-mix(
+    in srgb,
+    var(--ant-color-bg-elevated, #1f1f1f) 82%,
+    transparent
+  );
+  --platform-material-border: rgb(255 255 255 / 14%);
+  --platform-material-hover-surface: rgb(255 255 255 / 10%);
+  --platform-material-surface-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 8%),
+    0 10px 34px rgb(0 0 0 / 38%);
+  --platform-material-control-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 10%),
+    0 8px 24px rgb(0 0 0 / 26%);
+  --platform-material-backdrop-filter: blur(24px) saturate(140%);
 }
 
 html[data-theme='glass'] {
   --platform-root-canvas: transparent;
-}
-
-html[data-density='compact'] {
-  --app-header-height: 48px;
+  /* Ant 的 bg-container/bg-elevated 默认是实心色，不能直接作为玻璃背景。 */
+  --platform-material-surface: color-mix(
+    in srgb,
+    var(--ant-color-bg-container, #fff) 68%,
+    transparent
+  );
+  --platform-material-surface-strong: color-mix(
+    in srgb,
+    var(--ant-color-bg-elevated, #fff) 82%,
+    transparent
+  );
+  --platform-material-border: rgb(255 255 255 / 64%);
+  --platform-material-hover-surface: rgb(255 255 255 / 54%);
+  --platform-material-surface-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 54%),
+    0 10px 30px rgb(69 101 141 / 8%);
+  --platform-material-control-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 6px 18px -8px rgb(15 23 42 / 20%);
+  --platform-material-backdrop-filter: blur(24px) saturate(145%);
 }
 
 html,
@@ -98,10 +144,7 @@ body {
 }
 
 html[data-theme='glass'] body {
-  background:
-    radial-gradient(circle at 12% 8%, rgb(117 185 255 / 34%), transparent 34rem),
-    radial-gradient(circle at 88% 18%, rgb(184 159 255 / 26%), transparent 30rem),
-    linear-gradient(145deg, #edf6ff 0%, #f6f3ff 48%, #edf8ff 100%);
+  background: var(--ant-color-bg-layout, #f5f7fa);
   background-attachment: fixed;
 }
 
@@ -170,12 +213,10 @@ html[data-theme='glass'] .system-result-page .ant-result {
 }
 
 .app-frame .ant-btn {
-  transform: translateZ(0);
   transition:
-    color 160ms,
-    background-color 160ms,
-    border-color 160ms,
-    box-shadow 160ms,
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
     transform 100ms ease-out !important;
 }
 
@@ -747,11 +788,17 @@ html[data-theme='glass'] .system-result-page .ant-result {
 }
 
 .home-hero--ant {
+  display: flex;
   min-height: 0;
   align-items: center;
-  gap: 32px;
-  padding: 32px 0 24px;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  justify-content: flex-start;
+  gap: 0;
+  padding: 20px 0 18px;
+}
+
+.home-hero--compact .home-project-picker {
+  width: min(390px, 100%);
+  max-width: 390px;
 }
 
 .home-hero--ant h1 {
@@ -845,98 +892,10 @@ html[data-theme='glass'] .system-result-page .ant-result {
 
 /* Client shell follows the same 56px Ant header rhythm as the reference workspace. */
 .client-shell {
-  --app-header-height: 56px;
+  --app-header-height: var(--ant-layout-header-height, 56px);
 }
 
-html[data-density='compact'] .client-shell {
-  --app-header-height: 48px;
-}
-
-.client-sider {
-  height: 100%;
-  border-color: var(--ant-color-border-secondary);
-  background: var(--ant-color-bg-container) !important;
-}
-
-/* 侧栏宽度动画会迫使旁边的内容区（业务 iframe、大表格）逐帧重排：
-   iframe 内的 Element Plus 与 Tailwind 运行时每次都要重建布局，
-   200ms 过渡等于连续几十次全文档重排。收起/展开改为瞬时切换。 */
-.client-sider,
-.client-sider .ant-layout-sider-children {
-  transition: none !important;
-}
-
-.client-sider .ant-layout-sider-children {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  flex-direction: column;
-  padding: 0;
-}
-
-.client-sider .ant-layout-sider-children > .ant-menu-root,
-.client-topnav-menu {
-  background: transparent;
-}
-
-.client-sider .ant-layout-sider-children > .ant-menu-root {
-  flex: 1;
-  min-height: 0;
-  padding: 4px 8px 16px;
-  overflow: hidden auto;
-  border-inline-end: 0 !important;
-  font-size: 14px;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-}
-
-/* 子菜单属于根菜单的内容流，不能再次成为 flex 滚动容器。 */
-.client-sider .ant-menu-sub.ant-menu-inline {
-  flex: none;
-  max-height: none;
-  overflow-y: hidden;
-  scrollbar-width: none;
-}
-
-.client-sider .ant-menu-sub.ant-menu-inline::-webkit-scrollbar {
-  display: none;
-}
-
-/* Ant 的折叠运动需要计算高度；隔离绘制，避免牵连右侧原型重绘。 */
-.client-sider .ant-motion-collapse {
-  contain: layout paint;
-}
-
-.client-sider .ant-menu-submenu-title {
-  margin-block: 4px;
-  font-size: 14px;
-}
-
-.client-sider-footer {
-  flex: 0 0 auto;
-  padding: 8px;
-  border-top: 1px solid var(--ant-color-border-secondary);
-}
-
-.client-sider-trigger {
-  justify-content: flex-start;
-  color: var(--ant-color-text-secondary);
-  font-size: 14px;
-}
-
-.client-sider.ant-layout-sider-collapsed .client-sider-trigger {
-  justify-content: center;
-  padding-inline: 0;
-}
-
-.client-sider .ant-menu-item-selected {
-  color: var(--ant-color-primary);
-  background: var(--ant-color-primary-bg);
-}
-
-.client-sider .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  color: var(--ant-color-primary);
-}
+/* 侧栏与顶部两种外壳的框架样式都在 app-shell-frame.css（.app-sider / .client-topnav / .topnav-icon-button）。 */
 
 .client-topbar {
   height: var(--app-header-height);
@@ -963,34 +922,6 @@ html[data-density='compact'] .client-shell {
 .client-topbar--topnav .client-actions {
   flex: 0 0 auto;
   align-self: center;
-}
-
-.client-topnav-menu {
-  width: 0;
-  height: 100%;
-  min-width: 0;
-  flex: auto;
-  align-self: stretch;
-  border-bottom: 0 !important;
-  background: transparent !important;
-  font-size: 14px;
-}
-
-.client-topnav-menu.ant-menu-horizontal {
-  overflow: hidden;
-  line-height: calc(var(--app-header-height) - 2px);
-}
-
-.client-topnav-menu.ant-menu-horizontal::before {
-  display: none;
-}
-
-.client-topbar--sidebar {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr) auto;
-  align-items: center;
-  justify-content: normal;
-  gap: 24px;
 }
 
 .client-brand {
@@ -1045,14 +976,6 @@ html[data-density='compact'] .client-shell {
   gap: 8px;
 }
 
-.client-account {
-  height: 44px !important;
-  margin-left: 2px;
-  border-left: 1px solid var(--ant-color-border-secondary) !important;
-  border-radius: 0 !important;
-  padding: 6px 8px 6px 16px !important;
-}
-
 .client-content {
   min-height: 0;
 }
@@ -1063,6 +986,7 @@ html[data-density='compact'] .client-shell {
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  contain: layout paint;
 }
 
 .prototype-frame-host > .prototype-frame {
@@ -1285,18 +1209,12 @@ html[data-density='compact'] .client-shell {
     max-width: 560px;
   }
 
-  .client-topbar--sidebar {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 16px;
+  .client-topbar--topnav {
+    gap: 12px;
   }
 }
 
 @media (max-width: 680px) {
-  .platform-workspace__actions .ant-btn > span:not(.anticon),
-  .client-actions .theme-control {
-    display: none;
-  }
-
   .home-topbar--ant,
   .docs-header {
     height: var(--app-header-height);
@@ -1304,7 +1222,8 @@ html[data-density='compact'] .client-shell {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .platform-workspace__brand,
+  .app-sider__brand-button,
+  .app-sider__collapse,
   .theme-control.ant-btn {
     transition: none;
   }
@@ -1341,10 +1260,17 @@ html[data-theme='dark'] .system-result-page .ant-result {
   background: var(--ant-color-bg-container) !important;
 }
 
-html[data-theme='glass'] {
-  --app-glass-surface: rgb(255 255 255 / 66%);
-  --app-glass-surface-strong: rgb(255 255 255 / 80%);
-  --app-glass-border: rgb(255 255 255 / 64%);
+/* 深色主题的顶栏仍然是悬浮材质，不使用一整块纯色顶栏。 */
+html[data-theme='dark'] .platform-workspace__global-header,
+html[data-theme='dark'] .home-topbar--ant,
+html[data-theme='dark'] .client-topbar,
+html[data-theme='dark'] .docs-header,
+html[data-theme='dark'] .mobile-preview-header {
+  border-color: var(--platform-material-border) !important;
+  background: var(--platform-material-surface-strong) !important;
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 html[data-theme='glass'] .platform-workspace__global-header,
@@ -1357,9 +1283,10 @@ html[data-theme='glass'] .docs-header,
 html[data-theme='glass'] .docs-sidebar,
 html[data-theme='glass'] .docs-outline,
 html[data-theme='glass'] .mobile-preview-header {
-  border-color: var(--app-glass-border) !important;
-  background: var(--app-glass-surface-strong) !important;
-  backdrop-filter: blur(24px) saturate(150%);
+  border-color: var(--platform-material-border) !important;
+  background: var(--platform-material-surface-strong) !important;
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 html[data-theme='glass'] .platform-workspace .platform-surface,
@@ -1377,12 +1304,22 @@ html[data-theme='glass'] .client-login__card,
 html[data-theme='glass'] .docs-reader,
 html[data-theme='glass'] .prd-review-panel,
 html[data-theme='glass'] .system-result-page .ant-result {
-  border-color: var(--app-glass-border) !important;
-  background: var(--app-glass-surface) !important;
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 54%) inset,
-    0 10px 30px rgb(69 101 141 / 8%);
-  backdrop-filter: blur(22px) saturate(145%);
+  border-color: var(--platform-material-border) !important;
+  background: var(--platform-material-surface) !important;
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+}
+
+/* 选择器和功能胶囊的弹出层也使用同一材质，避免触发后又回到普通白底。 */
+html[data-theme='glass'] .ant-select-dropdown,
+html[data-theme='glass'] .app-pill-menu .ant-dropdown-menu,
+html[data-theme='glass'] .app-pill-menu .ant-menu {
+  border: 1px solid var(--platform-material-border) !important;
+  background: var(--platform-material-surface-strong) !important;
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 html[data-theme='glass'] .platform-workspace .ant-table,

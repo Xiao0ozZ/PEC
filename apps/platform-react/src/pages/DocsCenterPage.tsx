@@ -17,8 +17,19 @@ import { Button, Collapse, Empty, Input, Layout, List, Spin, Tag, Typography } f
 import { ArrowLeftOutlined, FileTextOutlined, LinkOutlined } from '@/ui/ant/icons';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { Header, Sider, Content } = Layout;
+
+function getDocumentName(document: DocumentEntry) {
+  const fallback = document.path.split('/').pop()?.replace(/\.md$/iu, '') || '未命名文档';
+  const fileName = typeof document.fileName === 'string' ? document.fileName : fallback;
+  return document.title || fileName;
+}
+
+function getDocumentFolders(document: DocumentEntry) {
+  if (!Array.isArray(document.folders)) return [];
+  return document.folders.filter((folder): folder is string => typeof folder === 'string' && Boolean(folder));
+}
 
 export function DocsCenterPage() {
   const navigate = useNavigate();
@@ -50,10 +61,25 @@ export function DocsCenterPage() {
   const filteredDocuments = useMemo(
     () =>
       documents.filter((document) =>
-        `${document.title || ''}${document.path}`.toLowerCase().includes(filter.toLowerCase()),
+        `${getDocumentName(document)} ${getDocumentFolders(document).join(' ')}`
+          .toLowerCase()
+          .includes(filter.trim().toLowerCase()),
       ),
     [documents, filter],
   );
+  const documentGroups = useMemo(() => {
+    const groups = new Map<string, DocumentEntry[]>();
+    filteredDocuments.forEach((document) => {
+      const folders = getDocumentFolders(document);
+      const key = folders.length ? folders.join(' / ') : '未分类';
+      const current = groups.get(key) ?? [];
+      current.push(document);
+      groups.set(key, current);
+    });
+    return [...groups.entries()]
+      .sort(([left], [right]) => left.localeCompare(right, 'zh-Hans-CN', { numeric: true }))
+      .map(([label, groupDocuments]) => ({ label, documents: groupDocuments }));
+  }, [filteredDocuments]);
   const associatedPages = useMemo(() => {
     if (!project || !selectedPath) return [];
     const projectPages = htmlCatalogQuery.data?.projects?.[projectId] ?? {};
@@ -155,6 +181,9 @@ export function DocsCenterPage() {
     );
 
   const selectDocument = (document: DocumentEntry) => openDocument(document.path);
+  const selectedFolderLabel = selectedDocument
+    ? getDocumentFolders(selectedDocument).join(' / ') || '未分类'
+    : '文档';
   const scrollToHeading = (headingId: string) => {
     setActiveHeadingId(headingId);
     document
@@ -165,33 +194,45 @@ export function DocsCenterPage() {
   return (
     <Layout className="docs-center">
       <Header className="docs-header">
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => navigate('/')}>
-          返回首页
-        </Button>
-        <div className="docs-header__identity">
-          <span>
+        <div className="docs-header__brand">
+          <Button
+            className="docs-header__back"
+            type="text"
+            icon={<ArrowLeftOutlined />}
+            aria-label="返回首页"
+            onClick={() => navigate('/')}
+          />
+          <span className="docs-header__identity-mark" aria-hidden="true">
             <FileTextOutlined />
           </span>
           <div>
-            <Title level={4}>{project.name}</Title>
-            <Text type="secondary">产品文档中心</Text>
+            <strong>{project.name}</strong>
+            <Text type="secondary">文档中心</Text>
           </div>
         </div>
+        <div className="docs-header__current">产品资料</div>
         <div className="docs-header__actions">
-          <Tag>{documents.length} 份文档</Tag>
+          <Tag bordered={false}>{documents.length} 份文档</Tag>
           <ThemeControl />
+          <Button type="text" onClick={() => navigate('/')}>
+            返回首页
+          </Button>
         </div>
       </Header>
       <Layout className="docs-layout">
         <Sider theme="light" width={292} className="docs-sidebar">
           <div className="docs-sidebar__heading">
-            <Text strong>文档目录</Text>
-            <Text type="secondary">{filteredDocuments.length}</Text>
+            <div>
+              <Text strong>文档目录</Text>
+              <Text type="secondary">按文件夹分类</Text>
+            </div>
+            <Tag bordered={false}>{filteredDocuments.length}</Tag>
           </div>
           <Input.Search
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="搜索文件名或路径"
+            allowClear
+            placeholder="搜索文件名"
           />
           {associatedPages.length ? (
             <Collapse
@@ -221,42 +262,71 @@ export function DocsCenterPage() {
               ]}
             />
           ) : null}
-          <List
-            className="docs-file-list"
-            dataSource={filteredDocuments}
-            locale={{ emptyText: <Empty description="没有匹配文档" /> }}
-            renderItem={(document) => (
-              <List.Item className={document.path === selectedPath ? 'is-active' : ''}>
-                <Button type="text" block onClick={() => selectDocument(document)}>
-                  <span className="docs-file-item__content">
-                    <strong>{document.title || document.path.split('/').pop()}</strong>
-                    <small>{document.path}</small>
-                  </span>
-                </Button>
-              </List.Item>
+          <div className="docs-file-groups">
+            {documentGroups.length ? (
+              documentGroups.map((group) => (
+                <section className="docs-file-group" key={group.label}>
+                  <div className="docs-file-group__heading">
+                    <Text strong>{group.label}</Text>
+                    <Text type="secondary">{group.documents.length}</Text>
+                  </div>
+                  <List
+                    className="docs-file-list"
+                    dataSource={group.documents}
+                    renderItem={(document) => (
+                      <List.Item className={document.path === selectedPath ? 'is-active' : ''}>
+                        <Button
+                          type="text"
+                          block
+                          title={getDocumentName(document)}
+                          onClick={() => selectDocument(document)}
+                        >
+                          <FileTextOutlined />
+                          <span className="docs-file-item__content">
+                            <strong>{getDocumentName(document)}</strong>
+                          </span>
+                        </Button>
+                      </List.Item>
+                    )}
+                  />
+                </section>
+              ))
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有匹配文档" />
             )}
-          />
+          </div>
         </Sider>
         <Content className="docs-reader">
           {selectedDocument ? (
-            <MarkdownReader
-              source={documentQuery.data ?? ''}
-              loading={documentQuery.isPending}
-              error={documentQuery.error instanceof Error ? documentQuery.error.message : undefined}
-              onHeadings={setHeadings}
-              documentPath={selectedPath}
-              resolveAssetUrl={resolveAssetUrl}
-              resolveDocumentUrl={resolveDocumentUrl}
-              onDocumentNavigate={openDocument}
-              activeAnchor={selectedAnchor}
-            />
+            <div className="docs-reader__inner">
+              <div className="docs-reader__breadcrumb">
+                <Text type="secondary">文档</Text>
+                <span aria-hidden="true">›</span>
+                <Text>{selectedFolderLabel}</Text>
+              </div>
+              <MarkdownReader
+                source={documentQuery.data ?? ''}
+                loading={documentQuery.isPending}
+                error={documentQuery.error instanceof Error ? documentQuery.error.message : undefined}
+                onHeadings={setHeadings}
+                documentPath={selectedPath}
+                resolveAssetUrl={resolveAssetUrl}
+                resolveDocumentUrl={resolveDocumentUrl}
+                onDocumentNavigate={openDocument}
+                activeAnchor={selectedAnchor}
+              />
+            </div>
           ) : (
             <Empty description="选择一份文档开始阅读" />
           )}
         </Content>
         <Sider theme="light" width={224} className="docs-outline">
           <div className="docs-outline__heading">
-            <Text strong>本文目录</Text>
+            <div>
+              <Text strong>本文目录</Text>
+              <Text type="secondary">按章节跳转</Text>
+            </div>
+            <Tag bordered={false}>{headings.length}</Tag>
           </div>
           <List
             size="small"

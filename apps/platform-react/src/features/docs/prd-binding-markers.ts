@@ -31,13 +31,13 @@ function scoreElement(element: Element, binding: PrdBinding) {
   return score;
 }
 
-function resolveBindingElement(root: Element, binding: PrdBinding) {
+function resolveBindingElement(root: Element, binding: PrdBinding, candidates?: Element[]) {
   const direct = resolveDomPath(root, binding.target.domPath ?? []);
   if (direct && scoreElement(direct, binding) >= 5) return direct;
 
   let best: Element | null = null;
   let bestScore = 0;
-  for (const element of root.querySelectorAll('*')) {
+  for (const element of candidates ?? root.querySelectorAll('*')) {
     const score = scoreElement(element, binding);
     if (score > bestScore) {
       best = element;
@@ -67,8 +67,10 @@ export function installPrdBindingMarkers(
     ) ?? document.body;
   if (!root) return;
 
+  // 关联数量增加时复用候选节点列表，避免每个绑定都重复遍历整棵页面树。
+  const candidates = Array.from(root.querySelectorAll('*'));
   bindings.forEach((binding) => {
-    const target = resolveBindingElement(root, binding);
+    const target = resolveBindingElement(root, binding, candidates);
     if (!(target instanceof HTMLElement)) return;
     const computed = document.defaultView?.getComputedStyle(target);
     if (computed?.position === 'static') {

@@ -13,17 +13,17 @@
   --app-sider-width: 240px;
   --app-sider-collapsed-width: 64px;
   --app-frame-gap: 6px;
-  --app-workspace-radius: 12px;
-  --app-sider-bg: #f7f7f7;
+  --app-workspace-radius: var(--ant-border-radius-lg, 12px);
+  --app-sider-bg: var(--ant-layout-sider-bg, var(--ant-color-bg-container, #f7f7f7));
 }
 
 /* 深色沿用外壳底色；玻璃主题交给底层背景透出，侧栏不再叠一层实体色。 */
 html[data-theme='dark'] {
-  --app-sider-bg: var(--ant-color-bg-layout);
+  --app-sider-bg: var(--ant-layout-sider-bg, var(--ant-color-bg-layout));
 }
 
 html[data-theme='glass'] {
-  --app-sider-bg: transparent;
+  --app-sider-bg: var(--ant-layout-sider-bg, transparent);
 }
 
 /* 卡片内部：左侧通高侧栏 + 右侧独立内容面板。 */
@@ -45,9 +45,11 @@ html[data-theme='glass'] {
   /* 左侧不留间隙：侧栏与面板靠底色差和 1px 描边分界，与参照实现一致。 */
   margin: var(--app-frame-gap) var(--app-frame-gap) var(--app-frame-gap) 0;
   overflow: hidden;
-  border: 1px solid var(--ant-color-border-secondary);
+  border: 1px solid var(--platform-material-border);
   border-radius: var(--app-workspace-radius);
-  background: var(--ant-color-bg-container);
+  background: var(--platform-material-surface);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 .app-workspace-panel > * {
@@ -124,9 +126,10 @@ html[data-theme='glass'] {
   height: 32px;
   flex: none;
   place-items: center;
-  border-radius: 9px;
-  color: #fff;
-  background: var(--ant-color-primary);
+  border-radius: var(--ant-border-radius-lg, 9px);
+  color: var(--ant-color-white, #fff);
+  /* 客户端外壳按项目主题色渲染，平台外壳回落到平台主色。 */
+  background: var(--project-accent, var(--ant-color-primary));
   font-size: 16px;
 }
 
@@ -159,7 +162,7 @@ html[data-theme='glass'] {
   color: var(--ant-color-text-secondary) !important;
 }
 
-/* 选择器槽位：白底控件，与侧栏灰底形成「浮起」的观感，不另加描边。 */
+/* 选择器槽位：沿用平台材质变量，和顶部胶囊使用同一套透明度、边框与模糊规则。 */
 .app-sider__slot {
   flex: 0 0 auto;
   padding: 4px 12px 12px;
@@ -170,15 +173,17 @@ html[data-theme='glass'] {
 }
 
 .app-sider__slot .ant-select-selector {
-  min-height: 40px;
-  border-color: transparent !important;
-  border-radius: 8px !important;
-  background: var(--ant-color-bg-container) !important;
-  box-shadow: none !important;
+  min-height: var(--ant-control-height-lg, 40px);
+  border: 1px solid var(--platform-material-border) !important;
+  border-radius: var(--ant-border-radius, 6px) !important;
+  background: var(--platform-material-surface-strong) !important;
+  box-shadow: var(--platform-material-control-shadow) !important;
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 .app-sider__slot .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-  background: var(--ant-color-fill-tertiary) !important;
+  background: var(--platform-material-hover-surface) !important;
 }
 
 .app-sider__nav {
@@ -229,20 +234,10 @@ html[data-theme='glass'] {
   border-top: 1px solid var(--ant-color-border-secondary);
 }
 
-.app-sider__nav .ant-menu-item {
-  margin-block: 2px;
-}
-
-/* 选中项是一块实心主色圆角方块，白字白图标；主色随主题自动分叉，不写死色值。 */
+/* 菜单尺寸、间距与选中态由 ConfigProvider 的 Menu token 控制；这里只保留外壳特有的字重。 */
 .app-sider__nav .ant-menu-item-selected {
-  color: #fff !important;
-  font-weight: 600;
-  background: var(--ant-color-primary) !important;
+  font-weight: var(--ant-font-weight-strong, 600);
   box-shadow: none;
-}
-
-.app-sider__nav .ant-menu-item-selected .ant-menu-item-icon {
-  color: #fff;
 }
 
 /* 底部工具区：逐行「图标 + 文案」或「图标 + 文案 + 尾部控件」，与上方菜单用细线断开。 */
@@ -295,24 +290,27 @@ html[data-theme='glass'] {
   padding: 8px 12px 12px;
 }
 
-/* 账号卡与选择器同构：白底、无描边，悬浮转灰。 */
+/* 账号卡与选择器同构：同一套材质变量，避免侧栏内出现两种透明效果。 */
 .app-account-card {
   display: flex;
   width: 100%;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border: 0;
-  border-radius: 8px;
+  border: 1px solid var(--platform-material-border);
+  border-radius: var(--ant-border-radius-lg, 8px);
   color: inherit;
-  background: var(--ant-color-bg-container);
+  background: var(--platform-material-surface-strong);
+  box-shadow: var(--platform-material-control-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .app-account-card:hover {
-  background: var(--ant-color-fill-tertiary);
+  background: var(--platform-material-hover-surface);
 }
 
 .app-sider-shell--collapsed .app-account-card {
@@ -354,6 +352,290 @@ html[data-theme='glass'] {
 .app-account-card__more {
   flex: none;
   color: var(--ant-color-text-quaternary);
+}
+
+/* --- 顶部菜单形态：三块悬浮胶囊（品牌 / 一级导航 / 功能控件） --- */
+
+.client-shell--topnav {
+  position: relative;
+}
+
+/* 悬浮顶栏：完全脱离内容流，不铺整条底色，三段胶囊直接浮在页面上。 */
+.client-topbar--topnav {
+  --topnav-capsule-height: calc(var(--ant-control-height-lg, 40px) + var(--ant-padding-xs, 8px));
+  --topnav-capsule-radius: calc(var(--topnav-capsule-height) / 2);
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: auto;
+  min-height: 0;
+  flex-basis: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border: 0;
+  background: transparent !important;
+  line-height: normal;
+  /* 胶囊之间的空白不拦点击，内容照常交互。 */
+  pointer-events: none;
+}
+
+.client-topbar--topnav > * {
+  pointer-events: auto;
+}
+
+/* 顶栏容器自身永远透明：页面内容要连续铺到顶部，只有三段胶囊拥有材质。 */
+.client-shell--topnav > .client-topbar.client-topbar--topnav {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 不给内容预留“顶栏底色带”：顶栏只作为覆盖层悬浮在滚动内容之上。 */
+.client-shell--topnav > .client-page-workspace {
+  padding-top: 0;
+}
+
+/* 三块胶囊与侧栏选择器共用平台材质变量，浅色主题自动使用玻璃材质。 */
+.topnav-block {
+  box-sizing: border-box;
+  display: flex;
+  height: var(--topnav-capsule-height, 48px);
+  min-height: var(--topnav-capsule-height, 48px);
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--platform-material-border);
+  border-radius: var(--topnav-capsule-radius, 24px) !important;
+  background: var(--platform-material-surface-strong);
+  box-shadow: var(--platform-material-surface-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+}
+
+.topnav-block--main {
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  min-width: 0;
+  flex: 0 1 auto;
+  gap: 0;
+  padding: 0 8px 0 10px;
+}
+
+/* 品牌、一级菜单、功能图标共用一张主胶囊；品牌本身不再单独占一张胶囊。 */
+.topnav-block--main .client-brand {
+  width: max-content;
+  height: var(--ant-menu-item-height, 36px);
+  flex: 0 0 auto;
+  gap: 8px;
+  margin: 0;
+  padding: 0 14px 0 0;
+}
+
+.topnav-block--main .client-topnav {
+  /* 主胶囊已经包含品牌和右侧功能，菜单应优先吃满两者之间的剩余空间。 */
+  max-width: none;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.client-topnav__divider {
+  width: 1px;
+  height: 24px;
+  flex: 0 0 1px;
+  margin: 0 6px;
+  background: var(--ant-color-border-secondary);
+}
+
+/* 深色 / 玻璃主题下顶栏保持透明，底色交给各张卡片。 */
+html[data-theme='dark'] .client-topbar--topnav,
+html[data-theme='glass'] .client-topbar--topnav {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* 一级导航：主胶囊内直接排菜单，自身横向滚动而不是撑破顶栏。 */
+.client-topnav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.client-topnav::-webkit-scrollbar {
+  display: none;
+}
+
+/* 使用 Ant Menu 原生的横向子菜单与箭头；这里只保留胶囊内的尺寸和选中材质。 */
+.client-topnav--native.ant-menu {
+  height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
+  line-height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
+  border-bottom: 0;
+  background: transparent;
+}
+
+.client-topnav--native.ant-menu-horizontal::after {
+  display: none;
+}
+
+.client-topnav--native.ant-menu-horizontal > .ant-menu-item,
+.client-topnav--native.ant-menu-horizontal > .ant-menu-submenu {
+  height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
+  min-width: max-content;
+  margin: 0 2px;
+  padding-inline: var(--ant-menu-item-padding-inline, 14px);
+  border-bottom: 0 !important;
+  border-radius: var(--ant-menu-horizontal-item-border-radius, 18px);
+  color: var(--ant-color-text-secondary);
+  line-height: var(--ant-menu-horizontal-line-height, var(--ant-menu-item-height, 36px));
+}
+
+.client-topnav--native.ant-menu-horizontal > .ant-menu-item::after,
+.client-topnav--native.ant-menu-horizontal > .ant-menu-submenu::after {
+  display: none !important;
+}
+
+.client-topnav--native.ant-menu-horizontal > .ant-menu-item:hover,
+.client-topnav--native.ant-menu-horizontal > .ant-menu-submenu:hover,
+.client-topnav--native.ant-menu-horizontal > .ant-menu-submenu-open {
+  color: var(--ant-menu-horizontal-item-hover-color, var(--ant-color-text));
+  background: var(--ant-menu-horizontal-item-hover-bg, var(--ant-color-fill-tertiary));
+}
+
+.client-topnav--native.ant-menu-horizontal > .ant-menu-item-selected,
+.client-topnav--native.ant-menu-horizontal > .ant-menu-submenu-selected {
+  color: var(--ant-menu-horizontal-item-selected-color, var(--ant-color-primary));
+  font-weight: 600;
+  background: var(--ant-menu-horizontal-item-selected-bg, var(--ant-color-primary-bg));
+}
+
+.client-topnav--native .ant-menu-submenu-arrow {
+  color: currentcolor;
+}
+
+/* 四个功能只显示图标，名称由 Tooltip 与无障碍标签提供。 */
+.client-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+}
+
+.topnav-icon-button {
+  display: inline-flex;
+  width: var(--ant-menu-item-height, 36px);
+  height: var(--ant-menu-item-height, 36px);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--ant-menu-item-height, 36px) / 2);
+  color: var(--ant-color-text-secondary);
+  background: transparent;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.topnav-icon-button:hover {
+  color: var(--ant-color-text);
+  background: var(--ant-color-fill-tertiary);
+}
+
+.topnav-icon-button:disabled,
+.topnav-icon-button:disabled:hover {
+  color: var(--ant-color-text-quaternary);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.topnav-block--main .client-brand__mark {
+  width: var(--ant-control-height-sm, 28px);
+  height: var(--ant-control-height-sm, 28px);
+  flex-basis: var(--ant-control-height-sm, 28px);
+  border-radius: var(--ant-border-radius-lg, 8px);
+  font-size: 14px !important;
+}
+
+.topnav-block--main .client-brand__mark .anticon,
+.topnav-block--main .client-brand__mark svg {
+  font-size: 15px;
+}
+
+.topnav-block--main .client-brand__copy strong {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+/* 药丸下拉：白底圆角卡片，分组小标题 + 选中项勾选。 */
+.app-pill-menu .ant-dropdown-menu,
+.app-pill-menu .ant-menu {
+  min-width: 200px;
+  padding: 6px;
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgb(15 23 42 / 12%);
+}
+
+.app-pill-menu .ant-dropdown-menu-item,
+.app-pill-menu .ant-menu-item {
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.app-pill-menu .ant-dropdown-menu-item-selected,
+.app-pill-menu .ant-menu-item-selected {
+  color: var(--ant-color-text);
+  background: var(--ant-color-fill-tertiary);
+}
+
+.app-pill-menu .ant-menu-item-group-title {
+  padding: 6px 10px 4px;
+  color: var(--ant-color-text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* 窄屏：顶栏只留图标，把宽度让给一级导航。 */
+@media (max-width: 1100px) {
+  .topnav-block--main {
+    max-width: calc(100vw - 20px);
+    padding-inline: 6px;
+  }
+
+  .topnav-block--main .client-brand {
+    padding-right: 8px;
+  }
+
+  .topnav-block--main .client-topnav {
+    max-width: none;
+  }
+
+  .client-topnav--native.ant-menu-horizontal > .ant-menu-item,
+  .client-topnav--native.ant-menu-horizontal > .ant-menu-submenu {
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='glass'] .topnav-block,
+  html[data-theme='dark'] .topnav-block {
+    border-color: var(--ant-color-border-secondary);
+    background: var(--ant-color-bg-container);
+    box-shadow: 0 8px 24px rgb(15 23 42 / 7%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 /* --- 窄屏：侧栏收进抽屉，用悬浮按钮唤出 --- */
