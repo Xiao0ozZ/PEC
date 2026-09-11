@@ -86,6 +86,32 @@ export interface PrototypeFrameProps {
   onLoad: (frame: HTMLIFrameElement) => void;
 }
 
+function arePrototypeFramePropsEqual(previous: PrototypeFrameProps, next: PrototypeFrameProps) {
+  if (
+    previous.page !== next.page ||
+    previous.source !== next.source ||
+    previous.contentTopOffset !== next.contentTopOffset ||
+    previous.onOpenPrd !== next.onOpenPrd ||
+    previous.onLoad !== next.onLoad
+  ) {
+    return false;
+  }
+
+  const previousTheme = previous.theme;
+  const nextTheme = next.theme;
+  if (
+    previousTheme.primary !== nextTheme.primary ||
+    previousTheme.primaryHover !== nextTheme.primaryHover ||
+    previousTheme.primaryActive !== nextTheme.primaryActive ||
+    previousTheme.pageBackground !== nextTheme.pageBackground
+  ) {
+    return false;
+  }
+
+  if (previous.prdBindings.length !== next.prdBindings.length) return false;
+  return previous.prdBindings.every((binding, index) => binding === next.prdBindings[index]);
+}
+
 export const PrototypeFrame = memo(function PrototypeFrame({
   page,
   source,
@@ -199,4 +225,4 @@ export const PrototypeFrame = memo(function PrototypeFrame({
       />
     </div>
   );
-});
+}, arePrototypeFramePropsEqual);

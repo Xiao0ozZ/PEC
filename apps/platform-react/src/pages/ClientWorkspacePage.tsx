@@ -122,6 +122,81 @@ export function ClientWorkspacePage() {
       : project?.name || '产品功能体验中心';
   }, [project?.name, selectedPage]);
 
+  // 这些派生值和回调必须在加载态/空页面态之前创建，避免条件 Hook，
+  // 同时保证公共壳状态变化时不会给 iframe 生成新的回调引用。
+  const activePage = selectedPage ?? defaultPage;
+  const activePagePath = activePage?.path ?? '';
+  const resolvedPrdPath = activePage ? getPagePrdPath(prdLinksQuery.data, clientId, activePage) || '' : '';
+  const resolvedRoutePath = activePage ? `/p/${projectId}/${clientId}/${activePage.path}` : '';
+  const pageBindings = activePagePath
+    ? (prdBindingsQuery.data?.bindings ?? []).filter((binding) =>
+        [activePagePath, resolvedRoutePath].includes(binding.pagePath),
+      )
+    : [];
+  const prdDocuments = [
+    ...(resolvedPrdPath ? [{ path: resolvedPrdPath }] : []),
+    ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
+  ].filter(
+    (item, index, items) =>
+      item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
+  );
+  const projectAccent = project?.theme?.primary || '#1677ff';
+  const changePrdMode = useCallback(
+    (nextMode: PrdPanelMode) => {
+      setPrdMode(nextMode);
+      localStorage.setItem('product-experience-center:prd-panel-mode', nextMode);
+    },
+    [setPrdMode],
+  );
+  const handleClosePrd = useCallback(() => setPrdOpen(false), [setPrdOpen]);
+  const prdPathRef = useRef(resolvedPrdPath);
+  useEffect(() => {
+    prdPathRef.current = resolvedPrdPath;
+  }, [resolvedPrdPath]);
+  const handleOpenPrd = useCallback(
+    (target?: { documentPath: string; anchor?: string }) => {
+      const documentPath =
+        typeof target?.documentPath === 'string' && target.documentPath.trim()
+          ? target.documentPath
+          : prdPathRef.current;
+      setPrdTarget({
+        documentPath,
+        ...(typeof target?.anchor === 'string' && target.anchor ? { anchor: target.anchor } : {}),
+      });
+      setPrdOpen(true);
+    },
+    [prdPathRef, setPrdOpen, setPrdTarget],
+  );
+  const clientTheme = useMemo(
+    () => ({
+      primary: project?.theme?.primary || '#1677ff',
+      primaryHover: project?.theme?.primaryHover,
+      primaryActive: project?.theme?.primaryActive,
+      pageBackground: project?.theme?.pageBackground,
+    }),
+    [
+      project?.theme?.pageBackground,
+      project?.theme?.primary,
+      project?.theme?.primaryActive,
+      project?.theme?.primaryHover,
+    ],
+  );
+  const clientConfigTheme = useMemo(
+    () => ({
+      token: {
+        colorPrimary: projectAccent,
+        colorInfo: projectAccent,
+      },
+      components: {
+        Menu: {
+          itemSelectedBg: projectAccent,
+          itemSelectedColor: '#fff',
+        },
+      },
+    }),
+    [projectAccent],
+  );
+
   if (projectQuery.isPending || catalogQuery.isPending) {
     return (
       <div className="home-loading">
@@ -170,71 +245,11 @@ export function ClientWorkspacePage() {
     );
   }
 
-  const prdPath = getPagePrdPath(prdLinksQuery.data, clientId, selectedPage) || '';
-  const routePath = `/p/${projectId}/${clientId}/${selectedPage.path}`;
-  const pageBindings = useMemo(() => {
-    const bindings = prdBindingsQuery.data?.bindings ?? [];
-    return bindings.filter((binding) => [selectedPage.path, routePath].includes(binding.pagePath));
-  }, [prdBindingsQuery.data?.bindings, routePath, selectedPage.path]);
-  const prdDocuments = useMemo(
-    () =>
-      [
-        ...(prdPath ? [{ path: prdPath }] : []),
-        ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
-      ].filter(
-        (item, index, items) =>
-          item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
-      ),
-    [pageBindings, prdPath],
-  );
+  const prdPath = resolvedPrdPath;
   const sourceDownloadUrl =
     developerMode && platformApi.development
       ? platformApi.getHtmlPrototypeSourceDownloadUrl(projectId, selectedPage.sourceRoot, selectedPage.source)
       : '';
-  const projectAccent = project.theme?.primary || '#1677ff';
-
-  const changePrdMode = useCallback((nextMode: PrdPanelMode) => {
-    setPrdMode(nextMode);
-    localStorage.setItem('product-experience-center:prd-panel-mode', nextMode);
-  }, []);
-
-  const handleClosePrd = useCallback(() => setPrdOpen(false), []);
-  const handleOpenPrd = useCallback(
-    (target?: { documentPath: string; anchor?: string }) => {
-      const documentPath =
-        typeof target?.documentPath === 'string' && target.documentPath.trim() ? target.documentPath : prdPath;
-      setPrdTarget({
-        documentPath,
-        ...(typeof target?.anchor === 'string' && target.anchor ? { anchor: target.anchor } : {}),
-      });
-      setPrdOpen(true);
-    },
-    [prdPath],
-  );
-  const clientTheme = useMemo(
-    () => ({
-      primary: project.theme?.primary || '#1677ff',
-      primaryHover: project.theme?.primaryHover,
-      primaryActive: project.theme?.primaryActive,
-      pageBackground: project.theme?.pageBackground,
-    }),
-    [project.theme?.pageBackground, project.theme?.primary, project.theme?.primaryActive, project.theme?.primaryHover],
-  );
-  const clientConfigTheme = useMemo(
-    () => ({
-      token: {
-        colorPrimary: projectAccent,
-        colorInfo: projectAccent,
-      },
-      components: {
-        Menu: {
-          itemSelectedBg: projectAccent,
-          itemSelectedColor: '#fff',
-        },
-      },
-    }),
-    [projectAccent],
-  );
 
   return (
     <ConfigProvider theme={clientConfigTheme}>
