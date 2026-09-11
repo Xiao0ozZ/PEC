@@ -1,7 +1,6 @@
 node_modules/
 .vite/
 dist/
-dist-vue/
 /projects/
 /platform-settings.json
 /project-mounts.local.json
@@ -9,8 +8,8 @@ dist-vue/
 vite.config.js.timestamp-*.mjs
 .DS_Store
 Thumbs.db
-output/playwright/
-output/playwright-vue/
+/output/
 exports/
+.workbuddy/
 .page-transfer-work/
 *.local

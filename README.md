@@ -57,7 +57,7 @@
 ├─ PAGE_TRANSFER_GUIDE.md      HTML 原型导入、回导与独立演示包说明
 ├─ PROJECT_PACKAGE_GUIDE.md    项目包结构、配置、插拔和发布规范
 ├─ TESTING_GUIDE.md            自动化验收范围、命令和基线更新规则
-├─ start-preview-8080.cmd      Windows 双击启动脚本
+├─ 启动React开发环境.cmd       Windows 双击启动脚本
 └─ package.json
 ```
 
@@ -75,20 +75,19 @@ React 是唯一的平台运行入口：开发、构建、测试和正式本地�
 
 ### Windows 双击启动
 
-双击 `start-preview-8080.cmd`。脚本会：
+双击 `启动React开发环境.cmd`。脚本会：
 
 1. 检查 Node.js。
 2. 在缺少 `node_modules` 时自动安装依赖。
-3. 使用 `0.0.0.0:8080` 启动 Vite。
-4. 自动打开 `http://127.0.0.1:8080`。
+3. 使用 React Vite 开发服务启动平台，默认端口为 `5188`。
 
-同一局域网的其他人员可通过 `http://本机IP:8080` 访问。关闭脚本窗口或按 `Ctrl+C` 可停止服务。
+同一局域网如需访问，可执行 `npm run dev:lan`，再通过 `http://本机IP:5188` 访问。关闭脚本窗口或按 `Ctrl+C` 可停止服务。
 
 ### 命令行启动
 
 ```powershell
 npm install
-npm run dev -- --host 0.0.0.0 --port 8080 --strictPort
+npm run dev
 ```
 
 ## 常用命令
