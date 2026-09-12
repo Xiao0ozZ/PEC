@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import type {
@@ -54,6 +62,8 @@ function readToolsVisibility() {
 export function HomePage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const homePageRef = useRef<HTMLElement>(null);
+  const topbarCapsuleRef = useRef<HTMLDivElement>(null);
   const projectQuery = useProjectManifest();
   const catalogQuery = useHtmlPageCatalog();
   const projects = useMemo(() => visibleProjects(projectQuery.data?.projects ?? []), [projectQuery.data]);
@@ -84,6 +94,27 @@ export function HomePage() {
     return () => window.removeEventListener('keydown', handleShortcut);
   }, []);
 
+  useLayoutEffect(() => {
+    const homePage = homePageRef.current;
+    const capsule = topbarCapsuleRef.current;
+    if (!homePage || !capsule) return;
+
+    const syncShellWidth = () => {
+      const width = Math.round(capsule.getBoundingClientRect().width);
+      if (width > 0) homePage.style.setProperty('--home-shell-width', `${width}px`);
+    };
+
+    syncShellWidth();
+    const resizeObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(syncShellWidth);
+    resizeObserver?.observe(capsule);
+    window.addEventListener('resize', syncShellWidth);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', syncShellWidth);
+    };
+  }, [projects.length, showTools]);
+
   function selectProject(projectId: string) {
     navigate(projectId ? `/?project=${encodeURIComponent(projectId)}` : '/', { replace: true });
   }
@@ -103,9 +134,9 @@ export function HomePage() {
   }
 
   return (
-    <main className="home-page home-page--ant">
+    <main ref={homePageRef} className="home-page home-page--ant">
       <header className="home-topbar home-topbar--ant">
-        <div className="home-topbar__capsule">
+        <div ref={topbarCapsuleRef} className="home-topbar__capsule">
           <Button className="home-brand home-brand--ant" type="text" onClick={() => selectProject('')}>
             <Avatar shape="square" icon={<AppstoreOutlined />} />
             <span className="home-brand__text">
@@ -144,23 +175,35 @@ export function HomePage() {
             <ThemeControl />
             {showTools ? (
               <>
-                <Button type="text" icon={<AppstoreOutlined />} onClick={() => navigate('/components')}>
-                  组件规范
-                </Button>
-                <Button type="text" icon={<FolderOpenOutlined />} onClick={() => navigate('/tools/projects')}>
-                  项目管理
-                </Button>
+                <Button
+                  type="text"
+                  icon={<AppstoreOutlined />}
+                  aria-label="组件规范"
+                  title="组件规范"
+                  onClick={() => navigate('/components')}
+                />
+                <Button
+                  type="text"
+                  icon={<FolderOpenOutlined />}
+                  aria-label="项目管理"
+                  title="项目管理"
+                  onClick={() => navigate('/tools/projects')}
+                />
                 <Button
                   type="text"
                   icon={<UploadOutlined />}
+                  aria-label="导入导出"
+                  title="导入导出"
                   disabled={!selectedProject}
                   onClick={openPageTransfer}
-                >
-                  导入导出
-                </Button>
-                <Button type="text" icon={<SettingOutlined />} onClick={() => navigate('/tools/console')}>
-                  控制台
-                </Button>
+                />
+                <Button
+                  type="text"
+                  icon={<SettingOutlined />}
+                  aria-label="控制台"
+                  title="控制台"
+                  onClick={() => navigate('/tools/console')}
+                />
               </>
             ) : null}
           </Flex>

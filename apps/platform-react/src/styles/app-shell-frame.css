@@ -10,20 +10,14 @@
  */
 
 :root {
-  --app-sider-width: 240px;
+  --app-sider-width: 260px;
   --app-sider-collapsed-width: 64px;
   --app-frame-gap: 6px;
   --app-workspace-radius: var(--ant-border-radius-lg, 12px);
-  --app-sider-bg: var(--ant-layout-sider-bg, var(--ant-color-bg-container, #f7f7f7));
-}
-
-/* 深色沿用外壳底色；玻璃主题交给底层背景透出，侧栏不再叠一层实体色。 */
-html[data-theme='dark'] {
-  --app-sider-bg: var(--ant-layout-sider-bg, var(--ant-color-bg-layout));
-}
-
-html[data-theme='glass'] {
-  --app-sider-bg: var(--ant-layout-sider-bg, transparent);
+  /* 外层画布与侧栏材质分离：侧栏必须保持半透明才能产生 blur。 */
+  --app-sider-bg: var(--platform-material-surface);
+  --app-sider-radius: 24px;
+  --app-sider-padding: 12px;
 }
 
 /* 卡片内部：左侧通高侧栏 + 右侧独立内容面板。 */
@@ -34,6 +28,7 @@ html[data-theme='glass'] {
   flex: 1 1 auto;
   flex-direction: row;
   overflow: hidden;
+  background: var(--platform-shell-canvas);
 }
 
 .app-workspace-panel {
@@ -43,11 +38,11 @@ html[data-theme='glass'] {
   flex: 1 1 auto;
   flex-direction: column;
   /* 左侧不留间隙：侧栏与面板靠底色差和 1px 描边分界，与参照实现一致。 */
-  margin: var(--app-frame-gap) var(--app-frame-gap) var(--app-frame-gap) 0;
+  margin: var(--app-frame-gap) var(--app-frame-gap) var(--app-frame-gap) var(--app-frame-gap);
   overflow: hidden;
   border: 1px solid var(--platform-material-border);
   border-radius: var(--app-workspace-radius);
-  background: var(--platform-material-surface);
+  background: var(--platform-shell-canvas);
   backdrop-filter: var(--platform-material-backdrop-filter);
   -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
@@ -55,6 +50,20 @@ html[data-theme='glass'] {
 .app-workspace-panel > * {
   min-width: 0;
   min-height: 0;
+}
+
+/*
+ * 业务侧栏模式只把左侧做成悬浮卡片，右侧内容沿用顶栏模式的连续外壳。
+ * 否则 .app-workspace-panel 会再叠一层圆角、描边和材质底，形成明显的“卡片套卡片”。
+ */
+.client-shell--sidebar .app-workspace-panel {
+  margin: var(--app-frame-gap) 0 var(--app-frame-gap) var(--app-frame-gap);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* --- 侧栏 --- */
@@ -65,9 +74,20 @@ html[data-theme='glass'] {
 }
 
 .app-sider {
-  height: 100%;
+  position: relative;
+  height: calc(100% - (var(--app-frame-gap) * 2));
   min-height: 0;
-  background: var(--app-sider-bg) !important;
+  align-self: flex-start;
+  margin: var(--app-frame-gap) 0 var(--app-frame-gap) var(--app-frame-gap);
+  overflow: hidden;
+  border: 1px solid var(--platform-material-sider-border);
+  border-radius: var(--app-sider-radius);
+  background: var(--platform-material-glass-sider-background) !important;
+  /* BoardUI 的白色外圈 + 三层短阴影，叠加平台的半透明 blur 作为玻璃材质。 */
+  box-shadow: var(--platform-material-glass-sider-shadow);
+  backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  isolation: isolate;
 }
 
 /* 宽度过渡会迫使右侧内容区（业务 iframe、大表格）逐帧重排，收起/展开瞬时完成。 */
@@ -88,6 +108,8 @@ html[data-theme='glass'] {
   height: 100%;
   min-height: 0;
   flex-direction: column;
+  padding: var(--app-sider-padding);
+  background: transparent;
 }
 
 .app-sider__brand {
@@ -97,7 +119,7 @@ html[data-theme='glass'] {
   gap: 8px;
   height: 48px;
   flex: 0 0 auto;
-  padding: 0 12px 0 16px;
+  padding: 0 4px;
 }
 
 /* 收起态只有 64px，logo 与折叠按钮并排会互相压住，改成上下两行居中。 */
@@ -165,7 +187,7 @@ html[data-theme='glass'] {
 /* 选择器槽位：沿用平台材质变量，和顶部胶囊使用同一套透明度、边框与模糊规则。 */
 .app-sider__slot {
   flex: 0 0 auto;
-  padding: 4px 12px 12px;
+  padding: 4px 0 12px;
 }
 
 .app-sider__slot .ant-select {
@@ -173,16 +195,17 @@ html[data-theme='glass'] {
 }
 
 .app-sider__slot .ant-select-selector {
-  min-height: var(--ant-control-height-lg, 40px);
-  border: 1px solid var(--platform-material-border) !important;
-  border-radius: var(--ant-border-radius, 6px) !important;
-  background: var(--platform-material-surface-strong) !important;
-  box-shadow: var(--platform-material-control-shadow) !important;
+  min-height: var(--ant-control-height, 32px);
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+  background: var(--platform-material-hover-surface) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%) !important;
   backdrop-filter: var(--platform-material-backdrop-filter);
   -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
 .app-sider__slot .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--platform-material-border) !important;
   background: var(--platform-material-hover-surface) !important;
 }
 
@@ -191,33 +214,38 @@ html[data-theme='glass'] {
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-bottom: 8px;
-  /* 二级常显后菜单必然超过一屏，滚动条要看得见，否则没人知道下面还有内容。 */
-  scrollbar-width: thin;
-  scrollbar-color: var(--ant-color-border) transparent;
+  padding: 0 0 8px;
+  scrollbar-width: none;
 }
 
 .app-sider__nav::-webkit-scrollbar {
-  width: 6px;
-}
-
-.app-sider__nav::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.app-sider__nav::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: var(--ant-color-border);
-}
-
-.app-sider__nav::-webkit-scrollbar-thumb:hover {
-  background: var(--ant-color-text-quaternary);
+  display: none;
 }
 
 .app-sider__nav .ant-menu {
-  padding-inline: 8px;
+  --ant-menu-item-height: 36px;
+  --ant-menu-item-margin-block: 2px;
+  --ant-menu-item-border-radius: 10px;
+  padding-inline: 0;
   border-inline-end: 0 !important;
   background: transparent !important;
+}
+
+.app-sider__nav .ant-menu-item,
+.app-sider__nav .ant-menu-submenu-title {
+  min-height: 36px;
+  margin-block: 2px;
+  border-radius: 10px;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.app-sider__nav .ant-menu-item:not(.ant-menu-item-selected):hover,
+.app-sider__nav .ant-menu-submenu-title:hover {
+  color: var(--ant-color-text) !important;
+  background: var(--platform-material-hover-surface) !important;
 }
 
 /* 一级是分组标题而不是可点项：弱化字色，缩进与二级文字对齐。 */
@@ -234,7 +262,7 @@ html[data-theme='glass'] {
   border-top: 1px solid var(--ant-color-border-secondary);
 }
 
-/* 菜单尺寸、间距与选中态由 ConfigProvider 的 Menu token 控制；这里只保留外壳特有的字重。 */
+/* 菜单尺寸与间距由这里收口；选中态继续交给 Ant Menu 的主题 token。 */
 .app-sider__nav .ant-menu-item-selected {
   font-weight: var(--ant-font-weight-strong, 600);
   box-shadow: none;
@@ -245,7 +273,7 @@ html[data-theme='glass'] {
   display: grid;
   gap: 2px;
   flex: 0 0 auto;
-  padding: 8px;
+  padding: 8px 0 0;
   border-top: 1px solid var(--ant-color-border-secondary);
 }
 
@@ -260,7 +288,7 @@ html[data-theme='glass'] {
   gap: 10px;
   padding: 0 8px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--ant-color-text-secondary) !important;
   font-size: 14px;
   font-weight: 400;
@@ -287,7 +315,7 @@ html[data-theme='glass'] {
 
 .app-sider__account {
   flex: 0 0 auto;
-  padding: 8px 12px 12px;
+  padding: 12px 0 0;
 }
 
 /* 账号卡与选择器同构：同一套材质变量，避免侧栏内出现两种透明效果。 */
@@ -297,19 +325,22 @@ html[data-theme='glass'] {
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border: 1px solid var(--platform-material-border);
-  border-radius: var(--ant-border-radius-lg, 8px);
+  border: 2px solid transparent;
+  border-radius: 12px;
   color: inherit;
-  background: var(--platform-material-surface-strong);
-  box-shadow: var(--platform-material-control-shadow);
+  background: var(--platform-material-hover-surface);
+  box-shadow: none;
   backdrop-filter: var(--platform-material-backdrop-filter);
   -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 
 .app-account-card:hover {
+  border-color: var(--platform-material-border);
   background: var(--platform-material-hover-surface);
 }
 
@@ -404,18 +435,62 @@ html[data-theme='glass'] {
 
 /* 三块胶囊与侧栏选择器共用平台材质变量，浅色主题自动使用玻璃材质。 */
 .topnav-block {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   height: var(--topnav-capsule-height, 48px);
   min-height: var(--topnav-capsule-height, 48px);
   align-items: center;
   overflow: hidden;
-  border: 1px solid var(--platform-material-border);
+  border: 0;
   border-radius: var(--topnav-capsule-radius, 24px) !important;
-  background: var(--platform-material-surface-strong);
-  box-shadow: var(--platform-material-surface-shadow);
-  backdrop-filter: var(--platform-material-backdrop-filter);
-  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+  background: var(--platform-material-glass-background);
+  box-shadow: var(--platform-material-glass-shadow);
+  backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  isolation: isolate;
+}
+
+/* Ant Design X 的顶部胶囊保留渐隐高光；侧栏改用 BoardUI 的白色实线外圈。 */
+.topnav-block::before,
+.topnav-block::after {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  content: '';
+}
+
+.topnav-block::before {
+  border: 1px solid;
+  border-image-source: var(--platform-material-glass-border);
+  border-image-slice: 1 0 0 1;
+  filter: blur(2px);
+}
+
+.topnav-block::after {
+  padding: 1px;
+  background: var(--platform-material-glass-highlight);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: exclude;
+  mask-composite: exclude;
+}
+
+.topnav-block > * {
+  position: relative;
+  z-index: 1;
 }
 
 .topnav-block--main {
@@ -641,6 +716,14 @@ html[data-theme='glass'] .client-topbar--topnav {
 }
 
 @media (prefers-reduced-transparency: reduce) {
+  .app-sider,
+  .app-sider-drawer-trigger {
+    background: var(--ant-color-bg-container) !important;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   html[data-theme='glass'] .topnav-block,
   html[data-theme='dark'] .topnav-block {
     border-color: var(--ant-color-border-secondary);
@@ -659,11 +742,54 @@ html[data-theme='glass'] .client-topbar--topnav {
   top: 14px;
   left: 14px;
   border: 1px solid var(--ant-color-border-secondary) !important;
-  background: var(--ant-color-bg-container) !important;
+  background: var(--platform-material-surface-strong) !important;
+  box-shadow: var(--platform-material-control-shadow);
+  backdrop-filter: var(--platform-material-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
+}
+
+.app-sider-drawer {
+  /* Ant v6 的 Drawer 面板实际是这个 section，不能只覆盖旧版的 content 节点。 */
+  height: calc(100% - (var(--app-frame-gap) * 2));
+  overflow: hidden;
+  border: 1px solid var(--platform-material-sider-border);
+  border-radius: var(--app-sider-radius);
+  background: var(--platform-material-glass-sider-background) !important;
+  box-shadow: var(--platform-material-glass-sider-shadow);
+  backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  isolation: isolate;
 }
 
 .app-sider-drawer .ant-drawer-body {
+  height: 100%;
   padding: 0;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+/* Drawer 的 wrapper 仍由 Ant 放置阴影和贴边定位；清掉它，避免和侧栏材质叠出一块黑底。 */
+.ant-drawer:has(> .ant-drawer-content-wrapper > .app-sider-drawer) .ant-drawer-content-wrapper {
+  top: var(--app-frame-gap);
+  bottom: var(--app-frame-gap);
+  left: var(--app-frame-gap);
+  height: auto !important;
+  overflow: visible;
+  box-shadow: none !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app-sider-drawer {
+    border-color: var(--ant-color-border-secondary);
+    background: var(--ant-color-bg-container) !important;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .ant-drawer:has(> .ant-drawer-content-wrapper > .app-sider-drawer) .ant-drawer-content-wrapper {
+    box-shadow: none !important;
+  }
 }
 
 /* 没有常驻侧栏时，内容面板四边等距。 */

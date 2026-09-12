@@ -89,6 +89,9 @@ describe('PrototypeFrame', () => {
     expect(frame.contentDocument?.documentElement.style.getPropertyValue('--app-color-surface')).toBe(
       '#141414',
     );
+    expect(frame.contentDocument?.getElementById('platform-frame-shell-background')?.textContent).toContain(
+      'background: transparent !important',
+    );
 
     document.documentElement.dataset.theme = 'glass';
     await waitFor(() => {

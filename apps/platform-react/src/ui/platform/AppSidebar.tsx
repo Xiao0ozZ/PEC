@@ -5,7 +5,8 @@ import { MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined } from '@/ui/ant/ico
 
 const { Sider } = Layout;
 
-const SIDER_WIDTH = 240;
+// 与 BoardUI 桌面侧栏保持同一 260px 节奏；内外留白由 app-shell-frame.css 统一控制。
+const SIDER_WIDTH = 260;
 const SIDER_COLLAPSED_WIDTH = 64;
 const DRAWER_WIDTH = 272;
 const DESKTOP_QUERY = '(min-width: 992px)';

@@ -35,9 +35,34 @@ const FRAME_THEME_TOKEN_MAP = [
   ['--app-color-primary-light-9', '--ant-color-primary-bg'],
 ] as const;
 
+const FRAME_SHELL_STYLE_ID = 'platform-frame-shell-background';
+
+function syncPrototypeFrameShell(frameDocument: Document) {
+  const style = frameDocument.getElementById(FRAME_SHELL_STYLE_ID) ?? frameDocument.createElement('style');
+
+  style.id = FRAME_SHELL_STYLE_ID;
+  style.textContent = `
+    html,
+    body,
+    #app,
+    #root,
+    .prototype-app,
+    .export-shell {
+      background: transparent !important;
+      background-image: none !important;
+    }
+  `;
+
+  if (!style.parentNode) {
+    (frameDocument.head ?? frameDocument.documentElement).appendChild(style);
+  }
+}
+
 function syncPrototypeFrameTheme(frameDocument: Document, theme: PrototypeFrameTheme) {
   const root = frameDocument.documentElement;
   if (!root) return;
+
+  syncPrototypeFrameShell(frameDocument);
 
   const hostRoot = document.documentElement;
   const hostElement = document.querySelector('.app-frame') ?? hostRoot;
