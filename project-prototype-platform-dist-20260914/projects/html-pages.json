@@ -1,0 +1,1354 @@
+{
+  "generatedAt": "2026-09-14T02:32:19.395Z",
+  "projects": {
+    "dashboard": {
+      "client-2": [
+        {
+          "path": "index",
+          "name": "html-66a1tk",
+          "title": "瞰車大數據看板",
+          "sourceType": "html-direct",
+          "source": "index.html",
+          "sourceRoot": "client-2",
+          "renderMode": "full",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        }
+      ]
+    },
+    "demo": {
+      "admin": [
+        {
+          "path": "membership-plans",
+          "name": "html-membership-plans-y5nwvj",
+          "title": "客户等级方案",
+          "sourceType": "html-direct",
+          "source": "页面演示包-1784621198557-yb7ha3.html",
+          "sourceRoot": "admin",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Medal",
+          "menu": true
+        }
+      ],
+      "client-3": [
+        {
+          "path": "channel-ticket-applications",
+          "name": "html-channel-ticket-applications-ml9oqq",
+          "title": "租車券申报审批",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_applications.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batch-detail",
+          "name": "html-channel-ticket-batch-detail-1ldl7bj",
+          "title": "批次详情",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batch_detail.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batches",
+          "name": "html-channel-ticket-batches-1umn6n",
+          "title": "合作通路租车券",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batches.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "corporate-detail",
+          "name": "html-corporate-detail-1rnp9qh",
+          "title": "企业详情",
+          "sourceType": "html-direct",
+          "source": "corporate_detail.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Postcard",
+          "menu": true
+        },
+        {
+          "path": "corporate-login",
+          "name": "html-corporate-login-1x37hpb",
+          "title": "企业端登录",
+          "sourceType": "html-direct",
+          "source": "corporate_login.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": false
+        },
+        {
+          "path": "corporates",
+          "name": "html-corporates-b99i72",
+          "title": "企业客户管理",
+          "sourceType": "html-direct",
+          "source": "corporates.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Management",
+          "menu": true
+        },
+        {
+          "path": "dashboard",
+          "name": "html-dashboard-1igldq0",
+          "title": "综合仪表板",
+          "sourceType": "html-direct",
+          "source": "dashboard.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Odometer",
+          "menu": true
+        },
+        {
+          "path": "dispatch",
+          "name": "html-dispatch-1mgbgm4",
+          "title": "车辆排程看板",
+          "sourceType": "html-direct",
+          "source": "dispatch.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "DataBoard",
+          "menu": true
+        },
+        {
+          "path": "employees",
+          "name": "html-employees-162rop7",
+          "title": "平台账户管理",
+          "sourceType": "html-direct",
+          "source": "employees.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "User",
+          "menu": true
+        },
+        {
+          "path": "login",
+          "name": "html-login-fp71a3",
+          "title": "后台登录",
+          "sourceType": "html-direct",
+          "source": "login.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": false
+        },
+        {
+          "path": "marketing",
+          "name": "html-marketing-1mgmj5g",
+          "title": "行销方案管理",
+          "sourceType": "html-direct",
+          "source": "marketing.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "member-detail",
+          "name": "html-member-detail-gvpzoe",
+          "title": "会员详情",
+          "sourceType": "html-direct",
+          "source": "member_detail.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Postcard",
+          "menu": true
+        },
+        {
+          "path": "member-review",
+          "name": "html-member-review-1e14959",
+          "title": "资质认证审核",
+          "sourceType": "html-direct",
+          "source": "member_review.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "members",
+          "name": "html-members-qiaw6p",
+          "title": "个人会员管理",
+          "sourceType": "html-direct",
+          "source": "members.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "User",
+          "menu": true
+        },
+        {
+          "path": "membership-plans",
+          "name": "html-membership-plans-1u0o7r",
+          "title": "客户等级方案",
+          "sourceType": "html-direct",
+          "source": "membership_plans.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Medal",
+          "menu": true
+        },
+        {
+          "path": "new-order-one-way",
+          "name": "html-new-order-one-way-1pe0q6e",
+          "title": "新增甲租乙还订单",
+          "sourceType": "html-direct",
+          "source": "new_order_one_way.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "new-order-same-station",
+          "name": "html-new-order-same-station-46twdr",
+          "title": "新增同站租还订单",
+          "sourceType": "html-direct",
+          "source": "new_order_same_station.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "new-order",
+          "name": "html-new-order-535hvb",
+          "title": "新增门市租车订单",
+          "sourceType": "html-direct",
+          "source": "new_order.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "official-vehicle-contracts",
+          "name": "html-official-vehicle-contracts-1g86vpw",
+          "title": "公务用车合约管理",
+          "sourceType": "html-direct",
+          "source": "official_vehicle_contracts.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "order-detail",
+          "name": "html-order-detail-krzo0a",
+          "title": "订单详情",
+          "sourceType": "html-direct",
+          "source": "order_detail.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "permissions",
+          "name": "html-permissions-o2cwqw",
+          "title": "权限管理",
+          "sourceType": "html-direct",
+          "source": "permissions.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Lock",
+          "menu": true
+        },
+        {
+          "path": "pricing",
+          "name": "html-pricing-rrfnqq",
+          "title": "动态调价策略",
+          "sourceType": "html-direct",
+          "source": "pricing.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Money",
+          "menu": true
+        },
+        {
+          "path": "rental-companies",
+          "name": "html-rental-companies-eri0v0",
+          "title": "车行管理",
+          "sourceType": "html-direct",
+          "source": "rental_companies.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "OfficeBuilding",
+          "menu": true
+        },
+        {
+          "path": "service-products",
+          "name": "html-service-products-1qtd1me",
+          "title": "基础产品定价",
+          "sourceType": "html-direct",
+          "source": "service_products.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "services",
+          "name": "html-services-1uu74eq",
+          "title": "增值服务管理",
+          "sourceType": "html-direct",
+          "source": "services.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "settings",
+          "name": "html-settings-1h879eh",
+          "title": "租赁业务规则",
+          "sourceType": "html-direct",
+          "source": "settings.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "stations",
+          "name": "html-stations-17ev94h",
+          "title": "据点管理",
+          "sourceType": "html-direct",
+          "source": "stations.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Location",
+          "menu": true
+        },
+        {
+          "path": "store-orders",
+          "name": "html-store-orders-169vm3n",
+          "title": "门市租赁订单",
+          "sourceType": "html-direct",
+          "source": "store_orders.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "stores",
+          "name": "html-stores-15g8ki8",
+          "title": "门市管理",
+          "sourceType": "html-direct",
+          "source": "stores.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Shop",
+          "menu": true
+        },
+        {
+          "path": "system-rules",
+          "name": "html-system-rules-1v0vn69",
+          "title": "系统通用参数",
+          "sourceType": "html-direct",
+          "source": "system_rules.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "tbox-management",
+          "name": "html-tbox-management-1kw01zb",
+          "title": "车机设定中心",
+          "sourceType": "html-direct",
+          "source": "tbox_management.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "time-share-orders",
+          "name": "html-time-share-orders-wpfi9h",
+          "title": "分时租赁订单",
+          "sourceType": "html-direct",
+          "source": "time_share_orders.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "vehicle-console",
+          "name": "html-vehicle-console-sa8mpq",
+          "title": "车辆控制台",
+          "sourceType": "html-direct",
+          "source": "vehicle_console.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "vehicle-groups",
+          "name": "html-vehicle-groups-nr6bad",
+          "title": "车型组管理",
+          "sourceType": "html-direct",
+          "source": "vehicle_groups.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "vehicle-status-list",
+          "name": "html-vehicle-status-list-15569nc",
+          "title": "车辆速查表",
+          "sourceType": "html-direct",
+          "source": "vehicle_status_list.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "vehicle-transfer",
+          "name": "html-vehicle-transfer-gd0k4c",
+          "title": "车辆调拨管理",
+          "sourceType": "html-direct",
+          "source": "vehicle_transfer.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "vehicles",
+          "name": "html-vehicles-ypejjt",
+          "title": "车辆档案库",
+          "sourceType": "html-direct",
+          "source": "vehicles.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "war-room",
+          "name": "html-war-room-1kx74u6",
+          "title": "战情分析看板",
+          "sourceType": "html-direct",
+          "source": "war_room.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "DataBoard",
+          "menu": true
+        },
+        {
+          "path": "workbench",
+          "name": "html-workbench-1x9wcy7",
+          "title": "工作台首页",
+          "sourceType": "html-direct",
+          "source": "workbench.html",
+          "sourceRoot": "client-3",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "House",
+          "menu": true
+        }
+      ],
+      "client-2": []
+    },
+    "rimo-rental": {
+      "operation": [
+        {
+          "path": "corporate-login",
+          "name": "html-corporate-login-1k3bjl3",
+          "title": "企业端登录",
+          "sourceType": "html-direct",
+          "source": "corporate_login.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": false
+        },
+        {
+          "path": "login",
+          "name": "html-login-18czis3",
+          "title": "后台登录",
+          "sourceType": "html-direct",
+          "source": "login.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": false
+        },
+        {
+          "path": "workbench",
+          "name": "html-workbench-1ukl8vb",
+          "title": "工作台首页",
+          "sourceType": "html-direct",
+          "source": "workbench.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "workspace",
+          "icon": "House",
+          "menu": true
+        },
+        {
+          "path": "dashboard",
+          "name": "html-dashboard-141x8pc",
+          "title": "综合仪表板",
+          "sourceType": "html-direct",
+          "source": "dashboard.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dashboard",
+          "icon": "Odometer",
+          "menu": true
+        },
+        {
+          "path": "war-room",
+          "name": "html-war-room-1mfdie",
+          "title": "战情分析看板",
+          "sourceType": "html-direct",
+          "source": "war_room.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dashboard",
+          "icon": "DataBoard",
+          "menu": true
+        },
+        {
+          "path": "time-share-orders",
+          "name": "html-time-share-orders-15blbpp",
+          "title": "分时租赁订单",
+          "sourceType": "html-direct",
+          "source": "time_share_orders.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "new-order-one-way",
+          "name": "html-new-order-one-way-1a3ara6",
+          "title": "新增甲租乙还订单",
+          "sourceType": "html-direct",
+          "source": "new_order_one_way.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "new-order-same-station",
+          "name": "html-new-order-same-station-1b7mnnr",
+          "title": "新增同站租还订单",
+          "sourceType": "html-direct",
+          "source": "new_order_same_station.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "store-orders",
+          "name": "html-store-orders-1hrqbob",
+          "title": "门市租赁订单",
+          "sourceType": "html-direct",
+          "source": "store_orders.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "new-order",
+          "name": "html-new-order-1yrelhb",
+          "title": "新增门市租车订单",
+          "sourceType": "html-direct",
+          "source": "new_order.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "order-detail",
+          "name": "html-order-detail-130reaa",
+          "title": "订单详情",
+          "sourceType": "html-direct",
+          "source": "order_detail.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "orders",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "member-review",
+          "name": "html-member-review-1vfhoth",
+          "title": "资质认证审核",
+          "sourceType": "html-direct",
+          "source": "member_review.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "members",
+          "name": "html-members-2aat6x",
+          "title": "个人会员管理",
+          "sourceType": "html-direct",
+          "source": "members.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "User",
+          "menu": true
+        },
+        {
+          "path": "member-detail",
+          "name": "html-member-detail-1s8we7a",
+          "title": "会员详情",
+          "sourceType": "html-direct",
+          "source": "member_detail.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "Postcard",
+          "menu": true
+        },
+        {
+          "path": "corporates",
+          "name": "html-corporates-9e11c6",
+          "title": "企业客户管理",
+          "sourceType": "html-direct",
+          "source": "corporates.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "Management",
+          "menu": true
+        },
+        {
+          "path": "corporate-detail",
+          "name": "html-corporate-detail-1itqz35",
+          "title": "企业详情",
+          "sourceType": "html-direct",
+          "source": "corporate_detail.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "Postcard",
+          "menu": true
+        },
+        {
+          "path": "membership-plans",
+          "name": "html-membership-plans-1g9493j",
+          "title": "客户等级方案",
+          "sourceType": "html-direct",
+          "source": "membership_plans.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "customers",
+          "icon": "Medal",
+          "menu": true
+        },
+        {
+          "path": "official-vehicle-contracts",
+          "name": "html-official-vehicle-contracts-1336bn0",
+          "title": "公务用车合约管理",
+          "sourceType": "html-direct",
+          "source": "official_vehicle_contracts.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "official-vehicles",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "dispatch",
+          "name": "html-dispatch-te4db8",
+          "title": "车辆排程看板",
+          "sourceType": "html-direct",
+          "source": "dispatch.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dispatch",
+          "icon": "DataBoard",
+          "menu": true
+        },
+        {
+          "path": "vehicle-console",
+          "name": "html-vehicle-console-1pu0t5i",
+          "title": "车辆控制台",
+          "sourceType": "html-direct",
+          "source": "vehicle_console.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dispatch",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "vehicle-status-list",
+          "name": "html-vehicle-status-list-mj8ajk",
+          "title": "车辆速查表",
+          "sourceType": "html-direct",
+          "source": "vehicle_status_list.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dispatch",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "vehicle-transfer",
+          "name": "html-vehicle-transfer-1ov9xx0",
+          "title": "车辆调拨管理",
+          "sourceType": "html-direct",
+          "source": "vehicle_transfer.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "dispatch",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "vehicles",
+          "name": "html-vehicles-v1rzwx",
+          "title": "车辆档案库",
+          "sourceType": "html-direct",
+          "source": "vehicles.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "assets",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "vehicle-groups",
+          "name": "html-vehicle-groups-1sp4fr1",
+          "title": "车型组管理",
+          "sourceType": "html-direct",
+          "source": "vehicle_groups.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "assets",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "tbox-management",
+          "name": "html-tbox-management-q5564v",
+          "title": "车机设定中心",
+          "sourceType": "html-direct",
+          "source": "tbox_management.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "assets",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "rental-companies",
+          "name": "html-rental-companies-12nj9ro",
+          "title": "车行管理",
+          "sourceType": "html-direct",
+          "source": "rental_companies.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "locations",
+          "icon": "OfficeBuilding",
+          "menu": true
+        },
+        {
+          "path": "stores",
+          "name": "html-stores-1duvk14",
+          "title": "门市管理",
+          "sourceType": "html-direct",
+          "source": "stores.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "locations",
+          "icon": "Shop",
+          "menu": true
+        },
+        {
+          "path": "stations",
+          "name": "html-stations-2hv7jd",
+          "title": "据点管理",
+          "sourceType": "html-direct",
+          "source": "stations.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "locations",
+          "icon": "Location",
+          "menu": true
+        },
+        {
+          "path": "service-products",
+          "name": "html-service-products-1xhl88e",
+          "title": "基础产品定价",
+          "sourceType": "html-direct",
+          "source": "service_products.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "pricing",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "pricing",
+          "name": "html-pricing-13mp4nu",
+          "title": "动态调价策略",
+          "sourceType": "html-direct",
+          "source": "pricing.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "pricing",
+          "icon": "Money",
+          "menu": true
+        },
+        {
+          "path": "services",
+          "name": "html-services-gmgg96",
+          "title": "增值服务管理",
+          "sourceType": "html-direct",
+          "source": "services.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "pricing",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "settings",
+          "name": "html-settings-sd0jc1",
+          "title": "租赁业务规则",
+          "sourceType": "html-direct",
+          "source": "settings.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "pricing",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batches",
+          "name": "html-channel-ticket-batches-1aj87br",
+          "title": "合作通路租车券",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batches.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "marketing",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batch-detail",
+          "name": "html-channel-ticket-batch-detail-1prrlwn",
+          "title": "批次详情",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batch_detail.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "marketing",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-applications",
+          "name": "html-channel-ticket-applications-1i7dj2i",
+          "title": "租車券申报审批",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_applications.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "marketing",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "marketing",
+          "name": "html-marketing-1rruht8",
+          "title": "行销方案管理",
+          "sourceType": "html-direct",
+          "source": "marketing.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "marketing",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "employees",
+          "name": "html-employees-11d5u4j",
+          "title": "平台账户管理",
+          "sourceType": "html-direct",
+          "source": "employees.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "system",
+          "icon": "User",
+          "menu": true
+        },
+        {
+          "path": "permissions",
+          "name": "html-permissions-1dw2k5s",
+          "title": "权限管理",
+          "sourceType": "html-direct",
+          "source": "permissions.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "system",
+          "icon": "Lock",
+          "menu": true
+        },
+        {
+          "path": "system-rules",
+          "name": "html-system-rules-8zrm2h",
+          "title": "系统通用参数",
+          "sourceType": "html-direct",
+          "source": "system_rules.html",
+          "sourceRoot": "operation",
+          "renderMode": "content-only",
+          "section": "system",
+          "icon": "Setting",
+          "menu": true
+        }
+      ],
+      "enterprise": [
+        {
+          "path": "corporate-login",
+          "name": "html-corporate-login-1315cll",
+          "title": "企业端登录",
+          "sourceType": "html-direct",
+          "source": "corporate_login.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "dashboard",
+          "icon": "Document",
+          "menu": false
+        },
+        {
+          "path": "dashboard",
+          "name": "html-dashboard-1bpqu8e",
+          "title": "公务车仪表板",
+          "sourceType": "html-direct",
+          "source": "dashboard.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "dashboard",
+          "icon": "DataBoard",
+          "menu": true
+        },
+        {
+          "path": "time-share-orders",
+          "name": "html-time-share-orders-1u6rxoj",
+          "title": "分时租赁订单",
+          "sourceType": "html-direct",
+          "source": "time_share_orders.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "sharing",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "official-order",
+          "name": "html-official-order-kpgb2y",
+          "title": "公务订单管理",
+          "sourceType": "html-direct",
+          "source": "official_order.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "official-use",
+          "icon": "List",
+          "menu": true
+        },
+        {
+          "path": "official-order-add",
+          "name": "html-official-order-add-1jfc5pq",
+          "title": "新增公务订单",
+          "sourceType": "html-direct",
+          "source": "official_order_add.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "official-use",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "contract-quotas",
+          "name": "html-contract-quotas-rfq0zk",
+          "title": "合约配额管理",
+          "sourceType": "html-direct",
+          "source": "contract_quotas.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "official-vehicles",
+          "name": "html-official-vehicles-1b9p2ef",
+          "title": "公务车辆管理",
+          "sourceType": "html-direct",
+          "source": "official_vehicles.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "official-vehicle-add",
+          "name": "html-official-vehicle-add-z3i66",
+          "title": "新增公务车",
+          "sourceType": "html-direct",
+          "source": "official_vehicle_add.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "CirclePlus",
+          "menu": true
+        },
+        {
+          "path": "official-vehicle-reminders",
+          "name": "html-official-vehicle-reminders-14d8suy",
+          "title": "清洁保养提醒",
+          "sourceType": "html-direct",
+          "source": "official_vehicle_reminders.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "Warning",
+          "menu": true
+        },
+        {
+          "path": "dispatch-schedule",
+          "name": "html-dispatch-schedule-efh0zw",
+          "title": "车辆调度排程",
+          "sourceType": "html-direct",
+          "source": "dispatch_schedule.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "Calendar",
+          "menu": true
+        },
+        {
+          "path": "car-use-management",
+          "name": "html-car-use-management-1f0o2a0",
+          "title": "车辆使用范围",
+          "sourceType": "html-direct",
+          "source": "car_use_management.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "vehicles-contracts",
+          "icon": "Van",
+          "menu": true
+        },
+        {
+          "path": "branch-company-management",
+          "name": "html-branch-company-management-cwuh08",
+          "title": "分公司管理",
+          "sourceType": "html-direct",
+          "source": "branch_company_management.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "organization",
+          "icon": "House",
+          "menu": true
+        },
+        {
+          "path": "department-management",
+          "name": "html-department-management-1kj8u72",
+          "title": "部门管理",
+          "sourceType": "html-direct",
+          "source": "department_management.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "organization",
+          "icon": "Files",
+          "menu": true
+        },
+        {
+          "path": "employee-management",
+          "name": "html-employee-management-c02bwk",
+          "title": "员工管理",
+          "sourceType": "html-direct",
+          "source": "employee_management.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "organization",
+          "icon": "User",
+          "menu": true
+        },
+        {
+          "path": "employee-review",
+          "name": "html-employee-review-1uwibtp",
+          "title": "员工申请审核",
+          "sourceType": "html-direct",
+          "source": "employee_review.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "organization",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "approval-setting",
+          "name": "html-approval-setting-9u4e58",
+          "title": "预约审批设定",
+          "sourceType": "html-direct",
+          "source": "approval_setting.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "rules",
+          "icon": "Setting",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batches",
+          "name": "html-channel-ticket-batches-1t9w7yp",
+          "title": "合作通路租車券",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batches.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "channels",
+          "icon": "Tickets",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-batch-detail",
+          "name": "html-channel-ticket-batch-detail-14br8y5",
+          "title": "批次详情",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_batch_detail.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "channels",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "official-car-bill",
+          "name": "html-official-car-bill-1y0hnza",
+          "title": "公务车账单",
+          "sourceType": "html-direct",
+          "source": "official_car_bill.html",
+          "sourceRoot": "enterprise",
+          "renderMode": "content-only",
+          "section": "billing",
+          "icon": "Money",
+          "menu": true
+        }
+      ],
+      "client-3": [
+        {
+          "path": "channel-ticket-app-compatible",
+          "name": "html-ukfbyg",
+          "title": "RIMO Rental - 合作通路租车券 APP 原型（兼容现有流程）",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_app_compatible.html",
+          "sourceRoot": "client-3",
+          "renderMode": "full",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        },
+        {
+          "path": "channel-ticket-app",
+          "name": "html-j4o18p",
+          "title": "RIMO Rental - 合作通路租车券 APP 原型",
+          "sourceType": "html-direct",
+          "source": "channel_ticket_app.html",
+          "sourceRoot": "client-3",
+          "renderMode": "full",
+          "section": "workspace",
+          "icon": "Document",
+          "menu": true
+        }
+      ]
+    }
+  },
+  "sections": {
+    "dashboard": {
+      "client-2": [
+        {
+          "id": "workspace",
+          "title": "工作区"
+        }
+      ]
+    },
+    "demo": {
+      "admin": [
+        {
+          "id": "workspace",
+          "title": "工作区"
+        }
+      ],
+      "client-2": [
+        {
+          "id": "workspace",
+          "title": "工作区"
+        }
+      ],
+      "client-3": [
+        {
+          "id": "workspace",
+          "title": "工作区"
+        }
+      ]
+    },
+    "rimo-rental": {
+      "operation": [
+        {
+          "id": "workspace",
+          "title": "核心工作区"
+        },
+        {
+          "id": "dashboard",
+          "title": "数据看板"
+        },
+        {
+          "id": "orders",
+          "title": "订单中心"
+        },
+        {
+          "id": "customers",
+          "title": "客户中心"
+        },
+        {
+          "id": "official-vehicles",
+          "title": "公务用车合约"
+        },
+        {
+          "id": "dispatch",
+          "title": "车辆营运与调度"
+        },
+        {
+          "id": "assets",
+          "title": "车辆资产"
+        },
+        {
+          "id": "locations",
+          "title": "站点与区域"
+        },
+        {
+          "id": "pricing",
+          "title": "定价与服务"
+        },
+        {
+          "id": "marketing",
+          "title": "营销中心"
+        },
+        {
+          "id": "system",
+          "title": "系统管理"
+        }
+      ],
+      "enterprise": [
+        {
+          "id": "dashboard",
+          "title": "Dashboard"
+        },
+        {
+          "id": "sharing",
+          "title": "分时租赁"
+        },
+        {
+          "id": "official-use",
+          "title": "公务用车"
+        },
+        {
+          "id": "vehicles-contracts",
+          "title": "车辆与合约"
+        },
+        {
+          "id": "organization",
+          "title": "员工与组织"
+        },
+        {
+          "id": "rules",
+          "title": "规则设置"
+        },
+        {
+          "id": "channels",
+          "title": "合作通路"
+        },
+        {
+          "id": "billing",
+          "title": "结算"
+        }
+      ],
+      "client-3": [
+        {
+          "id": "workspace",
+          "title": "工作区"
+        }
+      ]
+    }
+  }
+}

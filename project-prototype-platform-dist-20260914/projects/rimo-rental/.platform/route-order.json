@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "clients": {
+    "operation": {
+      "sectionOrder": [
+        "workspace",
+        "dashboard",
+        "orders",
+        "customers",
+        "official-vehicles",
+        "dispatch",
+        "assets",
+        "locations",
+        "pricing",
+        "marketing",
+        "system"
+      ],
+      "pageOrder": {
+        "workspace": [
+          "html-legacy-1uld938-1letgdt",
+          "html-corporate-login-1k3bjl3",
+          "html-login-18czis3",
+          "html-workbench-1ukl8vb"
+        ],
+        "dashboard": [
+          "html-dashboard-141x8pc",
+          "html-war-room-1mfdie"
+        ],
+        "orders": [
+          "html-time-share-orders-15blbpp",
+          "html-new-order-one-way-1a3ara6",
+          "html-new-order-same-station-1b7mnnr",
+          "html-store-orders-1hrqbob",
+          "html-new-order-1yrelhb",
+          "html-order-detail-130reaa"
+        ],
+        "customers": [
+          "html-member-review-1vfhoth",
+          "html-members-2aat6x",
+          "html-member-detail-1s8we7a",
+          "html-corporates-9e11c6",
+          "html-corporate-detail-1itqz35",
+          "html-membership-plans-1g9493j"
+        ],
+        "official-vehicles": [
+          "html-official-vehicle-contracts-1336bn0"
+        ],
+        "dispatch": [
+          "html-dispatch-te4db8",
+          "html-vehicle-console-1pu0t5i",
+          "html-vehicle-status-list-mj8ajk",
+          "html-vehicle-transfer-1ov9xx0"
+        ],
+        "assets": [
+          "html-vehicles-v1rzwx",
+          "html-vehicle-groups-1sp4fr1",
+          "html-tbox-management-q5564v"
+        ],
+        "locations": [
+          "html-rental-companies-12nj9ro",
+          "html-stores-1duvk14",
+          "html-stations-2hv7jd"
+        ],
+        "pricing": [
+          "html-service-products-1xhl88e",
+          "html-pricing-13mp4nu",
+          "html-services-gmgg96",
+          "html-settings-sd0jc1"
+        ],
+        "marketing": [
+          "html-channel-ticket-batches-1aj87br",
+          "html-channel-ticket-batch-detail-1prrlwn",
+          "html-channel-ticket-applications-1i7dj2i",
+          "html-marketing-1rruht8"
+        ],
+        "system": [
+          "html-employees-11d5u4j",
+          "html-permissions-1dw2k5s",
+          "html-system-rules-8zrm2h"
+        ]
+      }
+    },
+    "enterprise": {
+      "sectionOrder": [
+        "dashboard",
+        "sharing",
+        "official-use",
+        "vehicles-contracts",
+        "organization",
+        "rules",
+        "channels",
+        "billing"
+      ],
+      "pageOrder": {
+        "dashboard": [
+          "html-corporate-login-1315cll",
+          "html-dashboard-1bpqu8e"
+        ],
+        "sharing": [
+          "html-time-share-orders-1u6rxoj"
+        ],
+        "official-use": [
+          "html-official-order-kpgb2y",
+          "html-official-order-add-1jfc5pq"
+        ],
+        "vehicles-contracts": [
+          "html-contract-quotas-rfq0zk",
+          "html-official-vehicles-1b9p2ef",
+          "html-official-vehicle-add-z3i66",
+          "html-official-vehicle-reminders-14d8suy",
+          "html-dispatch-schedule-efh0zw",
+          "html-car-use-management-1f0o2a0"
+        ],
+        "organization": [
+          "html-branch-company-management-cwuh08",
+          "html-department-management-1kj8u72",
+          "html-employee-management-c02bwk",
+          "html-employee-review-1uwibtp"
+        ],
+        "rules": [
+          "html-approval-setting-9u4e58"
+        ],
+        "channels": [
+          "html-channel-ticket-batches-1t9w7yp",
+          "html-channel-ticket-batch-detail-14br8y5"
+        ],
+        "billing": [
+          "html-official-car-bill-1y0hnza"
+        ]
+      }
+    }
+  }
+}

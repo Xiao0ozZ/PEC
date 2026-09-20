@@ -40,7 +40,6 @@ const PUBLIC_EXTENSIONS = new Set([
   '.woff',
   '.woff2',
 ]);
-const SOURCE_EXTENSIONS = new Set(['.vue']);
 const MIME_TYPES = {
   '.avif': 'image/avif',
   '.css': 'text/css; charset=utf-8',
@@ -94,23 +93,6 @@ async function resolveProjectFile(projectsRoot, projectId, relativePath, mounts 
   return resolveExistingPathInsideRoot(projectRoot, normalized, {
     allowedExtensions: PUBLIC_EXTENSIONS,
   });
-}
-
-async function resolveProjectSource(projectsRoot, projectId, relativePath, mounts = {}) {
-  if (!PROJECT_ID_PATTERN.test(projectId || '') || !isSafeRelativePath(relativePath)) return null;
-  const normalizedPath = String(relativePath).replaceAll('\\', '/');
-  if (!normalizedPath.startsWith('views/')) return null;
-  if (!SOURCE_EXTENSIONS.has(path.extname(normalizedPath).toLowerCase())) return null;
-  const projectRoot = resolveMountedProjectRoot(projectsRoot, projectId, mounts);
-  return resolveExistingPathInsideRoot(projectRoot, normalizedPath, {
-    allowedExtensions: SOURCE_EXTENSIONS,
-  });
-}
-
-function sourceContentDisposition(filePath) {
-  const fileName = path.basename(filePath);
-  const fallbackName = fileName.replace(/[^\x20-\x7e]/g, '_').replace(/["\\\r\n]/g, '_');
-  return `attachment; filename="${fallbackName}"; filename*=UTF-8''${encodeURIComponent(fileName)}`;
 }
 
 function sendJson(res, payload, statusCode = 200) {
@@ -252,9 +234,8 @@ export function projectPackagesPlugin({
           /^([a-z][a-z0-9-]*)\/(?:project\.json|page-definitions\.js|\.platform\/(?:page-prd-links|route-order)\.json)$/i.test(
             relativePath,
           );
-        const viewChange = /^([a-z][a-z0-9-]*)\/views\/.+\.vue$/i.test(relativePath);
-        if (!projectEntryChange && !manifestChange && !viewChange && !bindingChange && !mountChange) return;
-        if (projectEntryChange || manifestChange || viewChange || mountChange) scanCache.delete(root);
+        if (!projectEntryChange && !manifestChange && !bindingChange && !mountChange) return;
+        if (projectEntryChange || manifestChange || mountChange) scanCache.delete(root);
         clearTimeout(refreshTimer);
         refreshTimer = setTimeout(() => {
           if (projectEntryChange || manifestChange || mountChange) {
@@ -267,7 +248,7 @@ export function projectPackagesPlugin({
               data: { projectId: bindingChange[1] },
             });
           }
-          if (projectEntryChange || manifestChange || viewChange) {
+          if (projectEntryChange || manifestChange) {
             server.ws.send({ type: 'full-reload' });
           }
         }, 120);
@@ -513,37 +494,6 @@ export function projectPackagesPlugin({
             sendJson(
               res,
               { message: '项目资源读取失败', detail: error.message },
-              error.code === 'ENOENT' ? 404 : 500,
-            );
-          }
-          return;
-        }
-        if (requestUrl.pathname === '/__projects/source') {
-          if (!isLocalRequest(req)) {
-            sendJson(res, { message: '页面源文件下载仅允许本机使用。' }, 403);
-            return;
-          }
-          const target = await resolveProjectSource(
-            root,
-            requestUrl.searchParams.get('project'),
-            requestUrl.searchParams.get('path'),
-            await loadMounts(),
-          );
-          if (!target) {
-            sendJson(res, { message: '页面源文件路径无效。' }, 400);
-            return;
-          }
-          try {
-            const content = await fs.readFile(target);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-            res.setHeader('Content-Disposition', sourceContentDisposition(target));
-            res.setHeader('Cache-Control', 'no-store');
-            res.end(content);
-          } catch (error) {
-            sendJson(
-              res,
-              { message: '页面源文件读取失败。', detail: error.message },
               error.code === 'ENOENT' ? 404 : 500,
             );
           }

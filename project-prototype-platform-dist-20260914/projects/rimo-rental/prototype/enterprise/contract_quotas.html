@@ -1,0 +1,2145 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="RnoPKLridxTR3XGzKOnTZW">
+  <head data-page-node-id="gkoduAqXQjgsECiV8txZB9">
+    <meta charset="UTF-8" data-page-node-id="KW0nu5q36lMeB8a8leZJiV" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="OYlKaYmYE8sc0thwo481zb" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>合约配额管理</title>
+    <link rel="icon" href="data:," data-page-node-id="nmZFlnlQEMpTkgImZFotVR" />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" data-page-node-id="8fKNbZ0SpHcHat4O0gnciL" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.contract-quotas .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .contract-quotas .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* Value Highlight Custom UI */
+        .contract-quotas .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .contract-quotas .role-view-switcher {
+            position: fixed;
+            right: 24px;
+            bottom: 20px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px 8px 14px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #dbe3ea;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(8px);
+        }
+
+        .contract-quotas .role-view-switcher__label {
+            color: #64748b;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .contract-quotas .role-view-switcher .el-radio-button__inner {
+            min-width: 76px;
+        }
+
+        .contract-quotas .el-table th.el-table__cell {
+            background: var(--app-color-surface-subtle);
+            color: var(--app-color-text-secondary);
+        }
+
+        /* [配额转移-新增] 与营运端一致的转移弹窗样式 */
+        .contract-quotas-overlay.transfer-dialog { max-width: calc(100vw - 48px); margin-top: 4vh; }
+        .contract-quotas-overlay .transfer-toolbar,
+        .contract-quotas-overlay .transfer-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .contract-quotas-overlay .transfer-toolbar { margin-bottom: 16px; }
+        .contract-quotas-overlay .transfer-push { margin-left: auto; }
+        .contract-quotas-overlay .transfer-muted { font-size: 13px; color: #64748b; line-height: 1.6; overflow-wrap: anywhere; }
+        .contract-quotas-overlay .transfer-editor-body { max-height: 82vh; overflow-y: auto; padding-right: 4px; }
+        .contract-quotas-overlay .transfer-alert { margin-top: 16px; }
+        .contract-quotas-overlay .transfer-original-summary { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .contract-quotas-overlay .transfer-metric { padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 6px; background: #f8fafc; font-size: 13px; }
+        .contract-quotas-overlay .transfer-metric strong { display: block; font-size: 18px; line-height: 1.5; margin-top: 4px; overflow-wrap: anywhere; }
+        .contract-quotas-overlay .transfer-source-summary strong { font-size: 14px; }
+        .contract-quotas-overlay .transfer-quota-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; color: #475569; font-size: 13px; line-height: 1.6; }
+        .contract-quotas-overlay .transfer-quota-line strong { font-size: 14px; font-weight: 600; color: #1e293b; }
+        .contract-quotas-overlay .transfer-target-quota { margin: -8px 0 20px; }
+        .contract-quotas-overlay .transfer-inline-summary { padding-top: 12px; }
+
+        /* 配额进度条配色：统一走主题变量，不硬编码色值 */
+        .contract-quotas .quota-progress.progress-hq .el-progress-bar__inner { background-color: var(--app-color-primary) !important; }
+        .contract-quotas .quota-progress.progress-empty .el-progress-bar__inner { background-color: var(--app-color-border) !important; }
+        .contract-quotas .quota-progress.progress-full .el-progress-bar__inner { background-color: var(--app-color-danger) !important; }
+        .contract-quotas .quota-progress.progress-warning .el-progress-bar__inner { background-color: var(--app-color-warning) !important; }
+        .contract-quotas .quota-progress.progress-normal .el-progress-bar__inner { background-color: var(--app-color-success) !important; }
+
+        /* 操作列按钮：固定列宽 + 左对齐，保证各行按钮纵向对齐（缺项占位、不塌陷） */
+        .contract-quotas .action-btns {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .contract-quotas .action-btns > .action-btn,
+        .contract-quotas .action-btns > .el-dropdown {
+            flex: 0 0 auto;
+            margin-right: 8px;
+        }
+        .contract-quotas .action-btns > .action-btn:last-child,
+        .contract-quotas .action-btns > .el-dropdown:last-child {
+            margin-right: 0;
+        }
+        .contract-quotas .action-btns > .action-btn,
+        .contract-quotas .action-btns > .el-dropdown .action-btn {
+            justify-content: flex-start;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .contract-quotas .action-btns > .action-btn--allocate { width: 56px; }
+        .contract-quotas .action-btns > .action-btn--details { width: 82px; }
+        .contract-quotas .action-btns > .el-dropdown .action-btn--more { width: 48px; }
+        .contract-quotas .action-btns .is-hidden {
+            visibility: hidden;
+            pointer-events: none;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "contract-quotas",
+  "pageTitle": "合约配额管理",
+  "fileName": "contract_quotas.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "enterprise",
+  "routePath": "/enterprise/contract-quotas",
+  "menuSection": "vehicles-contracts",
+  "menuTitle": "合约配额管理",
+  "menuIcon": "Tickets",
+  "menu": true,
+  "rootClass": "contract-quotas",
+  "overlayRootClass": "contract-quotas-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body data-page-node-id="Qo1tOvUHN9YU4FpwHcDcDJ">
+    <div id="app" class="prototype-app" v-cloak data-page-node-id="9tvVpsAhrPZ1BKyIHPVoqS">
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar" data-page-node-id="474EH1mDeEvQmcbQRCCxdO">
+        <div class="prototype-brand" data-page-node-id="BwzQrFmi6P8d7naYGLFS56">
+          <span data-shell-project-name data-page-node-id="FQlfXSYmCrRr03wrpPBD53">RIMO Rental</span>
+          <small data-shell-client-name data-page-node-id="AKrw3SNdJrDhe31ho7ATJz">企业端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航" data-page-node-id="FCWUqe1ysSlTvn6wcLJpnV">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group" data-page-node-id="snQbil8ZgLvFD9YFADBE9A">车辆与合约</div>
+<a class="prototype-menu-item is-active" href="./contract_quotas.html" aria-current="page" data-shell-page-title data-page-node-id="T6FtBCeNdf9GPRpXqoCFkQ"><span class="prototype-menu-icon" data-prototype-menu-icon="Tickets" aria-hidden="true" data-page-node-id="eCnUcJ4YmhAmv5xc5uTHHe"></span><span data-page-node-id="NFNfvUM0hbYnhHmMeAg70x">合约配额管理</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace" data-page-node-id="z0KFnSnxvS6RxPxCEumF9S">
+        <header class="prototype-topbar" data-prototype-shell="topbar" data-page-node-id="vDiA53KVIGiV28UchCqFaX">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb data-page-node-id="NCfamCc1CFWkvPnmPj5Oa1">首页 / 企业端 / 合约配额管理</div>
+          <el-dropdown trigger="click" data-page-node-id="bnqdxXrYe1HgYAaSaGmnUQ">
+            <button class="prototype-user" type="button" aria-label="账号菜单" data-page-node-id="6tkAwo662s3wURS7u627hI">
+              <span class="prototype-avatar" data-page-node-id="HayFcdmzFn3MpKt76uRDav">A</span>
+              <span data-page-node-id="auFTeIwDjVh99a6tkzzfq3">Admin</span>
+            </button>
+            <template #dropdown data-page-node-id="NT5ZUhJIG6eJ6DElHPZXbB">
+              <el-dropdown-menu data-page-node-id="7nyN1O0ceySn2SgCTuqwFD">
+                <el-dropdown-item data-page-node-id="oQ6ne94glCFdvj5uE5fMpJ">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main" data-page-node-id="Lb9SS8ExkDfkpnTRPQvPv3">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-contract-quotas contract-quotas" data-page-content data-page-root="contract-quotas" data-page-key="contract-quotas" data-page-node-id="x1nijqaDf4YML9kWIe67jJ">
+  <div data-business-content data-layout-type="legacy" data-page-node-id="CJpQDOTgQo8yU2bESQaGBY">
+<!-- 顶部操作栏 -->
+                <div class="flex justify-between items-end mb-6" data-page-node-id="DLaCqTE4rvehVVXBD4txZ0">
+                    <div data-page-node-id="Mx66nj1Tv0QtaPY9YItQ1f">
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight" data-page-node-id="aJ69lQi8gCyoduCSsAQmrf">合约配额管理</h1>
+                        <p class="text-gray-500 text-sm mt-1" data-page-node-id="yAAMORZDfPKjEDp1NY8VPT">管理车辆底层合约与调度下发额度，严格控制资产绑定状态。</p>
+                    </div>
+                    <div class="flex gap-3" data-page-node-id="UXG2PXCL8TVP53hkbXALFe">
+                        <el-button v-if="currentUserRole === 'HEADQUARTERS'" size="large" @click="openTaskList()">合約轉移任務</el-button>
+                        <el-button v-if="currentUserRole === 'HEADQUARTERS'" type="primary" size="large"
+                            class="shadow-md shadow-[color:var(--app-color-primary-shadow)]" data-page-node-id="bNt1X1x03G5l2rxx9hIcaA">
+                            <el-icon class="mr-1" data-page-node-id="bx7Dmd11Ffv0bLjAjPmA7o">
+                                <Plus data-page-node-id="U4lVGOSkUjsNmpNZ8lTKeN"></Plus>
+                            </el-icon> 增加配额
+                        </el-button>
+                    </div>
+                </div>
+
+                <!-- 一、顶部统计看板 (Data Dashboard) -->
+                <!-- [总公司视角] -->
+                <div v-if="currentUserRole === 'HEADQUARTERS'" class="grid grid-cols-4 gap-4 mb-6" data-page-node-id="cac5A9oHHWh6yMtK8QVFCn">
+                    <div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'totalContracts' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('totalContracts')" data-page-node-id="iFI5w1kWj6R1PBNBiXDoJP">
+                        <span class="text-sm text-gray-500 font-medium mb-1" data-page-node-id="ycsbJIRY222kDlrvVJ8FSX">集团总合约数</span>
+                        <span class="card-value text-gray-800" data-page-node-id="9wZAV7VBKyRJbscklvhIzl">{{ statsHQ.totalContracts }}</span>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'totalQuota' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('totalQuota')" data-page-node-id="76Iqg8uAlf8xEq0BhKPOVa">
+                        <span class="text-sm text-gray-500 font-medium mb-1" data-page-node-id="c5HHigbEp7TSWZ8eXDcipG">集团总可用配额</span>
+                        <div class="flex items-center gap-2" data-page-node-id="zLywPtGyRBn3n0wzEUPW1u">
+                            <span class="card-value text-emerald-500" data-page-node-id="YvzTlpQQma3eV1YzkdfJoR">{{ statsHQ.totalQuota }}</span>
+                            <el-tag type="info" size="small" effect="plain" round data-page-node-id="WqIxMBCKH7lE3azbrCnwu7">台/辆</el-tag>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'allocatedQuota' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('allocatedQuota')" data-page-node-id="fjbSal51PrdaMJD3GXd2Yj">
+                        <span class="text-sm text-gray-500 font-medium mb-1 text-[color:var(--app-color-primary)]" data-page-node-id="B7PuFRMk8mXI5raniWwWH0">已下发配额</span>
+                        <div class="flex items-center gap-2" data-page-node-id="UHhqWzjKFWfjyG9UXy99KL">
+                            <span class="card-value text-[color:var(--app-color-primary)]" data-page-node-id="pitMu0oRlYK6DDBpwSOvMO">{{ statsHQ.allocatedQuota }}</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'unallocatedQuota' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('unallocatedQuota')" data-page-node-id="KvW5SEDGGeGKIRSWC6sIsD">
+                        <span class="text-sm text-gray-500 font-medium mb-1 text-amber-500" data-page-node-id="sPrDtauX9cPJmL6DEU9Bct">待分配配额</span>
+                        <div class="flex items-center gap-2" data-page-node-id="wEVnt0L16BWxA1S5xc2nuO">
+                            <span class="card-value text-amber-500" data-page-node-id="zXo3Xv1WoMpL0vKl3v4B6e">{{ statsHQ.unallocatedQuota }}</span>
+                            <el-icon class="text-amber-500 text-xl" data-page-node-id="ogWgPx7u46BAHfxHqCoAKD">
+                                <Watercup data-page-node-id="V5OkRad4pDO8YG01ZpEVqP"></Watercup>
+                            </el-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [分公司视角] -->
+                <div v-else class="grid grid-cols-2 gap-4 mb-6" data-page-node-id="Fp0dThET0ugYTt9vmTob7c">
+                    <div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col items-center cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'branchContracts' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('branchContracts')" data-page-node-id="hAnhxNKLcazanqKH2Kbovh">
+                        <span class="text-sm text-gray-500 font-medium mb-1" data-page-node-id="8ZuRJTYbTSnBDR6kGbXCta">本公司有效合约数</span>
+                        <span class="card-value text-gray-800" data-page-node-id="d2m3ILvGSRf3IRaTOcLD80">{{ statsBranch.contracts }}</span>
+                    </div>
+                    <div 
+                        class="bg-white rounded-xl shadow-sm border p-5 flex flex-col items-center cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors" :class="activeSummaryCard === 'branchQuota' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'" @click="applySummaryFilter('branchQuota')" data-page-node-id="TvzrgKD4tv06JxFFMMFcfj">
+                        <span class="text-sm text-gray-500 font-medium mb-1" data-page-node-id="BCDsdV12AoGvpmhayWnFcn">本公司当前可用总配额</span>
+                        <div class="flex items-center gap-2" data-page-node-id="9Qhpro3WSk14vvNAwapG8M">
+                            <span class="card-value text-emerald-500 text-4xl" data-page-node-id="DLVkd4XXjNQOF0TDCMERoB">{{ statsBranch.quota }} <span 
+                                    class="text-sm text-gray-400 font-normal" data-page-node-id="BH2AXsM6NZteWMJ5P7PTKM">车辆</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 核心业务卡片 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col" data-page-node-id="AM9gNchoGz3iZHuCfnEewc">
+
+                    <!-- 二、搜索与筛选区 -->
+                    <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-wrap gap-4 items-center" data-page-node-id="8fWTCsiiYUSCtcTV6siqEu">
+                        <el-input v-model="filters.query" placeholder="搜索合约编号 / 合约名称" prefix-icon="Search" clearable
+                            style="width: 240px" data-page-node-id="SgzmJCQvxJD2m6HPvbsnPf"></el-input>
+
+                        <el-select v-model="filters.type" placeholder="合约类型" clearable style="width: 140px" data-page-node-id="m3d8DQp7Pvw57GwGGgwMRL">
+                            <el-option label="全部类型" value="ALL" data-page-node-id="o5cmwNkMOM3TcnlNdZ6KUG"></el-option>
+                            <el-option label="试用 (Trial)" value="TRIAL" data-page-node-id="lnZAj3XnEE1Wx2rtZo8viv"></el-option>
+                            <el-option label="正式 (Official)" value="OFFICIAL" data-page-node-id="nbBFmyEHhXZ7eJkvRafdvh"></el-option>
+                        </el-select>
+
+                        <el-select v-model="filters.billing" placeholder="缴费周期" clearable style="width: 140px" data-page-node-id="ojEQiNPn0XxFGKMDilOBbQ">
+                            <el-option label="全部周期" value="ALL" data-page-node-id="10GHrBNBq937xXdMM6tdc4"></el-option>
+                            <el-option label="月缴 (Monthly)" value="MONTHLY" data-page-node-id="BqllbWLNdQC669k9gG3o4B"></el-option>
+                            <el-option label="年缴 (Annually)" value="ANNUALLY" data-page-node-id="b87UNMrN4BM8kyin9FNoXh"></el-option>
+                        </el-select>
+
+                        <el-select v-model="filters.status" placeholder="全部状态" multiple collapse-tags
+                            collapse-tags-tooltip clearable style="width: 190px" data-page-node-id="6miuIynuVI9p8wZYUTMGzy">
+                            <el-option label="生效中" value="ACTIVE" data-page-node-id="ufNvrbsUYXycH1y1eQ1Uhv"></el-option>
+                            <el-option label="已终止" value="TERMINATED" data-page-node-id="ecTbIrjmnyNRNZ6GS88lrf"></el-option>
+                            <el-option label="即将过期" value="EXPIRING_SOON" data-page-node-id="OSmdM9MMdMprqch53wsOqW"></el-option>
+                            <el-option label="付款确认中" value="PAYING" data-page-node-id="MX4Gs1OE6aX0VWnGnSr44g"></el-option>
+                            <el-option label="已过期" value="EXPIRED" data-page-node-id="tVPuawfHzsyxnO7cpAyDZ4"></el-option>
+                        </el-select>
+
+                        <!-- [仅总公司可见] -->
+                        <el-select v-if="currentUserRole === 'HEADQUARTERS'" v-model="filters.allocation"
+                            placeholder="全部分配状态" multiple collapse-tags collapse-tags-tooltip clearable style="width: 220px" data-page-node-id="uLEhi7ScgWPiik5fJl42gE">
+                            <el-option label="已全部分配" value="FULL" data-page-node-id="stunb9CXMlDxfWTCv4opgs"></el-option>
+                            <el-option label="部分分配" value="PARTIAL" data-page-node-id="TyxWv9MhdjQZm1PxjJY7ua"></el-option>
+                            <el-option label="未分配" value="UNASSIGNED" data-page-node-id="pLZK1A71MaLMTISYdQrAyD"></el-option>
+                        </el-select>
+
+                        <div class="ml-auto text-sm text-gray-500" data-page-node-id="xpACGNNqcIO3Zy5Z041vD0">
+                            共检索到 <span class="font-bold text-gray-800" data-page-node-id="QxRqJyGM8a7HhJcFDOGHkU">{{ filteredData.length }}</span> 份合约
+                        </div>
+                    </div>
+
+                    <!-- 三、核心数据表格 -->
+                    <el-table :data="filteredData" style="width: 100%" data-page-node-id="tTeShNft7VyR6DPPCHlCTb">
+
+                        <el-table-column label="合约编号与名称" min-width="260" data-page-node-id="0pGA38CAuIyMZaRtgtC9Pn">
+                            <template #default="{ row }" data-page-node-id="JE4PiDaV07lEQkTk6W7ZNY">
+                                <div class="font-mono text-gray-800 text-sm font-semibold" data-page-node-id="bN19BGALiW8blBRQjWfZPj">{{ row.id }}</div>
+                                <div class="text-xs text-gray-500 mt-1 truncate" :title="row.name" data-page-node-id="vJBhsYDzu0RcypHLipDB0A">{{ row.name }}</div>
+                                <div v-if="currentUserRole === 'HEADQUARTERS'" class="flex flex-wrap gap-2">
+                                    <el-button v-if="taskNotice(row.id, 'out')" link type="warning" size="small" @click="openTaskList(row.id)">有轉出任務</el-button>
+                                    <el-button v-if="taskNotice(row.id, 'in')" link type="primary" size="small" @click="openTaskList(row.id)">有轉入任務</el-button>
+                                    <el-button v-if="taskFailed(row.id)" link type="danger" size="small" @click="openTaskList(row.id)">轉移失敗</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="合约类型" width="120" data-page-node-id="X0x3F697ZpIIB1Fvvt1jbi">
+                            <template #default="{ row }" data-page-node-id="SgxAcahEvlj4zwTOFaysiA">
+                                <el-tag v-if="row.type === 'TRIAL'" type="info" size="small" effect="plain"
+                                    class="border-blue-200 text-blue-600 bg-blue-50" data-page-node-id="CxSHdhsnAwffajFWUtXLv8">试用 (Trial)</el-tag>
+                                <el-tag v-if="row.type === 'OFFICIAL'" type="success" size="small" effect="light"
+                                    class="text-emerald-600 bg-emerald-50 border-emerald-200" data-page-node-id="QFXC6v6tdbe3NwMG5BRhLP">正式 (Official)</el-tag>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column v-if="currentUserRole === 'HEADQUARTERS'" label="结算方" prop="settlementParty"
+                            min-width="150" align="center" data-page-node-id="0ZEofYBxpGtlSSvXqW5YFs">
+                            <template #default="{ row }" data-page-node-id="Oa8SCTdUxH4WrDhBtJsc73">
+                                <div class="text-sm text-gray-700" data-page-node-id="DmSgRMFrmeub5nfAIMe7xJ">{{ row.settlementParty || '-' }}</div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="缴费周期" width="100" align="center" data-page-node-id="nYYuRtFdG1sZidvT40pmLz">
+                            <template #default="{ row }" data-page-node-id="qJeqcDRRKzUtKOB5ufDU4l">
+                                <div class="text-sm text-gray-600 bg-gray-100 rounded px-2 py-0.5 inline-block" data-page-node-id="nYX7OTbxTcRDHi33CVLjtL">
+                                    {{ row.billing === 'MONTHLY' ? '月缴' : '年缴' }}
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="合约期限" min-width="220" data-page-node-id="6fiDGvWbFMZXCcROkh7ugM">
+                            <template #default="{ row }" data-page-node-id="80YnC66sEvi12Zl2myQphx">
+                                <div class="text-xs text-gray-600 flex items-center" data-page-node-id="zyr7KEsqk4eZtqB5l50CEN">
+                                    {{ row.startDate }} <span class="mx-1 text-gray-400" data-page-node-id="JqiD2PzgAgEnHSLD6cgtOC">至</span> {{ row.endDate }}
+                                    <!-- 临近到期 (< 15 days) -->
+                                    <div v-if="getDaysRemaining(row.endDate) >= 0 && getDaysRemaining(row.endDate) < 15"
+                                        class="ml-2 flex items-center text-amber-500 font-semibold bg-amber-50 px-1.5 py-0.5 rounded"
+                                        title="距离过期不足15天">
+                                        <el-icon class="mr-1 text-[14px]" data-page-node-id="Xf13yUAXcqAz1YhNcR5KbJ">
+                                            <Warning data-page-node-id="ZzVvXWQWWW2i1VoozS6mXl"></Warning>
+                                        </el-icon>临近到期
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="配额使用情况" min-width="240" data-page-node-id="hXbwe9wTVJCSFCqoAGCrh6">
+                            <template #default="{ row }" data-page-node-id="jbSDPZ4qbXjQOsDRKNxT8Y">
+                                <!-- 总公司视角渲染 -->
+                                <div v-if="currentUserRole === 'HEADQUARTERS'" data-page-node-id="LT06UwZSpiUSGnLAobnKuv">
+                                    <!-- 旧版结构备份：如需恢复，可取消下方注释并删除新版两行结构。
+                                    <div class="flex justify-between text-[11px] mb-1">
+                                        <span class="text-gray-500">已分配 <strong>{{ row.allocatedQuota }}</strong></span>
+                                        <span class="text-gray-400">总额度 {{ row.totalQuota }}</span>
+                                    </div>
+                                    -->
+                                    <div class="flex items-center justify-between gap-3 text-[11px] text-gray-500 mb-1 whitespace-nowrap" data-page-node-id="CCsor91GqtOIZMaL0GMDVS">
+                                        <span data-page-node-id="tx7KYEFZFCoMaETCIK3Ee2">
+                                            总额度 <strong class="text-gray-700" data-page-node-id="OEEtjH7cvFegtXX2czqKK4">{{ row.totalQuota }}</strong>
+                                        </span>
+                                        <span class="text-right" data-page-node-id="jruw0cV7FDRHd2LNcpLMGG">
+                                            已下发 <strong class="text-[color:var(--app-color-primary)]" data-page-node-id="YHymHfwl59HbQUtT58vxXW">{{ row.allocatedQuota }}</strong>
+                                            <span class="mx-1 text-gray-300" data-page-node-id="UCHzmM0b93bh4Kq9eXq56y">·</span>
+                                            待分配 <strong class="text-amber-500" data-page-node-id="wFCn6RIDLkgEC9CZ4UbmuN">{{ row.totalQuota - row.allocatedQuota }}</strong>
+                                        </span>
+                                    </div>
+                                    <el-progress :percentage="Math.round((row.allocatedQuota / row.totalQuota) * 100)"
+                                        :stroke-width="8" :show-text="false" :class="getProgressClass(row)" data-page-node-id="19wZHtgW3VPtFKPLt0Hog8">
+                                    </el-progress>
+                                </div>
+                                <!-- 分公司视角渲染 -->
+                                <div v-else data-page-node-id="Eq4Jo2GCWNyn4f396r2g5Y">
+                                    <!-- 旧版结构备份：如需恢复，可取消下方注释并删除新版两行结构。
+                                    <div class="flex justify-between text-[11px] mb-1">
+                                        <span class="text-gray-500">已绑定 <strong>{{ getBranchUsedQuota(row) }}</strong>
+                                            台</span>
+                                        <span class="text-gray-400">可用总额度 {{ getBranchQuota(row) }} 台</span>
+                                    </div>
+                                    -->
+                                    <div class="flex items-center justify-between gap-3 text-[11px] text-gray-500 mb-1 whitespace-nowrap" data-page-node-id="h4SRnci9dBGHKM6uNpUvmC">
+                                        <span data-page-node-id="DGrxLYFyZ6moZBrqZAAy5j">
+                                            可用总额度 <strong class="text-gray-700" data-page-node-id="oWFN6HUF4GarYJiYOOwKZ3">{{ getBranchQuota(row) }}</strong>
+                                        </span>
+                                        <span class="text-right" data-page-node-id="FA4SVtweAoF8GS8ZvOEizg">
+                                            已绑定 <strong class="text-emerald-600" data-page-node-id="mEihhnyAf0dsxQVMp24Nc3">{{ getBranchUsedQuota(row) }}</strong>
+                                            <span class="mx-1 text-gray-300" data-page-node-id="HGuNHZGFMdHXWalHOLG8O3">·</span>
+                                            剩余可绑定 <strong class="text-amber-500" data-page-node-id="SXoKEHaQaLUb5rtJgeDikj">{{ getBranchQuota(row) - getBranchUsedQuota(row) }}</strong>
+                                        </span>
+                                    </div>
+                                    <el-progress 
+                                        :percentage="getBranchQuota(row) === 0 ? 0 : Math.round((getBranchUsedQuota(row) / getBranchQuota(row)) * 100)"
+                                        :stroke-width="8" :show-text="false" :class="getBranchProgressClass(row)" data-page-node-id="FQQ4qmySdvDt6SFblDHw4C">
+                                    </el-progress>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="状态" width="120" align="center" data-page-node-id="930dbiDBZHyRc9V2r8z9vT">
+                            <template #default="{ row }" data-page-node-id="GZr2FeIOrp0g5OondBpPbc">
+                                <span class="flex items-center justify-center gap-1.5 text-sm"
+                                    :class="getStatusColorClass(row)" data-page-node-id="oHVlqDGGxh9eFNjPhv9aoZ">
+                                    <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(row)" data-page-node-id="KYdpnMVsvOkFH1iHP9M5Oh"></span>
+                                    {{ getStatusText(row) }}
+                                </span>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="生效时间" width="170">
+                            <template #default="{ row }">
+                                <div class="text-xs text-gray-700">{{ getEffectiveDisplay(row) }}</div>
+                                <el-tag v-if="getGiftDays(row) > 0" type="success" size="small" effect="plain"
+                                    class="mt-1">赠送 {{ getGiftDays(row) }} 天</el-tag>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="操作" width="236" align="left" header-align="left" fixed="right">
+                            <template #default="{ row }">
+                                <!-- 【分公司视角】 -->
+                                <div v-if="currentUserRole === 'BRANCH'" class="flex items-center justify-start gap-1.5 whitespace-nowrap">
+                                    <el-button link type="primary" size="small" @click="openVehiclesModal(row)">
+                                        查看下挂车辆
+                                    </el-button>
+                                </div>
+                                <!-- 【总公司视角】 -->
+                                <div v-else class="action-btns">
+                                    <el-button link type="primary" size="small" class="action-btn action-btn--allocate"
+                                        :class="{ 'is-hidden': !canAllocateContract(row) }"
+                                        @click="openAllocateModal(row)">
+                                        分配配额
+                                    </el-button>
+                                    <el-button link type="primary" size="small" class="action-btn action-btn--details" @click="openDetailsModal(row)">查看分配明细</el-button>
+                                    <el-dropdown trigger="click" :class="{ 'is-hidden': !canTransferTo(row) }" @command="openTransferDialog(row)">
+                                        <el-button link type="primary" size="small" class="action-btn action-btn--more">
+                                            更多<el-icon class="ml-1"><ArrowDown></ArrowDown></el-icon>
+                                        </el-button>
+                                        <template #dropdown>
+                                            <el-dropdown-menu>
+                                                <el-dropdown-item command="transfer">轉移至其他合約</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </template>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div class="role-view-switcher" aria-label="页面视角切换" data-page-node-id="baLOokCX9BOjmAEgbnnEoT">
+                    <span class="role-view-switcher__label" data-page-node-id="GeZTuwfBuOyA6XSDLWJkBQ">页面视角</span>
+                    <el-radio-group v-model="currentUserRole" size="small" @change="handleRoleChange" data-page-node-id="pmPiKEEcFvCTcnA9GnmW0Y">
+                        <el-radio-button label="HEADQUARTERS" data-page-node-id="7CWGjrkYmmEOPi7DHXU6Zl">总公司</el-radio-button>
+                        <el-radio-button label="BRANCH" data-page-node-id="8QrP3Kx5dyrXEkWO6YDMEm">分公司</el-radio-button>
+                    </el-radio-group>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="contract-quotas-overlay" data-page-node-id="aiSANGTfTHHvwmLCJwAvID">
+<el-dialog v-model="modals.allocate" title="分配配额" width="480px" v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay" data-page-node-id="qCBoBz1tz8pKM8QLChWF2Z">
+            <div v-if="activeContract" class="mb-5 bg-gray-50 p-4 border rounded-lg border-gray-200" data-page-node-id="5vdncyBmG91TLKiRDv2VQp">
+                <div class="text-xs text-gray-500 mb-1" data-page-node-id="i0ZNpkhJhkfjT7N88ztLQr">正在操作合约</div>
+                <div class="font-mono text-gray-800 font-bold mb-3" data-page-node-id="Ujh49qI8gx4sGQLWsHYSiu">{{ activeContract.id }} - {{ activeContract.name }}
+                </div>
+
+                <div class="flex items-center gap-2 text-sm text-gray-700 bg-[color:var(--app-color-primary-light-9)] text-[color:var(--app-color-primary-hover)] p-2 rounded" data-page-node-id="N5dqhinE0cEj0zaEGHNPwG">
+                    <el-icon data-page-node-id="koIABFz5nlGbzjEDs8p5VN">
+                        <CopyDocument data-page-node-id="gT5zd9B3bgJ8FkHekIPVJB"></CopyDocument>
+                    </el-icon>
+                    <span data-page-node-id="AOTBcybNAOtcaHwdLtllAF">当前该合约可分配余额：<strong class="text-xl ms-1" data-page-node-id="tATS475kIAWFxvJtUnR5Tt">{{ activeContract.totalQuota -
+                            activeContract.allocatedQuota }}</strong> 台</span>
+                </div>
+            </div>
+
+            <el-form label-position="top" data-page-node-id="kg7FDQlFkFJM0QFUsDTF4P">
+                <el-form-item label="目标分公司" required data-page-node-id="vrY8bFiN6zmrH7GNfsrhTv">
+                    <el-select v-model="allocateForm.branchId" class="w-full" filterable placeholder="选择分配给哪个分公司" data-page-node-id="RIgiiUHn2UWyNqh3B4N0DH">
+                        <el-option v-for="b in branchOptions" :key="b.id" :label="b.name" :value="b.id" data-page-node-id="GuOTMeaysazNPsW5zu0IBG"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="分配数量" required data-page-node-id="8XqxUaEmHqluqLkucivY63">
+                    <el-input-number v-model="allocateForm.amount" :min="1"
+                        :max="activeContract ? Math.max(0, availablePool(activeContract)) : 1"
+                        class="w-full" step-strictly data-page-node-id="YACFPuF0qtOgQdW6wfsQyM"></el-input-number>
+                    <div class="text-xs text-gray-400 mt-2 leading-tight" data-page-node-id="9FdF5jSytPB4FBlGard2Ye">配额下发后，目标分公司即可在车辆管理中上架对应数量的车辆。此操作会占用蓄水池配额。
+                    </div>
+                </el-form-item>
+            </el-form>
+
+            <template #footer data-page-node-id="xQ6KrlM6pdzrnbt6Mzn3Uc">
+                <el-button @click="modals.allocate = false" data-page-node-id="DBwe2EYrQiC0ictGi31pLo">取消</el-button>
+                <el-button type="primary" @click="confirmAllocation"
+                    :disabled="!allocateForm.branchId || !allocateForm.amount" data-page-node-id="CF7aHxI3YCTbRBEuQxyyrh">确认下发</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="modals.details" title="合约分配明细" width="550px" v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay" data-page-node-id="FMPUDjJXaOhjPXx7a3LgDm">
+            <div v-if="activeContract" class="mb-4 text-sm text-gray-600" data-page-node-id="FFK2FdHRphbuXnJK7JvMOj">
+                合约 <span class="font-mono font-bold text-gray-800" data-page-node-id="EwBeZZ4JUFMm0Ao3Goqx3k">{{ activeContract.id }}</span> 的已核准分配记录：
+            </div>
+
+            <el-table :data="aggregatedAllocations" style="width: 100%" size="small" border stripe data-page-node-id="h9a1fnbTgfbc21wgGVbZwy">
+                <el-table-column label="分公司名称" min-width="150" data-page-node-id="5xh96ETqGeivzMd5HDCtdC">
+                    <template #default="{ row }" data-page-node-id="Pv0NNoll7FmN49UVI8DPGy">
+                        <div class="font-medium text-gray-700" data-page-node-id="QwBGAGngBBuVkNkKFf25Yk">{{ getBranchName(row.branchId) }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="已分配总配额" width="120" align="center" data-page-node-id="mf8h8Z5pj5bw5jqTmqJ1iS">
+                    <template #default="{ row }" data-page-node-id="C72CwbUB0RAhKNrkdHz4Zg">
+                        <span class="font-bold text-[color:var(--app-color-primary)]" data-page-node-id="LoSNLKoVKktkP2RkaC0jqC">{{ row.amount }} 台</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="当前已绑定" width="110" align="center" data-page-node-id="X0AZQ7IHNNvOVuIoKoCyWg">
+                    <template #default="{ row }" data-page-node-id="GspbvT7bjOuhGTlsDoZUcM">
+                        <span class="font-medium text-emerald-600" data-page-node-id="CIg8Rd1zHBFG8u7HGyrplh">{{ getBranchUsedQuotaById(activeContract,
+                            row.branchId) }} 台</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100" align="center" data-page-node-id="wKO4uZD25dDWzO2LyFhTep">
+                    <template #default="{ row }" data-page-node-id="2WogFu7wqKMPVIo2EP6nU7">
+                        <el-button type="primary" link size="small" @click="openAdjustModal(row)" data-page-node-id="PHF8m4qbgRx31ICSFa4um6">调整</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <div v-if="aggregatedAllocations.length === 0" class="text-center py-6 text-gray-400 text-sm" data-page-node-id="Lbv4Hvc0ZSmBQVCXiN0NpR">暂无分配记录</div>
+
+            <template #footer data-page-node-id="vOiBrsGv7VxAeOHZs1BvBi">
+                <el-button type="primary" plain @click="modals.details = false" data-page-node-id="dHVryfblAt1wDTbZMa0gPG">关闭明细</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="modals.adjust" title="调整分配配额" width="400px" v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay" data-page-node-id="E5glASyQBMbPeegKqzTcy8">
+            <div v-if="activeAllocation" class="mb-4 text-sm text-gray-700" data-page-node-id="swaOp45jgQE8fBcSN2DFnM">
+                正在调整 <strong data-page-node-id="F7DgouW9J5NeHYSf2Kbm7F">{{ getBranchName(activeAllocation.branchId) }}</strong> 的配额：
+            </div>
+            <el-form label-position="top" data-page-node-id="2PhWo6a04ZKV1Waiu4hj8y">
+                <el-form-item label="分配数量" required data-page-node-id="vbaJ3k8XDekVHbosmHGUg2">
+                    <el-input-number v-model="adjustForm.amount" :min="0" :max="adjustMaxAmount" class="w-full"
+                        step-strictly data-page-node-id="HIH4EKDVcJCRHKmQzVDFh8"></el-input-number>
+                    <div class="text-xs text-gray-400 mt-2 leading-tight" data-page-node-id="y3Ynl55bnBAsJOQuG5Iyld">
+                        调大将占用蓄水池配额；调小将释放给蓄水池（设为0则取消分配）。<br data-page-node-id="b4kDF85kHFa1Kr01GEIkv9">
+                        当前该合约可再分配余额：<strong data-page-node-id="QX36ztVTfzPlXFWaoboKLs">{{ activeContract ? (activeContract.totalQuota -
+                            activeContract.allocatedQuota) : 0 }}</strong> 台
+                    </div>
+                </el-form-item>
+            </el-form>
+            <template #footer data-page-node-id="Tdi3KEjgG7BTgJHJKfIKq3">
+                <el-button @click="modals.adjust = false" data-page-node-id="nnJs6Ydkt9K86p2pwZRYro">取消</el-button>
+                <el-button type="primary" @click="confirmAdjust" data-page-node-id="WZcDDmZ1DFuElXgID76UTV">确认调整</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="modals.vehicles" title="已绑定该合约的车辆列表" width="600px" v-if="currentUserRole === 'BRANCH'" class="contract-quotas-overlay" data-page-node-id="aWsIHE8kxCiJ8Q6Inxl6tv">
+            <div v-if="activeContract"
+                class="mb-4 text-sm text-gray-700 bg-emerald-50 p-3 rounded border border-emerald-100 flex items-center justify-between" data-page-node-id="2xMEAC2EN8zQ6gSe8AOw4O">
+                <div data-page-node-id="9I0i4jkAhny2TeRNScSZB1">
+                    <span class="text-gray-500 mr-2" data-page-node-id="ozzQTcAQld8B6Pl9J7dtkk">当前合约：</span>
+                    <strong class="font-mono" data-page-node-id="1ZVpdWNXx4gJT38vZOpsuh">{{ activeContract.id }}</strong>
+                </div>
+                <div data-page-node-id="5UVYDy7drPCBnMs29ZP9Cj">
+                    <span class="text-gray-500 mr-2" data-page-node-id="dWPpx8gE0UmmJ9ZxEAY76l">配额使用率：</span>
+                    <strong class="text-emerald-700" data-page-node-id="XHqiL44otiFOdrIWSfYf06">{{ activeContractMockVehicles.length }} / {{
+                        getBranchQuota(activeContract) }}</strong> 台
+                </div>
+            </div>
+
+            <el-table :data="activeContractMockVehicles" style="width: 100%" size="small" border stripe height="300" data-page-node-id="8zd8VlBLUmRFPJqKdDlxnZ">
+                <el-table-column prop="license" label="车牌号" width="120" data-page-node-id="xHncXx1qVnYPQWOYX4D5wT">
+                    <template #default="{ row }" data-page-node-id="jjQsZqtpKWoWO5sPnoOHbS">
+                        <span class="font-bold text-gray-800" data-page-node-id="ETNRxgVsfWafVCHEDpjHeU">{{ row.license }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="model" label="车型" min-width="150" data-page-node-id="DDZmj5SI8YuRTZ3KtPU56x"></el-table-column>
+                <el-table-column prop="bindDate" label="绑定时间" width="160" align="center" data-page-node-id="R3Q7PP6x7rYtkEDQIGdatL"></el-table-column>
+                <el-table-column prop="status" label="运营状态" width="100" align="center" data-page-node-id="tTSUClpDglv6FfWiAiuLgy">
+                    <template #default="{ row }" data-page-node-id="w5wBrNY7zKTN21cKp9YL07">
+                        <el-tag :type="row.status === 'ACTIVE' ? 'success' : 'info'" size="small" effect="plain" data-page-node-id="CvSvOdiPlmYFsUeR3JODoq">
+                            {{ row.status === 'ACTIVE' ? '上架中' : '已下架' }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="90" align="center" data-page-node-id="gf2ZDbTWr9GEoOvlRJA0Ce">
+                    <template #default="{ row }" data-page-node-id="Ad3alhicq89boLLPtW15R8">
+                        <el-button type="danger" link size="small"
+                            @click="unbindVehicleFromContract(row)" data-page-node-id="lHV83IqqLWwpkWH4V7xIAI">解绑</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <div v-if="activeContractMockVehicles.length === 0" class="text-center py-6 text-gray-400 text-sm" data-page-node-id="0pLh0GyEEDGRKroy5YMKUM">
+                当前合约暂未绑定任何车辆
+            </div>
+
+            <template #footer data-page-node-id="CCd98n9h1zUwMl4qsdP35e">
+                <el-button type="primary" plain @click="modals.vehicles = false" data-page-node-id="5K07nAu1cc6EdfdDEeDkqC">关闭</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="taskListOpen" title="合約轉移任務" width="1100px" v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay transfer-dialog" :close-on-click-modal="false">
+    <div class="transfer-toolbar">
+        <el-input v-model="taskFilter.query" placeholder="搜尋合約編號或名稱" aria-label="搜尋轉移任務" clearable style="width:260px"></el-input>
+        <el-select v-model="taskFilter.status" placeholder="全部狀態" aria-label="任務狀態" clearable style="width:150px"><el-option v-for="(label, value) in taskStatuses" :key="value" :label="label" :value="value"></el-option></el-select>
+        <el-button class="transfer-push" type="primary" @click="openTransferDialog(null)">新增轉移任務</el-button>
+    </div>
+    <el-table :data="pagedTasks" max-height="400" empty-text="暫無符合條件的任務">
+        <el-table-column label="來源合約" min-width="220"><template #default="{ row }"><div>{{ row.sourceId }}</div><div class="transfer-muted">{{ row.sourceSnapshot.name }}</div></template></el-table-column>
+        <el-table-column label="目標合約" min-width="220"><template #default="{ row }"><div>{{ row.targetId }}</div><div class="transfer-muted">{{ row.targetSnapshot.name }}</div></template></el-table-column>
+        <el-table-column label="車輛數" width="80" align="right"><template #default="{ row }">{{ row.vehicleIds.length }} 輛</template></el-table-column>
+        <el-table-column label="執行時間" width="170"><template #default="{ row }"><div>{{ formatTaskTime(row.executedAt || row.scheduledAt) }}</div><div class="transfer-muted">{{ row.executedAt ? '實際執行' : '預計執行' }}</div></template></el-table-column>
+        <el-table-column label="狀態" width="110"><template #default="{ row }"><el-tag :type="taskTypes[row.status]">{{ taskStatuses[row.status] }}</el-tag></template></el-table-column>
+        <el-table-column label="操作" width="135" fixed="right"><template #default="{ row }"><el-button link type="primary" @click="openTransferDialog(null, row)">{{ row.status === 'PENDING' ? '編輯' : row.status === 'FAILED' ? '處理' : '查看' }}</el-button><el-button v-if="['PENDING', 'FAILED'].includes(row.status)" link type="danger" @click="cancelTask(row)">取消</el-button></template></el-table-column>
+    </el-table>
+    <div class="flex justify-end mt-4"><el-pagination v-model:current-page="taskPage" :page-size="5" :total="filteredTasks.length" layout="total, prev, pager, next"></el-pagination></div>
+    <template #footer><el-button @click="taskListOpen = false">關閉</el-button></template>
+</el-dialog>
+<el-dialog v-model="modals.transfer" :title="transferReadonly ? '轉移任務詳情' : '車輛轉移至其他合約'" width="900px" v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay transfer-dialog" :close-on-click-modal="false" data-page-node-id="hwUffcxUA1RcDyKusFcDDi">
+    <div class="transfer-editor-body" data-page-node-id="830hD8J3Xi48xFbsk4XXgZ">
+        <el-alert v-if="currentTask && currentTask.failureReason" :title="currentTask.failureReason" type="error" :closable="false" show-icon></el-alert>
+        <el-form v-if="!transferForm.sourceId" label-position="top"><el-form-item label="來源合約" required><el-select v-model="transferForm.sourceId" filterable placeholder="請選擇來源合約" @change="selectTransferSource"><el-option v-for="row in sourceOptions" :key="row.id" :label="row.id + ' · ' + row.name" :value="row.id"></el-option></el-select></el-form-item></el-form>
+        <div v-if="transferSourceContract" class="transfer-original-summary" data-page-node-id="rlPLL8QaR9dVKxoRCTiM1u">
+            <div class="transfer-metric transfer-source-summary" data-page-node-id="Vqs2eHQNp7GlCBlxNinqaz">
+                <div class="transfer-muted" data-page-node-id="ECdTUEFjq7VAbfFOLM62BR">來源合約（目前合約）</div>
+                <strong data-page-node-id="JAE1DWtljKq35B7oczR2wG">{{ transferSourceContract.id }} · {{ transferSourceContract.name }}</strong>
+                <div class="transfer-muted" data-page-node-id="Z3Mp0ilTUEo7NZqC3GSu1L">總配額 {{ transferSourceContract.totalQuota }} 台</div>
+            </div>
+            <div class="transfer-metric" data-page-node-id="WtBt2zXRu6aXhd0WUbsudo">
+                <div class="transfer-muted" data-page-node-id="FtXcFTeQXkPQeD08EFBWDz">來源已分配配額</div>
+                <strong data-page-node-id="GMIOe1UsQ0OGdyMqSvA3ZI">{{ transferSourceContract.allocatedQuota }} 台</strong>
+            </div>
+            <div class="transfer-metric" data-page-node-id="Dy8VzTb5lpdnMheF5Xd1i8">
+                <div class="transfer-muted" data-page-node-id="tLjsw2KQ8dhHqkEbppWPrT">來源已綁車輛</div>
+                <strong data-page-node-id="un7tAhCzv4cUgwC0SGh9A1">{{ transferSourceVehicles.length }} 台</strong>
+            </div>
+        </div>
+        <el-form label-position="top" :disabled="transferReadonly || transferBusy" data-page-node-id="dIFXaSuFMj7L7CiKShcTSi">
+            <el-form-item label="目標合約" required data-page-node-id="G5tRRpq1f9bb1JyLOjappd">
+                <el-select v-model="transferForm.targetId" filterable placeholder="請選擇目標合約" @change="changeTransferTarget" data-page-node-id="aMyf538nBhyztCpXLRNz25">
+                    <el-option v-for="row in transferTargetOptions" :key="row.id" :label="row.id + ' · ' + row.name" :value="row.id" data-page-node-id="7oTzc7OVY5oyKSDi54RyYu"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div v-if="transferTargetContract" class="transfer-quota-line transfer-target-quota" data-page-node-id="rgewHPfBxcVswqEwKgXDz2">
+            <span data-page-node-id="sFdQ616KP9ApcHCDHVmZGL">目標總配額 <strong data-page-node-id="UzKBvP28QxPlT5uwxPyXKI">{{ transferTargetContract.totalQuota }}</strong> 台</span>
+            <span data-page-node-id="EZgDLidt5Xu187yzaJVCfi">已分配 <strong data-page-node-id="QRm54DOCUunocZ3bbHFR3c">{{ transferTargetContract.allocatedQuota }}</strong> 台</span>
+            <span data-page-node-id="8QZ4oeuCq0cLTPAJpaCnXq">待分配可用 <strong data-page-node-id="pOTOp6jGkSADiiHNpXx22a">{{ transferTargetAvailable }}</strong> 台</span>
+        </div>
+        <template v-if="transferSourceContract" data-page-node-id="VhuinjInjyRq6FCzRJB7Dr">
+            <div class="transfer-toolbar" data-page-node-id="jNV4rQiEo9SiZDAbso9D4k">
+                <strong data-page-node-id="Luk4gOWPc7wwAhBadGeGcz">選擇需要轉移的車輛</strong>
+                <span class="transfer-push transfer-muted" data-page-node-id="uTj3PynWCAy1TCKeT8MBQE">系統自動在目標合約為所選車輛補充分公司配額</span>
+            </div>
+            <el-table :data="transferBranchRows" border size="small" max-height="320" empty-text="暫無可轉移車輛" data-page-node-id="9lwldPTZuQAPO1TLbvHzUh">
+                <el-table-column label="選擇" width="64" align="center" data-page-node-id="DubHo02fmS5dI1nC0aqoCl">
+                    <template #default="{ row }" data-page-node-id="vgrABy6XlppLBVCYHi2pPL">
+                        <el-checkbox :model-value="row.selectedCount > 0"
+                            :disabled="transferReadonly || transferBusy"
+                            :indeterminate="row.selectedCount > 0 && row.selectedCount < row.vehicles.length"
+                            :aria-label="'選取 ' + row.name" @change="toggleTransferBranch(row, $event)"></el-checkbox>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="分公司" min-width="150" data-page-node-id="YCqCJknPOFPywQX071APoU"></el-table-column>
+                <el-table-column label="來源已綁車輛" width="110" align="center" data-page-node-id="eX3Qv2U0HyPTBEWsfFVHXq">
+                    <template #default="{ row }" data-page-node-id="s58NW4DWWhZnhg3DhCL2Bn">{{ row.vehicles.length }} 台</template>
+                </el-table-column>
+                <el-table-column label="轉移車輛" width="120" align="center" data-page-node-id="iG0bMPhKQEYhm1NSJZhsfa">
+                    <template #default="{ row }" data-page-node-id="DAIMLS2u1G03f4qP8kYcz1">
+                        <el-button link type="primary" size="small" @click="openTransferVehiclePicker(row)" data-page-node-id="Bk24r5rodF81LQbx4JjQCs">已選 {{ row.selectedCount }} 台</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="轉移後來源剩餘車輛" width="165" align="center" data-page-node-id="1Et0puuSGCGXquNxbHCz6F">
+                    <template #default="{ row }" data-page-node-id="1NFdUb5rgxPd3SrDgt9PO8">{{ row.vehicles.length - row.selectedCount }} 台</template>
+                </el-table-column>
+            </el-table>
+            <div class="transfer-quota-line transfer-inline-summary" data-page-node-id="ZMCtJC284o45p72a7xV9d8">
+                <span data-page-node-id="j0xPUYrhpDe4vVoy9G0R5p">本次轉移 <strong data-page-node-id="s1xTUYEjKXSOyLcjxDNRde">{{ transferForm.vehicleIds.length }}</strong> 輛</span>
+                <span data-page-node-id="VVoo11f2vT2bl9HrVlxLrd">使用既有配額 <strong data-page-node-id="nCGHvuZUf9aMQNDMxEgkqv">{{ transferPreview.reused }}</strong> 台</span>
+                <span data-page-node-id="xhLNbaFB5Co0XjNZB7fzQF">需新增配額 <strong data-page-node-id="fQoSoO8oxdV3ugWOoHZIRR">{{ transferPreview.extra }}</strong> 台</span>
+            </div>
+        </template>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+            <div class="text-sm font-semibold mb-2">轉移時間</div>
+            <el-radio-group v-model="transferForm.mode" :disabled="transferReadonly || transferBusy"><el-radio-button value="IMMEDIATE">立即轉移</el-radio-button><el-radio-button value="SOURCE_EXPIRE">來源合約到期時轉移</el-radio-button></el-radio-group>
+            <div v-if="transferForm.mode === 'SOURCE_EXPIRE'" class="transfer-muted mt-2">預計執行：{{ formatTaskTime(transferReadonly ? currentTask.scheduledAt : transferPreview.scheduledAt) }}；儲存後預留目標容量。</div>
+        </div>
+        <el-alert v-if="!transferReadonly && transferPreview.error" :title="transferPreview.error" type="warning" :closable="false" show-icon class="transfer-alert" data-page-node-id="mVM6IgtrGGfjyw7puNKOEN"></el-alert>
+    </div>
+    <template #footer data-page-node-id="BbzFP5wfjRHIgabADpQyRr">
+        <div class="transfer-footer" data-page-node-id="8ND2rALbVArzcn0ZJErDkw">
+            <el-button v-if="currentTask && !transferReadonly" type="danger" plain :disabled="transferBusy" @click="cancelTask(currentTask)">取消轉移任務</el-button>
+            <span class="transfer-push" data-page-node-id="5G8s0HZCExymzSlBrtlrLF"></span>
+            <el-button @click="modals.transfer = false" data-page-node-id="1Y885WmTD6C3q0S71ReZDj">返回</el-button>
+            <el-button v-if="!transferReadonly" type="primary" :loading="transferBusy" :disabled="!!transferPreview.error" @click="confirmTransfer" data-page-node-id="rF9KBPOxnIo98ehI2qBn3g">{{ transferForm.mode === 'IMMEDIATE' ? '確認立即轉移' : '儲存轉移任務' }}</el-button>
+        </div>
+    </template>
+</el-dialog>
+<el-dialog v-model="transferVehiclePickerOpen" :title="'選擇轉移車輛 · ' + transferActiveBranchName" width="640px" append-to-body v-if="currentUserRole === 'HEADQUARTERS'" class="contract-quotas-overlay transfer-dialog" :close-on-click-modal="false" data-page-node-id="dCxVtXf5zzDvZSis5dZ6HU">
+    <div class="transfer-toolbar" data-page-node-id="DAgbP33bpXT3vR1r29nHzg">
+        <el-input v-model="transferPickerQuery" placeholder="搜尋車牌" clearable style="width: 240px" data-page-node-id="0wczOBxOIWeC2r1VGPcSET"></el-input>
+        <span class="transfer-push" data-page-node-id="gGBuL8fdwBTF7mAqvd8FKO">已選 {{ transferPickerIds.length }} 台</span>
+    </div>
+    <el-table :data="transferPickerVehicles" border max-height="350" data-page-node-id="ppPlYSng0OeI73UAcQHlvh">
+        <el-table-column width="46" align="center" data-page-node-id="gRFl1lzAKQxwjRppYRQri5">
+            <template #header><el-checkbox :model-value="pickerAll" :indeterminate="pickerSome && !pickerAll" :disabled="transferReadonly || !transferPickerVehicles.length" aria-label="選擇搜尋結果" @change="togglePickerAll"></el-checkbox></template>
+            <template #default="{ row }"><el-checkbox :model-value="transferPickerIds.includes(row.id)" :disabled="transferReadonly" :aria-label="'選擇 ' + row.license" @change="togglePickerVehicle(row.id, $event)"></el-checkbox></template>
+        </el-table-column>
+        <el-table-column prop="license" label="車牌" width="140" data-page-node-id="uOeEl6rCV1Nf50dO4jYAoH"></el-table-column>
+        <el-table-column prop="model" label="車型" min-width="180" data-page-node-id="EM8LUmXDxaA1QNhKVqhFZX"></el-table-column>
+        <el-table-column label="運營狀態" width="110" align="center" data-page-node-id="00156odpv5mIqvLKUoLrSU">
+            <template #default="{ row }" data-page-node-id="ambZlwWNY9DC2oHGwS5LPD">
+                <el-tag :type="row.status === 'ACTIVE' ? 'success' : 'info'" size="small" effect="plain" data-page-node-id="nUotXbOiR1yeRpyqBmQ4JB">{{ row.status === 'ACTIVE' ? '上架中' : '已下架' }}</el-tag>
+            </template>
+        </el-table-column>
+    </el-table>
+    <template #footer data-page-node-id="iKFzPhCFuF7yv0fHFtmFUP">
+        <el-button @click="transferVehiclePickerOpen = false" data-page-node-id="rRm5FlnWaecKhkNPAnjy4j">取消</el-button>
+        <el-button v-if="!transferReadonly" type="primary" @click="confirmTransferPicker" data-page-node-id="h79Zh0dlknvr3CDNwvieCt">確認選擇</el-button>
+    </template>
+</el-dialog>
+<el-dialog v-model="modals.prototypeLog" title="原型修改记录" width="520px" class="contract-quotas-overlay" data-page-node-id="Qu3CLEXb04cozoUutrV42V">
+            <div class="mb-4 border-b pb-3 text-sm leading-6">
+                <strong>v1.2｜2026-09-11</strong>
+                <p>修正轉移容量計算與車輛清單同步，保留車輛 ID；新增總公司轉移任務管理、立即／到期轉移及容量預留限制。</p>
+            </div>
+            <div class="space-y-4" data-page-node-id="jg7oulPF1QeuZAu6znejzR">
+                <div class="rounded-lg border border-blue-100 bg-blue-50/60 px-4 py-3" data-page-node-id="1N2CNS8ynDTsxI5mkz7Dsr">
+                    <div class="flex items-center justify-between gap-3" data-page-node-id="dQKTIpLTL5iCcbRhDJKD3D">
+                        <div class="font-semibold text-gray-800" data-page-node-id="wFeD5CQEfBDCxafoC86ONb">v1.1｜合约配额列展示调整</div>
+                        <el-tag type="info" effect="plain" data-page-node-id="FYFXwSGzydpt288cxI3ysb">2026-06-30</el-tag>
+                    </div>
+                    <div class="text-sm text-gray-500 mt-1" data-page-node-id="DWnimCbPc0asWolIbA6oXJ">页面：合约配额管理</div>
+                </div>
+                <div class="text-sm text-gray-700 leading-6" data-page-node-id="IT4TvoAhxa2BBxuPFYmMsK">
+                    <div class="font-semibold text-gray-800 mb-1" data-page-node-id="M2sURgRA5kTkDjWl0nhGEC">修改内容</div>
+                    <ul class="list-disc pl-5 space-y-1" data-page-node-id="gIhIOHPkxx8WN5czX69HUA">
+                        <li data-page-node-id="TAyhCVSuPIxcHAoM0rcjBd">配额使用情况列增加总公司视角的待分配配额显示。</li>
+                        <li data-page-node-id="u2JzPnvB5gwDSBLhmB5RBP">分公司视角增加剩余可绑定配额显示。</li>
+                        <li data-page-node-id="cMr38mQ7PtwNSiyeZy6zcM">总公司视角的已下发数字和进度条统一使用主题强调色 <span class="font-mono text-[color:var(--app-color-primary)]" data-page-node-id="Irq8vTs3pLEGmyn1BkKE0o">--app-color-primary</span>。</li>
+                        <li>配额进度条配色统一由样式类 + 主题变量控制（<span class="font-mono">.quota-progress.*</span>），不写死色值。</li>
+                        <li data-page-node-id="LBR1HUFiY21zAPyh5jWVGP">原配额使用情况结构已在源码中保留注释备份，便于回退。</li>
+                    </ul>
+                </div>
+                <div class="text-xs text-gray-400 border-t pt-3" data-page-node-id="lxk2GcUYz4RaYbFO0gfOEx">
+                    该记录用于原型评审和交付追踪，不代表真实系统功能入口。
+                </div>
+            </div>
+            <template #footer data-page-node-id="DjYgR1XqfMG3p90PSSlUyP">
+                <el-button type="primary" @click="modals.prototypeLog = false" data-page-node-id="9V7RxhKj0quUsPHwDpylHz">关闭</el-button>
+            </template>
+        </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+// Temporary debugging trap
+        window.onerror = function (message, source, lineno, colno, error) {
+            console.error("Global captured error:", message, error);
+            const errDiv = document.createElement('div');
+            errDiv.style.position = 'fixed';
+            errDiv.style.top = '10px';
+            errDiv.style.left = '50%';
+            errDiv.style.transform = 'translateX(-50%)';
+            errDiv.style.backgroundColor = 'rgba(255,0,0,0.9)';
+            errDiv.style.color = 'white';
+            errDiv.style.padding = '15px';
+            errDiv.style.zIndex = '999999';
+            errDiv.style.borderRadius = '5px';
+            errDiv.innerText = `[JS Error] ${message} at line ${lineno}`;
+            document.body.appendChild(errDiv);
+        };
+        const { createApp, ref, reactive, computed, watch } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+// UI & Environment State
+                const currentUserRole = ref('HEADQUARTERS'); // 'HEADQUARTERS' or 'BRANCH'
+                const MY_BRANCH_ID = 'B03'; // When in Branch view, we simulate B03
+
+                const TODAY = new Date();
+                const getFutureDateStr = (days) => {
+                    const d = new Date(TODAY);
+                    d.setDate(d.getDate() + days);
+                    return d.toISOString().split('T')[0];
+                };
+                const getPastDateStr = (days) => {
+                    const d = new Date(TODAY);
+                    d.setDate(d.getDate() - days);
+                    return d.toISOString().split('T')[0];
+                };
+
+                // Shared Reference Data
+                const branchOptions = ref([
+                    { id: 'B01', name: '华北一分公司' },
+                    { id: 'B02', name: '华北二分公司' },
+                    { id: 'B03', name: '华南一分公司 (开发)' },
+                    { id: 'B04', name: '华东区分公司' }
+                ]);
+
+                // Mock Data for Contracts
+                const contractsData = ref([
+                    {
+                        id: 'C-2023-0801', name: '集团统采租赁计划A', type: 'OFFICIAL', billing: 'ANNUALLY', settlementParty: '格上租車',
+                        startDate: getPastDateStr(100), endDate: getFutureDateStr(300),
+                        effectiveAt: `${getPastDateStr(105)} 09:00`,
+                        totalQuota: 50, allocatedQuota: 30, allocations: [{ branchId: 'B01', amount: 10, date: '2023-08-01' }, { branchId: 'B03', amount: 20, date: '2023-08-15' }]
+                    },
+                    {
+                        id: 'C-2024-0012', name: '华北区分采补充审批单', type: 'OFFICIAL', billing: 'MONTHLY', settlementParty: '和運租車',
+                        startDate: getPastDateStr(20), endDate: getFutureDateStr(100),
+                        effectiveAt: `${getPastDateStr(20)} 00:00`,
+                        totalQuota: 120, allocatedQuota: 120, allocations: [{ branchId: 'B02', amount: 120, date: '2024-01-12' }]
+                    },
+                    {
+                        id: 'C-2024-0999', name: '临时调用保障', type: 'TRIAL', billing: 'MONTHLY', settlementParty: '中租租車',
+                        startDate: getPastDateStr(15), endDate: getFutureDateStr(10), // Expiring Soon (<15 days)
+                        effectiveAt: `${getPastDateStr(15)} 00:00`,
+                        totalQuota: 10, allocatedQuota: 5, allocations: [{ branchId: 'B03', amount: 5, date: '2024-02-01' }]
+                    },
+                    {
+                        id: 'C-2022-X773', name: '旧批次试运营采购', type: 'TRIAL', billing: 'MONTHLY', settlementParty: '本企业',
+                        startDate: getPastDateStr(400), endDate: getPastDateStr(35), // Expired
+                        effectiveAt: `${getPastDateStr(400)} 00:00`,
+                        totalQuota: 20, allocatedQuota: 20, allocations: [{ branchId: 'B04', amount: 20, date: '2022-05-10' }]
+                    },
+                    {
+                        id: 'C-2024-08X2', name: '集团储备车辆扩容包', type: 'OFFICIAL', billing: 'ANNUALLY', settlementParty: '艾維士租車',
+                        startDate: getPastDateStr(2), endDate: getFutureDateStr(360),
+                        effectiveAt: `${getPastDateStr(7)} 09:00`,
+                        totalQuota: 200, allocatedQuota: 0, allocations: []
+                    },
+                    {
+                        id: 'C-2024-09Y3', name: '华南区新签测试合同', type: 'OFFICIAL', billing: 'MONTHLY', settlementParty: '本企业',
+                        startDate: getFutureDateStr(1), endDate: getFutureDateStr(30), statusOverride: 'PAYING',
+                        effectiveAt: '', scheduledEffectiveAt: `${getFutureDateStr(1)} 00:00`,
+                        totalQuota: 40, allocatedQuota: 0, allocations: []
+                    },
+                    {
+                        id: 'C-2025-F811', name: '快手同城地推车队', type: 'OFFICIAL', billing: 'ANNUALLY', settlementParty: '中租租車',
+                        startDate: getPastDateStr(200), endDate: getFutureDateStr(165), statusOverride: 'TERMINATED',
+                        effectiveAt: `${getPastDateStr(200)} 00:00`,
+                        totalQuota: 100, allocatedQuota: 0, allocations: []
+                    }
+                ]);
+
+                // [配额转移-新增] 车辆数据模型：contractId -> branchId -> 车辆数组。
+                // 独立于原有 allocations 结构，供"转移车辆"选择使用；原有分配/调整逻辑完全不受影响。
+                const transferVehicleStore = reactive({});
+                const buildTransferVehicles = (contractId, branchId, count, seedDate) => {
+                    const list = [];
+                    for (let i = 0; i < count; i++) {
+                        list.push({
+                            id: `${contractId}-${branchId}-V${i + 1}`,
+                            branchId,
+                            branchName: '',
+                            license: `粤B·D${String(contractId).replace(/\D/g, '').slice(-3)}${100 + i}`,
+                            model: '吉利 雷达RD6 550km (皮卡)',
+                            bindDate: seedDate || '',
+                            status: i % 2 === 0 ? 'ACTIVE' : 'INACTIVE'
+                        });
+                    }
+                    return list;
+                };
+                (function seedTransferVehicles() {
+                    const usedByContract = { 'C-2023-0801': 15, 'C-2024-0999': 2 };
+                    contractsData.value.forEach(row => {
+                        transferVehicleStore[row.id] = {};
+                        (row.allocations || []).forEach(a => {
+                            const branch = branchOptions.value.find(b => b.id === a.branchId);
+                            const branchName = branch ? branch.name : a.branchId;
+                            const cap = usedByContract[row.id] || 0;
+                            const used = row.id === 'C-2023-0801'
+                                ? Math.min(a.amount, a.branchId === 'B01' ? 10 : cap)
+                                : row.id === 'C-2024-0999' ? Math.min(a.amount, cap) : 0;
+                            const vehicles = buildTransferVehicles(row.id, a.branchId, used, a.date);
+                            vehicles.forEach(v => { v.branchName = branchName; });
+                            transferVehicleStore[row.id][a.branchId] = vehicles;
+                        });
+                    });
+                })();
+                const transferBranchList = () => branchOptions.value.map(b => ({ id: b.id, name: b.name }));
+
+                // Filters
+                const filters = reactive({
+                    query: '',
+                    type: 'ALL',
+                    billing: 'ALL',
+                    status: [],
+                    allocation: []
+                });
+                const activeSummaryCard = ref('');
+
+                // Modal States
+                const modals = reactive({
+                    allocate: false,
+                    details: false,
+                    adjust: false,
+                    vehicles: false,
+                    prototypeLog: false,
+                    transfer: false
+                });
+
+                const activeContract = ref(null);
+                const activeAllocations = ref([]);
+                const activeAllocation = ref(null);
+                const activeContractMockVehicles = computed(() => activeContract.value ? generateMockVehiclesForBranch(activeContract.value) : []);
+                const allocateForm = reactive({ branchId: '', amount: 1 });
+                const adjustForm = reactive({ amount: 0 });
+
+                const adjustMaxAmount = computed(() => {
+                    if (!activeContract.value || !activeAllocation.value) return 0;
+                    return Math.max(0, enterpriseTransfers.availablePool(activeContract.value)) + activeAllocation.value.amount;
+                });
+
+                // Computed Logic
+                const getDaysRemaining = (endStr) => {
+                    const diffTime = Math.abs(new Date(endStr) - TODAY);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return new Date(endStr) >= TODAY ? diffDays : -diffDays;
+                };
+
+                const getStatusProp = (row) => {
+                    if (row.statusOverride) return row.statusOverride;
+                    const days = getDaysRemaining(row.endDate);
+                    if (days < 0) return 'EXPIRED';
+                    if (days >= 0 && days < 15) return 'EXPIRING_SOON';
+                    return 'ACTIVE';
+                };
+
+                // The actual filtered data list based on role + selections
+                const filteredData = computed(() => {
+                    let baseData = contractsData.value;
+
+                    // Branch view logic
+                    if (currentUserRole.value === 'BRANCH') {
+                        // Only show contracts that have an allocation for MY_BRANCH_ID
+                        baseData = baseData.filter(v => v.allocations.some(a => a.branchId === MY_BRANCH_ID));
+                    }
+
+                    return baseData.filter(v => {
+                        const sStatus = getStatusProp(v);
+
+                        // Text Search
+                        if (filters.query && !v.id.includes(filters.query) && !v.name.includes(filters.query)) return false;
+
+                        // Dropdowns
+                        if (filters.type !== 'ALL' && v.type !== filters.type) return false;
+                        if (filters.billing !== 'ALL' && v.billing !== filters.billing) return false;
+                        if (filters.status.length > 0 && !filters.status.includes(sStatus)) return false;
+
+                        // Allocation Filter (HQ ONLY)
+                        if (currentUserRole.value === 'HEADQUARTERS' && filters.allocation.length > 0) {
+                            let allocationStatus = 'PARTIAL';
+                            if (v.allocatedQuota === 0) allocationStatus = 'UNASSIGNED';
+                            if (v.allocatedQuota >= v.totalQuota) allocationStatus = 'FULL';
+                            if (!filters.allocation.includes(allocationStatus)) return false;
+                        }
+
+                        return true;
+                    });
+                });
+
+                // Dashboard stats
+                const statsHQ = computed(() => {
+                    let totalContracts = contractsData.value.length;
+                    let totalQuota = 0, allocatedQuota = 0;
+                    contractsData.value.forEach(v => {
+                        if (!['ACTIVE', 'EXPIRING_SOON'].includes(getStatusProp(v))) return;
+                        totalQuota += v.totalQuota;
+                        allocatedQuota += v.allocatedQuota;
+                    });
+                    return { totalContracts, totalQuota, allocatedQuota, unallocatedQuota: totalQuota - allocatedQuota };
+                });
+
+                const statsBranch = computed(() => {
+                    let contracts = 0;
+                    let quota = 0;
+                    contractsData.value.forEach(v => {
+                        const myAlloc = v.allocations.find(a => a.branchId === MY_BRANCH_ID);
+                        if (myAlloc && ['ACTIVE', 'EXPIRING_SOON'].includes(getStatusProp(v))) {
+                            contracts++;
+                            quota += myAlloc.amount;
+                        }
+                    });
+                    return { contracts, quota };
+                });
+
+                // Helpers
+                const getBranchName = (id) => {
+                    const b = branchOptions.value.find(x => x.id === id);
+                    return b ? b.name : id;
+                };
+
+                const getBranchQuota = (row) => {
+                    return row.allocations.filter(a => a.branchId === MY_BRANCH_ID).reduce((sum, a) => sum + a.amount, 0);
+                };
+
+                const getBranchUsedQuotaById = (row, branchId) => {
+                    return (transferVehicleStore[row.id]?.[branchId] || []).length;
+                };
+
+                const getBranchUsedQuota = (row) => {
+                    return getBranchUsedQuotaById(row, MY_BRANCH_ID);
+                };
+
+                const generateMockVehiclesForBranch = (row) => {
+                    return transferVehicleStore[row.id]?.[MY_BRANCH_ID] || [];
+                };
+
+                const getStatusText = (row) => {
+                    const s = getStatusProp(row);
+                    if (s === 'PAYING') return '付款确认中';
+                    if (s === 'EXTIRED' || s === 'EXPIRED') return '已过期';
+                    if (s === 'EXPIRING_SOON') return '即将到期';
+                    if (s === 'TERMINATED') return '已终止';
+                    return '生效中';
+                };
+
+                const getStatusColorClass = (row) => {
+                    const s = getStatusProp(row);
+                    if (s === 'PAYING') return 'text-blue-600';
+                    if (s === 'EXPIRED') return 'text-red-600';
+                    if (s === 'EXPIRING_SOON') return 'text-amber-600';
+                    if (s === 'TERMINATED') return 'text-gray-700 decoration-gray-400 line-through';
+                    return 'text-emerald-600';
+                };
+
+                const getStatusDotClass = (row) => {
+                    const s = getStatusProp(row);
+                    if (s === 'PAYING') return 'bg-blue-500';
+                    if (s === 'EXPIRED') return 'bg-red-500';
+                    if (s === 'EXPIRING_SOON') return 'bg-amber-500';
+                    if (s === 'TERMINATED') return 'bg-gray-600';
+                    return 'bg-emerald-500';
+                };
+
+                // 生效时间显示：有实际生效时间则显示；否则显示计划生效时间（预计）；都没有则显示 -
+                const getEffectiveDisplay = (row) => {
+                    if (!row) return '-';
+                    if (row.effectiveAt) return row.effectiveAt;
+                    if (row.scheduledEffectiveAt) return `${row.scheduledEffectiveAt}（预计）`;
+                    return '-';
+                };
+
+                // 赠送天数 = 合约开始日 − 生效日（仅正式合约）
+                const getGiftDaysByValue = (effectiveAt, startDate) => {
+                    if (!effectiveAt || !startDate || effectiveAt === '-') return 0;
+                    const effectiveDate = new Date(`${effectiveAt.slice(0, 10)}T00:00:00`);
+                    const contractStartDate = new Date(`${startDate}T00:00:00`);
+                    if (Number.isNaN(effectiveDate.getTime()) || Number.isNaN(contractStartDate.getTime())) return 0;
+                    return Math.max(0, Math.round((contractStartDate - effectiveDate) / (1000 * 60 * 60 * 24)));
+                };
+                const getGiftDays = (row) => {
+                    if (!row || row.type !== 'OFFICIAL') return 0;
+                    return getGiftDaysByValue(row.effectiveAt || row.scheduledEffectiveAt, row.startDate);
+                };
+
+                // 进度条配色统一由 CSS 类 + 主题变量控制（见 PAGE_STYLE .quota-progress.*），JS 不写色值。
+                const getProgressClass = (row) => {
+                    return 'quota-progress progress-hq';
+                };
+
+                const getBranchProgressClass = (row) => {
+                    const total = getBranchQuota(row);
+                    if (total === 0) return 'quota-progress progress-empty';
+                    const percent = Math.round((getBranchUsedQuota(row) / total) * 100);
+                    if (percent >= 100) return 'quota-progress progress-full'; // 满容量告警
+                    if (percent > 80) return 'quota-progress progress-warning'; // 接近容量告警
+                    return 'quota-progress progress-normal'; // 正常
+                };
+
+                // Actions
+                const handleRoleChange = () => {
+                    clearContractFilters();
+                    activeSummaryCard.value = '';
+                };
+
+                const clearContractFilters = () => {
+                    filters.query = '';
+                    filters.type = 'ALL';
+                    filters.billing = 'ALL';
+                    filters.status = [];
+                    filters.allocation = [];
+                };
+
+                let isApplyingSummaryFilter = false;
+
+                watch(() => [
+                    filters.query,
+                    filters.type,
+                    filters.billing,
+                    filters.status.join(','),
+                    filters.allocation.join(',')
+                ], () => {
+                    if (isApplyingSummaryFilter) return;
+
+                    const hasOtherFilters = Boolean(filters.query)
+                        || filters.type !== 'ALL'
+                        || filters.billing !== 'ALL';
+
+                    if (currentUserRole.value === 'HEADQUARTERS' && !hasOtherFilters) {
+                        const statusKey = [...filters.status].sort().join(',');
+                        const allocationKey = [...filters.allocation].sort().join(',');
+                        if (statusKey === 'ACTIVE,EXPIRING_SOON' && allocationKey === '') {
+                            activeSummaryCard.value = 'totalQuota';
+                            return;
+                        }
+                        if (statusKey === 'ACTIVE,EXPIRING_SOON' && allocationKey === 'FULL,PARTIAL') {
+                            activeSummaryCard.value = 'allocatedQuota';
+                            return;
+                        }
+                        if (statusKey === 'ACTIVE,EXPIRING_SOON' && allocationKey === 'PARTIAL,UNASSIGNED') {
+                            activeSummaryCard.value = 'unallocatedQuota';
+                            return;
+                        }
+                    }
+
+                    activeSummaryCard.value = '';
+                }, { flush: 'sync' });
+
+                const applySummaryFilter = (type) => {
+                    isApplyingSummaryFilter = true;
+
+                    if (activeSummaryCard.value === type) {
+                        clearContractFilters();
+                        activeSummaryCard.value = '';
+                        isApplyingSummaryFilter = false;
+                        return;
+                    }
+
+                    clearContractFilters();
+
+                    if (type === 'totalQuota') {
+                        filters.status = ['ACTIVE', 'EXPIRING_SOON'];
+                    }
+                    if (type === 'allocatedQuota') {
+                        filters.status = ['ACTIVE', 'EXPIRING_SOON'];
+                        filters.allocation = ['FULL', 'PARTIAL'];
+                    }
+                    if (type === 'unallocatedQuota') {
+                        filters.status = ['ACTIVE', 'EXPIRING_SOON'];
+                        filters.allocation = ['PARTIAL', 'UNASSIGNED'];
+                    }
+                    if (type === 'branchContracts' || type === 'branchQuota') {
+                        filters.status = ['ACTIVE', 'EXPIRING_SOON'];
+                    }
+
+                    activeSummaryCard.value = type;
+                    isApplyingSummaryFilter = false;
+                };
+
+                // 是否可分配配额：与原来按钮 disabled 条件一致（付款中 / 已过期 / 配额已满 均不可分配）
+                const canAllocateContract = (row) => {
+                    if (!row) return false;
+                    return ['ACTIVE', 'EXPIRING_SOON'].includes(getStatusProp(row)) && enterpriseTransfers.availablePool(row) > 0;
+                };
+
+                const openAllocateModal = (row) => {
+                    activeContract.value = row;
+                    allocateForm.branchId = '';
+                    allocateForm.amount = 1;
+                    modals.allocate = true;
+                };
+
+                const aggregatedAllocations = computed(() => {
+                    if (!activeContract.value) return [];
+                    const map = {};
+                    // Aggregate allocations per branch, summing amounts
+                    activeContract.value.allocations.forEach(a => {
+                        if (!map[a.branchId]) {
+                            map[a.branchId] = { branchId: a.branchId, amount: 0, originalRow: a };
+                        }
+                        map[a.branchId].amount += a.amount;
+                    });
+                    return Object.values(map);
+                });
+
+                const openDetailsModal = (row) => {
+                    activeContract.value = row;
+                    modals.details = true;
+                };
+
+                const openAdjustModal = (row) => {
+                    // For adjust, we use the aggregated view now. So we map changes back to all original allocations
+                    // Or realistically, replace logic with targeting the aggregated modal amounts
+                    activeAllocation.value = row;
+                    adjustForm.amount = row.amount;
+                    modals.adjust = true;
+                };
+
+                const confirmAdjust = () => {
+                    if (!activeContract.value || !activeAllocation.value) return;
+                    if (currentUserRole.value !== 'HEADQUARTERS') return;
+                    const row = activeContract.value, bid = activeAllocation.value.branchId;
+                    const minimum = getBranchUsedQuotaById(row, bid) + enterpriseTransfers.reservedIdle(row.id, bid);
+                    if (!Number.isInteger(adjustForm.amount) || adjustForm.amount < minimum || adjustForm.amount - activeAllocation.value.amount > enterpriseTransfers.availablePool(row)) return ElMessage.warning('調整後配額須容納已綁車輛及任務預留，且不得占用其他預留配額。');
+                    const diff = adjustForm.amount - activeAllocation.value.amount;
+
+                    // find all old allocations for this branch and wipe them
+                    const oldAllocations = activeContract.value.allocations.filter(a => a.branchId === activeAllocation.value.branchId);
+
+                    if (adjustForm.amount === 0) {
+                        // remove all matching
+                        activeContract.value.allocations = activeContract.value.allocations.filter(a => a.branchId !== activeAllocation.value.branchId);
+                    } else {
+                        // wipe and replace with single consolidated row
+                        activeContract.value.allocations = activeContract.value.allocations.filter(a => a.branchId !== activeAllocation.value.branchId);
+                        activeContract.value.allocations.push({
+                            branchId: activeAllocation.value.branchId,
+                            amount: adjustForm.amount,
+                            date: new Date().toISOString().split('T')[0]
+                        });
+                    }
+
+                    activeContract.value.allocatedQuota += diff;
+
+                    ElMessage.success(`配额调整成功`);
+                    modals.adjust = false;
+                };
+
+                const openVehiclesModal = (row) => {
+                    activeContract.value = row;
+                    modals.vehicles = true;
+                };
+
+                const unbindVehicleFromContract = (vehicleRow) => {
+                    if (enterpriseTransfers.vehicleLocked(vehicleRow.id)) return ElMessage.warning('此車輛已有待執行轉移任務，請先取消任務。');
+                    ElMessageBox.confirm(`确定要将车辆 ${vehicleRow.license} 从当前合约解绑吗？`, '解绑确认', {
+                        confirmButtonText: '确定解绑',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        if (enterpriseTransfers.vehicleLocked(vehicleRow.id)) return ElMessage.warning('車輛已有轉移任務，不能解綁。');
+                        const index = activeContractMockVehicles.value.findIndex(v => v.license === vehicleRow.license);
+                        if (index > -1) {
+                            activeContractMockVehicles.value.splice(index, 1);
+                            ElMessage.success(`车辆 ${vehicleRow.license} 已成功解绑`);
+                        }
+                    }).catch(() => { });
+                };
+
+                const confirmAllocation = () => {
+                    const row = activeContract.value;
+                    if (!row) return;
+                    if (currentUserRole.value !== 'HEADQUARTERS' || !branchOptions.value.some(b => b.id === allocateForm.branchId) || !Number.isInteger(allocateForm.amount) || allocateForm.amount <= 0 || allocateForm.amount > enterpriseTransfers.availablePool(row)) return ElMessage.warning('請選擇分公司，且分配數量不得超過扣除任務預留後的可用配額。');
+
+                    const amountToAllocate = allocateForm.amount;
+                    row.allocatedQuota += amountToAllocate;
+
+                    // Append Allocation
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    row.allocations.push({
+                        branchId: allocateForm.branchId,
+                        amount: amountToAllocate,
+                        date: todayStr
+                    });
+
+                    ElMessage.success(`成功向分公司下发 ${amountToAllocate} 台配额`);
+                    modals.allocate = false;
+                };
+
+                // 企业端转移：接口必须按登录企业、总公司权限校验；两端共用后端任务和预留记录。
+                const enterpriseTransfers = (() => {
+                    const CORPORATE_ID = 'CORPORATE-DEMO';
+                    contractsData.value.forEach(row => { row.corporateId = CORPORATE_ID; });
+                    const clone = value => JSON.parse(JSON.stringify(value));
+                    const tasks = ref([]), taskListOpen = ref(false), taskPage = ref(1), transferBusy = ref(false);
+                    const taskFilter = reactive({ query: '', status: '' });
+                    const taskStatuses = { PENDING: '待執行', COMPLETED: '已完成', FAILED: '執行失敗', CANCELLED: '已取消' };
+                    const taskTypes = { PENDING: 'warning', COMPLETED: 'success', FAILED: 'danger', CANCELLED: 'info' };
+                    const transferForm = reactive({ id: '', sourceId: '', targetId: '', vehicleIds: [], mode: 'IMMEDIATE' });
+                    const contractOf = id => contractsData.value.find(r => r.id === id && r.corporateId === CORPORATE_ID && !r.deleted);
+                    const pending = id => tasks.value.filter(t => t.status === 'PENDING' && t.id !== id);
+                    const vehiclesOf = id => Object.values(transferVehicleStore[id] || {}).flat();
+                    const allocationsOf = row => {
+                        const map = {};
+                        (row?.allocations || []).forEach(a => { map[a.branchId] = (map[a.branchId] || 0) + a.amount; });
+                        return map;
+                    };
+                    const parse = date => new Date(String(date).replace(' ', 'T')).getTime();
+                    const effectiveAt = row => parse(row.effectiveAt || row.scheduledEffectiveAt || row.startDate + 'T00:00:00');
+                    const endsAt = row => parse(row.endDate + 'T00:00:00') + 86400000;
+                    const formatTaskTime = ms => {
+                        if (!ms) return '—';
+                        const d = new Date(ms), pad = n => String(n).padStart(2, '0');
+                        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+                    };
+                    const currentTask = computed(() => tasks.value.find(t => t.id === transferForm.id));
+                    const transferReadonly = computed(() => ['COMPLETED', 'CANCELLED'].includes(currentTask.value?.status));
+                    const transferSourceContract = computed(() => transferReadonly.value ? currentTask.value.sourceSnapshot : contractOf(transferForm.sourceId));
+                    const transferTargetContract = computed(() => transferReadonly.value ? currentTask.value.targetSnapshot : contractOf(transferForm.targetId));
+                    const transferSourceVehicles = computed(() => transferReadonly.value ? currentTask.value.sourceVehiclesSnapshot : vehiclesOf(transferForm.sourceId));
+                    const transferTargetOptions = computed(() => transferReadonly.value ? [currentTask.value.targetSnapshot] : contractsData.value.filter(r => contractOf(r.id) && r.id !== transferForm.sourceId && !['TERMINATED', 'VOID', 'PAYING', 'EXPIRED'].includes(getStatusProp(r)) && endsAt(r) > Date.now()));
+                    const reservations = (id, exclude) => pending(exclude).filter(t => t.targetId === id);
+                    const reservedExtra = (id, exclude) => reservations(id, exclude).reduce((n, t) => n + t.details.reduce((s, d) => s + d.extra, 0), 0);
+                    const reservedIdle = (id, bid, exclude) => reservations(id, exclude).reduce((n, t) => n + (t.details.find(d => d.branchId === bid)?.reused || 0), 0);
+                    const availablePool = (row, exclude) => row.totalQuota - Object.values(allocationsOf(row)).reduce((a, b) => a + b, 0) - reservedExtra(row.id, exclude);
+                    const transferTargetAvailable = computed(() => transferReadonly.value ? currentTask.value.availableSnapshot : transferTargetContract.value ? Math.max(0, availablePool(transferTargetContract.value, transferForm.id)) : 0);
+                    const canTransferTo = row => currentUserRole.value === 'HEADQUARTERS' && !!row && !!contractOf(row.id) && ['ACTIVE', 'EXPIRING_SOON', 'EXPIRED'].includes(getStatusProp(row)) && vehiclesOf(row.id).length > 0;
+                    const taskNotice = (id, direction) => tasks.value.some(t => t.status === 'PENDING' && t[direction === 'out' ? 'sourceId' : 'targetId'] === id);
+                    const taskFailed = id => tasks.value.some(t => t.status === 'FAILED' && [t.sourceId, t.targetId].includes(id));
+                    // 校验与执行使用同一计算；既有配额必须扣除已绑车辆及其他任务预留。
+                    const preview = (draft, system = false, now = Date.now()) => {
+                        const result = { reused: 0, extra: 0, error: '', details: [], vehicles: [], scheduledAt: null };
+                        const fail = message => ({ ...result, error: message });
+                        if (!system && currentUserRole.value !== 'HEADQUARTERS') return fail('僅總公司管理員可操作轉移。');
+                        const source = contractOf(draft.sourceId), target = contractOf(draft.targetId);
+                        if (!source || !target || source.id === target.id) return fail('請選擇本企業的不同來源、目標合約。');
+                        if (!['ACTIVE', 'EXPIRING_SOON', 'EXPIRED'].includes(getStatusProp(source))) return fail('來源合約狀態不允許轉移。');
+                        if (['TERMINATED', 'VOID', 'PAYING', 'EXPIRED'].includes(getStatusProp(target))) return fail('目標合約狀態不允許轉入。');
+                        if (!['IMMEDIATE', 'SOURCE_EXPIRE'].includes(draft.mode)) return fail('請選擇轉移時間。');
+                        result.scheduledAt = draft.mode === 'IMMEDIATE' ? now : Math.max(endsAt(source), effectiveAt(target));
+                        if (!Number.isFinite(result.scheduledAt) || !Number.isFinite(endsAt(target))) return fail('合約日期不完整。');
+                        if (!system && draft.mode === 'SOURCE_EXPIRE' && result.scheduledAt <= now) return fail('到期時間已到，請選擇立即轉移。');
+                        const executionAt = system ? now : result.scheduledAt;
+                        if (effectiveAt(target) > executionAt || endsAt(target) <= executionAt) return fail('目標合約在轉移時尚未生效或已到期。');
+                        if (pending(draft.id).some(t => t.sourceId === source.id)) return fail('來源合約已有待執行任務，請編輯原任務。');
+                        const ids = draft.vehicleIds;
+                        if (!ids.length) return fail('請至少選擇一輛車。');
+                        if (new Set(ids).size !== ids.length) return fail('車輛不可重複選取。');
+                        result.vehicles = ids.map(id => vehiclesOf(source.id).find(v => v.id === id));
+                        if (result.vehicles.some(v => !v)) return fail('車輛綁定已變更，請重新選擇。');
+                        if (draft.vehicles?.some(v => result.vehicles.find(x => x.id === v.id)?.branchId !== v.branchId)) return fail('車輛所屬分公司已變更。');
+                        const counts = {};
+                        result.vehicles.forEach(v => { counts[v.branchId] = (counts[v.branchId] || 0) + 1; });
+                        const allocated = allocationsOf(target);
+                        for (const [bid, count] of Object.entries(counts)) {
+                            const used = (transferVehicleStore[target.id]?.[bid] || []).length;
+                            const free = Math.max(0, (allocated[bid] || 0) - used - reservedIdle(target.id, bid, draft.id));
+                            const reused = Math.min(free, count), extra = count - reused;
+                            result.details.push({ branchId: bid, reused, extra });
+                            result.reused += reused; result.extra += extra;
+                        }
+                        if (result.extra > availablePool(target, draft.id)) return fail('目標待分配可用配額不足，本次需新增 ' + result.extra + ' 台。');
+                        return result;
+                    };
+                    const transferPreview = computed(() => transferReadonly.value ? { error: '', reused: currentTask.value.details.reduce((n, d) => n + d.reused, 0), extra: currentTask.value.details.reduce((n, d) => n + d.extra, 0), scheduledAt: currentTask.value.scheduledAt } : preview(transferForm));
+                    const transferBranchRows = computed(() => {
+                        const groups = {};
+                        transferSourceVehicles.value.forEach(v => {
+                            if (!groups[v.branchId]) groups[v.branchId] = { id: v.branchId, name: getBranchName(v.branchId), vehicles: [], selectedCount: 0 };
+                            groups[v.branchId].vehicles.push(v);
+                            if (transferForm.vehicleIds.includes(v.id)) groups[v.branchId].selectedCount++;
+                        });
+                        return Object.values(groups);
+                    });
+                    const transferVehiclePickerOpen = ref(false), transferActiveBranchId = ref(''), transferPickerQuery = ref(''), transferPickerIds = ref([]);
+                    const transferActiveBranchName = computed(() => getBranchName(transferActiveBranchId.value));
+                    const transferPickerVehicles = computed(() => transferSourceVehicles.value.filter(v => v.branchId === transferActiveBranchId.value && v.license.toLowerCase().includes(transferPickerQuery.value.toLowerCase())));
+                    const toggleTransferVehicle = (id, selected) => {
+                        if (transferReadonly.value || transferBusy.value) return;
+                        transferForm.vehicleIds = selected ? [...new Set([...transferForm.vehicleIds, id])] : transferForm.vehicleIds.filter(x => x !== id);
+                    };
+                    const toggleTransferBranch = (row, selected) => row.vehicles.forEach(v => toggleTransferVehicle(v.id, selected));
+                    const openTransferVehiclePicker = row => {
+                        transferActiveBranchId.value = row.id; transferPickerQuery.value = '';
+                        transferPickerIds.value = row.vehicles.filter(v => transferForm.vehicleIds.includes(v.id)).map(v => v.id);
+                        transferVehiclePickerOpen.value = true;
+                    };
+                    const togglePickerVehicle = (id, selected) => {
+                        if (transferReadonly.value) return;
+                        transferPickerIds.value = selected ? [...new Set([...transferPickerIds.value, id])] : transferPickerIds.value.filter(x => x !== id);
+                    };
+                    const pickerAll = computed(() => !!transferPickerVehicles.value.length && transferPickerVehicles.value.every(v => transferPickerIds.value.includes(v.id)));
+                    const pickerSome = computed(() => transferPickerVehicles.value.some(v => transferPickerIds.value.includes(v.id)));
+                    const togglePickerAll = selected => transferPickerVehicles.value.forEach(v => togglePickerVehicle(v.id, selected));
+                    const confirmTransferPicker = () => {
+                        if (transferReadonly.value || currentUserRole.value !== 'HEADQUARTERS') return;
+                        const ids = transferSourceVehicles.value.filter(v => v.branchId === transferActiveBranchId.value).map(v => v.id);
+                        transferForm.vehicleIds = [...transferForm.vehicleIds.filter(id => !ids.includes(id)), ...transferPickerIds.value.filter(id => ids.includes(id))];
+                        transferVehiclePickerOpen.value = false;
+                    };
+                    const openTransferDialog = (row, task = null) => {
+                        if (currentUserRole.value !== 'HEADQUARTERS') return;
+                        if (!task && row) task = pending().find(t => t.sourceId === row.id);
+                        const source = task ? contractOf(task.sourceId) : row;
+                        Object.assign(transferForm, task ? { id: task.id, sourceId: task.sourceId, targetId: task.targetId, mode: task.mode, vehicleIds: [...task.vehicleIds] } : { id: '', sourceId: row?.id || '', targetId: '', mode: 'IMMEDIATE', vehicleIds: source ? vehiclesOf(source.id).map(v => v.id) : [] });
+                        if (task?.status === 'FAILED') transferForm.vehicleIds = transferForm.vehicleIds.filter(id => vehiclesOf(task.sourceId).some(v => v.id === id));
+                        modals.transfer = true;
+                    };
+                    const selectTransferSource = () => {
+                        transferForm.targetId = '';
+                        transferForm.vehicleIds = vehiclesOf(transferForm.sourceId).map(v => v.id);
+                    };
+                    const changeTransferTarget = () => {
+                        const target = contractOf(transferForm.targetId);
+                        if (target && effectiveAt(target) > Date.now()) transferForm.mode = 'SOURCE_EXPIRE';
+                    };
+                    const buildTask = (draft, p, id) => ({
+                        ...clone(draft), id, status: 'PENDING', details: clone(p.details), vehicles: clone(p.vehicles),
+                        sourceSnapshot: clone(contractOf(draft.sourceId)), targetSnapshot: clone(contractOf(draft.targetId)), sourceVehiclesSnapshot: clone(vehiclesOf(draft.sourceId)),
+                        scheduledAt: p.scheduledAt, executedAt: null, updatedAt: Date.now(), version: 1, failureReason: '', events: [], availableSnapshot: availablePool(contractOf(draft.targetId), draft.id)
+                    });
+                    // 后端必须在同一事务内校验、补足目标配额、改绑、释放预留并更新任务；车辆 ID 不变。
+                    const execute = (task, now = Date.now()) => {
+                        if (task.status !== 'PENDING') return task.status === 'COMPLETED';
+                        const p = preview(task, true, now);
+                        if (p.error) { task.status = 'FAILED'; task.failureReason = p.error; task.updatedAt = now; task.version++; return false; }
+                        const target = contractOf(task.targetId);
+                        const targetAllocations = clone(target.allocations);
+                        const src = clone(transferVehicleStore[task.sourceId] || {}), dst = clone(transferVehicleStore[task.targetId] || {});
+                        p.details.forEach(d => {
+                            if (d.extra) targetAllocations.push({ branchId: d.branchId, amount: d.extra, date: formatTaskTime(now).slice(0, 10) });
+                        });
+                        p.vehicles.forEach(v => {
+                            src[v.branchId] = src[v.branchId].filter(x => x.id !== v.id);
+                            (dst[v.branchId] ||= []).push(clone(v));
+                        });
+                        transferVehicleStore[task.sourceId] = src; transferVehicleStore[task.targetId] = dst;
+                        target.allocations = targetAllocations;
+                        target.allocatedQuota = targetAllocations.reduce((n, a) => n + a.amount, 0);
+                        task.status = 'COMPLETED'; task.executedAt = now; task.updatedAt = now; task.failureReason = ''; task.version++;
+                        task.events.push({ type: 'COMPLETED', at: now });
+                        return true;
+                    };
+                    let sequence = 2;
+                    const confirmTransfer = async () => {
+                        if (transferBusy.value || transferReadonly.value) return;
+                        const draft = clone(transferForm), previous = currentTask.value, version = previous?.version;
+                        let p = preview(draft);
+                        if (p.error) return ElMessage.warning(p.error);
+                        transferBusy.value = true;
+                        try {
+                            await ElMessageBox.confirm(draft.mode === 'IMMEDIATE' ? '確認立即轉移所選車輛？來源分公司配額保留。' : '確認儲存到期轉移任務並預留目標容量？', '確認轉移', { confirmButtonText: '確認', cancelButtonText: '返回', type: 'warning' });
+                            if (previous && (previous.version !== version || !['PENDING', 'FAILED'].includes(previous.status))) return ElMessage.warning('任務狀態已變更，請重新開啟。');
+                            p = preview(draft);
+                            if (p.error) return ElMessage.warning(p.error);
+                            const next = buildTask(draft, p, previous?.id || 'ET-' + String(sequence++).padStart(4, '0'));
+                            next.version = (previous?.version || 0) + 1;
+                            next.events = [...(previous?.events || []), { type: previous ? 'EDITED' : 'CREATED', at: Date.now(), before: previous ? clone({ status: previous.status, vehicleIds: previous.vehicleIds, targetId: previous.targetId, failureReason: previous.failureReason }) : null }];
+                            if (draft.mode === 'IMMEDIATE' && !execute(next)) return ElMessage.error(next.failureReason);
+                            if (previous) Object.assign(previous, next); else tasks.value.unshift(next);
+                            modals.transfer = false;
+                            ElMessage.success(next.status === 'COMPLETED' ? '車輛轉移已完成' : '轉移任務已儲存');
+                        } catch (error) {
+                            if (!['cancel', 'close'].includes(error)) ElMessage.error('轉移未完成，請重新確認。');
+                        } finally { transferBusy.value = false; }
+                    };
+                    const cancelTask = async task => {
+                        if (currentUserRole.value !== 'HEADQUARTERS' || transferBusy.value || !['PENDING', 'FAILED'].includes(task.status)) return;
+                        try { await ElMessageBox.confirm('取消任務並釋放預留容量？來源配額及車輛不變。', '取消轉移任務', { confirmButtonText: '確認取消', cancelButtonText: '返回', type: 'warning' }); } catch { return; }
+                        if (currentUserRole.value !== 'HEADQUARTERS' || !['PENDING', 'FAILED'].includes(task.status)) return;
+                        task.status = 'CANCELLED'; task.updatedAt = Date.now(); task.version++; task.events.push({ type: 'CANCELLED', at: task.updatedAt });
+                        if (transferForm.id === task.id) modals.transfer = false;
+                    };
+                    const openTaskList = (id = '') => { if (currentUserRole.value !== 'HEADQUARTERS') return; taskFilter.query = id; taskFilter.status = ''; taskPage.value = 1; taskListOpen.value = true; };
+                    const filteredTasks = computed(() => tasks.value.filter(t => (!taskFilter.status || t.status === taskFilter.status) && (t.sourceId + t.sourceSnapshot.name + t.targetId + t.targetSnapshot.name).toLowerCase().includes(taskFilter.query.toLowerCase())).sort((a, b) => b.updatedAt - a.updatedAt));
+                    const pagedTasks = computed(() => filteredTasks.value.slice((taskPage.value - 1) * 5, taskPage.value * 5));
+                    watch(taskFilter, () => { taskPage.value = 1; });
+                    watch(() => filteredTasks.value.length, n => { taskPage.value = Math.min(taskPage.value, Math.max(1, Math.ceil(n / 5))); });
+                    watch(currentUserRole, () => { modals.transfer = false; taskListOpen.value = false; transferVehiclePickerOpen.value = false; });
+                    const sourceOptions = computed(() => contractsData.value.filter(canTransferTo));
+                    const runDueTasks = (now = Date.now()) => pending().filter(t => t.scheduledAt <= now).forEach(t => execute(t, now));
+                    let timer;
+                    Vue.onMounted(() => { timer = setInterval(runDueTasks, 30000); });
+                    Vue.onUnmounted(() => clearInterval(timer));
+                    const vehicleLocked = id => pending().some(t => t.vehicleIds.includes(id));
+                    const seedSource = contractOf('C-2024-0999');
+                    const seedDraft = { sourceId: seedSource.id, targetId: 'C-2024-08X2', mode: 'SOURCE_EXPIRE', vehicleIds: vehiclesOf(seedSource.id).map(v => v.id) };
+                    const seedPreview = preview(seedDraft);
+                    if (!seedPreview.error) tasks.value.push(buildTask(seedDraft, seedPreview, 'ET-0001'));
+                    return { tasks, taskListOpen, taskPage, taskFilter, taskStatuses, taskTypes, currentTask, transferReadonly, transferBusy,
+                        transferForm, transferSourceContract, transferTargetContract, transferSourceVehicles, transferTargetAvailable, transferTargetOptions, transferPreview, transferBranchRows,
+                        transferVehiclePickerOpen, transferPickerQuery, transferPickerIds, transferActiveBranchName, transferPickerVehicles, pickerAll, pickerSome,
+                        togglePickerVehicle, togglePickerAll, openTransferVehiclePicker, confirmTransferPicker, toggleTransferBranch, toggleTransferVehicle,
+                        canTransferTo, openTransferDialog, changeTransferTarget, selectTransferSource, confirmTransfer, cancelTask, openTaskList, filteredTasks, pagedTasks,
+                        formatTaskTime, sourceOptions, taskNotice, taskFailed, runDueTasks, preview, availablePool, reservedIdle, vehicleLocked };
+                })();
+
+                return {
+                    // Refs
+                    currentUserRole, MY_BRANCH_ID,
+                    branchOptions, filters, modals, activeSummaryCard,
+                    allocateForm, activeContract, activeAllocations, activeAllocation, adjustForm,
+                    activeContractMockVehicles, aggregatedAllocations,
+                    filteredData, statsHQ, statsBranch, adjustMaxAmount,
+                    // Computes / Helpers
+                    getDaysRemaining, getBranchName, getBranchQuota, getBranchUsedQuota, getBranchUsedQuotaById, getBranchProgressClass,
+                    getStatusProp, getStatusText, getStatusColorClass, getStatusDotClass, getProgressClass,
+                    getEffectiveDisplay, getGiftDays,
+                    // Methods
+                    handleRoleChange, openAllocateModal, openDetailsModal, confirmAllocation,
+                    canAllocateContract,
+                    openAdjustModal, confirmAdjust, openVehiclesModal, unbindVehicleFromContract, applySummaryFilter,
+                    ...enterpriseTransfers
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

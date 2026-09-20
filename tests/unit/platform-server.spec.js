@@ -29,8 +29,8 @@ async function createWritableFixture() {
   };
 }
 
-async function createTransferFixture() {
-  const platformRoot = await fs.mkdtemp(path.join(process.cwd(), '.tmp-platform-transfer-'));
+async function createRouteFixture() {
+  const platformRoot = await fs.mkdtemp(path.join(process.cwd(), '.tmp-platform-routes-'));
   temporaryRoots.push(platformRoot);
   const projectsRoot = path.join(platformRoot, 'projects');
   await fs.mkdir(projectsRoot, { recursive: true });
@@ -252,7 +252,7 @@ describe('platform local server', () => {
       prototype: { enabled: false, root: 'prototype', clients: {} },
       mobile: { enabled: false },
       homepage: { visible: true },
-      features: { pageTransfer: true, designSystem: true },
+      features: { designSystem: true },
     };
 
     const createResponse = await fetch(`${baseUrl}/__projects/create`, {
@@ -278,8 +278,8 @@ describe('platform local server', () => {
     ).toMatchObject({ id: 'local-project', name: '本地项目（已更新）' });
   });
 
-  it('serves route data and HTML inspection without loading the Vite development server', async () => {
-    const fixture = await createTransferFixture();
+  it('serves route data without loading the Vite development server', async () => {
+    const fixture = await createRouteFixture();
     const service = createPlatformServer({
       projectsRoot: fixture.projectsRoot,
       platformRoot: fixture.platformRoot,
@@ -290,7 +290,7 @@ describe('platform local server', () => {
     const address = await service.start();
     const baseUrl = `http://127.0.0.1:${address.port}`;
 
-    const routesResponse = await fetch(`${baseUrl}/__page-transfer/routes?projectId=sample-project`);
+    const routesResponse = await fetch(`${baseUrl}/__project-routes?projectId=sample-project`);
     expect(routesResponse.status).toBe(200);
     expect(await routesResponse.json()).toMatchObject({
       ok: true,
@@ -298,21 +298,6 @@ describe('platform local server', () => {
       clients: [{ id: 'admin' }],
     });
 
-    const html = await fs.readFile(
-      path.resolve(process.cwd(), 'examples/sample-project/prototype/admin/release-board.html'),
-      'utf8',
-    );
-    const inspectResponse = await fetch(`${baseUrl}/__page-transfer/inspect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ html }),
-    });
-    expect(inspectResponse.status).toBe(200);
-    expect(await inspectResponse.json()).toMatchObject({
-      ok: true,
-      valid: true,
-      manifest: { pageKey: 'release-board' },
-    });
   });
 
   it('rejects association writes from non-local requests', async () => {

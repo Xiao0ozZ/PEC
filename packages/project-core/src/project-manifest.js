@@ -81,10 +81,6 @@ export function validateProjectManifest(manifest, folderName, projectRoot) {
       errors.push(`主题颜色 ${name} 必须使用六位十六进制色值。`);
     }
   }
-  if (manifest.compatibility?.legacyViewRoot && manifest.compatibility.legacyViewRoot !== 'src/views') {
-    errors.push('兼容页面目录当前只允许使用 src/views。');
-  }
-
   const clientIds = new Set();
   for (const client of manifest.clients || []) {
     if (!PROJECT_ID_PATTERN.test(client.id || '')) errors.push(`客户端 id 无效：${client.id || '空值'}。`);

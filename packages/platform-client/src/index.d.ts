@@ -47,13 +47,6 @@ export interface PlatformClient {
   loadDocument(projectId: string, documentPath: string): Promise<string>;
   loadPlatformSettings(): Promise<PlatformSettings>;
   savePlatformSettings(settings: PlatformSettings): Promise<PlatformSettings>;
-  inspectHtml(html: string): Promise<Record<string, unknown>>;
-  importPage(html: string, target: Record<string, unknown>): Promise<Record<string, unknown>>;
-  exportPages(input: {
-    projectId: string;
-    selectedPaths?: string[];
-    packageName?: string;
-  }): Promise<Record<string, unknown>>;
   listRoutes(projectId: string): Promise<RouteListResult>;
   mutateRoute(action: RouteMutationAction, target: Record<string, unknown>): Promise<Record<string, unknown>>;
 }

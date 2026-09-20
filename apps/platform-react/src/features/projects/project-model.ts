@@ -23,9 +23,8 @@ export function getClientPages(catalog: HtmlPageCatalog | undefined, projectId: 
 }
 
 export type ClientRuntimeStatus = {
-  state: 'ready' | 'partial' | 'legacy-vue' | 'index-missing' | 'empty';
+  state: 'ready' | 'index-missing' | 'empty';
   runnablePageCount: number;
-  legacyVuePageCount: number;
   managedHtmlPageCount: number;
 };
 
@@ -35,23 +34,16 @@ export function getClientRuntimeStatus(
   pages: HtmlPrototypePage[],
 ): ClientRuntimeStatus {
   const summary = project.pageRuntime?.clients?.[clientId];
-  const legacyVuePageCount = summary?.vueSfc ?? 0;
   const managedHtmlPageCount = summary?.htmlTemplate ?? 0;
   const runnablePageCount = pages.length;
 
-  if (runnablePageCount && legacyVuePageCount) {
-    return { state: 'partial', runnablePageCount, legacyVuePageCount, managedHtmlPageCount };
-  }
   if (runnablePageCount) {
-    return { state: 'ready', runnablePageCount, legacyVuePageCount, managedHtmlPageCount };
+    return { state: 'ready', runnablePageCount, managedHtmlPageCount };
   }
   if (managedHtmlPageCount) {
-    return { state: 'index-missing', runnablePageCount, legacyVuePageCount, managedHtmlPageCount };
+    return { state: 'index-missing', runnablePageCount, managedHtmlPageCount };
   }
-  if (legacyVuePageCount) {
-    return { state: 'legacy-vue', runnablePageCount, legacyVuePageCount, managedHtmlPageCount };
-  }
-  return { state: 'empty', runnablePageCount, legacyVuePageCount, managedHtmlPageCount };
+  return { state: 'empty', runnablePageCount, managedHtmlPageCount };
 }
 
 export function getClientSections(catalog: HtmlPageCatalog | undefined, projectId: string, clientId: string) {

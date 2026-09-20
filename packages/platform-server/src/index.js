@@ -5,12 +5,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { URL } from 'node:url';
 
-import {
-  LOOPBACK_HOST,
-  formatPlatformServerAddresses,
-  isSharedHost,
-  listLanAddresses,
-} from './addresses.js';
+import { LOOPBACK_HOST, formatPlatformServerAddresses, isSharedHost, listLanAddresses } from './addresses.js';
 import {
   DOCUMENT_PUBLIC_EXTENSIONS,
   PROJECT_PUBLIC_DIRECTORIES,
@@ -33,6 +28,14 @@ import {
   scanHtmlPrototypePages,
   toPublicProjectManifest,
   updateProjectPackage,
+  createProjectRoute,
+  deleteProjectRoute,
+  listProjectRoutes,
+  restoreProjectRoute,
+  restoreProjectSections,
+  updateProjectRoute,
+  updateProjectRouteOrder,
+  updateProjectSections,
   writeJsonAtomic,
 } from '../../project-core/src/index.js';
 import {
@@ -63,7 +66,6 @@ const DEFAULT_MIME_TYPES = Object.freeze({
   '.webp': 'image/webp',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
-  '.zip': 'application/zip',
 });
 
 const PROJECT_ASSET_EXTENSIONS = new Set(Object.keys(DEFAULT_MIME_TYPES));
@@ -72,9 +74,7 @@ const SETTINGS_BODY_LIMIT = 16 * 1024;
 const SHARE_BODY_LIMIT = 4 * 1024;
 const ASSOCIATION_BODY_LIMIT = 8 * 1024 * 1024;
 const MANAGEMENT_BODY_LIMIT = 8 * 1024 * 1024;
-const TRANSFER_BODY_LIMIT = 12 * 1024 * 1024;
 const LOCAL_SERVER_READ_ONLY_CODE = 'LOCAL_SERVER_READ_ONLY';
-let pageTransferModulePromise;
 
 function mimeTypeFor(filePath) {
   return DEFAULT_MIME_TYPES[path.extname(filePath).toLowerCase()] || 'application/octet-stream';
@@ -193,14 +193,6 @@ async function resolveWritableProjectFile(projectRoot, relativePath) {
   });
 }
 
-async function resolveExportFile(platformRoot, requestPath) {
-  const normalized = String(requestPath || '')
-    .replaceAll('\\', '/')
-    .replace(/^\/+/, '');
-  if (!normalized.toLowerCase().startsWith('exports/')) return null;
-  return resolveExistingFile(path.join(platformRoot, 'exports'), normalized.slice('exports/'.length));
-}
-
 function normalizedProjectConfig(projectId, payload, isBindings) {
   if (!isRecord(payload)) throw requestError('请求内容必须是 JSON 对象。', 400, 'BAD_REQUEST');
   const requestedProjectId = projectIdFrom(payload.projectId || projectId);
@@ -210,11 +202,6 @@ function normalizedProjectConfig(projectId, payload, isBindings) {
   return isBindings
     ? normalizeProjectPrdBindings(projectId, payload)
     : normalizeProjectPagePrdLinks(projectId, payload);
-}
-
-function loadPageTransferModule() {
-  pageTransferModulePromise ||= import('../../platform-transfer/src/index.js');
-  return pageTransferModulePromise;
 }
 
 async function readSettings(settingsPath) {
@@ -569,103 +556,64 @@ export function createPlatformServer({
     return true;
   }
 
-  async function handlePageTransfer(request, requestUrl, response) {
+  async function handleProjectRoutes(request, requestUrl, response) {
     const routePath = requestUrl.pathname;
     const supported = new Set([
-      '/__page-transfer/inspect',
-      '/__page-transfer/import',
-      '/__page-transfer/routes',
-      '/__page-transfer/route/create',
-      '/__page-transfer/route/update',
-      '/__page-transfer/section/update',
-      '/__page-transfer/route/order',
-      '/__page-transfer/route/delete',
-      '/__page-transfer/route/restore',
-      '/__page-transfer/section/restore',
-      '/__page-transfer/export',
+      '/__project-routes',
+      '/__project-routes/route/create',
+      '/__project-routes/route/update',
+      '/__project-routes/section/update',
+      '/__project-routes/route/order',
+      '/__project-routes/route/delete',
+      '/__project-routes/route/restore',
+      '/__project-routes/section/restore',
     ]);
     if (!supported.has(routePath)) return false;
 
-    const isRead = routePath === '/__page-transfer/routes' && request.method === 'GET';
-    if (!isRead && denyWrite(request, response)) return true;
+    const isList = routePath === '/__project-routes';
+    if (isList && request.method !== 'GET') {
+      response.setHeader('Allow', 'GET');
+      sendJson(response, { message: '路由读取接口只支持 GET。' }, 405);
+      return true;
+    }
+    if (!isList && request.method !== 'POST') {
+      response.setHeader('Allow', 'POST');
+      sendJson(response, { message: '路由管理接口只支持 POST。' }, 405);
+      return true;
+    }
+    if (!isList && denyWrite(request, response)) return true;
 
     try {
-      const {
-        createExportPackage,
-        createProjectRoute,
-        deleteProjectRoute,
-        importPage,
-        inspectHtml,
-        listProjectRoutes,
-        restoreProjectRoute,
-        restoreProjectSections,
-        updateProjectRoute,
-        updateProjectRouteOrder,
-        updateProjectSections,
-      } = await loadPageTransferModule();
-      if (routePath === '/__page-transfer/inspect') {
-        if (request.method !== 'POST')
-          throw requestError('HTML 检查接口只支持 POST。', 405, 'METHOD_NOT_ALLOWED');
-        const result = inspectHtml((await readJsonBody(request, TRANSFER_BODY_LIMIT)).html);
-        sendJson(response, { ok: true, ...result });
-        return true;
-      }
-
-      if (routePath === '/__page-transfer/import') {
-        if (request.method !== 'POST')
-          throw requestError('页面导入接口只支持 POST。', 405, 'METHOD_NOT_ALLOWED');
-        const body = await readJsonBody(request, TRANSFER_BODY_LIMIT);
-        const result = await importPage({
-          projectRoot: workspaceRoot,
-          source: body.html,
-          target: body.target || {},
-          mounts: await loadMounts(),
-        });
-        sendJson(response, { ok: true, result });
-        return true;
-      }
-
-      if (routePath === '/__page-transfer/routes') {
-        if (request.method !== 'GET')
-          throw requestError('路由读取接口只支持 GET。', 405, 'METHOD_NOT_ALLOWED');
+      const mounts = await loadMounts();
+      if (isList) {
         const result = await listProjectRoutes({
           projectRoot: workspaceRoot,
           projectId: requestUrl.searchParams.get('projectId'),
-          mounts: await loadMounts(),
+          mounts,
         });
         sendJson(response, { ok: true, ...result });
         return true;
       }
 
-      const body = await readJsonBody(request, TRANSFER_BODY_LIMIT);
+      const body = await readJsonBody(request, MANAGEMENT_BODY_LIMIT);
       const routeActions = {
-        '/__page-transfer/route/create': async () =>
-          createProjectRoute({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/route/update': async () =>
-          updateProjectRoute({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/section/update': async () =>
-          updateProjectSections({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/route/order': async () =>
-          updateProjectRouteOrder({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/route/delete': async () =>
-          deleteProjectRoute({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/route/restore': async () =>
-          restoreProjectRoute({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/section/restore': async () =>
-          restoreProjectSections({ projectRoot: workspaceRoot, target: body, mounts: await loadMounts() }),
-        '/__page-transfer/export': async () =>
-          createExportPackage({
-            projectRoot: workspaceRoot,
-            projectId: body.projectId,
-            selectedPaths: body.selectedPaths || [],
-            packageName: body.packageName,
-            mounts: await loadMounts(),
-          }),
+        '/__project-routes/route/create': () =>
+          createProjectRoute({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/route/update': () =>
+          updateProjectRoute({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/section/update': () =>
+          updateProjectSections({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/route/order': () =>
+          updateProjectRouteOrder({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/route/delete': () =>
+          deleteProjectRoute({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/route/restore': () =>
+          restoreProjectRoute({ projectRoot: workspaceRoot, target: body, mounts }),
+        '/__project-routes/section/restore': () =>
+          restoreProjectSections({ projectRoot: workspaceRoot, target: body, mounts }),
       };
       const action = routeActions[routePath];
-      if (!action) throw requestError('未知页面传输接口。', 404, 'NOT_FOUND');
-      if (request.method !== 'POST')
-        throw requestError('页面传输接口只支持 POST。', 405, 'METHOD_NOT_ALLOWED');
+      if (!action) throw requestError('未知路由管理接口。', 404, 'NOT_FOUND');
       sendJson(response, { ok: true, result: await action() });
     } catch (error) {
       sendJson(
@@ -673,7 +621,6 @@ export function createPlatformServer({
         {
           ok: false,
           code: error.code || 'BAD_REQUEST',
-          error: error.message,
           message: error.message,
           details: error.details || null,
           rollback: error.rollback || null,
@@ -681,35 +628,6 @@ export function createPlatformServer({
         error.statusCode || 400,
       );
     }
-    return true;
-  }
-
-  async function handleExportFile(request, requestUrl, response) {
-    let requestPath = '';
-    if (requestUrl.pathname === '/__page-transfer/download') {
-      requestPath = requestUrl.searchParams.get('path') || '';
-    } else if (requestUrl.pathname.startsWith('/exports/')) {
-      requestPath = requestUrl.pathname.slice(1);
-    } else {
-      return false;
-    }
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      response.setHeader('Allow', 'GET, HEAD');
-      sendJson(response, { message: '导出文件接口只支持 GET。' }, 405);
-      return true;
-    }
-    const target = await resolveExportFile(workspaceRoot, requestPath);
-    if (!target) {
-      sendJson(response, { message: '导出文件不存在或路径无效。' }, 404);
-      return true;
-    }
-    const download = requestUrl.pathname === '/__page-transfer/download';
-    sendBytes(
-      response,
-      await fs.readFile(target),
-      target,
-      download ? { 'Content-Disposition': sourceContentDisposition(target) } : {},
-    );
     return true;
   }
 
@@ -934,7 +852,8 @@ export function createPlatformServer({
           if (typeof body?.enabled !== 'boolean') {
             throw requestError('enabled 必须是布尔值。', 400, 'INVALID_SHARE_STATE');
           }
-          await setShareEnabled(body.enabled);          sendJson(response, {
+          await setShareEnabled(body.enabled);
+          sendJson(response, {
             ok: true,
             share: shareStatus(local),
             message: body.enabled ? '已开启局域网只读分享。' : '已关闭局域网分享。',
@@ -972,8 +891,7 @@ export function createPlatformServer({
     }
     if (await handleWorkspaceManagement(request, requestUrl, response)) return;
     if (await handleProjectManagement(request, requestUrl, response)) return;
-    if (await handlePageTransfer(request, requestUrl, response)) return;
-    if (await handleExportFile(request, requestUrl, response)) return;
+    if (await handleProjectRoutes(request, requestUrl, response)) return;
     if (await handleProjectPlatformConfig(request, requestUrl, response)) return;
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       sendJson(response, { message: '独立本地服务暂不支持该写入接口。' }, 405);

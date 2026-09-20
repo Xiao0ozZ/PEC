@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>租車券申报审批</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.channel-ticket-applications .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .channel-ticket-applications .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .channel-ticket-applications .el-table th.el-table__cell {
+            background: var(--app-color-surface-subtle);
+            color: var(--app-color-text-secondary);
+        }
+
+        .channel-ticket-applications .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .channel-ticket-applications .channel-applications-filter-toolbar {
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .channel-ticket-applications .channel-applications-filter-toolbar > .el-button + .el-button {
+            margin-left: 0 !important;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "channel-ticket-applications",
+  "pageTitle": "租車券申报审批",
+  "fileName": "channel_ticket_applications.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/channel-ticket-applications",
+  "menuSection": "marketing",
+  "menuTitle": "租車券申报审批",
+  "menuIcon": "List",
+  "menu": true,
+  "rootClass": "channel-ticket-applications",
+  "overlayRootClass": "channel-ticket-applications-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">营销中心</div>
+<a class="prototype-menu-item is-active" href="./channel_ticket_applications.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="List" aria-hidden="true"></span><span>租車券申报审批</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 租車券申报审批</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-channel-ticket-applications channel-ticket-applications" data-page-content data-page-root="channel-ticket-applications" data-page-key="channel-ticket-applications">
+  <div data-business-content data-layout-type="legacy">
+<div class="mb-5">
+                    <h1 class="text-2xl font-bold text-gray-900">租車券申报审批</h1>
+                    <p class="text-sm text-gray-500 mt-1">审核合作通路企业线上提交的批次申报；审批通过后系统生成正式租車券批次。</p>
+                </div>
+
+                <div class="grid grid-cols-4 gap-4 mb-5">
+                    <button type="button" @click="toggleStatusCard('待审批')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeStatusCard === '待审批' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">待审批</div>
+                        <div class="card-value text-amber-500 mt-1">{{ stats.pending }}</div>
+                    </button>
+                    <button type="button" @click="toggleStatusCard('已通过')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeStatusCard === '已通过' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">已通过</div>
+                        <div class="card-value text-emerald-600 mt-1">{{ stats.approved }}</div>
+                    </button>
+                    <button type="button" @click="toggleStatusCard('已驳回')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeStatusCard === '已驳回' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">已驳回</div>
+                        <div class="card-value text-red-500 mt-1">{{ stats.rejected }}</div>
+                    </button>
+                    <button type="button" @click="toggleStatusCard('已撤回')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeStatusCard === '已撤回' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">已撤回</div>
+                        <div class="card-value text-gray-600 mt-1">{{ stats.withdrawn }}</div>
+                    </button>
+                </div>
+
+                <section class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div class="channel-applications-filter-toolbar p-4 border-b border-gray-100 bg-gray-50 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex flex-wrap gap-3">
+                            <el-input v-model="filters.keyword" clearable prefix-icon="Search"
+                                placeholder="申报单号 / 批次名称" style="width: 230px"></el-input>
+                            <el-select v-model="filters.enterprise" clearable filterable placeholder="申报企业"
+                                style="width: 210px">
+                                <el-option v-for="item in enterpriseOptions" :key="item" :label="item"
+                                    :value="item"></el-option>
+                            </el-select>
+                            <el-select v-model="filters.status" clearable placeholder="申报状态" style="width: 140px"
+                                @change="syncStatusCard">
+                                <el-option label="待审批" value="待审批"></el-option>
+                                <el-option label="已通过" value="已通过"></el-option>
+                                <el-option label="已驳回" value="已驳回"></el-option>
+                                <el-option label="已撤回" value="已撤回"></el-option>
+                            </el-select>
+                            <el-select v-model="filters.issueMode" clearable placeholder="发券方式" style="width: 150px">
+                                <el-option label="名单发放" value="LIST"></el-option>
+                                <el-option label="数量生成" value="QUANTITY"></el-option>
+                            </el-select>
+                            <el-tooltip content="重置筛选" placement="top">
+                                <el-button circle @click="resetFilters">
+                                    <el-icon><Refresh></Refresh></el-icon>
+                                </el-button>
+                            </el-tooltip>
+                        </div>
+                        <span class="text-sm text-gray-500">共 {{ filteredApplications.length }} 笔申报</span>
+                    </div>
+
+                    <el-table :data="pagedApplications" style="width:100%">
+                        <el-table-column label="申报单编号" width="190">
+                            <template #default="{ row }">
+                                <div class="font-medium text-gray-800">{{ row.applicationNo }}</div>
+                                <div class="text-xs text-gray-500">申报版本 V{{ row.version }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="批次名称 / 企业" min-width="220">
+                            <template #default="{ row }">
+                                <div class="font-semibold text-gray-900">{{ row.name }}</div>
+                                <div class="text-xs text-gray-500 mt-1">{{ row.enterprise }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="发券方式 / 数量" width="150">
+                            <template #default="{ row }">
+                                <div>{{ getIssueModeLabel(row.issueMode) }}</div>
+                                <div class="text-xs text-gray-500 mt-1">{{ row.totalCount }} 张</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="据点配置" min-width="190">
+                            <template #default="{ row }">
+                                <template v-if="row.stations.length">
+                                    <div>{{ row.stationTypes.length }} 类据点 / {{ row.stations.length }} 个据点</div>
+                                    <el-tooltip :content="row.stations.join('、')" placement="top">
+                                        <div class="text-xs text-gray-500 mt-1 truncate max-w-[220px]">{{ row.stations.join('、') }}</div>
+                                    </el-tooltip>
+                                </template>
+                                <template v-else>
+                                    <div class="text-amber-600">待审批配置</div>
+                                    <div class="text-xs text-gray-500 mt-1">企业申报不含据点范围</div>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="固定取还车时间" width="180">
+                            <template #default="{ row }">
+                                <div>{{ row.pickupAt }}</div>
+                                <div class="text-xs text-gray-500">{{ row.returnAt }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提交时间 / 申报人" width="170">
+                            <template #default="{ row }">
+                                <div>{{ row.submittedAt }}</div>
+                                <div class="text-xs text-gray-500">{{ row.applicant }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="状态" width="100" align="center">
+                            <template #default="{ row }">
+                                <el-tag :type="getStatusType(row.status)" effect="plain">{{ row.status }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="145" align="right" fixed="right">
+                            <template #default="{ row }">
+                                <el-button type="primary" link @click="openDetail(row)">查看</el-button>
+                                <el-button v-if="row.status === '待审批'" type="primary" link
+                                    @click="openReview(row)">审批</el-button>
+                                <el-button v-else-if="row.generatedBatchNo" type="primary" link
+                                    @click="openBatch(row)">查看批次</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <div class="px-4 py-3 border-t border-gray-100 flex justify-end">
+                        <el-pagination v-model:current-page="pagination.page"
+                            v-model:page-size="pagination.pageSize" :page-sizes="[10, 20, 50]"
+                            layout="total, sizes, prev, pager, next" :total="filteredApplications.length">
+                        </el-pagination>
+                    </div>
+                </section>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="channel-ticket-applications-overlay">
+<el-dialog v-model="detailVisible" title="批次申报详情" width="1040px" top="4vh" class="channel-ticket-applications-overlay">
+                    <div v-if="currentApplication">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <div class="text-lg font-semibold text-gray-900">{{ currentApplication.name }}</div>
+                                <div class="text-sm text-gray-500 mt-1">{{ currentApplication.applicationNo }} · 申报版本 V{{ currentApplication.version }}</div>
+                            </div>
+                            <el-tag :type="getStatusType(currentApplication.status)" size="large">{{ currentApplication.status }}</el-tag>
+                        </div>
+
+                        <el-descriptions :column="3" border>
+                            <el-descriptions-item label="申报企业">{{ currentApplication.enterprise }}</el-descriptions-item>
+                            <el-descriptions-item label="申报人">{{ currentApplication.applicant }}</el-descriptions-item>
+                            <el-descriptions-item label="提交时间">{{ currentApplication.submittedAt }}</el-descriptions-item>
+                            <el-descriptions-item label="适用服务">分时租赁 / 同站租还</el-descriptions-item>
+                            <el-descriptions-item label="发券方式">{{ getIssueModeLabel(currentApplication.issueMode) }}</el-descriptions-item>
+                            <el-descriptions-item label="申报数量">{{ currentApplication.totalCount }} 张</el-descriptions-item>
+                            <el-descriptions-item label="时间规则">固定取还车时间</el-descriptions-item>
+                            <el-descriptions-item label="固定时长模式">预留，未开放</el-descriptions-item>
+                            <el-descriptions-item label="固定取车时间">{{ currentApplication.pickupAt }}</el-descriptions-item>
+                            <el-descriptions-item label="固定还车时间">{{ currentApplication.returnAt }}</el-descriptions-item>
+                            <el-descriptions-item label="可用时间">
+                                <span v-if="currentApplication.generatedBatchNo">
+                                    {{ currentApplication.availableStartAt }} 至 {{ currentApplication.availableEndAt }}
+                                </span>
+                                <span v-else class="text-gray-500">审批通过后自动生成：正式批次建立时间至固定还车时间</span>
+                            </el-descriptions-item>
+                            <el-descriptions-item label="营运据点配置" :span="3">
+                                <span v-if="currentApplication.stations.length">
+                                    {{ currentApplication.stationTypes.join('、') }} / {{ currentApplication.stations.join('、') }}
+                                </span>
+                                <span v-else class="text-amber-600">待审批时配置</span>
+                            </el-descriptions-item>
+                            <el-descriptions-item label="申报说明" :span="3">{{ currentApplication.remark || '-' }}</el-descriptions-item>
+                            <el-descriptions-item v-if="currentApplication.issueMode === 'LIST'" label="名单校验" :span="3">
+                                <div>导入 {{ currentApplication.totalCount }} 人，已匹配会员 {{ currentApplication.matchedCount }} 人，待匹配会员 {{ currentApplication.pendingMatchCount }} 人，无异常</div>
+                                <div class="mt-1 text-xs text-gray-500">名单字段为姓名、证件号码，不包含证件类型；同一批次证件号码已完成唯一性校验。</div>
+                            </el-descriptions-item>
+                            <el-descriptions-item v-if="currentApplication.rejectReason" label="驳回原因" :span="3">
+                                <span class="text-red-600">{{ currentApplication.rejectReason }}</span>
+                            </el-descriptions-item>
+                            <el-descriptions-item v-if="currentApplication.generatedBatchNo" label="生成批次" :span="3">
+                                <el-link type="primary" @click="openBatch(currentApplication)">{{ currentApplication.generatedBatchNo }}</el-link>
+                            </el-descriptions-item>
+                        </el-descriptions>
+
+                        <div v-if="currentApplication.stations.length" class="mt-5 border border-amber-200 bg-amber-50 rounded-lg px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <div class="font-medium text-amber-800">车辆库存提醒</div>
+                                <el-tag size="small" :type="getApplicationCapacityHint(currentApplication).pending ? 'info' : (getApplicationCapacityHint(currentApplication).hasRisk ? 'warning' : 'success')" effect="plain">
+                                    {{ getApplicationCapacityHint(currentApplication).tag }}
+                                </el-tag>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-700">
+                                <span>当前批次 <b>{{ getApplicationCapacityHint(currentApplication).currentDemand }} 张</b></span>
+                                <span>适用据点可用 <b>{{ getApplicationCapacityHint(currentApplication).availableVehicleCount }} 台</b></span>
+                                <span>其他相关批次最多占用 <b>{{ getApplicationCapacityHint(currentApplication).relatedMaxOccupancy }} 台</b></span>
+                                <span>预计剩余 <b>{{ getApplicationCapacityHint(currentApplication).remainingVehicleCount }} 台</b></span>
+                            </div>
+                        </div>
+
+                        <div v-if="currentApplication.reviewedAt" class="mt-5">
+                            <div class="font-semibold text-gray-800 mb-2">审批记录</div>
+                            <el-table :data="[currentApplication]" size="small">
+                                <el-table-column prop="reviewedAt" label="审批时间" width="170"></el-table-column>
+                                <el-table-column prop="reviewer" label="审批人" width="120"></el-table-column>
+                                <el-table-column prop="status" label="审批结果" width="110"></el-table-column>
+                                <el-table-column prop="reviewComment" label="审批意见"></el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                    <template #footer>
+                        <el-button @click="detailVisible = false">关闭</el-button>
+                        <el-button v-if="currentApplication?.status === '待审批'" type="primary" @click="openReview(currentApplication)">进入审批</el-button>
+                    </template>
+                </el-dialog>
+<el-dialog v-model="reviewVisible" title="审批批次申报" width="780px" class="channel-ticket-applications-overlay">
+                    <el-alert title="营运端不能直接修改企业申报内容。资料有误时请驳回，由企业修改后重新提交。" type="info"
+                        :closable="false" class="mb-5"></el-alert>
+                    <el-form label-width="126px">
+                        <el-form-item label="申报单编号">
+                            <span>{{ currentApplication?.applicationNo }}</span>
+                        </el-form-item>
+                        <el-form-item label="审批结果">
+                            <el-radio-group v-model="reviewForm.result">
+                                <el-radio-button label="APPROVE">审批通过</el-radio-button>
+                                <el-radio-button label="REJECT">审批驳回</el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+                        <template v-if="reviewForm.result === 'APPROVE'">
+                            <el-form-item label="适用据点类型" required>
+                                <el-select v-model="reviewForm.stationTypes" multiple collapse-tags
+                                    placeholder="请选择据点类型" style="width:100%" @change="handleReviewStationTypeChange">
+                                    <el-option v-for="option in stationTypeOptions" :key="option.value"
+                                        :label="option.label" :value="option.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="适用据点" required>
+                                <el-select v-model="reviewForm.stations" multiple collapse-tags filterable
+                                    placeholder="请选择该批次可使用的据点" style="width:100%">
+                                    <el-option v-for="option in reviewStationOptions" :key="option.value"
+                                        :label="option.label" :value="option.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <div v-if="reviewForm.stations.length"
+                                class="ml-[126px] mb-5 border border-amber-200 bg-amber-50 rounded-lg px-4 py-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="font-medium text-amber-800">车辆库存提醒</div>
+                                    <el-tag size="small" :type="capacityHint.pending ? 'info' : (capacityHint.hasRisk ? 'warning' : 'success')" effect="plain">{{ capacityHint.tag }}</el-tag>
+                                </div>
+                                <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-700">
+                                    <span>当前批次 <b>{{ capacityHint.currentDemand }} 张</b></span>
+                                    <span>适用据点可用 <b>{{ capacityHint.availableVehicleCount }} 台</b></span>
+                                    <span>其他相关批次最多占用 <b>{{ capacityHint.relatedMaxOccupancy }} 台</b></span>
+                                    <span>预计剩余 <b>{{ capacityHint.remainingVehicleCount }} 台</b></span>
+                                </div>
+                            </div>
+                        </template>
+                        <el-form-item v-if="reviewForm.result === 'APPROVE'" label="批次初始状态">
+                            <el-radio-group v-model="reviewForm.initialBatchStatus">
+                                <el-radio label="停用">停用（默认）</el-radio>
+                                <el-radio label="启用">启用</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item :label="reviewForm.result === 'REJECT' ? '驳回原因' : '审批意见'"
+                            :required="reviewForm.result === 'REJECT'">
+                            <el-input v-model="reviewForm.comment" type="textarea" :rows="4"
+                                :placeholder="reviewForm.result === 'REJECT' ? '请填写明确的驳回原因' : '可填写审批备注'"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <template #footer>
+                        <el-button @click="reviewVisible = false">取消</el-button>
+                        <el-button :type="reviewForm.result === 'REJECT' ? 'danger' : 'primary'"
+                            @click="submitReview">确认{{ reviewForm.result === 'REJECT' ? '驳回' : '通过' }}</el-button>
+                    </template>
+                </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, reactive, computed, ref } = Vue;
+const filters = reactive({ keyword: '', enterprise: '', status: '', issueMode: '' });
+                const pagination = reactive({ page: 1, pageSize: 10 });
+                const activeStatusCard = ref('');
+                const detailVisible = ref(false);
+                const reviewVisible = ref(false);
+                const currentApplication = ref(null);
+                const reviewForm = reactive({
+                    result: 'APPROVE',
+                    stationTypes: [],
+                    stations: [],
+                    initialBatchStatus: '停用',
+                    comment: ''
+                });
+                const stationTypeOptions = [
+                    { label: '一般预约开放', value: '一般预约开放' },
+                    { label: '旅行社团体专用', value: '旅行社团体专用' },
+                    { label: '企业活动合作据点', value: '企业活动合作据点' }
+                ];
+                const stationCatalog = [
+                    { label: '金城民生停车场', value: '金城民生停车场', type: '旅行社团体专用', vehicleCount: 10 },
+                    { label: '金湖机场停车场', value: '金湖机场停车场', type: '旅行社团体专用', vehicleCount: 6 },
+                    { label: '山外车站停车场', value: '山外车站停车场', type: '一般预约开放', vehicleCount: 12 },
+                    { label: '金门大学停车场', value: '金门大学停车场', type: '一般预约开放', vehicleCount: 6 },
+                    { label: '台北信义企业停车场', value: '台北信义企业停车场', type: '企业活动合作据点', vehicleCount: 9 }
+                ];
+                const relatedBatchMock = [
+                    { batchNo: 'GT-KM-20260720-001', remainingCount: 8, stations: ['金城民生停车场'] },
+                    { batchNo: 'GT-KM-20260722-002', remainingCount: 3, stations: ['金城民生停车场', '金湖机场停车场'] },
+                    { batchNo: 'GT-KM-20260724-003', remainingCount: 6, stations: ['山外车站停车场'] },
+                    { batchNo: 'GT-TP-20260726-001', remainingCount: 5, stations: ['台北信义企业停车场'] }
+                ];
+
+                // 计算相关批次在当前适用据点车辆池中最多可能占用的车辆数。
+                const getRelatedMaxOccupancy = (stations = []) => {
+                    const selectedStations = stationCatalog.filter(item => stations.includes(item.value));
+                    const relatedBatches = relatedBatchMock
+                        .map(batch => ({
+                            ...batch,
+                            availableStations: batch.stations.filter(station => stations.includes(station))
+                        }))
+                        .filter(batch => batch.availableStations.length > 0);
+                    const batchCount = relatedBatches.length;
+                    const stationCount = selectedStations.length;
+                    const source = 0;
+                    const batchStart = 1;
+                    const stationStart = batchStart + batchCount;
+                    const sink = stationStart + stationCount;
+                    const capacity = Array.from({ length: sink + 1 }, () => Array(sink + 1).fill(0));
+
+                    relatedBatches.forEach((batch, batchIndex) => {
+                        capacity[source][batchStart + batchIndex] = batch.remainingCount;
+                        batch.availableStations.forEach(station => {
+                            const stationIndex = selectedStations.findIndex(item => item.value === station);
+                            if (stationIndex >= 0) capacity[batchStart + batchIndex][stationStart + stationIndex] = batch.remainingCount;
+                        });
+                    });
+                    selectedStations.forEach((station, stationIndex) => {
+                        capacity[stationStart + stationIndex][sink] = station.vehicleCount;
+                    });
+
+                    let maxOccupancy = 0;
+                    while (true) {
+                        const parent = Array(sink + 1).fill(-1);
+                        const queue = [source];
+                        parent[source] = source;
+                        for (let index = 0; index < queue.length && parent[sink] === -1; index += 1) {
+                            const current = queue[index];
+                            for (let next = 0; next <= sink; next += 1) {
+                                if (parent[next] === -1 && capacity[current][next] > 0) {
+                                    parent[next] = current;
+                                    queue.push(next);
+                                }
+                            }
+                        }
+                        if (parent[sink] === -1) break;
+
+                        let flow = Infinity;
+                        for (let node = sink; node !== source; node = parent[node]) {
+                            flow = Math.min(flow, capacity[parent[node]][node]);
+                        }
+                        for (let node = sink; node !== source; node = parent[node]) {
+                            capacity[parent[node]][node] -= flow;
+                            capacity[node][parent[node]] += flow;
+                        }
+                        maxOccupancy += flow;
+                    }
+
+                    return {
+                        relatedBatchCount: relatedBatches.length,
+                        relatedVoucherCount: relatedBatches.reduce((sum, batch) => sum + batch.remainingCount, 0),
+                        relatedMaxOccupancy: maxOccupancy
+                    };
+                };
+                const buildCapacityHint = (stations = [], currentDemand = 0) => {
+                    const normalizedDemand = Number(currentDemand || 0);
+                    const availableVehicleCount = stationCatalog
+                        .filter(item => stations.includes(item.value))
+                        .reduce((sum, item) => sum + item.vehicleCount, 0);
+                    const related = getRelatedMaxOccupancy(stations);
+                    const remainingVehicleCount = Math.max(availableVehicleCount - related.relatedMaxOccupancy, 0);
+                    const pending = stations.length === 0 || normalizedDemand <= 0;
+                    const hasRisk = !pending && normalizedDemand > remainingVehicleCount;
+                    return {
+                        currentDemand: normalizedDemand,
+                        availableVehicleCount,
+                        ...related,
+                        remainingVehicleCount,
+                        pending,
+                        hasRisk,
+                        tag: pending ? '待判断' : (hasRisk ? '存在库存风险' : '未发现库存风险')
+                    };
+                };
+
+                const applications = reactive([
+                    {
+                        id: 1,
+                        applicationNo: 'AP-KM-20260709-001',
+                        version: 1,
+                        name: '金门夏季企业体验活动租車券',
+                        enterprise: '金门风狮爷旅行社',
+                        applicant: '王雅婷',
+                        issueMode: 'QUANTITY',
+                        totalCount: 20,
+                        matchedCount: 0,
+                        pendingMatchCount: 0,
+                        stationTypes: [],
+                        stations: [],
+                        pickupAt: '2026-07-25 09:00',
+                        returnAt: '2026-07-25 18:00',
+                        availableStartAt: '2026-07-10 00:00',
+                        availableEndAt: '2026-07-25 17:00',
+                        submittedAt: '2026-07-09 10:18',
+                        status: '待审批',
+                        remark: '企业暑期会员体验活动，预计统一于活动日使用。'
+                    },
+                    {
+                        id: 2,
+                        applicationNo: 'AP-KM-20260709-002',
+                        version: 2,
+                        name: '海峡科技员工家庭日租車券',
+                        enterprise: '海峡科技股份有限公司',
+                        applicant: '陈冠宇',
+                        issueMode: 'LIST',
+                        totalCount: 16,
+                        matchedCount: 11,
+                        pendingMatchCount: 5,
+                        stationTypes: [],
+                        stations: [],
+                        pickupAt: '2026-07-28 08:30',
+                        returnAt: '2026-07-28 17:30',
+                        availableStartAt: '2026-07-12 00:00',
+                        availableEndAt: '2026-07-28 16:30',
+                        submittedAt: '2026-07-09 09:42',
+                        status: '待审批',
+                        remark: '员工家庭日活动，由企业统一通知参与人员。'
+                    },
+                    {
+                        id: 3,
+                        applicationNo: 'AP-KM-20260708-003',
+                        version: 1,
+                        name: '蓝湾旅行社机场接驳团租車券',
+                        enterprise: '金门蓝湾旅行社',
+                        applicant: '林淑芬',
+                        issueMode: 'LIST',
+                        totalCount: 12,
+                        matchedCount: 8,
+                        pendingMatchCount: 4,
+                        stationTypes: ['旅行社团体专用'],
+                        stations: ['金湖机场停车场'],
+                        pickupAt: '2026-07-20 09:00',
+                        returnAt: '2026-07-20 18:00',
+                        availableStartAt: '2026-07-09 08:50',
+                        availableEndAt: '2026-07-20 18:00',
+                        submittedAt: '2026-07-08 14:05',
+                        status: '已通过',
+                        remark: '机场接驳团体使用。',
+                        reviewedAt: '2026-07-09 08:50',
+                        reviewer: '营运管理员',
+                        reviewComment: '资料确认无误，批次初始状态为停用。',
+                        generatedBatchNo: 'GT-KM-20260503-002',
+                        generatedBatchId: 2
+                    },
+                    {
+                        id: 4,
+                        applicationNo: 'AP-KM-20260708-002',
+                        version: 1,
+                        name: '合作伙伴交流活动租車券',
+                        enterprise: '金门风狮爷旅行社',
+                        applicant: '王雅婷',
+                        issueMode: 'LIST',
+                        totalCount: 12,
+                        matchedCount: 9,
+                        pendingMatchCount: 3,
+                        stationTypes: [],
+                        stations: [],
+                        pickupAt: '2026-07-30 10:00',
+                        returnAt: '2026-07-30 17:00',
+                        availableStartAt: '2026-07-15 00:00',
+                        availableEndAt: '2026-07-30 16:00',
+                        submittedAt: '2026-07-08 11:26',
+                        status: '已驳回',
+                        remark: '合作伙伴交流活动。',
+                        reviewedAt: '2026-07-08 16:30',
+                        reviewer: '营运管理员',
+                        rejectReason: '所选据点未开放企业活动合作据点类型，请调整后重新提交。',
+                        reviewComment: '所选据点未开放企业活动合作据点类型，请调整后重新提交。'
+                    },
+                    {
+                        id: 5,
+                        applicationNo: 'AP-KM-20260707-006',
+                        version: 1,
+                        name: '七月企业客户体验租車券',
+                        enterprise: '浯江商务服务有限公司',
+                        applicant: '李佩珊',
+                        issueMode: 'QUANTITY',
+                        totalCount: 10,
+                        matchedCount: 0,
+                        pendingMatchCount: 0,
+                        stationTypes: [],
+                        stations: [],
+                        pickupAt: '2026-07-18 09:00',
+                        returnAt: '2026-07-18 17:00',
+                        availableStartAt: '2026-07-08 00:00',
+                        availableEndAt: '2026-07-18 16:00',
+                        submittedAt: '2026-07-07 15:20',
+                        status: '已撤回',
+                        remark: '企业已撤回调整活动日期。'
+                    }
+                ]);
+
+                const enterpriseOptions = computed(() => Array.from(new Set(applications.map(item => item.enterprise))));
+                const reviewStationOptions = computed(() => {
+                    if (!reviewForm.stationTypes.length) return [];
+                    return stationCatalog.filter(item => reviewForm.stationTypes.includes(item.type));
+                });
+                const capacityHint = computed(() => {
+                    return buildCapacityHint(reviewForm.stations, currentApplication.value?.totalCount || 0);
+                });
+                const filteredApplications = computed(() => {
+                    const keyword = filters.keyword.trim().toLowerCase();
+                    return applications.filter(item => {
+                        const keywordMatch = !keyword || `${item.applicationNo} ${item.name}`.toLowerCase().includes(keyword);
+                        const enterpriseMatch = !filters.enterprise || item.enterprise === filters.enterprise;
+                        const statusMatch = !filters.status || item.status === filters.status;
+                        const issueModeMatch = !filters.issueMode || item.issueMode === filters.issueMode;
+                        return keywordMatch && enterpriseMatch && statusMatch && issueModeMatch;
+                    });
+                });
+                const pagedApplications = computed(() => {
+                    const start = (pagination.page - 1) * pagination.pageSize;
+                    return filteredApplications.value.slice(start, start + pagination.pageSize);
+                });
+                const stats = computed(() => applications.reduce((acc, item) => {
+                    if (item.status === '待审批') acc.pending += 1;
+                    if (item.status === '已通过') acc.approved += 1;
+                    if (item.status === '已驳回') acc.rejected += 1;
+                    if (item.status === '已撤回') acc.withdrawn += 1;
+                    return acc;
+                }, { pending: 0, approved: 0, rejected: 0, withdrawn: 0 }));
+
+                const getIssueModeLabel = (mode) => mode === 'QUANTITY' ? '数量生成' : '名单发放';
+                const getStatusType = (status) => {
+                    if (status === '已通过') return 'success';
+                    if (status === '已驳回') return 'danger';
+                    if (status === '待审批') return 'warning';
+                    return 'info';
+                };
+                const getApplicationCapacityHint = (row) => {
+                    return buildCapacityHint(row?.stations || [], row?.totalCount || 0);
+                };
+                const resetFilters = () => {
+                    filters.keyword = '';
+                    filters.enterprise = '';
+                    filters.status = '';
+                    filters.issueMode = '';
+                    activeStatusCard.value = '';
+                    pagination.page = 1;
+                };
+                const toggleStatusCard = (status) => {
+                    const nextStatus = activeStatusCard.value === status ? '' : status;
+                    activeStatusCard.value = nextStatus;
+                    filters.status = nextStatus;
+                    pagination.page = 1;
+                };
+                const syncStatusCard = (status) => {
+                    activeStatusCard.value = status || '';
+                    pagination.page = 1;
+                };
+                const openDetail = (row) => {
+                    currentApplication.value = row;
+                    detailVisible.value = true;
+                };
+                const openReview = (row) => {
+                    currentApplication.value = row;
+                    reviewForm.result = 'APPROVE';
+                    reviewForm.stationTypes = [];
+                    reviewForm.stations = [];
+                    reviewForm.initialBatchStatus = '停用';
+                    reviewForm.comment = '';
+                    detailVisible.value = false;
+                    reviewVisible.value = true;
+                };
+                const submitReview = () => {
+                    if (!currentApplication.value || currentApplication.value.status !== '待审批') return;
+                    if (reviewForm.result === 'APPROVE' && (!reviewForm.stationTypes.length || !reviewForm.stations.length)) {
+                        ElementPlus.ElMessage.warning('审批通过前必须选择适用据点类型和适用据点');
+                        return;
+                    }
+                    if (reviewForm.result === 'REJECT' && !reviewForm.comment.trim()) {
+                        ElementPlus.ElMessage.warning('请填写驳回原因');
+                        return;
+                    }
+                    const row = currentApplication.value;
+                    if (reviewForm.result === 'REJECT') {
+                        row.status = '已驳回';
+                        row.rejectReason = reviewForm.comment;
+                        row.reviewComment = reviewForm.comment;
+                        row.reviewedAt = '2026-07-09 11:30';
+                        row.reviewer = '营运管理员';
+                        reviewVisible.value = false;
+                        ElementPlus.ElMessage.success('申报已驳回，企业可修改后重新提交');
+                        return;
+                    }
+                    ElementPlus.ElMessageBox.confirm(
+                        `审批通过后将生成正式批次，初始状态为“${reviewForm.initialBatchStatus}”。`,
+                        '确认审批通过',
+                        { confirmButtonText: '确认通过', cancelButtonText: '取消', type: 'warning' }
+                    ).then(() => {
+                        row.status = '已通过';
+                        row.reviewComment = reviewForm.comment || `审批通过，批次初始状态为${reviewForm.initialBatchStatus}。`;
+                        row.reviewedAt = '2026-07-09 11:30';
+                        row.reviewer = '营运管理员';
+                        row.stationTypes = [...reviewForm.stationTypes];
+                        row.stations = [...reviewForm.stations];
+                        row.availableStartAt = '2026-07-09 11:30';
+                        row.availableEndAt = row.returnAt;
+                        row.generatedBatchNo = `GT-KM-20260709-${String(row.id + 10).padStart(3, '0')}`;
+                        reviewVisible.value = false;
+                        ElementPlus.ElMessage.success(`审批通过，已生成正式批次 ${row.generatedBatchNo}`);
+                    }).catch(() => {});
+                };
+                const openBatch = (row) => {
+                    window.location.href = `channel_ticket_batch_detail.html?id=${row.generatedBatchId || row.id}`;
+                };
+                const handleReviewStationTypeChange = () => {
+                    const availableValues = reviewStationOptions.value.map(item => item.value);
+                    reviewForm.stations = reviewForm.stations.filter(item => availableValues.includes(item));
+                };
+
+                return {
+                    filters,
+                    pagination,
+                    activeStatusCard,
+                    applications,
+                    enterpriseOptions,
+                    filteredApplications,
+                    pagedApplications,
+                    stats,
+                    detailVisible,
+                    reviewVisible,
+                    currentApplication,
+                    reviewForm,
+                    stationTypeOptions,
+                    reviewStationOptions,
+                    capacityHint,
+                    getIssueModeLabel,
+                    getStatusType,
+                    getApplicationCapacityHint,
+                    resetFilters,
+                    toggleStatusCard,
+                    syncStatusCard,
+                    openDetail,
+                    openReview,
+                    submitReview,
+                    openBatch,
+                    handleReviewStationTypeChange
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component);
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

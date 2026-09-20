@@ -1,0 +1,2860 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>车辆档案库</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/theme-chalk/dark/css-vars.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-avatar-surface: #94a3b8;
+        --app-color-host-page: #f5f5f7;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏仅在深色主题下保留轻量半透明材质与投影；浅色使用基础样式的实色，无阴影。 */
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.vehicles .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .vehicles .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .vehicles .el-tree-node__content {
+            height: 32px;
+        }
+
+        /* Fix for Element Plus Checkbox layout in Sidebar */
+        .vehicles .sidebar-filters .el-checkbox {
+            display: flex !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            padding: 8px 0 !important;
+        }
+
+        .vehicles .sidebar-filters .el-checkbox__label {
+            display: flex !important;
+            flex: 1 !important;
+            width: 100% !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding-left: 10px !important;
+        }
+
+        /* Custom Drawer Styles */
+        /* Custom Drawer Styles */
+        .custom-drawer .el-drawer__body {
+            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Fixed Tabs Layout */
+        .vehicles .vehicle-detail-tabs {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .vehicles .vehicle-detail-tabs>.el-tabs__header {
+            flex-shrink: 0;
+            margin-bottom: 0 !important;
+            background-color: #fff;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .vehicles .vehicle-detail-tabs>.el-tabs__content {
+            flex-grow: 1;
+            overflow: hidden;
+            padding: 0 !important;
+        }
+
+        .vehicles .vehicle-detail-tabs .el-tab-pane {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        .vehicles .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .vehicles .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .vehicles .custom-scroll::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .vehicles .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* Tabs Optimization */
+        .vehicles .vehicle-detail-tabs .el-tabs__content {
+            padding: 0 !important;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .vehicles .vehicle-detail-tabs .el-tab-pane {
+            height: 100%;
+        }
+
+        .vehicles .vehicle-detail-tabs.el-tabs--border-card {
+            border: none;
+            box-shadow: none;
+        }
+
+        .vehicles .vehicle-detail-tabs .el-tabs__header {
+            background-color: #fff;
+            border-bottom: 1px solid #e4e7ed;
+            padding-left: 16px;
+        }
+        .adaptive-filter-toolbar,
+        .adaptive-filter-controls {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .adaptive-filter-controls > *,
+        .adaptive-filter-actions > * {
+            flex: 0 0 auto;
+        }
+
+        .adaptive-filter-actions {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .vehicles .vehicles-list-panel {
+            min-height: 0;
+        }
+
+        .vehicles .adaptive-filter-controls {
+            flex: 1 1 auto;
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .vehicles .adaptive-filter-controls > .el-button + .el-button {
+            margin-left: 0 !important;
+        }
+
+        .vehicles .adaptive-filter-actions {
+            margin-left: auto;
+        }
+
+        .vehicles .adaptive-filter-controls .el-input {
+            max-width: min(280px, 100%);
+        }
+
+        .vehicles .vehicles-table-wrap {
+            min-height: 0;
+        }
+
+        .vehicles .vehicles-table-wrap > .el-table {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .vehicles .vehicles-table .el-table__inner-wrapper::before {
+            display: none;
+        }
+
+        .vehicles .vehicles-table .el-table__header-wrapper th.el-table__cell {
+            background: var(--app-color-surface-subtle);
+            color: var(--app-color-text-secondary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .vehicles .adaptive-filter-actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .vehicles .vehicles-list-filters {
+                padding: 12px;
+            }
+
+            .vehicles .adaptive-filter-toolbar,
+            .vehicles .adaptive-filter-controls {
+                gap: 8px;
+            }
+
+            .vehicles .vehicles-table .el-table__cell {
+                padding: 10px 0;
+            }
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+    <!-- [AI-EDIT] DARK_SHIM: 深色主题映射层(试点)。全站推广时按最终映射表整体重新生成。 -->
+    <style data-dark-shim>
+      /* 深色映射层:仅 html[data-theme="dark"] 时接管 Tailwind 颜色类与派生色阶;浅色完全不受影响。 */
+      html[data-theme='dark'] {
+        --app-color-success: #34d399;
+        --app-color-warning: #fbbf24;
+        --app-color-danger: #f87171;
+        --app-color-primary-text: color-mix(in srgb, var(--app-color-primary) 55%, #ffffff);
+        --app-color-primary-light-3: color-mix(in srgb, var(--app-color-primary) 70%, #141414);
+        --app-color-primary-light-5: color-mix(in srgb, var(--app-color-primary) 50%, #141414);
+        --app-color-primary-light-7: color-mix(in srgb, var(--app-color-primary) 35%, #141414);
+        --app-color-primary-light-8: color-mix(in srgb, var(--app-color-primary) 25%, #141414);
+        --app-color-primary-light-9: color-mix(in srgb, var(--app-color-primary) 15%, #141414);
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: color-mix(in srgb, var(--app-color-primary) 70%, #ffffff);
+        --el-color-success: var(--app-color-success);
+        --el-color-success-light-3: color-mix(in srgb, var(--app-color-success) 70%, #141414);
+        --el-color-success-light-5: color-mix(in srgb, var(--app-color-success) 50%, #141414);
+        --el-color-success-light-7: color-mix(in srgb, var(--app-color-success) 35%, #141414);
+        --el-color-success-light-8: color-mix(in srgb, var(--app-color-success) 25%, #141414);
+        --el-color-success-light-9: color-mix(in srgb, var(--app-color-success) 15%, #141414);
+        --el-color-success-dark-2: color-mix(in srgb, var(--app-color-success) 70%, #ffffff);
+        --el-color-warning: var(--app-color-warning);
+        --el-color-warning-light-3: color-mix(in srgb, var(--app-color-warning) 70%, #141414);
+        --el-color-warning-light-5: color-mix(in srgb, var(--app-color-warning) 50%, #141414);
+        --el-color-warning-light-7: color-mix(in srgb, var(--app-color-warning) 35%, #141414);
+        --el-color-warning-light-8: color-mix(in srgb, var(--app-color-warning) 25%, #141414);
+        --el-color-warning-light-9: color-mix(in srgb, var(--app-color-warning) 15%, #141414);
+        --el-color-warning-dark-2: color-mix(in srgb, var(--app-color-warning) 70%, #ffffff);
+        --el-color-danger: var(--app-color-danger);
+        --el-color-danger-light-3: color-mix(in srgb, var(--app-color-danger) 70%, #141414);
+        --el-color-danger-light-5: color-mix(in srgb, var(--app-color-danger) 50%, #141414);
+        --el-color-danger-light-7: color-mix(in srgb, var(--app-color-danger) 35%, #141414);
+        --el-color-danger-light-8: color-mix(in srgb, var(--app-color-danger) 25%, #141414);
+        --el-color-danger-light-9: color-mix(in srgb, var(--app-color-danger) 15%, #141414);
+        --el-color-danger-dark-2: color-mix(in srgb, var(--app-color-danger) 70%, #ffffff);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active {
+        color: var(--app-color-primary-text);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary-text);
+      }
+
+      html[data-theme='dark'] .bg-blue-50 { background-color: color-mix(in srgb, var(--app-color-primary) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-blue-600 { background-color: var(--app-color-primary); }
+      html[data-theme='dark'] .bg-blue-600\/90 { background-color: var(--app-color-primary); }
+      html[data-theme='dark'] .bg-emerald-500 { background-color: var(--app-color-success); }
+      html[data-theme='dark'] .bg-gray-100 { background-color: var(--app-color-surface-muted); }
+      html[data-theme='dark'] .hover\:bg-gray-100:hover { background-color: var(--app-color-surface-muted); }
+      html[data-theme='dark'] .bg-gray-300 { background-color: var(--app-color-border); }
+      html[data-theme='dark'] .bg-gray-50 { background-color: var(--app-color-surface-subtle); }
+      html[data-theme='dark'] .bg-gray-50\/50 { background-color: var(--app-color-surface-subtle); }
+      html[data-theme='dark'] .bg-red-50 { background-color: color-mix(in srgb, var(--app-color-danger) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-red-50\/10 { background-color: color-mix(in srgb, var(--app-color-danger) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-red-500 { background-color: var(--app-color-danger); }
+      html[data-theme='dark'] .bg-white { background-color: var(--app-color-surface); }
+      html[data-theme='dark'] .bg-yellow-50 { background-color: color-mix(in srgb, var(--app-color-warning) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .border-blue-100 { border-color: color-mix(in srgb, var(--app-color-primary) 32%, transparent); }
+      html[data-theme='dark'] .border-gray-100 { border-color: var(--app-color-border-subtle); }
+      html[data-theme='dark'] .border-gray-200 { border-color: var(--app-color-border-light); }
+      html[data-theme='dark'] .border-red-100 { border-color: color-mix(in srgb, var(--app-color-danger) 32%, transparent); }
+      html[data-theme='dark'] .border-red-50 { border-color: color-mix(in srgb, var(--app-color-danger) 32%, transparent); }
+      html[data-theme='dark'] .border-yellow-100 { border-color: color-mix(in srgb, var(--app-color-warning) 32%, transparent); }
+      html[data-theme='dark'] .text-blue-600 { color: var(--app-color-primary); }
+      html[data-theme='dark'] .text-emerald-600 { color: var(--app-color-success); }
+      html[data-theme='dark'] .text-gray-300 { color: color-mix(in srgb, var(--app-color-text-muted) 60%, transparent); }
+      html[data-theme='dark'] .text-gray-400 { color: color-mix(in srgb, var(--app-color-text-muted) 80%, transparent); }
+      html[data-theme='dark'] .text-gray-500 { color: var(--app-color-text-muted); }
+      html[data-theme='dark'] .text-gray-600 { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .hover\:text-gray-600:hover { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .text-gray-700 { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .text-gray-800 { color: var(--app-color-text-primary); }
+      html[data-theme='dark'] .text-gray-900 { color: var(--app-color-text-primary); }
+      html[data-theme='dark'] .text-orange-400 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-orange-500 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-red-500 { color: var(--app-color-danger); }
+      html[data-theme='dark'] .text-red-600 { color: var(--app-color-danger); }
+      html[data-theme='dark'] .text-yellow-700 { color: var(--app-color-warning); }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "vehicles",
+  "pageTitle": "车辆档案库",
+  "fileName": "vehicles.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/vehicles",
+  "menuSection": "assets",
+  "menuTitle": "车辆档案库",
+  "menuIcon": "Van",
+  "menu": true,
+  "rootClass": "vehicles",
+  "overlayRootClass": "vehicles-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+    <!-- TEMPLATE-LOCK: 主题引导脚本（试点），首帧渲染前解析浅/深色主题。 -->
+    <script data-prototype-theme-bootstrap>
+      (function () {
+        var STORAGE_KEY = 'prototype-theme';
+        var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+        var readMode = function () {
+          try {
+            var v = localStorage.getItem(STORAGE_KEY);
+            return v === 'light' || v === 'dark' || v === 'auto' ? v : 'auto';
+          } catch (error) { return 'auto'; }
+        };
+        var apply = function () {
+          var mode = readMode();
+          var resolved = mode === 'auto' && media ? (media.matches ? 'dark' : 'light') : mode;
+          document.documentElement.dataset.theme = resolved;
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
+        };
+        if (media) {
+          var onSystemChange = function () { if (readMode() === 'auto') apply(); };
+          if (media.addEventListener) media.addEventListener('change', onSystemChange);
+          else if (media.addListener) media.addListener(onSystemChange);
+        }
+        window.ElementPrototypeTheme = {
+          get mode() { return readMode(); },
+          set: function (mode) {
+            if (mode !== 'light' && mode !== 'dark' && mode !== 'auto') return;
+            try { localStorage.setItem(STORAGE_KEY, mode); } catch (error) {}
+            apply();
+          },
+          apply: apply
+        };
+        apply();
+      })();
+    </script>
+    <!-- 试点专用:右下角主题切换面板(与模板演示切换器同款样式),全站推广时移除或转正式控件。 -->
+    <script data-prototype-theme-toggle>
+      (function () {
+        var boot = function () {
+          var api = window.ElementPrototypeTheme;
+          if (!api) return;
+          var MODES = [['auto', '跟随系统'], ['light', '浅色'], ['dark', '深色']];
+          var wrap = document.createElement('div');
+          wrap.className = 'prototype-theme-switch';
+          wrap.setAttribute('role', 'group');
+          wrap.setAttribute('aria-label', '切换主题');
+          var label = document.createElement('span');
+          label.textContent = '主题';
+          var group = document.createElement('div');
+          var buttons = {};
+          var baseBtn = 'min-height:30px;padding:0 10px;color:var(--app-color-text-secondary);font:inherit;font-size:13px;background:transparent;border:0;border-radius:5px;cursor:pointer';
+          MODES.forEach(function (m) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = m[1];
+            b.style.cssText = baseBtn;
+            b.addEventListener('click', function () {
+              api.set(m[0]);
+              sync();
+            });
+            group.appendChild(b);
+            buttons[m[0]] = b;
+          });
+          var sync = function () {
+            var mode = api.mode;
+            MODES.forEach(function (m) {
+              var b = buttons[m[0]];
+              var active = m[0] === mode;
+              b.className = active ? 'is-active' : '';
+              b.setAttribute('aria-pressed', active ? 'true' : 'false');
+              b.style.color = active ? 'var(--app-color-primary)' : 'var(--app-color-text-secondary)';
+              b.style.fontWeight = active ? '600' : '400';
+              b.style.background = active ? 'var(--app-color-surface)' : 'transparent';
+              b.style.boxShadow = active ? '0 1px 3px rgb(15 23 42 / 12%)' : 'none';
+            });
+          };
+          wrap.style.cssText = 'position:fixed !important;right:24px !important;bottom:24px !important;left:auto !important;top:auto !important;z-index:9999;display:flex;align-items:center;gap:10px;padding:6px;background:var(--app-color-surface);border:1px solid var(--app-color-border);border-radius:10px;box-shadow:0 10px 28px rgb(15 23 42 / 14%)';
+          label.style.cssText = 'padding-left:8px;color:var(--app-color-text-muted);font-size:13px;white-space:nowrap';
+          group.style.cssText = 'display:flex;align-items:center;gap:2px;padding:2px;background:var(--app-color-surface-subtle);border-radius:7px';
+          wrap.appendChild(label);
+          wrap.appendChild(group);
+          document.body.appendChild(wrap);
+          sync();
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+        else boot();
+      })();
+    </script>
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">车辆资产</div>
+<a class="prototype-menu-item is-active" href="./vehicles.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Van" aria-hidden="true"></span><span>车辆档案库</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 车辆档案库</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-vehicles vehicles" data-page-content data-page-root="vehicles" data-page-key="vehicles">
+  <div data-business-content data-layout-type="legacy">
+<!-- 顶部操作栏 -->
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">车辆档案库</h1>
+                        <p class="text-gray-500 text-sm mt-1">管理所有车辆实例，监控状态、里程及服务能力。</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <el-button type="primary" size="large" class="shadow-md shadow-[color:var(--app-color-primary-shadow)]"
+                            @click="openDialog(null)">
+                            <el-icon class="mr-1">
+                                <Plus></Plus>
+                            </el-icon> 新增车辆
+                        </el-button>
+                    </div>
+                </div>
+
+                <!-- 车辆列表工作区：筛选、表格和分页保持在同一容器内。 -->
+                <div class="vehicles-list-panel bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[calc(100vh-264px)]">
+                <!-- 搜索工具栏 -->
+                <div class="vehicles-list-filters bg-gray-50 p-4 border-b border-gray-200 shrink-0">
+                        <div ref="filterToolbar" class="adaptive-filter-toolbar flex flex-wrap items-center justify-between gap-4">
+                            <div class="adaptive-filter-controls flex items-center gap-4 flex-wrap">
+                                <el-input v-model="searchQuery" placeholder="车牌号 / VIN" prefix-icon="Search"
+                                    clearable style="width: 280px"></el-input>
+
+                                <el-select v-if="filterLayoutTier >= 2" v-model="filterAssetCompanyIds" multiple collapse-tags collapse-tags-tooltip
+                                    clearable filterable placeholder="资产归属" style="width: 150px">
+                                    <el-option v-for="company in companyOptions" :key="company.id" :label="company.label"
+                                        :value="company.id"></el-option>
+                                </el-select>
+
+                                <el-cascader v-if="filterLayoutTier >= 3" v-model="filterPositionIds" :options="orgData" :props="positionFilterProps"
+                                    filterable clearable collapse-tags collapse-tags-tooltip
+                                    placeholder="当前位置" style="width: 210px"></el-cascader>
+
+                                <el-select v-model="filterStatus" multiple collapse-tags collapse-tags-tooltip clearable
+                                    placeholder="营运状态" style="width: 150px">
+                                    <el-option v-for="item in statusOptions" :key="item.value" :label="item.label"
+                                        :value="item.value"></el-option>
+                                </el-select>
+
+                                <el-button type="primary" icon="Filter" plain @click="searchPanelExpanded = !searchPanelExpanded">
+                                    {{ searchPanelExpanded ? '收起筛选' : '更多筛选' }}
+                                </el-button>
+                                <el-button icon="Refresh" circle @click="resetVehicleFilters"></el-button>
+                                <el-button type="success" plain icon="Upload" @click="handleImportCommand('import')">导入</el-button>
+                                <el-button type="primary" plain icon="Download" @click="handleExport">导出</el-button>
+                                <el-dropdown @command="applyVehicleBatchStatus" trigger="click">
+                                    <el-button type="warning" plain :disabled="selectedVehicles.length === 0">
+                                        批量操作
+                                        <svg class="ml-1.5 h-4 w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ></path>
+                                        </svg>
+                                    </el-button>
+                                    <template #dropdown>
+                                        <el-dropdown-menu>
+                                            <el-dropdown-item :command="true" class="text-emerald-600"><el-icon><Check></Check></el-icon>批量启用</el-dropdown-item>
+                                            <el-dropdown-item :command="false" class="text-red-500"><el-icon><Close></Close></el-icon>批量停用</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </template>
+                                </el-dropdown>
+                            </div>
+                            <div class="adaptive-filter-actions flex items-center gap-3">
+                                <span class="text-sm text-gray-500 whitespace-nowrap">共 {{ filteredVehicles.length }} 辆车</span>
+                            </div>
+                        </div>
+
+                        <div v-show="searchPanelExpanded" class="pt-4 mt-4 border-t border-gray-100">
+                            <div class="flex flex-wrap items-center justify-between gap-4">
+                                <div class="flex items-center gap-4 flex-1 flex-wrap">
+                                    <el-select v-if="filterLayoutTier < 2" v-model="filterAssetCompanyIds" multiple collapse-tags collapse-tags-tooltip clearable
+                                        filterable placeholder="资产归属" style="width: 150px">
+                                        <el-option v-for="company in companyOptions" :key="company.id" :label="company.label"
+                                            :value="company.id"></el-option>
+                                    </el-select>
+                                    <el-cascader v-if="filterLayoutTier < 3" v-model="filterPositionIds" :options="orgData" :props="positionFilterProps"
+                                        filterable clearable collapse-tags collapse-tags-tooltip
+                                        placeholder="当前位置" style="width: 210px"></el-cascader>
+                                    <el-select v-model="filterEnabledStates" multiple collapse-tags collapse-tags-tooltip clearable
+                                        placeholder="是否启用" style="width: 150px">
+                                        <el-option v-for="item in enabledOptions" :key="item.value" :label="item.label"
+                                            :value="item.value"></el-option>
+                                    </el-select>
+
+                                    <el-select v-model="filterVehicleTypes" multiple collapse-tags collapse-tags-tooltip clearable
+                                        placeholder="载具类型" style="width: 150px">
+                                        <el-option v-for="item in vehicleTypeOptions" :key="item.value" :label="item.label"
+                                            :value="item.value"></el-option>
+                                    </el-select>
+
+                                    <el-select v-model="filterServiceTypes" multiple collapse-tags collapse-tags-tooltip clearable
+                                        placeholder="服务类型" style="width: 180px">
+                                        <el-option v-for="item in serviceOptions" :key="item.value" :label="item.label"
+                                            :value="item.value"></el-option>
+                                    </el-select>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span v-if="selectedVehicles.length > 0" class="text-xs text-blue-600 font-medium whitespace-nowrap bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                        已选 {{ selectedVehicles.length }} 项
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- 车辆列表 -->
+                <div class="vehicles-table-wrap flex flex-col flex-1 min-h-0 overflow-hidden">
+                    <el-table class="vehicles-table" :data="paginatedVehicles" table-layout="fixed" style="width: 100%" height="100%" stripe
+                        :header-cell-style="{ background: 'var(--app-color-surface-subtle)', color: 'var(--app-color-text-secondary)', fontWeight: '600' }"
+                        @selection-change="handleSelectionChange">
+                            <el-table-column type="selection" width="40"></el-table-column>
+                            <el-table-column label="车辆信息" min-width="240">
+                                <template #default="{ row }">
+                                    <div class="flex items-center gap-3">
+                                        <el-image :src="getVehiclePhoto(row)"
+                                            class="w-20 h-14 rounded object-cover border bg-gray-100"
+                                            :preview-src-list="[getVehiclePhoto(row)]" preview-teleported fit="cover">
+                                            <template #error>
+                                                <div 
+                                                    class="flex items-center justify-center w-full h-full text-gray-300">
+                                                    <el-icon>
+                                                        <Picture></Picture>
+                                                    </el-icon>
+                                                </div>
+                                            </template>
+                                        </el-image>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="font-bold text-gray-800 text-base">{{ row.licensePlate }}</div>
+                                                <el-tag :type="getVehicleTypeTagType(row.vehicleType)"
+                                                    size="small" effect="plain">
+                                                    {{ getVehicleTypeLabel(row.vehicleType) }}
+                                                </el-tag>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">{{ getGroupName(row.vehicleGroupId)
+                                                }}</div>
+                                            <div class="text-xs text-gray-400 mt-0.5 font-mono">VIN: {{
+                                                row.vin.substring(0, 6) }}...{{ row.vin.substring(row.vin.length-4) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="资产归属" min-width="180">
+                                <template #default="{ row }">
+                                    <div class="text-sm font-medium text-gray-800">{{ getCompanyName(row.assetCompanyId) }}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="当前位置" min-width="180">
+                                <template #default="{ row }">
+                                    <div class="text-sm">
+                                        <div class="font-medium text-gray-800">{{ getStoreName(row.storeId) }}</div>
+                                        <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                            <el-icon class="mr-1 text-gray-400">
+                                                <Location></Location>
+                                            </el-icon>
+                                            {{ getStationName(row.stationId) }}
+                                        </div>
+                                    </div>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="营运状态" width="110">
+                                <template #default="{ row }">
+                                    <div class="flex flex-col gap-1">
+                                        <el-tag :type="getStatusType(row.operationStatus)" size="small">{{
+                                            getStatusName(row.operationStatus) }}</el-tag>
+                                    </div>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="是否启用" width="90" align="center">
+                                <template #default="{ row }">
+                                    <div @click.stop class="flex justify-center">
+                                        <el-switch v-model="row.enabled" size="small"
+                                            style="--el-switch-on-color: var(--app-color-primary); --el-switch-off-color: #ff4949"
+                                            @change="handleStatusToggle(row)"></el-switch>
+                                    </div>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="当前上架" width="150">
+                                <template #default="{ row }">
+                                    <el-tooltip :content="getServiceTooltip(row.serviceTypes)" placement="top" effect="light">
+                                        <div class="flex flex-col gap-1 cursor-default">
+                                            <div>
+                                                <el-tag size="small" :type="getServiceTagType(row.currentServiceType)" effect="light">
+                                                    {{ getServiceFullName(row.currentServiceType) }}
+                                                </el-tag>
+                                            </div>
+                                            <div class="text-xs text-gray-500">
+                                                可服务 {{ row.serviceTypes.length }} 项
+                                            </div>
+                                        </div>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="里程" width="120" prop="mileage" sortable>
+                                <template #default="{ row }">
+                                    <span class="font-mono">{{ row.mileage.toLocaleString() }} km</span>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="操作" width="220" align="right" fixed="right">
+                                <template #default="{ row }">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <el-button link type="primary" size="small" @click="openDetailDrawer(row)">
+                                            <el-icon class="mr-1">
+                                                <Document></Document>
+                                            </el-icon>详情
+                                        </el-button>
+                                        <el-button link type="primary" size="small"
+                                            @click="openDialog(row)">编辑</el-button>
+
+                                        <el-dropdown trigger="click">
+                                            <el-button link type="info" size="small" icon="More"></el-button>
+                                            <template #dropdown>
+                                                <el-dropdown-menu>
+                                                    <el-dropdown-item 
+                                                        v-if="row.operationStatus !== 'MAINTENANCE' && row.operationStatus !== 'RENTED'"
+                                                        @click="setMaintenance(row)">
+                                                        <el-icon>
+                                                            <Tools></Tools>
+                                                        </el-icon> 发起维保
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item v-if="row.operationStatus === 'MAINTENANCE'"
+                                                        @click="setIdle(row)">
+                                                        <el-icon>
+                                                            <CircleCheck></CircleCheck>
+                                                        </el-icon> 结束维保
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item divided class="text-red-500"
+                                                        :disabled="row.operationStatus === 'RENTED'"
+                                                        @click="deleteVehicle(row)">
+                                                        <el-icon>
+                                                            <Delete></Delete>
+                                                        </el-icon> 删除车辆
+                                                    </el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </template>
+                                        </el-dropdown>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="p-3 border-t border-gray-100 flex justify-end bg-white">
+                            <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                                :page-sizes="[10, 20, 50]" layout="total, sizes, prev, pager, next, jumper"
+                                :total="filteredVehicles.length" @size-change="handlePageSizeChange"
+                                @current-change="handlePageChange"></el-pagination>
+                        </div>
+                </div>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="vehicles-overlay">
+<el-dialog v-model="dialogVisible" :title="isEdit ? '编辑车辆' : '新增车辆'" width="920px" top="4vh" class="vehicles-overlay">
+            <el-form :model="currentVehicle" label-position="top" :rules="rules" ref="formRef"
+                class="h-[620px] overflow-hidden flex flex-col">
+                <el-tabs v-model="activeDialogTab" class="flex-1 overflow-hidden">
+
+                    <el-tab-pane label="基础资料" name="BASIC" class="h-full overflow-y-auto custom-scroll pr-2">
+                        <el-divider content-position="left"><el-icon>
+                                <Tickets></Tickets>
+                            </el-icon> 车辆识别</el-divider>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <el-form-item label="车牌号" prop="licensePlate" required>
+                                <el-input v-model="currentVehicle.licensePlate" placeholder="例如: RAA-1234"></el-input>
+                            </el-form-item>
+                            <el-form-item label="车架号 (VIN)" prop="vin">
+                                <el-input v-model="currentVehicle.vin" placeholder="17位 VIN 码" maxlength="17"></el-input>
+                            </el-form-item>
+                            <el-form-item label="载具类型" required>
+                                <el-radio-group v-model="currentVehicle.vehicleType" @change="handleVehicleTypeChange">
+                                    <el-radio label="car">🚗 汽车</el-radio>
+                                    <el-radio label="motorcycle">🏍️ 摩托车</el-radio>
+                                    <el-radio label="microElectric">🔋 微电车</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="所属车型组" prop="vehicleGroupId" required>
+                                <el-select v-model="currentVehicle.vehicleGroupId" placeholder="请选择车型组" class="w-full">
+                                    <el-option v-for="g in filteredGroupOptions" :key="g.id"
+                                        :label="g.brand + ' ' + g.model + ' (' + g.year + ')'" :value="g.id">
+                                        <span class="float-left">{{ g.brand }} {{ g.model }}</span>
+                                        <span class="float-right text-gray-400 text-xs">{{ g.year }}</span>
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+
+                        <el-divider content-position="left"><el-icon>
+                                <OfficeBuilding></OfficeBuilding>
+                            </el-icon> 资产归属与位置</el-divider>
+                        <div class="grid grid-cols-3 gap-x-6 gap-y-2">
+                            <el-form-item label="资产所属车行" prop="assetCompanyId" required>
+                                <el-select v-model="currentVehicle.assetCompanyId" class="w-full" :disabled="isEdit"
+                                    placeholder="请选择资产所属车行" @change="handleAssetCompanyChange">
+                                    <el-option v-for="company in companyOptions" :key="company.id" :label="company.label"
+                                        :value="company.id"></el-option>
+                                </el-select>
+                                <span v-if="isEdit" class="text-gray-400 text-xs">编辑时不在此处调整资产归属</span>
+                            </el-form-item>
+                            <el-form-item label="登记所有人">
+                                <el-input v-model="currentVehicle.owner" placeholder="公司/个人"></el-input>
+                            </el-form-item>
+                            <el-form-item label="资产来源">
+                                <el-select v-model="currentVehicle.source" class="w-full">
+                                    <el-option label="自购" value="PURCHASE"></el-option>
+                                    <el-option label="租赁" value="LEASE"></el-option>
+                                    <el-option label="挂靠" value="AFFILIATE"></el-option>
+                                    <el-option label="托管" value="TRUST"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <el-form-item label="当前门市" prop="storeId" required>
+                                <el-select v-model="currentVehicle.storeId" class="w-full" :disabled="isEdit"
+                                    placeholder="请选择当前门市" @change="handleStoreChange">
+                                    <el-option v-for="store in filteredStoreOptions" :key="store.id" :label="store.label"
+                                        :value="store.id"></el-option>
+                                </el-select>
+                                <span v-if="isEdit" class="text-gray-400 text-xs">编辑时通过调度或调拨调整位置</span>
+                            </el-form-item>
+                            <el-form-item label="当前据点" prop="stationId" required>
+                                <el-select v-model="currentVehicle.stationId" class="w-full" :disabled="isEdit"
+                                    placeholder="请选择当前据点">
+                                    <el-option v-for="station in filteredStationOptions" :key="station.id"
+                                        :label="station.label" :value="station.id"></el-option>
+                                </el-select>
+                                <span v-if="isEdit" class="text-gray-400 text-xs">编辑时通过调度或调拨调整位置</span>
+                            </el-form-item>
+                        </div>
+
+                        <el-divider content-position="left"><el-icon>
+                                <InfoFilled></InfoFilled>
+                            </el-icon> 基础属性</el-divider>
+                        <div class="grid grid-cols-3 gap-x-6 gap-y-2">
+                            <el-form-item label="颜色">
+                                <el-input v-model="currentVehicle.color" placeholder="例如: 白色"></el-input>
+                            </el-form-item>
+                            <el-form-item label="出厂年份">
+                                <el-date-picker v-model="currentVehicle.year" type="year" placeholder="选择年份"
+                                    value-format="YYYY" style="width: 100%"></el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="当前里程 (km)">
+                                <el-input-number v-model="currentVehicle.mileage" :min="0" :step="100"
+                                    style="width: 100%"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="车辆昵称">
+                                <el-input v-model="currentVehicle.nickname" placeholder="给车辆起个好记的名字"></el-input>
+                            </el-form-item>
+                            <el-form-item label="车辆实拍图 (可选)" class="col-span-2">
+                                <el-input v-model="currentVehicle.customPhotoUrl" placeholder="输入 URL，留空则使用车型组默认图">
+                                    <template #prefix><el-icon>
+                                            <Picture></Picture>
+                                        </el-icon></template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+
+                        <el-divider content-position="left"><el-icon>
+                                <Setting></Setting>
+                            </el-icon> 技术参数</el-divider>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <el-form-item label="座位数">
+                                <el-input-number v-model="currentVehicle.seats" :min="1" :max="60"
+                                    class="w-full"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="车门数">
+                                <el-input-number v-model="currentVehicle.doors" :min="0" :max="6"
+                                    class="w-full"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="燃料类型">
+                                <el-select v-model="currentVehicle.fuelType" class="w-full">
+                                    <el-option label="汽油" value="GASOLINE"></el-option>
+                                    <el-option label="纯电" value="ELECTRIC"></el-option>
+                                    <el-option label="混合动力" value="HYBRID"></el-option>
+                                    <el-option label="柴油" value="DIESEL"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="变速箱">
+                                <el-select v-model="currentVehicle.transmission" class="w-full">
+                                    <el-option label="自动挡 (AT)" value="AT"></el-option>
+                                    <el-option label="手动挡 (MT)" value="MT"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="排量/续航">
+                                <el-input v-model="currentVehicle.displacement"
+                                    placeholder="如: 2.0T 或 500km"></el-input>
+                            </el-form-item>
+                            <el-form-item label="油箱/电池容量">
+                                <el-input v-model="currentVehicle.tankCapacity" placeholder="如: 60L 或 75kWh"></el-input>
+                            </el-form-item>
+                            <el-form-item label="是否国产">
+                                <el-switch v-model="currentVehicle.isDomestic" active-text="国产"
+                                    inactive-text="进口/合资"></el-switch>
+                            </el-form-item>
+                            <el-form-item label="大件行李数 (24寸+)">
+                                <el-input-number v-model="currentVehicle.luggageLarge" :min="0"
+                                    class="w-full"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="小件行李数 (20寸-)">
+                                <el-input-number v-model="currentVehicle.luggageSmall" :min="0"
+                                    class="w-full"></el-input-number>
+                            </el-form-item>
+                        </div>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="运营配置" name="OPS" class="h-full overflow-y-auto custom-scroll pr-2">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 mb-4 text-sm text-gray-600">
+                            位置调整通过调度或调拨处理，当前页主要维护上架状态、可服务范围和设备标签。
+                        </div>
+
+                        <el-divider content-position="left"><el-icon>
+                                <Operation></Operation>
+                            </el-icon> 上架与状态</el-divider>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <el-form-item label="运营状态">
+                                <template v-if="isEdit">
+                                    <el-tag :type="getOperationStatusType(currentVehicle.operationStatus)" size="large"
+                                        effect="dark">
+                                        {{ getOperationStatusName(currentVehicle.operationStatus) }}
+                                    </el-tag>
+                                    <span class="text-gray-400 text-xs ml-2">状态由系统流程维护</span>
+                                </template>
+                                <template v-else>
+                                    <el-tag type="success" size="large" effect="dark">空闲</el-tag>
+                                    <span class="text-gray-400 text-xs ml-2">新车默认空闲</span>
+                                </template>
+                            </el-form-item>
+                            <el-form-item label="当前服务类型" required>
+                                <el-select v-model="currentVehicle.currentServiceType" class="w-full" :disabled="isEdit"
+                                    placeholder="选择当前上架的业务线">
+                                    <el-option label="同站租还" value="SHARING_SAME"></el-option>
+                                    <el-option label="甲租乙还" value="SHARING_ONE_WAY"></el-option>
+                                    <el-option label="门市租赁" value="STORE_STANDARD"></el-option>
+                                    <el-option label="24H门市" value="STORE_24H"></el-option>
+                                    <el-option label="公务用车" value="GOV"></el-option>
+                                </el-select>
+                                <span v-if="isEdit" class="text-gray-400 text-xs">编辑时不直接修改当前上架业务线</span>
+                            </el-form-item>
+                            <el-form-item label="启用状态">
+                                <div class="flex items-center gap-3">
+                                    <el-switch v-model="currentVehicle.enabled" active-text="已启用" inactive-text="已停用" inactive-color="#dcdfe6">
+                                    </el-switch>
+                                    <span class="text-gray-400 text-xs">{{ currentVehicle.enabled ? '对外接受新订单' :
+                                        '暂停接单，不影响进行中业务' }}</span>
+                                </div>
+                            </el-form-item>
+                        </div>
+                        <el-form-item label="可服务类型">
+                            <el-checkbox-group v-model="currentVehicle.serviceTypes">
+                                <el-checkbox label="SHARING_SAME">同站租还</el-checkbox>
+                                <el-checkbox label="SHARING_ONE_WAY">甲租乙还</el-checkbox>
+                                <el-checkbox label="STORE_STANDARD">门市租赁</el-checkbox>
+                                <el-checkbox label="STORE_24H">24H门市</el-checkbox>
+                                <el-checkbox label="GOV">公务用车</el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+
+                        <el-divider content-position="left"><el-icon>
+                                <PriceTag></PriceTag>
+                            </el-icon> 标签与设备</el-divider>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <el-form-item label="车辆标签">
+                                <el-select v-model="currentVehicle.tags" multiple filterable allow-create
+                                    default-first-option placeholder="输入标签按回车" class="w-full">
+                                    <el-option label="新车" value="New"></el-option>
+                                    <el-option label="无烟车" value="NoSmoke"></el-option>
+                                    <el-option label="GPS" value="GPS"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="车机设备CID">
+                                <el-input v-model="currentVehicle.cid" placeholder="T-Box ID / Device ID"></el-input>
+                            </el-form-item>
+                        </div>
+
+                        <el-divider content-position="left"><el-icon>
+                                <WarningFilled></WarningFilled>
+                            </el-icon> 特殊车辆限制</el-divider>
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 w-full">
+                            <el-checkbox v-model="currentVehicle.isSpecial">标记为特殊车辆</el-checkbox>
+                            <div class="text-xs text-yellow-700 mt-1">仅影响会员可见性和可预约资格，不改变车辆资产归属。</div>
+                            <div v-if="currentVehicle.isSpecial" class="mt-3 animate-fade-in">
+                                <el-form-item label="限制会员类型" class="!mb-0">
+                                    <el-select v-model="currentVehicle.specialMembershipRequired"
+                                        placeholder="选择允许租赁的会员等级" class="w-60">
+                                        <el-option label="白银会员及以上" value="SILVER"></el-option>
+                                        <el-option label="黄金会员及以上" value="GOLD"></el-option>
+                                        <el-option label="黑钻会员及以上" value="DIAMOND"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+
+                </el-tabs>
+            </el-form>
+            <template #footer>
+                <el-button @click="dialogVisible = false"><el-icon class="mr-1">
+                        <Close></Close>
+                    </el-icon>取消</el-button>
+                <el-button type="primary" @click="saveVehicle"><el-icon class="mr-1">
+                        <Check></Check>
+                    </el-icon>保存</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="importDialogVisible" title="导入车辆数据" width="480px" destroy-on-close class="vehicles-overlay">
+            <div class="mb-4 text-gray-600 text-sm">
+                <p class="mb-2">1. 请先下载导入模板，按标准模板格式填写数据。</p>
+                <el-button type="primary" plain size="small" @click="downloadTemplate">
+                    <el-icon class="mr-1"><Download></Download></el-icon> 下载规范表模板
+                </el-button>
+            </div>
+            <div class="border-t border-gray-100 pt-4 mt-4">
+                <p class="mb-2 text-gray-600 text-sm">2. 上传填写好的数据表格（支持 .xls, .xlsx 格式，单次最大支持 1000 条）。</p>
+                <el-upload class="upload-demo" drag action="#" :auto-upload="false" :on-change="handleFileChange"
+                    accept=".xls,.xlsx">
+                    <el-icon class="el-icon--upload"><UploadFilled></UploadFilled></el-icon>
+                    <div class="el-upload__text">
+                        将文件拖拽至此处，或 <em>点击上传</em>
+                    </div>
+                </el-upload>
+            </div>
+            <template #footer>
+                <el-button @click="importDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmImport">开始导入</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="photoHistoryVisible" title="历史车况照片" width="700px" append-to-body destroy-on-close class="vehicles-overlay">
+            <div class="h-[600px] overflow-y-auto px-4 custom-scroll">
+                <el-timeline>
+                    <el-timeline-item v-for="(item, idx) in mockPhotoHistory" :key="idx" :timestamp="item.date"
+                        placement="top" :type="idx===0 ? 'primary' : ''" :size="idx===0 ? 'large' : 'normal'">
+                        <div 
+                            class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-4 transition-all hover:shadow-sm">
+                            <!-- Info Header -->
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <div class="font-bold text-gray-800 flex items-center gap-2">
+                                        {{ item.type }}
+                                        <el-tag v-if="idx===0" size="small" type="primary"
+                                            effect="light">Current</el-tag>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">验车人: {{ item.operator }}</div>
+                                </div>
+                            </div>
+                            <!-- Photos (Grid 4) -->
+                            <div class="grid grid-cols-4 gap-2 mb-2">
+                                <el-image v-for="(url, pIdx) in item.photos" :key="pIdx" :src="url"
+                                    :preview-src-list="item.photos" :initial-index="pIdx" fit="cover"
+                                    class="w-full aspect-video rounded border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
+                                </el-image>
+                            </div>
+                            <!-- Remark -->
+                            <div 
+                                class="text-xs text-gray-500 bg-white p-2 rounded border border-gray-100 flex items-start gap-1">
+                                <el-icon class="mt-0.5">
+                                    <InfoFilled></InfoFilled>
+                                </el-icon>
+                                <span>备注: {{ item.remark }}</span>
+                            </div>
+                        </div>
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
+        </el-dialog>
+<el-drawer v-model="detailDrawerVisible" :size="'80%'" :with-header="false" destroy-on-close class="custom-drawer vehicles-overlay">
+            <div class="h-full flex flex-col bg-gray-50 relative">
+                <!-- Close Button -->
+                <button @click="detailDrawerVisible = false"
+                    class="absolute top-4 right-6 z-50 text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors">
+                    <el-icon class="text-2xl">
+                        <Close></Close>
+                    </el-icon>
+                </button>
+
+                <!-- 1. Sticky Header -->
+                <div 
+                    class="bg-white shadow-sm border-b border-gray-200 px-8 py-5 flex justify-between items-start z-10 flex-shrink-0 gap-8">
+                    <div class="flex items-start gap-8 min-w-0">
+                        <!-- Plate & Status -->
+                        <div>
+                            <div class="flex items-center gap-4">
+                                <h1 class="text-3xl font-mono font-bold text-gray-900 tracking-tight">
+                                    {{ currentDetailVehicle.licensePlate }}
+                                </h1>
+                                <el-tag :type="getStatusType(currentDetailVehicle.operationStatus)" effect="light" round
+                                    size="large" class="!px-4 !text-sm !font-bold">
+                                    {{ getStatusName(currentDetailVehicle.operationStatus) }}
+                                </el-tag>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-2 flex items-center gap-3">
+                                <span class="font-medium text-gray-700">{{
+                                    getGroupName(currentDetailVehicle.vehicleGroupId) }}</span>
+                                <span class="h-3 w-[1px] bg-gray-300"></span>
+                                <span class="font-mono text-gray-400">VIN: {{ currentDetailVehicle.vin }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Key Metrics -->
+                        <div class="grid grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-3 border-l border-gray-100 pl-10 min-w-[520px]">
+                            <div>
+                                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">资产归属
+                                </div>
+                                <div class="font-semibold text-gray-800 text-sm">
+                                    {{ getCompanyName(currentDetailVehicle.assetCompanyId) }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">当前位置
+                                </div>
+                                <div class="font-semibold text-gray-800 flex items-center gap-1.5 text-sm">
+                                    <div class="w-2 h-2 rounded-full bg-[color:var(--app-color-primary)]"></div>
+                                    {{ getLocationName(currentDetailVehicle) }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">当前服务
+                                </div>
+                                <div class="font-semibold text-gray-800 text-sm">
+                                    {{ getServiceFullName(currentDetailVehicle.currentServiceType) }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">当前里程
+                                </div>
+                                <div class="font-bold text-gray-800 font-mono text-xl leading-none">
+                                    {{ currentDetailVehicle.mileage ? currentDetailVehicle.mileage.toLocaleString() : 0
+                                    }}
+                                    <span class="text-xs font-normal text-gray-400 ml-0.5">km</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-3 pr-12 shrink-0">
+                        <el-button @click="openDialog(currentDetailVehicle)" icon="Edit" plain>编辑资料</el-button>
+                        <el-button type="warning" plain icon="Tools"
+                            v-if="currentDetailVehicle.operationStatus !== 'MAINTENANCE'"
+                            @click="setMaintenance(currentDetailVehicle)">发起维保</el-button>
+                        <el-button type="primary" icon="Van">新增调度</el-button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-hidden flex flex-col relative w-full">
+                    <!-- Tabs Header at the TOP of content area -->
+                    <el-tabs v-model="activeDetailTab" class="h-full flex flex-col vehicle-detail-tabs w-full"
+                        type="border-card">
+
+                        <!-- TAB A: Overview -->
+                        <el-tab-pane label="车辆概况" name="OVERVIEW"
+                            class="h-full overflow-y-auto custom-scroll p-6 w-full">
+                            <div class="max-w-7xl mx-auto space-y-6 w-full p-2">
+                                <div class="bg-white rounded-lg border border-gray-200 px-5 py-4">
+                                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                                        <div>
+                                            <div class="text-[11px] text-gray-400 uppercase font-bold tracking-wider mb-2">当前上架</div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <el-tag size="small" :type="getServiceTagType(currentDetailVehicle.currentServiceType)" effect="light">
+                                                    {{ getServiceFullName(currentDetailVehicle.currentServiceType) }}
+                                                </el-tag>
+                                                <span class="text-sm text-gray-500">可服务 {{ (currentDetailVehicle.serviceTypes || []).length }} 项</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-[11px] text-gray-400 uppercase font-bold tracking-wider mb-2">启用状态</div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="inline-flex items-center gap-1 text-sm"
+                                                    :class="currentDetailVehicle.enabled ? 'text-emerald-600' : 'text-red-500'">
+                                                    <span class="w-2 h-2 rounded-full"
+                                                        :class="currentDetailVehicle.enabled ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                                                    {{ currentDetailVehicle.enabled ? '已启用，对外接受新订单' : '已停用，暂停接单' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-[11px] text-gray-400 uppercase font-bold tracking-wider mb-2">资产说明</div>
+                                            <div class="text-sm text-gray-700">{{ currentDetailVehicle.owner || '未登记所有人' }} · {{ getSourceName(currentDetailVehicle.source) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <el-descriptions title="车辆基础档案" :column="4" border
+                                    class="bg-white shadow-sm rounded-lg overflow-hidden">
+                                    <el-descriptions-item label="颜色">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm"
+                                                :style="{backgroundColor: currentDetailVehicle.color === '白色' ? '#fff' : currentDetailVehicle.color === '黑色' ? '#000' : '#888'}">
+                                            </div>
+                                            {{ currentDetailVehicle.color }}
+                                        </div>
+                                    </el-descriptions-item>
+                                    <el-descriptions-item label="车座">{{ currentDetailVehicle.seats
+                                        }}座</el-descriptions-item>
+                                    <el-descriptions-item label="燃料">
+                                        <el-tag size="small"
+                                            :type="currentDetailVehicle.fuelType === 'ELECTRIC' ? 'success' : 'warning'"
+                                            effect="plain">{{ currentDetailVehicle.fuelType }}</el-tag>
+                                    </el-descriptions-item>
+                                    <el-descriptions-item label="车门">{{ currentDetailVehicle.doors
+                                        }}门</el-descriptions-item>
+                                    <el-descriptions-item label="资产所属车行">{{ getCompanyName(currentDetailVehicle.assetCompanyId)
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="资产来源">{{ getSourceName(currentDetailVehicle.source)
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="登记所有人">{{ currentDetailVehicle.owner
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="当前位置" :span="2">{{ getLocationName(currentDetailVehicle)
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="出厂年份">{{ currentDetailVehicle.year
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="上牌日期">2023-05-20</el-descriptions-item>
+                                    <el-descriptions-item label="车架号 (VIN)" :span="2">{{ currentDetailVehicle.vin
+                                        }}</el-descriptions-item>
+                                    <el-descriptions-item label="设备CID" :span="2">{{ currentDetailVehicle.cid || '未绑定'
+                                        }}</el-descriptions-item>
+                                </el-descriptions>
+
+                                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                                    <div class="flex items-center justify-between mb-3 text-sm">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-1 h-4 bg-blue-600 rounded-full"></div>
+                                            <h3 class="font-bold text-gray-800">最新车况照片</h3>
+                                            <el-tag size="small" type="info" effect="plain"
+                                                class="border-gray-200 text-gray-500">2024-05-01 验车</el-tag>
+                                        </div>
+                                        <el-button link type="primary" size="small"
+                                            @click="photoHistoryVisible = true">查看历史照片</el-button>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-3">
+                                        <div 
+                                            class="h-52 rounded-xl overflow-hidden relative group bg-gray-100 border border-gray-200">
+                                            <img :src="getVehiclePhoto(currentDetailVehicle)"
+                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                            <div 
+                                                class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-3">
+                                                <div class="flex items-center gap-2">
+                                                    <el-tag size="small" type="primary" effect="dark"
+                                                        class="border-none !bg-blue-600/90 shadow-sm">主视图</el-tag>
+                                                    <span class="text-white/80 text-xs">最近一次验车主图</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div v-for="(img, idx) in ['正前', '右前 45°', '中控仪表', '后排座椅']"
+                                                :key="'compact'+idx"
+                                                class="h-[102px] rounded-lg overflow-hidden relative group cursor-pointer bg-gray-100 border border-gray-200">
+                                                <img :src="'https://via.placeholder.com/300x200?text=Photo+' + (idx+1)"
+                                                    class="w-full h-full object-cover opacity-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105">
+                                                <div 
+                                                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5 flex justify-center">
+                                                    <span class="text-[10px] text-white/90 font-medium tracking-wide">{{
+                                                        img }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- TAB: Orders -->
+                        <el-tab-pane label="订单记录" name="ORDERS"
+                            class="h-full overflow-y-auto custom-scroll p-6 w-full bg-gray-50/50">
+                            <div class="max-w-7xl mx-auto space-y-4">
+                                <!-- Tabs & Filter Header -->
+                                <div class="flex justify-between items-end border-b border-gray-200 pb-2">
+                                    <el-tabs v-model="activeOrderTab" class="!mb-0"
+                                        style="--el-tabs-header-height: 40px;">
+                                        <el-tab-pane label="同站租还" name="same_station"></el-tab-pane>
+                                        <el-tab-pane label="甲租乙还" name="one_way"></el-tab-pane>
+                                        <el-tab-pane label="公务车" name="official"></el-tab-pane>
+                                    </el-tabs>
+                                    <div class="flex items-center gap-3 pb-1">
+                                        <el-radio-group v-model="radioTime" size="small">
+                                            <el-radio-button label="近半年" ></el-radio-button>
+                                            <el-radio-button label="全部" ></el-radio-button>
+                                        </el-radio-group>
+                                        <el-input prefix-icon="Search" placeholder="搜索订单号/手机号" size="small"
+                                            style="width: 200px" ></el-input>
+                                    </div>
+                                </div>
+
+                                <!-- Rich Orders Table -->
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <el-table :data="filteredOrderRecords" style="width: 100%" stripe
+                                        :header-cell-style="{ background: 'var(--app-color-surface-subtle)', color: 'var(--app-color-text-secondary)', fontWeight: '600' }">
+                                        <el-table-column label="订单信息" min-width="160">
+                                            <template #default="scope">
+                                                <div class="flex flex-col">
+                                                    <a :href="'order_detail.html?id=' + scope.row.orderId"
+                                                        class="text-[color:var(--app-color-primary)] font-bold hover:underline mb-0.5 font-mono text-sm">
+                                                        {{ scope.row.orderId }}
+                                                    </a>
+                                                    <div class="text-xs text-gray-400">{{ scope.row.createTime }}</div>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="客户" min-width="160">
+                                            <template #default="scope">
+                                                <div class="flex items-center gap-2">
+                                                    <div class="font-medium text-gray-800">{{ scope.row.customer.name }}
+                                                    </div>
+                                                    <el-tag v-if="scope.row.clientType === 'corporate'" size="small"
+                                                        color="var(--app-color-primary-light-9)" style="color: var(--app-color-primary); border-color: var(--app-color-primary-light-8);"
+                                                        effect="light">
+                                                        {{ scope.row.corporate?.shortName }}
+                                                    </el-tag>
+                                                </div>
+                                                <div class="text-xs text-gray-500 mt-0.5">{{ scope.row.customer.phone }}
+                                                </div>
+                                                <el-tag v-if="scope.row.customer.level" size="small" effect="plain"
+                                                    class="mt-1 scale-90 origin-left">{{ scope.row.customer.level
+                                                    }}</el-tag>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="行程时间" min-width="180">
+                                            <template #default="scope">
+                                                <div class="text-sm">
+                                                    <div class="flex items-center gap-1 mb-1">
+                                                        <span class="text-gray-400 w-8 text-xs">取车</span>
+                                                        <span class="font-medium text-gray-700">{{
+                                                            scope.row.schedule.start }}</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-1">
+                                                        <span class="text-gray-400 w-8 text-xs">还车</span>
+                                                        <span class="font-medium"
+                                                            :class="{'text-red-500 font-bold': scope.row.status === 'overdue', 'text-gray-700': scope.row.status !== 'overdue'}">
+                                                            {{ scope.row.schedule.end }}
+                                                        </span>
+                                                        <el-icon v-if="scope.row.status === 'overdue'"
+                                                            class="text-red-500 ml-1">
+                                                            <Warning></Warning>
+                                                        </el-icon>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="取还门店" min-width="140">
+                                            <template #default="scope">
+                                                <div class="text-sm">
+                                                    <div v-if="scope.row.location.pickup !== scope.row.location.return"
+                                                        class="flex flex-col gap-1">
+                                                        <div class="flex items-center gap-1">
+                                                            <el-tag size="small" type="warning" effect="dark"
+                                                                class="scale-90 origin-left w-10 text-center px-0">取</el-tag>
+                                                            <span class="text-yellow-700 font-bold text-xs">{{
+                                                                scope.row.location.pickup }}</span>
+                                                        </div>
+                                                        <div class="flex items-center gap-1">
+                                                            <el-tag size="small" type="warning" effect="dark"
+                                                                class="scale-90 origin-left w-10 text-center px-0">还</el-tag>
+                                                            <span class="text-yellow-700 font-bold text-xs">{{
+                                                                scope.row.location.return }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div v-else>
+                                                        <div class="flex items-center gap-1 mb-1">
+                                                            <el-tag size="small" type="info" effect="plain"
+                                                                class="scale-90 origin-left w-10 text-center px-0">取</el-tag>
+                                                            <span class="text-gray-700 text-xs">{{
+                                                                scope.row.location.pickup }}</span>
+                                                        </div>
+                                                        <div class="flex items-center gap-1">
+                                                            <el-tag size="small" type="info" effect="plain"
+                                                                class="scale-90 origin-left w-10 text-center px-0">还</el-tag>
+                                                            <span class="text-gray-700 text-xs">{{
+                                                                scope.row.location.return }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="金额" min-width="100" align="right">
+                                            <template #default="scope">
+                                                <div class="font-bold text-gray-800 font-mono">¥{{
+                                                    scope.row.amount.toLocaleString() }}</div>
+                                                <div class="text-xs text-orange-400"
+                                                    v-if="scope.row.status === 'reserved' || scope.row.status === 'pending_payment'">
+                                                    待支付</div>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="状态" min-width="100" align="center">
+                                            <template #default="{ row }">
+                                                <el-tag :type="tableStatusConfig(row.status).type"
+                                                    :color="tableStatusConfig(row.status).color"
+                                                    :style="tableStatusConfig(row.status).color ? { color: '#fff', borderColor: tableStatusConfig(row.status).color } : {}"
+                                                    effect="light" round size="small">
+                                                    {{ tableStatusConfig(row.status).text }}
+                                                </el-tag>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column label="操作" min-width="80" align="center" fixed="right">
+                                            <template #default="scope">
+                                                <el-button link type="primary" size="small">详情</el-button>
+                                            </template>
+                                        </el-table-column>
+
+                                        <template #empty>
+                                            <el-empty description="该分类下暂无订单记录" :image-size="80"></el-empty>
+                                        </template>
+                                    </el-table>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- TAB B: Operations -->
+                        <!-- TAB B: Operations -->
+                        <el-tab-pane label="营运轨迹" name="OPERATIONS"
+                            class="h-full overflow-y-auto custom-scroll p-6 w-full">
+                            <div class="max-w-7xl mx-auto space-y-4">
+                                <div 
+                                    class="flex justify-between items-center bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                    <div class="flex items-center gap-4">
+                                        <h3 class="font-bold text-gray-800 text-base">出入站流水记录</h3>
+                                        <el-radio-group v-model="radioTime" size="small">
+                                            <el-radio-button label="近7天" ></el-radio-button>
+                                            <el-radio-button label="近30天" ></el-radio-button>
+                                            <el-radio-button label="全部" ></el-radio-button>
+                                        </el-radio-group>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <el-input prefix-icon="Search" placeholder="搜索单号/门店" size="small"
+                                            style="width: 200px" ></el-input>
+                                        <el-button icon="Download" size="small" plain>导出</el-button>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                                    <el-table :data="[
+                                        { time: '2024-05-03 14:00', type: 'IN', station: '新北板桥车站 B1 停车区', reason: '租赁还车', orderNo: '#ORD-20240501-A2', mileage: '12,850 km', operator: '王怡君' },
+                                        { time: '2024-05-01 10:00', type: 'OUT', station: '台北松山机场第一停车场', reason: '租赁出车', orderNo: '#ORD-20240501-A2', mileage: '12,630 km', operator: '陈柏翰' },
+                                        { time: '2024-04-28 09:30', type: 'IN', station: '台中高铁 P1 停车区', reason: '内部调度', orderNo: '#DSP-009', mileage: '12,580 km', operator: '林家豪' },
+                                        { time: '2024-04-28 08:00', type: 'OUT', station: 'RIMO 新北板桥旗舰店', reason: '内部调度', orderNo: '#DSP-009', mileage: '12,540 km', operator: '林家豪' },
+                                    ]" stripe size="default" style="width: 100%">
+                                        <el-table-column prop="time" label="时间" width="160" sortable>
+                                            <template #default="{row}"><span class="font-mono text-gray-600">{{ row.time
+                                                    }}</span></template>
+                                        </el-table-column>
+                                        <el-table-column prop="type" label="类型" width="100">
+                                            <template #default="{row}">
+                                                <el-tag :type="row.type === 'IN' ? 'success' : 'primary'" effect="plain"
+                                                    size="small" class="w-16 text-center">
+                                                    {{ row.type === 'IN' ? '入站' : '出站' }}
+                                                </el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="station" label="站点/停车场" min-width="180">
+                                            <template #default="{row}"><span class="font-bold text-gray-700">{{
+                                                    row.station }}</span></template>
+                                        </el-table-column>
+                                        <el-table-column prop="reason" label="业务类型" width="120"></el-table-column>
+                                        <el-table-column prop="orderNo" label="关联单号" width="160">
+                                            <template #default="{row}"><el-link type="primary" :underline="false">{{
+                                                    row.orderNo }}</el-link></template>
+                                        </el-table-column>
+                                        <el-table-column prop="mileage" label="里程" width="120" align="right">
+                                            <template #default="{row}"><span class="font-mono">{{ row.mileage
+                                                    }}</span></template>
+                                        </el-table-column>
+                                        <el-table-column prop="operator" label="操作人" width="100"></el-table-column>
+                                    </el-table>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- TAB C: Health (Mock Data) -->
+                        <el-tab-pane label="健康档案" name="HEALTH" class="h-full overflow-y-auto custom-scroll p-6 w-full">
+                            <div class="space-y-6 max-w-7xl mx-auto">
+                                <!-- Maintenance Card -->
+                                <el-card shadow="never" class="!border-gray-200">
+                                    <template #header>
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold flex items-center gap-2"><el-icon 
+                                                    class="text-orange-500">
+                                                    <Tools></Tools>
+                                                </el-icon> 维保记录</span>
+                                            <el-button type="primary" link icon="Plus">新增记录</el-button>
+                                        </div>
+                                    </template>
+                                    <el-table :data="mockMaintenanceData" empty-text="暂无维保记录" border stripe
+                                        size="small">
+                                        <el-table-column prop="date" label="维保日期" width="120"></el-table-column>
+                                        <el-table-column prop="type" label="维保类型" width="100">
+                                            <template #default="{row}"><el-tag 
+                                                    size="small">{{row.type}}</el-tag></template>
+                                        </el-table-column>
+                                        <el-table-column prop="items" label="项目内容"></el-table-column>
+                                        <el-table-column prop="cost" label="金额" width="100">
+                                            <template #default="{row}">N/A</template>
+                                        </el-table-column>
+                                        <el-table-column prop="garage" label="维修厂"></el-table-column>
+                                        <el-table-column prop="operator" label="经办人" width="100"></el-table-column>
+                                    </el-table>
+                                </el-card>
+
+                                <!-- Accident Card -->
+                                <el-card shadow="never" class="!border-red-100 bg-red-50/10">
+                                    <template #header>
+                                        <div class="flex justify-between items-center border-red-50">
+                                            <span class="font-bold text-red-600 flex items-center gap-2"><el-icon>
+                                                    <WarningFilled></WarningFilled>
+                                                </el-icon> 事故/出险记录</span>
+                                        </div>
+                                    </template>
+                                    <el-table :data="mockAccidentData" empty-text="暂无事故记录" border stripe size="small">
+                                        <el-table-column prop="date" label="出险日期" width="120"></el-table-column>
+                                        <el-table-column prop="desc" label="事故描述"></el-table-column>
+                                        <el-table-column prop="status" label="理赔状态" width="100">
+                                            <template #default="{row}">
+                                                <el-tag :type="row.status === '已结案' ? 'success' : 'warning'"
+                                                    size="small">{{row.status}}</el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="cost" label="定损金额" width="100"></el-table-column>
+                                    </el-table>
+                                </el-card>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- TAB D: System Logs (Mock Data) -->
+                        <el-tab-pane label="系统日志" name="LOGS" class="h-full overflow-y-auto custom-scroll p-6 w-full">
+                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                <el-table :data="mockSystemLogs" empty-text="加载中..." stripe size="small"
+                                    style="width: 100%">
+                                    <el-table-column prop="time" label="时间" width="180"></el-table-column>
+                                    <el-table-column prop="user" label="操作人" width="120"></el-table-column>
+                                    <el-table-column prop="action" label="操作内容"></el-table-column>
+                                    <el-table-column prop="ip" label="IP地址"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                    </el-tabs>
+                </div>
+            </div>
+        </el-drawer>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed, onMounted, onBeforeUnmount } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+// --- Mock Data (Synced with other pages conceptually) ---
+                const orgData = ref([
+                    {
+                        id: 'C1', label: 'RIMO 台湾直营车行', value: 'C1',
+                        children: [
+                            {
+                                id: 'S1', label: '台北松山机场旗舰店', value: 'S1', children: [
+                                    { id: '1', label: '台北松山机场第一停车场', value: '1' },
+                                    { id: '2', label: '民生敦北自助取还区', value: '2' }
+                                ]
+                            },
+                            {
+                                id: 'S2', label: '新北板桥旗舰店', value: 'S2', children: [
+                                    { id: '3', label: '板桥车站 B1 停车区', value: '3' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'C2', label: '晨峰租车合作车行', value: 'C2',
+                        children: [
+                            {
+                                id: 'S3', label: '台中高铁站门市', value: 'S3', children: [
+                                    { id: '4', label: '台中高铁 P1 停车区', value: '4' }
+                                ]
+                            },
+                            {
+                                id: 'S4', label: '高雄左营高铁门市', value: 'S4', children: [
+                                    { id: '5', label: '左营高铁彩虹市集停车区', value: '5' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'C3', label: '海岳租车合作车行', value: 'C3',
+                        children: [
+                            {
+                                id: 'S5', label: '桃园青埔门市', value: 'S5', children: [
+                                    { id: '6', label: '桃园高铁站前停车区', value: '6' }
+                                ]
+                            }
+                        ]
+                    }
+                ]);
+
+                const groupsData = ref([
+                    { id: 'G1', vehicleType: 'car', brand: 'Toyota', model: 'Corolla Cross', year: '2024', defaultPhotoUrl: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=500&auto=format&fit=crop' },
+                    { id: 'G2', vehicleType: 'car', brand: 'Lexus', model: 'UX 300e', year: '2024', defaultPhotoUrl: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=500&auto=format&fit=crop' }
+                    ,
+                    { id: 'G3', vehicleType: 'motorcycle', brand: 'Yamaha', model: 'XMAX 300', year: '2023', defaultPhotoUrl: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=500&auto=format&fit=crop' },
+                    { id: 'G4', vehicleType: 'motorcycle', brand: 'Gogoro', model: 'SuperSport', year: '2024', defaultPhotoUrl: 'https://images.unsplash.com/photo-1517846693594-1567da72af75?q=80&w=500&auto=format&fit=crop' },
+                    { id: 'G5', vehicleType: 'microElectric', brand: 'RIMO', model: 'Mini EV', year: '2024', defaultPhotoUrl: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=500&auto=format&fit=crop' }]);
+
+                const vehicles = ref([
+                    {
+                        id: 'V1', licensePlate: 'BKA-1023', vin: 'AHTLB3JE0R0001234', vehicleGroupId: 'G1', color: '珍珠白', year: '2024', mileage: 12850, operationStatus: 'IDLE', enabled: true, assetCompanyId: 'C1', storeId: 'S1', stationId: '1', serviceTypes: ['SHARING_SAME', 'STORE_STANDARD'], currentServiceType: 'STORE_STANDARD', customPhotoUrl: '',
+                        seats: 5, doors: 5, fuelType: 'GASOLINE', transmission: 'AT', luggageLarge: 2, luggageSmall: 2, isDomestic: true, source: 'PURCHASE', owner: 'RIMO 台湾直营车队', vehicleType: 'car'
+                    },
+                    {
+                        id: 'V2', licensePlate: 'BQT-5816', vin: 'JTHC65BH0R2005678', vehicleGroupId: 'G2', color: '曜石黑', year: '2024', mileage: 5300, operationStatus: 'RENTED', enabled: true, assetCompanyId: 'C1', storeId: 'S2', stationId: '3', serviceTypes: ['STORE_STANDARD', 'STORE_24H'], currentServiceType: 'STORE_STANDARD', customPhotoUrl: '',
+                        seats: 5, doors: 5, fuelType: 'ELECTRIC', transmission: 'AT', luggageLarge: 2, luggageSmall: 1, isDomestic: false, source: 'PURCHASE', owner: 'RIMO 台湾直营车队', vehicleType: 'car'
+                    },
+                    {
+                        id: 'V3', licensePlate: 'BCP-7315', vin: 'JTMBW3FV0R1009012', vehicleGroupId: 'G1', color: '云河灰', year: '2024', mileage: 26800, operationStatus: 'MAINTENANCE', enabled: true, assetCompanyId: 'C2', storeId: 'S3', stationId: '4', serviceTypes: ['SHARING_ONE_WAY', 'STORE_STANDARD'], currentServiceType: 'STORE_STANDARD', customPhotoUrl: '',
+                        seats: 5, doors: 5, fuelType: 'GASOLINE', transmission: 'AT', luggageLarge: 1, luggageSmall: 2, isDomestic: true, source: 'LEASE', owner: '晨峰租车', vehicleType: 'car'
+                    },
+                    {
+                        id: 'V4', licensePlate: 'NWM-2288', vin: 'RKRSG4220PA001122', vehicleGroupId: 'G3', color: '消光蓝', year: '2023', mileage: 4200, operationStatus: 'IDLE', enabled: true, assetCompanyId: 'C2', storeId: 'S4', stationId: '5', serviceTypes: ['STORE_STANDARD', 'SHARING_SAME'], currentServiceType: 'STORE_STANDARD', customPhotoUrl: '',
+                        seats: 2, doors: 0, fuelType: 'GASOLINE', transmission: 'AT', luggageLarge: 0, luggageSmall: 1, isDomestic: false, source: 'AFFILIATE', owner: '晨峰租车', vehicleType: 'motorcycle'
+                    },
+                    {
+                        id: 'V5', licensePlate: 'PJF-9091', vin: 'GGRSS0010RA003344', vehicleGroupId: 'G4', color: '星宇灰', year: '2024', mileage: 3500, operationStatus: 'RENTED', enabled: false, assetCompanyId: 'C3', storeId: 'S5', stationId: '6', serviceTypes: ['STORE_STANDARD'], currentServiceType: 'STORE_STANDARD', customPhotoUrl: '',
+                        seats: 1, doors: 0, fuelType: 'ELECTRIC', transmission: 'AT', luggageLarge: 0, luggageSmall: 0, isDomestic: true, source: 'TRUST', owner: '海岳租车', vehicleType: 'motorcycle'
+                    },
+                    {
+                        id: 'V6', licensePlate: 'BER-6024', vin: 'AHTLB3JE0R0007788', vehicleGroupId: 'G1', color: '钛银', year: '2024', mileage: 8900, operationStatus: 'IDLE', enabled: true, assetCompanyId: 'C1', storeId: 'S1', stationId: '2', serviceTypes: ['STORE_STANDARD', 'STORE_24H'], currentServiceType: 'STORE_24H', customPhotoUrl: '',
+                        seats: 5, doors: 5, fuelType: 'GASOLINE', transmission: 'AT', luggageLarge: 2, luggageSmall: 2, isDomestic: true, source: 'PURCHASE', owner: 'RIMO 台湾直营车队', vehicleType: 'car'
+                    },
+                    {
+                        id: 'V7', licensePlate: 'MEV-0528', vin: 'MEV202405280001', vehicleGroupId: 'G5', color: '海湾蓝', year: '2024', mileage: 760, operationStatus: 'IDLE', enabled: true, assetCompanyId: 'C1', storeId: 'S1', stationId: '1', serviceTypes: ['SHARING_SAME'], currentServiceType: 'SHARING_SAME', customPhotoUrl: '',
+                        seats: 2, doors: 2, fuelType: 'ELECTRIC', transmission: 'AT', luggageLarge: 0, luggageSmall: 1, isDomestic: true, source: 'PURCHASE', owner: 'RIMO 台湾直营车队', vehicleType: 'microElectric'
+                    }
+                ]);
+
+                // --- Filter State ---
+                const filterAssetCompanyIds = ref([]);
+                const filterPositionIds = ref([]);
+                const filterStatus = ref(['IDLE', 'RENTED', 'MAINTENANCE']);
+                const filterEnabledStates = ref(['enabled', 'disabled']);
+        const filterServiceTypes = ref(['SHARING_SAME', 'SHARING_ONE_WAY', 'STORE_STANDARD', 'STORE_24H', 'GOV']);
+        const filterVehicleTypes = ref(['car', 'motorcycle', 'microElectric']);
+        const searchQuery = ref('');
+        const currentPage = ref(1);
+        const pageSize = ref(10);
+        const searchPanelExpanded = ref(false);
+                const filterToolbar = ref(null);
+                const filterLayoutTier = ref(1);
+                let filterResizeObserver = null;
+                const updateFilterLayout = () => {
+                    const width = filterToolbar.value?.clientWidth || 0;
+                    if (width >= 1180) filterLayoutTier.value = 3;
+                    else if (width >= 920) filterLayoutTier.value = 2;
+                    else filterLayoutTier.value = 1;
+                };
+                onMounted(() => {
+                    filterResizeObserver = new ResizeObserver(updateFilterLayout);
+                    if (filterToolbar.value) filterResizeObserver.observe(filterToolbar.value);
+                    updateFilterLayout();
+                });
+                onBeforeUnmount(() => filterResizeObserver?.disconnect());
+                const positionFilterProps = {
+                    multiple: true,
+                    checkStrictly: true,
+                    emitPath: false
+                };
+
+                const statusOptions = [
+                    { value: 'IDLE', label: '空闲', tagText: 'IDLE', tagType: 'success' },
+                    { value: 'RENTED', label: '租赁中', tagText: 'RENT', tagType: 'primary' },
+                    { value: 'MAINTENANCE', label: '维保中', tagText: 'MAIN', tagType: 'warning' }
+                ];
+
+                const enabledOptions = [
+                    { value: 'enabled', label: '已启用', tagText: 'ON', tagType: 'success' },
+                    { value: 'disabled', label: '已停用', tagText: 'OFF', tagType: 'danger' }
+                ];
+
+                const serviceOptions = [
+                    { value: 'SHARING_SAME', label: '同站租还', tagText: '同', tagType: 'success' },
+                    { value: 'SHARING_ONE_WAY', label: '甲租乙还', tagText: '异', tagType: 'success' },
+                    { value: 'STORE_STANDARD', label: '门市租赁', tagText: '店', tagType: 'warning' },
+                    { value: 'STORE_24H', label: '24H门市', tagText: '24', tagType: 'warning' },
+                    { value: 'GOV', label: '公务用', tagText: '政', tagType: 'info' }
+                ];
+
+                const vehicleTypeOptions = [
+                    { value: 'car', label: '汽车' },
+                    { value: 'motorcycle', label: '摩托车' },
+                    { value: 'microElectric', label: '微电车' }
+                ];
+
+
+
+
+
+                // --- Dialog State ---
+                const dialogVisible = ref(false);
+                const activeDialogTab = ref('BASIC');
+                const isEdit = ref(false);
+                const currentVehicle = reactive({});
+                const formRef = ref(null);
+
+                const importDialogVisible = ref(false);
+                const importFile = ref(null);
+
+                const rules = {
+                    licensePlate: [{ required: true, message: '请输入车牌号', trigger: 'blur' }],
+                    vehicleGroupId: [{ required: true, message: '请选择所属车型组', trigger: 'change' }],
+                    assetCompanyId: [{ required: true, message: '请选择资产所属车行', trigger: 'change' }],
+                    storeId: [{ required: true, message: '请选择当前门市', trigger: 'change' }],
+                    stationId: [{ required: true, message: '请选择当前据点', trigger: 'change' }],
+                    vin: [{ min: 17, max: 17, message: 'VIN长度应为17位', trigger: 'blur' }]
+                };
+
+                // --- Computed ---
+                const companyOptions = computed(() => orgData.value.map(company => ({
+                    id: company.id,
+                    label: company.label
+                })));
+
+                const filteredStoreOptions = computed(() => {
+                    const company = orgData.value.find(item => item.id === currentVehicle.assetCompanyId);
+                    return company ? company.children || [] : [];
+                });
+
+                const filteredStationOptions = computed(() => {
+                    const store = filteredStoreOptions.value.find(item => item.id === currentVehicle.storeId);
+                    return store ? store.children || [] : [];
+                });
+
+                const filteredGroupOptions = computed(() => {
+                    return groupsData.value.filter(g => g.vehicleType === currentVehicle.vehicleType);
+                });
+
+                const getVehicleTypeLabel = (type) => {
+                    return vehicleTypeOptions.find(item => item.value === type)?.label || '-';
+                };
+
+                const getVehicleTypeTagType = (type) => {
+                    const map = {
+                        car: 'success',
+                        motorcycle: 'warning',
+                        microElectric: 'info'
+                    };
+                    return map[type] || 'info';
+                };
+
+                const handleVehicleTypeChange = () => {
+                    currentVehicle.vehicleGroupId = ''; // Reset selection when type changes
+                };
+
+                const handleAssetCompanyChange = () => {
+                    if (!filteredStoreOptions.value.some(store => store.id === currentVehicle.storeId)) {
+                        currentVehicle.storeId = '';
+                        currentVehicle.stationId = '';
+                    }
+                };
+
+                const handleStoreChange = () => {
+                    if (!filteredStationOptions.value.some(station => station.id === currentVehicle.stationId)) {
+                        currentVehicle.stationId = '';
+                    }
+                };
+
+                const resetVehicleFilters = () => {
+                    filterAssetCompanyIds.value = [];
+                    filterPositionIds.value = [];
+                    filterStatus.value = ['IDLE', 'RENTED', 'MAINTENANCE'];
+                    filterEnabledStates.value = ['enabled', 'disabled'];
+                    filterServiceTypes.value = ['SHARING_SAME', 'SHARING_ONE_WAY', 'STORE_STANDARD', 'STORE_24H', 'GOV'];
+                    filterVehicleTypes.value = ['car', 'motorcycle', 'microElectric'];
+                    searchQuery.value = '';
+                    currentPage.value = 1;
+                    searchPanelExpanded.value = false;
+                };
+
+                const filteredVehicles = computed(() => {
+                    return vehicles.value.filter(v => {
+                        // 1. Asset company
+                        if (filterAssetCompanyIds.value.length > 0 && !filterAssetCompanyIds.value.includes(v.assetCompanyId)) {
+                            return false;
+                        }
+                        // 2. Position
+                        if (filterPositionIds.value.length > 0) {
+                            const scopeStationIds = getMergedStationIds(filterPositionIds.value);
+                            if (scopeStationIds.length === 0 || !scopeStationIds.includes(v.stationId)) return false;
+                        }
+                        // 3. Status
+                        if (filterStatus.value.length > 0 && !filterStatus.value.includes(v.operationStatus)) return false;
+                        // 4. Enabled state
+                        const enabledState = v.enabled ? 'enabled' : 'disabled';
+                        if (filterEnabledStates.value.length > 0 && !filterEnabledStates.value.includes(enabledState)) return false;
+                        // 5. Service Type
+                        if (filterVehicleTypes.value.length > 0 && !filterVehicleTypes.value.includes(v.vehicleType)) return false;
+                        if (filterServiceTypes.value.length > 0) {
+                            const hasType = v.serviceTypes.some(t => filterServiceTypes.value.includes(t));
+                            if (!hasType) return false;
+                        }
+                        // 6. Search
+                        if (searchQuery.value) {
+                            const q = searchQuery.value.toLowerCase();
+                            return v.licensePlate.toLowerCase().includes(q) || v.vin.toLowerCase().includes(q);
+                        }
+                        return true;
+                    });
+                });
+
+                const paginatedVehicles = computed(() => {
+                    const start = (currentPage.value - 1) * pageSize.value;
+                    return filteredVehicles.value.slice(start, start + pageSize.value);
+                });
+
+                const handlePageSizeChange = (size) => {
+                    pageSize.value = size;
+                    currentPage.value = 1;
+                };
+
+                const handlePageChange = (page) => {
+                    currentPage.value = page;
+                };
+
+                // --- Helpers ---
+                const getGroupName = (gid) => {
+                    const g = groupsData.value.find(x => x.id === gid);
+                    return g ? `${g.brand} ${g.model}` : '未知车型';
+                };
+
+                const getStoreMeta = (storeId) => {
+                    for (const company of orgData.value) {
+                        for (const store of company.children || []) {
+                            if (store.id === storeId) return { company, store };
+                        }
+                    }
+                    return null;
+                };
+
+                const getStationMeta = (stationId) => {
+                    for (const company of orgData.value) {
+                        for (const store of company.children || []) {
+                            for (const station of store.children || []) {
+                                if (station.id === stationId) return { company, store, station };
+                            }
+                        }
+                    }
+                    return null;
+                };
+
+                const getStationIdsInScope = (nodeId) => {
+                    if (!nodeId) return [];
+                    const stationMeta = getStationMeta(nodeId);
+                    if (stationMeta) return [stationMeta.station.id];
+
+                    const storeMeta = getStoreMeta(nodeId);
+                    if (storeMeta) return (storeMeta.store.children || []).map(item => item.id);
+
+                    const company = orgData.value.find(item => item.id === nodeId);
+                    if (company) {
+                        return (company.children || []).flatMap(store => (store.children || []).map(item => item.id));
+                    }
+                    return [];
+                };
+
+                const getMergedStationIds = (nodeIds) => {
+                    return [...new Set((nodeIds || []).flatMap(id => getStationIdsInScope(id)))];
+                };
+
+                const getCompanyName = (companyId) => {
+                    const company = orgData.value.find(item => item.id === companyId);
+                    return company ? company.label : companyId || '-';
+                };
+
+                const getStoreName = (storeId) => {
+                    const meta = getStoreMeta(storeId);
+                    return meta ? meta.store.label : storeId || '-';
+                };
+
+                const getStationName = (sid) => {
+                    const meta = getStationMeta(sid);
+                    return meta ? meta.station.label : sid || '-';
+                };
+
+                const getLocationName = (vehicle) => {
+                    const storeName = getStoreName(vehicle.storeId);
+                    const stationName = getStationName(vehicle.stationId);
+                    if (storeName === '-' && stationName === '-') return '-';
+                    if (storeName === '-') return stationName;
+                    if (stationName === '-') return storeName;
+                    return `${storeName} - ${stationName}`;
+                };
+
+                const getStatusName = (s) => ({ IDLE: '空闲', RENTED: '租赁中', MAINTENANCE: '维保中' }[s] || s);
+                const getStatusType = (s) => ({ IDLE: 'success', RENTED: 'primary', MAINTENANCE: 'warning' }[s] || 'info');
+                const getOperationStatusName = getStatusName;
+                const getOperationStatusType = getStatusType;
+                const getSourceName = (source) => ({
+                    PURCHASE: '自购',
+                    LEASE: '租赁',
+                    AFFILIATE: '挂靠',
+                    TRUST: '托管'
+                }[source] || source || '-');
+                const getServiceName = (t) => ({
+                    SHARING_SAME: '同站',
+                    SHARING_ONE_WAY: '异地',
+                    STORE_STANDARD: '门市',
+                    STORE_24H: '24H',
+                    GOV: '公务'
+                }[t] || t);
+                const getServiceFullName = (t) => ({
+                    SHARING_SAME: '同站租还',
+                    SHARING_ONE_WAY: '甲租乙还',
+                    STORE_STANDARD: '门市租赁',
+                    STORE_24H: '24H门市',
+                    GOV: '公务用车'
+                }[t] || t || '-');
+                const getServiceTooltip = (serviceTypes) => {
+                    const list = (serviceTypes || []).map(getServiceFullName).filter(Boolean);
+                    return list.length > 0 ? list.join('、') : '未配置服务项目';
+                };
+                const getServiceTagType = (t) => ({
+                    SHARING_SAME: 'success',
+                    SHARING_ONE_WAY: 'success',
+                    STORE_STANDARD: 'warning',
+                    STORE_24H: 'warning',
+                    GOV: 'info'
+                }[t] || 'info');
+
+                const getVehiclePhoto = (row) => {
+                    if (row.customPhotoUrl) return row.customPhotoUrl;
+                    const g = groupsData.value.find(x => x.id === row.vehicleGroupId);
+                    return g ? g.defaultPhotoUrl : '';
+                };
+
+                // --- Actions ---
+                const openDialog = (row) => {
+                    activeDialogTab.value = 'BASIC'; // Reset tab
+                    if (row) {
+                        isEdit.value = true;
+                        Object.assign(currentVehicle, JSON.parse(JSON.stringify(row)));
+                        currentVehicle.serviceTypes = row.serviceTypes || []; // Ensure array
+                    } else {
+                        isEdit.value = false;
+                        Object.assign(currentVehicle, {
+                            id: 'V' + Date.now(),
+                            licensePlate: '',
+                            vin: '',
+                            vehicleGroupId: '',
+                            color: '',
+                            year: new Date().getFullYear().toString(),
+                            vehicleType: 'car',
+                            mileage: 0,
+                            operationStatus: 'IDLE',
+                            enabled: true,
+                            assetCompanyId: '',
+                            storeId: '',
+                            stationId: '',
+                            serviceTypes: [],
+                            currentServiceType: 'STORE_STANDARD',
+                            customPhotoUrl: '',
+                            nickname: '', seats: 5, doors: 4, fuelType: 'GASOLINE', transmission: 'AT',
+                            tankCapacity: '', displacement: '', isDomestic: true,
+                            luggageLarge: 0, luggageSmall: 0,
+                            owner: '', source: 'PURCHASE', tags: [],
+                            isSpecial: false, specialMembershipRequired: '', cid: ''
+                        });
+                    }
+                    dialogVisible.value = true;
+                };
+
+                const saveVehicle = () => {
+                    formRef.value.validate((valid) => {
+                        if (valid) {
+                            if (isEdit.value) {
+                                const idx = vehicles.value.findIndex(v => v.id === currentVehicle.id); // Changed vehiclesData to vehicles
+                                if (idx !== -1) vehicles.value[idx] = { ...currentVehicle }; // Changed vehiclesData to vehicles
+                            } else {
+                                vehicles.value.push({ ...currentVehicle }); // Changed vehiclesData to vehicles
+                            }
+                            dialogVisible.value = false;
+                            ElMessage.success('保存成功');
+                        }
+                    });
+                };
+
+                const setMaintenance = (row) => {
+                    row.operationStatus = 'MAINTENANCE';
+                    ElMessage.warning(`车辆 ${row.licensePlate} 已切换至维保状态`);
+                };
+
+                const setIdle = (row) => {
+                    row.operationStatus = 'IDLE';
+                    ElMessage.success(`车辆 ${row.licensePlate} 维保结束，已上线`);
+                };
+
+                const handleStatusToggle = (row) => {
+                    const originalState = !row.enabled; // State before toggle (since v-model already updated it)
+                    // If turning ON, allow immediately
+                    if (row.enabled) {
+                        ElMessage.success(`车辆 ${row.licensePlate} 已启用`);
+                        return;
+                    }
+
+                    // If turning OFF, check operation status
+                    if (row.operationStatus === 'IDLE') {
+                        ElMessage.success(`车辆 ${row.licensePlate} 已停用`);
+                    } else {
+                        // Vehicle is busy (RENTED or MAINTENANCE), ask for confirmation
+                        ElMessageBox.confirm(
+                            `该车辆当前处于 ${getStatusName(row.operationStatus)} 状态，停用后将不再接受新订单/任务，确认停用吗？`,
+                            '确认停用',
+                            {
+                                confirmButtonText: '确认停用',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }
+                        ).then(() => {
+                            ElMessage.success(`车辆 ${row.licensePlate} 已停用`);
+                        }).catch(() => {
+                            row.enabled = true; // Revert switch
+                        });
+                    }
+                };
+
+                // --- Batch Operations ---
+                const selectedVehicles = ref([]);
+
+                const handleSelectionChange = (val) => {
+                    selectedVehicles.value = val;
+                };
+
+                const handleBatchEnable = () => {
+                    const toEnable = selectedVehicles.value.filter(v => !v.enabled);
+                    if (toEnable.length === 0) {
+                        return ElMessage.info('选中的车辆已全部启用');
+                    }
+                    toEnable.forEach(v => v.enabled = true);
+                    ElMessage.success(`已批量启用 ${toEnable.length} 辆车`);
+                    // Clear selection not strictly needed but good UX? Element UI table keeps selection unless manually cleared.
+                    // Let's keep selection for now.
+                };
+
+                const handleBatchDisable = () => {
+                    const toDisable = selectedVehicles.value.filter(v => v.enabled);
+                    if (toDisable.length === 0) {
+                        return ElMessage.info('选中的车辆已全部停用');
+                    }
+
+                    // Check for active vehicles
+                    const activeVehicles = toDisable.filter(v => ['RENTED', 'MAINTENANCE'].includes(v.operationStatus));
+
+                    if (activeVehicles.length > 0) {
+                        ElMessageBox.confirm(
+                            `选中的 ${toDisable.length} 辆车中，有 ${activeVehicles.length} 辆处于租赁或维保状态。停用后它们将不再接受新订单/任务，确认停用吗？`,
+                            '批量停用确认',
+                            {
+                                confirmButtonText: '确认停用',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }
+                        ).then(() => {
+                            toDisable.forEach(v => v.enabled = false);
+                            ElMessage.success(`已批量停用 ${toDisable.length} 辆车`);
+                        }).catch(() => { });
+                    } else {
+                        ElMessageBox.confirm(
+                            `确认批量停用选中的 ${toDisable.length} 辆车吗？`,
+                            '批量停用确认',
+                            { confirmButtonText: '确认', cancelButtonText: '取消' }
+                        ).then(() => {
+                            toDisable.forEach(v => v.enabled = false);
+                            ElMessage.success(`已批量停用 ${toDisable.length} 辆车`);
+                        }).catch(() => { });
+                    }
+                };
+
+                const applyVehicleBatchStatus = (nextStatus) => {
+                    if (nextStatus) {
+                        handleBatchEnable();
+                        return;
+                    }
+                    handleBatchDisable();
+                };
+
+                const deleteVehicle = (row) => {
+                    const idx = vehicles.value.findIndex(v => v.id === row.id);
+                    if (idx !== -1) {
+                        vehicles.value.splice(idx, 1);
+                        ElMessage.success('删除成功');
+                    }
+                };
+
+                // --- Drawer Logic ---
+                const detailDrawerVisible = ref(false);
+                const currentDetailVehicle = ref({});
+                const activeDetailTab = ref('OVERVIEW');
+
+                const openDetailDrawer = (vehicle) => {
+                    currentDetailVehicle.value = { ...vehicle }; // Clone
+                    activeDetailTab.value = 'OVERVIEW';
+                    detailDrawerVisible.value = true;
+                };
+
+                // Helper to get Photo (re-use logic)
+                const getVehiclePhoto_Drawer = (vehicle) => {
+                    if (!vehicle) return '';
+                    if (vehicle.customPhotoUrl) return vehicle.customPhotoUrl;
+                    const group = groupsData.value.find(g => g.id === vehicle.vehicleGroupId);
+                    return group ? group.defaultPhotoUrl : 'https://via.placeholder.com/300?text=No+Image';
+                };
+
+                // --- Drawer Mock Data ---
+                const radioTime = ref('近30天');
+                const activeOrderTab = ref('same_station');
+                const mockOrderRecords = ref([
+                    {
+                        orderId: 'ZT2405060001', type: 'same_station', createTime: '2024-05-06 09:15', status: 'completed',
+                        customer: { name: '张伟', phone: '0912-345-001', level: '新用户' },
+                        schedule: { start: '2024-05-07 10:00', end: '2024-05-08 10:00' },
+                        location: { pickup: '新北总店', return: '新北总店' }, amount: 1200
+                    },
+                    {
+                        orderId: 'ZT2405060002', type: 'same_station', createTime: '2024-05-05 14:30', status: 'reserved',
+                        customer: { name: '王小明', phone: '0912-345-678', level: '金牌会员' },
+                        schedule: { start: '2024-05-07 09:30', end: '2024-05-10 18:00' },
+                        location: { pickup: '新北总店', return: '新北总店' }, amount: 1920
+                    },
+                    {
+                        orderId: 'ZT2405040003', type: 'one_way', createTime: '2024-05-04 14:20', status: 'completed',
+                        customer: { name: '李阿美', phone: '0922-123-456', level: '普通会员' },
+                        schedule: { start: '2024-05-04 15:00', end: '2024-05-07 10:00' },
+                        location: { pickup: '台北车站店', return: '新北总店' }, amount: 850
+                    },
+                    {
+                        orderId: 'GOV2405020008', type: 'official', createTime: '2024-05-02 10:00', status: 'renewing',
+                        clientType: 'corporate', corporate: { shortName: '台积电' },
+                        customer: { name: '赵强', phone: '0933-111-222', level: '白金会员', dept: '研发部' },
+                        schedule: { start: '2024-05-02 11:00', end: '2024-05-09 11:00' },
+                        location: { pickup: '新北总店', return: '新北总店' }, amount: 5600
+                    }
+                ]);
+
+                // Filter logic for order tabs
+                const filteredOrderRecords = computed(() => {
+                    return mockOrderRecords.value.filter(o => o.type === activeOrderTab.value);
+                });
+
+                const tableStatusConfig = (status) => {
+                    const map = {
+                        pending_payment: { text: "待支付", type: "info", color: "" },
+                        reserved: { text: "已预订", type: "primary", color: "" },
+                        inspecting: { text: "验车中", type: "warning", color: "" },
+                        renting: { text: "用车中", type: "success", color: "" },
+                        renewing: { text: "续租中", type: "success", color: "" },
+                        overdue: { text: "逾期未还", type: "danger", color: "" },
+                        settlement_pending: { text: "待结算", type: "warning", color: "#8E44AD" },
+                        payment_due: { text: "待补缴", type: "warning", color: "#E67E22" },
+                        refund_pending: { text: "待退款", type: "warning", color: "#E67E22" },
+                        completed: { text: "已完成", type: "info", color: "" },
+                        cancelled: { text: "已取消", type: "info", color: "" },
+                        rejected: { text: "已拒绝", type: "danger", color: "" }
+                    };
+                    return map[status] || { text: status, type: "info", color: "" };
+                };
+                const mockMaintenanceData = ref([
+                    { date: '2024-02-15', type: '常规保养', items: '更换机油、机油滤芯、轮胎对调', cost: 'NT$3,200', garage: '和泰汽车北投厂', operator: '陈柏翰' },
+                    { date: '2023-12-20', type: '维修', items: '右后轮胎补胎与胎压校正', cost: 'NT$800', garage: 'RIMO 新北板桥整备中心', operator: '林家豪' }
+                ]);
+                const mockAccidentData = ref([
+                    { date: '2024-01-12', desc: '右前保杆擦伤（台北市区路边停车时发生）', status: '理赔中', cost: 'NT$18,000', reportId: 'RP-20240112-03' }
+                ]);
+                const mockSystemLogs = ref([
+                    { time: '2024-05-03 14:05:22', user: '王怡君', action: '修改车辆状态 [租赁中] -> [空闲]', ip: '10.21.8.15' },
+                    { time: '2024-05-01 10:00:15', user: '陈柏翰', action: '修改车辆状态 [空闲] -> [租赁中]', ip: '10.21.8.32' },
+                    { time: '2024-04-28 09:30:00', user: '系统', action: '自动同步车辆位置（GPS）', ip: '10.21.0.5' }
+                ]);
+
+                // --- Photo History Data ---
+                const photoHistoryVisible = ref(false);
+                const mockPhotoHistory = ref([
+                    {
+                        date: '2024-05-01 10:05',
+                        type: '租赁出车验车',
+                        operator: '张三',
+                        remark: '车辆外观无新增划痕，内饰清洁。',
+                        photos: [
+                            'https://via.placeholder.com/200x150?text=History+1',
+                            'https://via.placeholder.com/200x150?text=History+2',
+                            'https://via.placeholder.com/200x150?text=History+3'
+                        ]
+                    },
+                    {
+                        date: '2024-04-28 09:30',
+                        type: '入库验车',
+                        operator: '李四',
+                        remark: '右后轮毂有轻微擦伤，已记录。',
+                        photos: [
+                            'https://via.placeholder.com/200x150?text=History+A',
+                            'https://via.placeholder.com/200x150?text=History+B',
+                            'https://via.placeholder.com/200x150?text=History+C',
+                            'https://via.placeholder.com/200x150?text=History+D'
+                        ]
+                    }
+                ]);
+
+                const handleImportCommand = (cmd) => {
+                    if (cmd === 'import') {
+                        importDialogVisible.value = true;
+                        importFile.value = null;
+                    }
+                };
+
+                const handleExport = () => {
+                    ElMessage.success('车辆数据导出任务已提交，系统稍后将自动下载文件。');
+                };
+
+                const downloadTemplate = () => {
+                    ElMessage.success('模板开始下载');
+                };
+
+                const handleFileChange = (file) => {
+                    importFile.value = file;
+                };
+
+                const confirmImport = () => {
+                    if (!importFile.value) {
+                        ElMessage.warning('请先选择要导入的批量文件');
+                        return;
+                    }
+                    ElMessage.success('导入申请已提交，系统正在后台解析处理。');
+                    importDialogVisible.value = false;
+                    importFile.value = null;
+                };
+
+                return {
+                    orgData, groupsData, vehicles,
+                    filterAssetCompanyIds, filterPositionIds, positionFilterProps, filterStatus, filterEnabledStates, filterServiceTypes, filterVehicleTypes, searchQuery, searchPanelExpanded, filterToolbar, filterLayoutTier, filteredVehicles, paginatedVehicles, currentPage, pageSize,
+                    handlePageSizeChange, handlePageChange,
+                    resetVehicleFilters,
+                    companyOptions, filteredStoreOptions, filteredStationOptions, filteredGroupOptions, handleVehicleTypeChange, handleAssetCompanyChange, handleStoreChange,
+                    dialogVisible, isEdit, currentVehicle, formRef, rules, activeDialogTab,
+                    importDialogVisible,
+                    detailDrawerVisible, currentDetailVehicle, activeDetailTab, openDetailDrawer,
+                    radioTime, mockOrderRecords, activeOrderTab, filteredOrderRecords, tableStatusConfig, mockMaintenanceData, mockAccidentData, mockSystemLogs,
+                    photoHistoryVisible, mockPhotoHistory,
+                    getGroupName, getCompanyName, getStoreName, getStationName, getLocationName, getStatusName, getStatusType, getOperationStatusName, getOperationStatusType, getSourceName, getServiceName, getServiceFullName, getServiceTooltip, getServiceTagType, getVehiclePhoto, getVehicleTypeLabel, getVehicleTypeTagType,
+                    openDialog, saveVehicle, setMaintenance, setIdle, deleteVehicle, handleStatusToggle,
+                    handleImportCommand, handleExport, downloadTemplate, handleFileChange, confirmImport,
+                    statusOptions, enabledOptions, serviceOptions, vehicleTypeOptions,
+                    selectedVehicles, handleSelectionChange, applyVehicleBatchStatus
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

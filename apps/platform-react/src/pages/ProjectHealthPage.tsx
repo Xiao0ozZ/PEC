@@ -81,12 +81,12 @@ export function ProjectHealthPage() {
               <Statistic
                 title="错误"
                 value={report.summary.errors || 0}
-                styles={{ content: { color: report.summary.errors ? '#cf1322' : undefined } }}
+                styles={{ content: { color: report.summary.errors ? 'var(--ant-color-error)' : undefined } }}
               />
               <Statistic
                 title="提醒"
                 value={report.summary.warnings || 0}
-                styles={{ content: { color: report.summary.warnings ? '#d46b08' : undefined } }}
+                styles={{ content: { color: report.summary.warnings ? 'var(--ant-color-warning)' : undefined } }}
               />
             </Flex>
           </Surface>
@@ -133,9 +133,14 @@ function ProjectHealthLabel({ item }: { item: ProjectHealthItem }) {
   return (
     <Flex align="center" gap={10} wrap="wrap">
       {healthy ? (
-        <CheckCircleFilled style={{ color: '#52c41a' }} />
+        <CheckCircleFilled style={{ color: 'var(--ant-color-success)' }} />
       ) : (
-        <WarningFilled style={{ color: item.summary.status === 'error' ? '#ff4d4f' : '#faad14' }} />
+        <WarningFilled
+          style={{
+            color:
+              item.summary.status === 'error' ? 'var(--ant-color-error)' : 'var(--ant-color-warning)',
+          }}
+        />
       )}
       <Text strong>{item.project.name}</Text>
       <Text type="secondary">{item.project.id}</Text>

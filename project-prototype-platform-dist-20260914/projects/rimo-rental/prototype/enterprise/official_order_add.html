@@ -1,0 +1,1846 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+  <title>新增公务订单</title>
+  <link rel="icon" href="data:," />
+
+  <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+  <!-- PROTOTYPE_AI_PROTOCOL_START -->
+  <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+  <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+  <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+  <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+  <!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+  <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+  <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+  <style data-page-style>
+    .official-order-add .official-add-page {
+      min-height: 100%;
+    }
+
+    .official-order-add .official-back-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .official-order-add .official-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 9fr) minmax(280px, 3fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .official-order-add .official-main-column,
+    .official-order-add .official-side-column {
+      min-width: 0;
+    }
+
+    .official-order-add .official-main-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .official-order-add .official-top-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .official-order-add .official-sticky {
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .official-order-add .el-card {
+      border-color: #dbe3ec;
+      border-radius: 8px;
+    }
+
+    .official-order-add .el-card__header {
+      min-height: 0;
+      padding: 0 !important;
+      border-bottom: 0 !important;
+    }
+
+    .official-order-add .official-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 45px;
+      padding: 0 16px;
+      color: #1f2937;
+      background: rgb(249 250 251 / 80%);
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .official-order-add .official-card-header .el-icon {
+      color: var(--app-color-primary);
+      font-size: 18px;
+    }
+
+    .official-order-add .official-card-body {
+      padding: 16px;
+    }
+
+    .official-order-add .official-section-label {
+      margin-bottom: 4px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+
+    .official-order-add .official-section-label strong {
+      color: #6b7280;
+      font-weight: 400;
+    }
+
+    .official-order-add .official-required {
+      color: #ef4444;
+      font-weight: 700;
+    }
+
+    .official-order-add .employee-search-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .official-order-add .employee-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 84px;
+      padding: 14px;
+      margin-top: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    .official-order-add .employee-avatar {
+      display: grid;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      color: var(--app-color-primary);
+      background: var(--app-color-primary-light-9);
+      border: 1px solid var(--app-color-primary-light-8);
+      border-radius: 50%;
+      font-size: 15px;
+      font-weight: 700;
+      place-items: center;
+    }
+
+    .official-order-add .employee-name {
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .official-order-add .employee-meta {
+      margin-top: 2px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .official-order-add .official-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .official-order-add .official-form-field {
+      min-width: 0;
+    }
+
+    .official-order-add .official-form-field.is-wide {
+      grid-column: span 2;
+    }
+
+    .official-order-add .el-input__wrapper,
+    .official-order-add .el-select__wrapper,
+    .official-order-add .el-textarea__inner {
+      min-height: 40px;
+      border-radius: 4px;
+      box-shadow: 0 0 0 1px #dbe3ec inset;
+      font-size: 14px;
+    }
+
+    .official-order-add .el-date-editor.el-input,
+    .official-order-add .el-date-editor.el-input__wrapper,
+    .official-order-add .el-input-number {
+      width: 100%;
+    }
+
+    .official-order-add .el-date-editor .el-input__wrapper {
+      min-height: 40px;
+    }
+
+    .official-order-add .duration-banner {
+      margin-top: 12px;
+      padding: 9px 12px;
+      color: var(--app-color-primary-hover);
+      background: var(--app-color-primary-light-9);
+      border: 1px solid var(--app-color-primary-light-8);
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .official-order-add .vehicle-model-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .official-order-add .vehicle-model-card {
+      position: relative;
+      min-width: 0;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+
+    .official-order-add .vehicle-model-card:hover {
+      border-color: var(--app-color-primary-light-5);
+      box-shadow: 0 4px 12px rgb(15 23 42 / 7%);
+    }
+
+    .official-order-add .vehicle-model-card.is-selected {
+      background: rgb(238 242 255 / 55%);
+      border-color: var(--app-color-primary);
+    }
+
+    .official-order-add .vehicle-model-card.is-disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .official-order-add .vehicle-model-name {
+      padding-right: 48px;
+      overflow: hidden;
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .official-order-add .vehicle-model-desc {
+      margin-top: 3px;
+      overflow: hidden;
+      color: #64748b;
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .official-order-add .vehicle-count {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .official-order-add .vehicle-select-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      padding-top: 14px;
+      margin-top: 14px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .official-order-add .purpose-grid {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .official-order-add .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .official-order-add .summary-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 13px;
+    }
+
+    .official-order-add .summary-row:last-child {
+      border-bottom: 0;
+    }
+
+    .official-order-add .summary-label {
+      flex: 0 0 auto;
+      color: #64748b;
+    }
+
+    .official-order-add .summary-value {
+      min-width: 0;
+      color: #1e293b;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .official-order-add .approval-note {
+      padding: 10px 12px;
+      margin-top: 12px;
+      color: #475569;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .official-order-add .submit-button {
+      width: 100%;
+      height: 42px;
+      margin-top: 16px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px var(--app-color-primary-shadow);
+    }
+
+    .official-employee-dialog .employee-filter-bar {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(280px, 1.5fr);
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .official-employee-dialog .employee-dialog-note {
+      margin-bottom: 12px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .official-employee-dialog .employee-filter-bar .el-select,
+    .official-employee-dialog .employee-filter-bar .el-input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .official-employee-dialog .employee-filter-bar .el-select__wrapper,
+    .official-employee-dialog .employee-filter-bar .el-input__wrapper {
+      min-height: 40px;
+    }
+
+    .official-employee-dialog .el-dialog__body {
+      padding: 16px 20px 20px;
+    }
+
+    .official-member-option-item {
+      height: 58px !important;
+      padding: 6px 12px !important;
+      line-height: normal !important;
+    }
+
+    .official-member-option {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+      line-height: 18px;
+    }
+
+    .official-member-option-main,
+    .official-member-option-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .official-member-option-name,
+    .official-member-option-identity,
+    .official-member-option-contact {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .official-member-option-name {
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .official-member-option-identity,
+    .official-member-option-contact {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .official-employee-table {
+      width: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .official-employee-table .el-table__inner-wrapper::before {
+      display: none;
+    }
+
+    .official-employee-table .el-table__header th.el-table__cell {
+      height: 44px;
+      padding: 0;
+      color: var(--app-color-text-secondary);
+      background: var(--app-color-surface-subtle);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .official-employee-table .el-table__body td.el-table__cell {
+      height: 52px;
+      padding: 0;
+      color: #334155;
+      border-bottom-color: #eef2f7;
+      font-size: 13px;
+    }
+
+    .official-employee-table .cell {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .official-employee-table .el-table__row:hover>td.el-table__cell {
+      background: #f8fbfd;
+    }
+
+    @media (max-width: 1380px) {
+      .official-order-add .official-layout {
+        grid-template-columns: minmax(0, 1fr) 300px;
+      }
+
+      .official-order-add .vehicle-model-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1100px) {
+
+      .official-order-add .official-layout,
+      .official-order-add .official-top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .official-order-add .official-sticky {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .official-employee-dialog .employee-filter-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .official-employee-dialog .el-dialog__body {
+        padding: 14px 14px 16px;
+      }
+    }
+  
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+  </style>
+  <!-- PAGE_STYLE_END -->
+
+  <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+  <script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "official-order-add",
+  "pageTitle": "新增公务订单",
+  "fileName": "official_order_add.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "enterprise",
+  "routePath": "/enterprise/official-order-add",
+  "menuSection": "official-use",
+  "menuTitle": "新增公务订单",
+  "menuIcon": "CirclePlus",
+  "menu": true,
+  "rootClass": "official-order-add",
+  "overlayRootClass": "official-order-add-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+  <!-- PAGE_MANIFEST_END -->
+
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+<body>
+  <div id="app" class="prototype-app" v-cloak>
+    <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+    <!-- PROTOTYPE_SHELL_START -->
+    <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+      <div class="prototype-brand">
+        <span data-shell-project-name>RIMO Rental</span>
+        <small data-shell-client-name>企业端</small>
+      </div>
+      <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+        <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">公务用车</div>
+        <a class="prototype-menu-item is-active" href="./official_order_add.html" aria-current="page"
+          data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="CirclePlus"
+            aria-hidden="true"></span><span>新增公务订单</span></a>
+        <!-- SHELL_NAV_END -->
+      </nav>
+    </aside>
+
+    <div class="prototype-workspace">
+      <header class="prototype-topbar" data-prototype-shell="topbar">
+        <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 企业端 / 新增公务订单</div>
+        <el-dropdown trigger="click">
+          <button class="prototype-user" type="button" aria-label="账号菜单">
+            <span class="prototype-avatar">A</span>
+            <span>Admin</span>
+          </button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+      <!-- PROTOTYPE_SHELL_END -->
+
+      <main class="prototype-main">
+        <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+        <section class="legacy-page legacy-official-order-add official-order-add" data-page-content
+          data-page-root="official-order-add" data-page-key="official-order-add">
+          <div data-business-content data-layout-type="form-detail">
+            <div class="official-add-page">
+              <div class="official-back-row">
+                <el-button plain @click="goBack">
+                  <el-icon class="mr-1">
+                    <ArrowLeft></ArrowLeft>
+                  </el-icon>
+                  返回
+                </el-button>
+                <el-tag effect="plain" type="info">公务车预约</el-tag>
+              </div>
+
+              <div class="official-layout">
+                <div class="official-main-column">
+                  <div class="official-top-grid">
+                    <el-card shadow="never" body-class="!p-0">
+                      <template #header>
+                        <div class="official-card-header">
+                          <el-icon>
+                            <User></User>
+                          </el-icon>
+                          员工资料
+                        </div>
+                      </template>
+                      <div class="official-card-body">
+                        <div class="official-section-label"><span class="official-required">*</span>
+                          <strong>用车员工</strong>
+                        </div>
+                        <div class="employee-search-row">
+                          <el-select v-model="postForm.userId" filterable clearable :filter-method="filterMember"
+                            placeholder="搜索员工（姓名/证件号/手机号/邮箱）" class="flex-1 official-member-select" size="default"
+                            @change="selectMemberById">
+                            <template #prefix><el-icon>
+                                <Search></Search>
+                              </el-icon></template>
+                            <el-option v-for="member in memberSelectOptions" :key="member.userId"
+                              :label="member.name + '（' + member.employeeNo + '）'" :value="member.userId"
+                              class="official-member-option-item">
+                              <div class="official-member-option">
+                                <div class="official-member-option-main">
+                                  <span class="official-member-option-name">{{ member.name }}</span>
+                                  <span class="official-member-option-identity">{{ member.employeeNo }} · {{
+                                    member.phone }}</span>
+                                </div>
+                                <div class="official-member-option-meta">
+                                  <span class="official-member-option-identity">{{ member.idNumber }}</span>
+                                  <span class="official-member-option-contact">{{ member.email }}</span>
+                                </div>
+                              </div>
+                            </el-option>
+                          </el-select>
+                          <el-button type="primary" @click="memberVisible = true">选择员工</el-button>
+                        </div>
+
+                        <div v-if="memberInfo.name" class="employee-preview">
+                          <div class="flex min-w-0 items-center gap-3">
+                            <div class="employee-avatar">{{ memberInitial }}</div>
+                            <div class="min-w-0">
+                              <div class="employee-name">{{ memberInfo.name }}</div>
+                              <div class="employee-meta">{{ memberInfo.phone }} · {{ memberInfo.email }}</div>
+                              <div class="employee-meta">{{ memberInfo.branch }} / {{ memberInfo.department }}</div>
+                            </div>
+                          </div>
+                          <el-tag size="small" effect="plain">主管：{{ memberInfo.supervisor }}</el-tag>
+                        </div>
+                      </div>
+                    </el-card>
+
+                    <el-card shadow="never" body-class="!p-0">
+                      <template #header>
+                        <div class="official-card-header">
+                          <el-icon>
+                            <Calendar></Calendar>
+                          </el-icon>
+                          用车资料
+                        </div>
+                      </template>
+                      <div class="official-card-body">
+                        <div class="official-form-grid">
+                          <div class="official-form-field">
+                            <div class="official-section-label"><span class="official-required">*</span>
+                              <strong>取车据点</strong>
+                            </div>
+                            <el-select v-model="postForm.pickupSiteId" filterable placeholder="选择取车据点" class="w-full"
+                              size="default" @change="handlePickupSiteChange">
+                              <el-option v-for="site in siteOptions" :key="site.value" :label="site.label"
+                                :value="site.value"></el-option>
+                            </el-select>
+                          </div>
+                          <div class="official-form-field">
+                            <div class="official-section-label"><span class="official-required">*</span>
+                              <strong>预定日期（起）</strong>
+                            </div>
+                            <el-date-picker v-model="postForm.pickupTime" type="datetime" placeholder="选择取车时间"
+                              format="YYYY/MM/DD HH:mm" class="w-full" style="width: 100%"
+                              size="default"></el-date-picker>
+                          </div>
+                          <div class="official-form-field">
+                            <div class="official-section-label"><span class="official-required">*</span>
+                              <strong>还车据点</strong>
+                            </div>
+                            <el-select v-model="postForm.returnStationId" disabled placeholder="自动回显" class="w-full"
+                              size="default">
+                              <el-option v-for="site in siteOptions" :key="site.value" :label="site.label"
+                                :value="site.value"></el-option>
+                            </el-select>
+                          </div>
+                          <div class="official-form-field">
+                            <div class="official-section-label"><span class="official-required">*</span>
+                              <strong>预定日期（止）</strong>
+                            </div>
+                            <el-date-picker v-model="postForm.returnTime" type="datetime" placeholder="选择还车时间"
+                              format="YYYY/MM/DD HH:mm" class="w-full" style="width: 100%"
+                              size="default"></el-date-picker>
+                          </div>
+                        </div>
+                        <div class="duration-banner">
+                          预计租期：<strong>{{ leaseTermResult || '请选择完整时间' }}</strong>，取还车据点保持一致。
+                        </div>
+                      </div>
+                    </el-card>
+                  </div>
+
+                  <el-card shadow="never" body-class="!p-0">
+                    <template #header>
+                      <div class="official-card-header">
+                        <el-icon>
+                          <Van></Van>
+                        </el-icon>
+                        选择车款和车辆
+                      </div>
+                    </template>
+                    <div class="official-card-body">
+                      <div class="vehicle-model-grid">
+                        <div v-for="model in modelOptions" :key="model.value" class="vehicle-model-card" :class="{
+                    'is-selected': postForm.carModelId === model.value,
+                    'is-disabled': getModelAvailableCount(model.value) === 0
+                  }" @click="selectModel(model)">
+                          <el-tag class="vehicle-count" size="small"
+                            :type="getModelAvailableCount(model.value) > 0 ? 'success' : 'danger'" effect="light">
+                            {{ getModelAvailableCount(model.value) > 0 ? '剩' + getModelAvailableCount(model.value) :
+                            '无可用车' }}
+                          </el-tag>
+                          <div class="vehicle-model-name">{{ model.label }}</div>
+                          <div class="vehicle-model-desc">{{ model.desc }}</div>
+                          <div class="mt-3 flex items-center justify-between">
+                            <span class="text-xs text-gray-400">{{ model.vehicleTypeLabel }}</span>
+                            <div class="flex h-4 w-4 items-center justify-center rounded-full border"
+                              :class="postForm.carModelId === model.value ? 'border-[color:var(--app-color-primary)] bg-[color:var(--app-color-primary)]' : 'border-gray-300'">
+                              <el-icon v-if="postForm.carModelId === model.value" class="scale-75 text-white">
+                                <Check></Check>
+                              </el-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="vehicle-select-row">
+                        <div>
+                          <div class="official-section-label"><span class="official-required">*</span>
+                            <strong>预定车款</strong>
+                          </div>
+                          <el-input :model-value="selectedModelLabel" readonly placeholder="请从上方选择车款"></el-input>
+                        </div>
+                        <div>
+                          <div class="official-section-label"><span class="official-required">*</span>
+                            <strong>车牌号</strong>
+                          </div>
+                          <el-select v-model="postForm.vehicleId" filterable placeholder="选择车牌号" class="w-full"
+                            @change="handleVehicleChange">
+                            <el-option v-for="vehicle in filteredVehicleOptions" :key="vehicle.value"
+                              :label="vehicle.label" :value="vehicle.value" :disabled="vehicle.status !== '可预约'">
+                              <div class="flex items-center justify-between gap-3">
+                                <span>{{ vehicle.label }}</span>
+                                <el-tag size="small" :type="vehicle.status === '可预约' ? 'success' : 'warning'"
+                                  effect="plain">{{ vehicle.status }}</el-tag>
+                              </div>
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+
+                  <el-card shadow="never" body-class="!p-0">
+                    <template #header>
+                      <div class="official-card-header">
+                        <el-icon>
+                          <Document></Document>
+                        </el-icon>
+                        用车说明
+                      </div>
+                    </template>
+                    <div class="official-card-body">
+                      <div class="purpose-grid">
+                        <div>
+                          <div class="official-section-label"><strong>同行人数</strong></div>
+                          <el-input-number v-model="postForm.passengerCount" :min="1" :max="8"></el-input-number>
+                        </div>
+                        <div>
+                          <div class="official-section-label"><span class="official-required">*</span>
+                            <strong>目的地</strong>
+                          </div>
+                          <el-input v-model="postForm.destination" placeholder="例如：台北客户办公室 / 桃园厂区"></el-input>
+                        </div>
+                      </div>
+                      <div class="mt-3">
+                        <div class="official-section-label"><span class="official-required">*</span>
+                          <strong>用车事由</strong>
+                        </div>
+                        <el-input v-model="postForm.purpose" type="textarea" :rows="3" maxlength="80" show-word-limit
+                          placeholder="例如：外部拜访、跨厂区会议、接待用车"></el-input>
+                      </div>
+                    </div>
+                  </el-card>
+                </div>
+
+                <div class="official-side-column">
+                  <div class="official-sticky">
+                    <el-card shadow="hover" body-class="!p-0" class="!border-[color:var(--app-color-primary-light-8)]">
+                      <template #header>
+                        <div class="official-card-header">
+                          <el-icon>
+                            <Tickets></Tickets>
+                          </el-icon>
+                          预约摘要
+                        </div>
+                      </template>
+                      <div class="official-card-body">
+                        <div class="summary-list">
+                          <div class="summary-row">
+                            <span class="summary-label">用车员工</span>
+                            <span class="summary-value">{{ memberInfo.name || '未选择' }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">取还车据点</span>
+                            <span class="summary-value">{{ selectedSiteLabel || '未选择' }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">预定时间</span>
+                            <span class="summary-value">{{ reservationTimeLabel }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">预定车款</span>
+                            <span class="summary-value">{{ selectedModelLabel || '未选择' }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">车牌号</span>
+                            <span class="summary-value">{{ selectedVehicleLabel || '未选择' }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">预计租期</span>
+                            <span class="summary-value text-[color:var(--app-color-primary)]">{{ leaseTermResult || '未计算' }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="summary-label">目的地</span>
+                            <span class="summary-value">{{ postForm.destination || '未填写' }}</span>
+                          </div>
+                        </div>
+
+                        <div class="approval-note">
+                          提交后将依企业预约审批设定，自动判断是否进入主管或管理员审核。
+                        </div>
+
+                        <el-button type="primary" class="submit-button" @click="submitOrder">
+                          建立公务车订单
+                        </el-button>
+                      </div>
+                    </el-card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- PAGE_CONTENT_END -->
+      </main>
+    </div>
+
+    <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+    <div data-page-overlay="overlay" data-block-id="official-order-overlays" data-block-name="公务车预约覆盖层"
+      class="official-order-add-overlay">
+      <el-dialog v-model="memberVisible" title="选择员工" width="960px" destroy-on-close
+        class="official-employee-dialog official-order-add-overlay">
+        <div class="employee-dialog-note">可先筛选分公司、部门，再搜索具体员工。</div>
+        <div class="employee-filter-bar">
+          <el-select v-model="employeeFilterBranch" clearable placeholder="全部分公司">
+            <el-option v-for="branch in branchOptions" :key="branch" :label="branch" :value="branch"></el-option>
+          </el-select>
+          <el-select v-model="employeeFilterDepartment" clearable placeholder="全部部门">
+            <el-option v-for="department in departmentOptions" :key="department" :label="department"
+              :value="department"></el-option>
+          </el-select>
+          <el-input v-model="memberKeyword" :prefix-icon="Search" clearable
+            placeholder="搜索姓名 / 证件号 / 手机号 / Email"></el-input>
+        </div>
+        <el-table :data="filteredMembers" border height="360" class="official-employee-table" table-layout="fixed">
+          <el-table-column prop="employeeNo" label="员工编号" width="132"></el-table-column>
+          <el-table-column prop="name" label="姓名" width="92"></el-table-column>
+          <el-table-column prop="branch" label="分公司" width="118"></el-table-column>
+          <el-table-column prop="department" label="部门" width="126"></el-table-column>
+          <el-table-column prop="phone" label="手机号" width="132"></el-table-column>
+          <el-table-column prop="email" label="Email" min-width="180" show-overflow-tooltip></el-table-column>
+          <el-table-column label="操作" width="72" fixed="right">
+            <template #default="{ row }">
+              <el-button type="primary" link @click="selectMember(row)">选择</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+
+      <el-dialog v-model="orderSuccessVisible" title="公务车订单已建立" width="520px" center destroy-on-close
+        :close-on-click-modal="false" class="official-order-add-overlay">
+        <div class="space-y-4">
+          <div class="text-center">
+            <div
+              class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+              <el-icon class="text-3xl">
+                <CircleCheck></CircleCheck>
+              </el-icon>
+            </div>
+            <div class="text-lg font-bold text-gray-900">{{ createdOrder.orderNo }}</div>
+            <div class="mt-1 text-xs text-gray-500">订单已写入公务车订单列表，并保留员工、车辆、据点与预定时间快照。</div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div class="mb-1 text-xs text-gray-400">订单状态</div>
+              <div class="font-bold text-gray-800">{{ createdOrder.statusText }}</div>
+            </div>
+            <div class="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div class="mb-1 text-xs text-gray-400">审核状态</div>
+              <div class="font-bold text-gray-800">{{ createdOrder.approvalText }}</div>
+            </div>
+            <div class="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div class="mb-1 text-xs text-gray-400">车辆</div>
+              <div class="font-bold text-gray-800">{{ createdOrder.vehicle }}</div>
+            </div>
+            <div class="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div class="mb-1 text-xs text-gray-400">租期</div>
+              <div class="font-bold text-gray-800">{{ createdOrder.leaseTerm }}</div>
+            </div>
+          </div>
+        </div>
+        <template #footer>
+          <div class="flex gap-3">
+            <el-button class="flex-1" @click="resetForNextOrder">继续建立</el-button>
+            <el-button type="primary" class="flex-1" @click="goBack">返回订单列表</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
+    <!-- PAGE_OVERLAYS_END -->
+  </div>
+
+  <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+  <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+  <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script data-prototype-menu-icon-renderer>
+    (() => {
+      const renderMenuIcons = () => {
+        if (!window.Vue || !window.ElementPlusIconsVue) return;
+        document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+          if (host.dataset.prototypeMenuIconReady === 'true') return;
+          const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+          const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+          if (!icon) return;
+          window.Vue.render(window.Vue.h(icon), host);
+          host.dataset.prototypeMenuIconReady = 'true';
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+          once: true,
+        });
+      } else {
+        requestAnimationFrame(renderMenuIcons);
+      }
+    })();
+  </script>
+  <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+  <script data-page-script>
+    /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+    function pageSetup() {
+      const { ref, reactive, computed } = Vue;
+      const { ElMessage } = ElementPlus;
+
+      const addDays = (days, hour, minute = 0) => {
+        const date = new Date();
+        date.setDate(date.getDate() + days);
+        date.setHours(hour, minute, 0, 0);
+        return date;
+      };
+
+      const members = [
+        { userId: 1, employeeNo: 'EMP-TPE-001', name: '王怡君', idNumber: 'A123456789', email: 'yijun.wang@rimo.demo', phone: '0912-345-678', branch: '台北分公司', department: '业务部', supervisor: '陈经理' },
+        { userId: 2, employeeNo: 'EMP-TXG-014', name: '陈建宏', idNumber: 'B223456789', email: 'jason.chen@rimo.demo', phone: '0988-120-776', branch: '台中分公司', department: '行政管理部', supervisor: '林处长' },
+        { userId: 3, employeeNo: 'EMP-KHH-023', name: '林雅婷', idNumber: 'C323456789', email: 'yating.lin@rimo.demo', phone: '0922-886-301', branch: '高雄分公司', department: '财务部', supervisor: '王主任' }
+      ];
+
+      const siteOptions = [
+        { label: '台北总部－B2 公务车停车区', value: 'taipei_hq' },
+        { label: '新北汐止办公区－一楼取车点', value: 'xizhi_office' },
+        { label: '桃园航空城厂区－行政大楼停车场', value: 'taoyuan_plant' },
+        { label: '台中营运中心－地下停车场', value: 'taichung_center' },
+        { label: '高雄前镇据点－访客停车区', value: 'kaohsiung_qianzhen' }
+      ];
+
+      const modelOptions = [
+        { label: 'Toyota Corolla Cross', value: 'cross', vehicleTypeId: 'suv', vehicleTypeLabel: '休旅车', desc: '空间灵活，适合多人同行' },
+        { label: 'Lexus ES 250', value: 'es250', vehicleTypeId: 'sedan', vehicleTypeLabel: '商务轿车', desc: '商务接待与重要客户拜访' },
+        { label: 'Toyota Camry', value: 'camry', vehicleTypeId: 'sedan', vehicleTypeLabel: '中大型轿车', desc: '长途出差与跨厂区通勤' }
+      ];
+
+      const vehicleOptions = [
+        { label: 'RMO-3201', value: 'car-3201', modelId: 'cross', vehicleTypeId: 'suv', siteId: 'taipei_hq', status: '可预约' },
+        { label: 'RMO-3208', value: 'car-3208', modelId: 'es250', vehicleTypeId: 'sedan', siteId: 'taipei_hq', status: '可预约' },
+        { label: 'RMO-5216', value: 'car-5216', modelId: 'cross', vehicleTypeId: 'suv', siteId: 'xizhi_office', status: '可预约' },
+        { label: 'RMO-6612', value: 'car-6612', modelId: 'camry', vehicleTypeId: 'sedan', siteId: 'taoyuan_plant', status: '可预约' },
+        { label: 'RMO-7318', value: 'car-7318', modelId: 'cross', vehicleTypeId: 'suv', siteId: 'taichung_center', status: '可预约' },
+        { label: 'RMO-8026', value: 'car-8026', modelId: 'camry', vehicleTypeId: 'sedan', siteId: 'taichung_center', status: '预约中' },
+        { label: 'RMO-9125', value: 'car-9125', modelId: 'cross', vehicleTypeId: 'suv', siteId: 'kaohsiung_qianzhen', status: '可预约' },
+        { label: 'RMO-9150', value: 'car-9150', modelId: 'es250', vehicleTypeId: 'sedan', siteId: 'kaohsiung_qianzhen', status: '保养中' }
+      ];
+
+      const memberVisible = ref(false);
+      const memberKeyword = ref('');
+      const memberSearchQuery = ref('');
+      const employeeFilterBranch = ref('');
+      const employeeFilterDepartment = ref('');
+      const orderSuccessVisible = ref(false);
+
+      const memberInfo = reactive({ ...members[0] });
+      const postForm = reactive({
+        userId: members[0].userId,
+        accountType: 1,
+        pickupSiteId: 'taipei_hq',
+        returnStationId: 'taipei_hq',
+        carModelId: 'cross',
+        vehicleId: 'car-3201',
+        pickupTime: addDays(1, 9),
+        returnTime: addDays(2, 18),
+        vehicleTypeId: 'suv',
+        carModel: 'Toyota Corolla Cross',
+        passengerCount: 2,
+        destination: '新北汐止办公区',
+        purpose: '跨据点专案会议与客户拜访'
+      });
+
+      const createdOrder = reactive({
+        orderNo: '',
+        statusText: '',
+        approvalText: '',
+        vehicle: '',
+        leaseTerm: ''
+      });
+
+      const branchOptions = computed(() => [...new Set(members.map((item) => item.branch))]);
+
+      const departmentOptions = computed(() => {
+        const scoped = employeeFilterBranch.value
+          ? members.filter((item) => item.branch === employeeFilterBranch.value)
+          : members;
+        return [...new Set(scoped.map((item) => item.department))];
+      });
+
+      const filteredMembers = computed(() => {
+        const keyword = memberKeyword.value.trim().toLowerCase();
+        return members.filter((item) => {
+          if (employeeFilterBranch.value && item.branch !== employeeFilterBranch.value) return false;
+          if (employeeFilterDepartment.value && item.department !== employeeFilterDepartment.value) return false;
+          if (!keyword) return true;
+          return [item.name, item.idNumber, item.email, item.phone, item.branch, item.department, item.employeeNo]
+            .some((value) => String(value).toLowerCase().includes(keyword));
+        });
+      });
+
+      const filterMember = (query) => {
+        memberSearchQuery.value = (query || '').trim().toLowerCase();
+      };
+
+      const memberSelectOptions = computed(() => {
+        const keyword = memberSearchQuery.value;
+        if (!keyword) return members;
+        return members.filter((item) => [item.name, item.idNumber, item.phone, item.email, item.employeeNo]
+          .some((value) => String(value || '').toLowerCase().includes(keyword)));
+      });
+
+      const filteredVehicleOptions = computed(() => vehicleOptions.filter((item) => {
+        if (postForm.pickupSiteId && item.siteId !== postForm.pickupSiteId) return false;
+        if (postForm.carModelId && item.modelId !== postForm.carModelId) return false;
+        return true;
+      }));
+
+      const selectedSiteLabel = computed(() => siteOptions.find((item) => item.value === postForm.pickupSiteId)?.label || '');
+      const selectedModelLabel = computed(() => modelOptions.find((item) => item.value === postForm.carModelId)?.label || '');
+      const selectedVehicleLabel = computed(() => vehicleOptions.find((item) => item.value === postForm.vehicleId)?.label || '');
+      const memberInitial = computed(() => memberInfo.name ? memberInfo.name.slice(0, 1) : '员');
+
+      const formatDateTime = (value) => {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        const pad = (num) => String(num).padStart(2, '0');
+        return `${date.getFullYear()}/${pad(date.getMonth() + 1)}/${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      };
+
+      const reservationTimeLabel = computed(() => {
+        if (!postForm.pickupTime || !postForm.returnTime) return '未选择';
+        return `${formatDateTime(postForm.pickupTime)} 至 ${formatDateTime(postForm.returnTime)}`;
+      });
+
+      const leaseTermResult = computed(() => {
+        if (!postForm.pickupTime || !postForm.returnTime) return '';
+        const start = new Date(postForm.pickupTime);
+        const end = new Date(postForm.returnTime);
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) return '';
+        const minutes = Math.floor((end - start) / 60000);
+        const days = Math.floor(minutes / 1440);
+        const hours = Math.floor((minutes % 1440) / 60);
+        const mins = minutes % 60;
+        const parts = [];
+        if (days) parts.push(`${days}天`);
+        if (hours) parts.push(`${hours}小时`);
+        if (mins) parts.push(`${mins}分钟`);
+        return parts.join('') || '0分钟';
+      });
+
+      const getModelAvailableCount = (modelId) => vehicleOptions.filter((item) => {
+        if (item.modelId !== modelId) return false;
+        if (postForm.pickupSiteId && item.siteId !== postForm.pickupSiteId) return false;
+        return item.status === '可预约';
+      }).length;
+
+      const requiredChecklist = computed(() => [
+        { label: '用车员工', done: Boolean(postForm.userId) },
+        { label: '取车据点', done: Boolean(postForm.pickupSiteId) },
+        { label: '还车据点', done: Boolean(postForm.returnStationId) },
+        { label: '预定车款', done: Boolean(postForm.carModelId) },
+        { label: '车牌号', done: Boolean(postForm.vehicleId) },
+        { label: '预定日期（起）', done: Boolean(postForm.pickupTime) },
+        { label: '预定日期（止）', done: Boolean(postForm.returnTime) },
+        { label: '目的地', done: Boolean(postForm.destination.trim()) },
+        { label: '用车事由', done: Boolean(postForm.purpose.trim()) }
+      ]);
+
+      const selectMember = (member) => {
+        Object.assign(memberInfo, member);
+        postForm.userId = member.userId;
+        memberSearchQuery.value = '';
+        memberVisible.value = false;
+      };
+
+      const selectMemberById = (userId) => {
+        const member = members.find((item) => item.userId === userId);
+        if (member) {
+          selectMember(member);
+          return;
+        }
+        Object.assign(memberInfo, {
+          userId: '',
+          employeeNo: '',
+          name: '',
+          idNumber: '',
+          email: '',
+          phone: '',
+          branch: '',
+          department: '',
+          supervisor: ''
+        });
+        postForm.userId = '';
+      };
+
+      const handlePickupSiteChange = (value) => {
+        postForm.returnStationId = value;
+        postForm.vehicleId = '';
+        if (getModelAvailableCount(postForm.carModelId) === 0) {
+          postForm.carModelId = '';
+          postForm.carModel = '';
+          postForm.vehicleTypeId = '';
+        }
+      };
+
+      const selectModel = (model) => {
+        if (getModelAvailableCount(model.value) === 0) {
+          ElMessage.warning('当前据点没有该车款的可预约车辆');
+          return;
+        }
+        postForm.carModelId = model.value;
+        postForm.carModel = model.label;
+        postForm.vehicleTypeId = model.vehicleTypeId;
+        postForm.vehicleId = '';
+      };
+
+      const handleVehicleChange = (value) => {
+        const selected = vehicleOptions.find((item) => item.value === value);
+        postForm.vehicleTypeId = selected?.vehicleTypeId || postForm.vehicleTypeId;
+      };
+
+      const goBack = () => {
+        if (history.length > 1) history.back();
+        else ElMessage.info('当前为独立原型预览');
+      };
+
+      const resetForNextOrder = () => {
+        orderSuccessVisible.value = false;
+        postForm.destination = '';
+        postForm.purpose = '';
+      };
+
+      const submitOrder = () => {
+        const missing = requiredChecklist.value.filter((item) => !item.done).map((item) => item.label);
+        if (missing.length) {
+          ElMessage.warning(`请先完成：${missing.join('、')}`);
+          return;
+        }
+
+        const start = new Date(postForm.pickupTime);
+        const end = new Date(postForm.returnTime);
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+          ElMessage.warning('预定日期（止）必须晚于预定日期（起）');
+          return;
+        }
+
+        const selectedVehicle = vehicleOptions.find((item) => item.value === postForm.vehicleId);
+        if (!selectedVehicle || selectedVehicle.status !== '可预约') {
+          ElMessage.warning('当前车辆不可预约，请重新选择车牌号');
+          return;
+        }
+
+        const now = new Date();
+        const pad = (num) => String(num).padStart(2, '0');
+        Object.assign(createdOrder, {
+          orderNo: `OC-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${String(Date.now()).slice(-4)}`,
+          statusText: '已预约',
+          approvalText: '按企业设定判断',
+          vehicle: selectedVehicleLabel.value,
+          leaseTerm: leaseTermResult.value
+        });
+        orderSuccessVisible.value = true;
+      };
+
+      return {
+        memberVisible,
+        memberKeyword,
+        memberSearchQuery,
+        employeeFilterBranch,
+        employeeFilterDepartment,
+        memberInfo,
+        postForm,
+        branchOptions,
+        departmentOptions,
+        siteOptions,
+        modelOptions,
+        filteredMembers,
+        memberSelectOptions,
+        filteredVehicleOptions,
+        selectedSiteLabel,
+        selectedModelLabel,
+        selectedVehicleLabel,
+        reservationTimeLabel,
+        memberInitial,
+        leaseTermResult,
+        getModelAvailableCount,
+        filterMember,
+        selectMember,
+        selectMemberById,
+        handlePickupSiteChange,
+        selectModel,
+        handleVehicleChange,
+        goBack,
+        resetForNextOrder,
+        submitOrder,
+        orderSuccessVisible,
+        createdOrder
+      };
+    }
+    /* PAGE_LOGIC_END */
+
+    /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+    const app = Vue.createApp({ setup: pageSetup });
+    function registerLegacyComponents(app) {
+      for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+    }
+    registerLegacyComponents(app);
+    app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+    app.mount('#app');
+    /* PROTOTYPE_BOOTSTRAP_END */
+  </script>
+</body>
+
+</html>

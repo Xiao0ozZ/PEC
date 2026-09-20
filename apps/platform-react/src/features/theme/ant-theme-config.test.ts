@@ -31,7 +31,7 @@ describe('createAntThemeConfig', () => {
       itemHeight: 36,
       itemMarginBlock: 2,
       itemSelectedBg: 'var(--ant-color-primary)',
-      itemSelectedColor: '#fff',
+      itemSelectedColor: 'var(--ant-color-text-light-solid)',
       horizontalLineHeight: 36,
       horizontalItemBorderRadius: 18,
     });
@@ -42,10 +42,18 @@ describe('createAntThemeConfig', () => {
 
     expect(config.token).toMatchObject({
       colorPrimary: '#1677FF',
+      colorBgLayout: '#000000',
+      colorBgContainer: '#141414',
+      colorBgElevated: '#1f1f1f',
+      colorBorderSecondary: 'rgba(255, 255, 255, 0.14)',
     });
     expect(config.components?.Layout).toMatchObject({
       bodyBg: '#000000',
       headerBg: '#141414',
+    });
+    expect(config.components?.Menu).toMatchObject({
+      itemSelectedBg: 'var(--ant-color-primary)',
+      itemSelectedColor: 'var(--ant-color-text-light-solid)',
     });
   });
 });

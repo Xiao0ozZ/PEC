@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "projectId": "demo",
+  "links": {
+    "admin": {
+      "admin-home": "README.md"
+    }
+  }
+}

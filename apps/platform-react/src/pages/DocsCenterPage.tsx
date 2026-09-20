@@ -13,7 +13,7 @@ import {
 import { findProject } from '@/features/projects/project-model';
 import { MarkdownReader } from '@/features/docs/MarkdownReader';
 import { resolveDocumentAssetPath, type MarkdownHeading } from '@/features/docs/markdown';
-import { Button, Collapse, Empty, Input, Layout, List, Spin, Tag, Typography } from '@/ui/ant';
+import { Button, Collapse, Empty, Input, Layout, Spin, Tag, Typography } from '@/ui/ant';
 import { ArrowLeftOutlined, FileTextOutlined, LinkOutlined } from '@/ui/ant/icons';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
@@ -152,7 +152,7 @@ export function DocsCenterPage() {
   useEffect(() => {
     if (!activeOutlineHeadingId) return;
     document
-      .querySelector<HTMLElement>('.docs-outline .ant-list-item.is-active')
+      .querySelector<HTMLElement>('.docs-outline__list .is-active')
       ?.scrollIntoView({ block: 'nearest' });
   }, [activeOutlineHeadingId]);
 
@@ -212,7 +212,7 @@ export function DocsCenterPage() {
         </div>
         <div className="docs-header__current">产品资料</div>
         <div className="docs-header__actions">
-          <Tag bordered={false}>{documents.length} 份文档</Tag>
+          <Tag variant="filled">{documents.length} 份文档</Tag>
           <ThemeControl />
           <Button type="text" onClick={() => navigate('/')}>
             返回首页
@@ -226,7 +226,7 @@ export function DocsCenterPage() {
               <Text strong>文档目录</Text>
               <Text type="secondary">按文件夹分类</Text>
             </div>
-            <Tag bordered={false}>{filteredDocuments.length}</Tag>
+            <Tag variant="filled">{filteredDocuments.length}</Tag>
           </div>
           <Input.Search
             value={filter}
@@ -243,20 +243,18 @@ export function DocsCenterPage() {
                   key: 'pages',
                   label: `关联页面 ${associatedPages.length}`,
                   children: (
-                    <List
-                      size="small"
-                      dataSource={associatedPages}
-                      renderItem={(page) => (
-                        <List.Item>
+                    <ul className="docs-associated-pages__list">
+                      {associatedPages.map((page) => (
+                        <li key={page.key}>
                           <Button type="text" icon={<LinkOutlined />} onClick={() => navigate(page.route)}>
                             <span>
                               {page.title}
                               <small>{page.clientName}</small>
                             </span>
                           </Button>
-                        </List.Item>
-                      )}
-                    />
+                        </li>
+                      ))}
+                    </ul>
                   ),
                 },
               ]}
@@ -270,11 +268,9 @@ export function DocsCenterPage() {
                     <Text strong>{group.label}</Text>
                     <Text type="secondary">{group.documents.length}</Text>
                   </div>
-                  <List
-                    className="docs-file-list"
-                    dataSource={group.documents}
-                    renderItem={(document) => (
-                      <List.Item className={document.path === selectedPath ? 'is-active' : ''}>
+                  <ul className="docs-file-list">
+                    {group.documents.map((document) => (
+                      <li className={document.path === selectedPath ? 'is-active' : ''} key={document.path}>
                         <Button
                           type="text"
                           block
@@ -286,9 +282,9 @@ export function DocsCenterPage() {
                             <strong>{getDocumentName(document)}</strong>
                           </span>
                         </Button>
-                      </List.Item>
-                    )}
-                  />
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               ))
             ) : (
@@ -326,22 +322,21 @@ export function DocsCenterPage() {
               <Text strong>本文目录</Text>
               <Text type="secondary">按章节跳转</Text>
             </div>
-            <Tag bordered={false}>{headings.length}</Tag>
+            <Tag variant="filled">{headings.length}</Tag>
           </div>
-          <List
-            size="small"
-            dataSource={headings}
-            renderItem={(heading) => (
-              <List.Item
+          <ul className="docs-outline__list">
+            {headings.map((heading) => (
+              <li
                 className={heading.id === activeOutlineHeadingId ? 'is-active' : ''}
+                key={heading.id}
                 style={{ paddingLeft: (heading.level - 1) * 10 }}
               >
                 <Button type="text" block onClick={() => scrollToHeading(heading.id)}>
                   {heading.text}
                 </Button>
-              </List.Item>
-            )}
-          />
+              </li>
+            ))}
+          </ul>
         </Sider>
       </Layout>
     </Layout>

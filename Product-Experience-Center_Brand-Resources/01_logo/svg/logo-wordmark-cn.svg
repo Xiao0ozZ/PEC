@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="90" viewBox="0 0 480 90">
+    <defs>
+      <linearGradient id="gFront" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1D7DFF"/><stop offset="1" stop-color="#0958D9"/></linearGradient>
+      <linearGradient id="gBack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#58AEFF"/><stop offset="1" stop-color="#0D6EFD"/></linearGradient>
+      <linearGradient id="gSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B7E0FF"/><stop offset="1" stop-color="#69B8FF"/></linearGradient>
+      <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0D6EFD" flood-opacity="0.18"/></filter>
+    </defs><text x="8" y="53" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="40" font-weight="700" fill="#12213A">产品功能体验中心</text><text x="9" y="78" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#667085" letter-spacing="1">PRODUCT EXPERIENCE CENTER</text></svg>

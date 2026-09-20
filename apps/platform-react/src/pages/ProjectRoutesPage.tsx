@@ -111,8 +111,8 @@ interface SectionBackup {
 
 function routeType(page: RoutePage) {
   if (page.sourceType === 'html-direct') return 'HTML 直读';
-  if (page.sourceType === 'html-template' || page.source === 'html-template') return 'HTML 导入';
-  return '工程页面';
+  if (page.sourceType === 'html-template') return 'HTML 托管';
+  return 'HTML 页面';
 }
 
 function initialRouteForm(client: RouteClient, page?: RoutePage): RouteForm {
@@ -251,7 +251,6 @@ export function ProjectRoutesPage() {
       target: {
         projectId,
         ...routeDialog.form,
-        ...(routeDialog.mode === 'create' ? { runtime: 'html' } : {}),
       },
     });
     setRouteDialog(null);
@@ -317,7 +316,7 @@ export function ProjectRoutesPage() {
       <Alert
         type="info"
         showIcon
-        title="路由新增会同时生成一个可运行的占位页面；页面内容可继续通过“页面导入导出”中的替换页面功能更新。"
+        title="路由新增会同时生成一个可运行的 HTML 占位页面；页面内容可直接在项目包的 html-pages 目录中维护。"
       />
       {routeQuery.isError ? (
         <Alert type="error" showIcon title="路由读取失败" description={routeQuery.error.message} />
@@ -637,7 +636,7 @@ function RouteTable({
           minWidth: 200,
           render: (_value, page: RoutePage) => (
             <div>
-              <small>{page.view || page.source || '未记录页面来源'}</small>
+              <small>{page.source || '未记录页面来源'}</small>
               {pagePrdLinkFor(pageLinks, client.id, page.name) ? (
                 <Tag color="success">PRD 已关联</Tag>
               ) : (

@@ -11,7 +11,7 @@ function normalizeText(value) {
   return String(value || '')
     .normalize('NFKC')
     .toLowerCase()
-    .replace(/\.(?:md|html?|vue)$/iu, '')
+    .replace(/\.(?:md|html?)$/iu, '')
     .replace(/^\d+[_-]*/u, '')
     .replace(/[^\p{L}\p{N}]+/gu, '');
 }
@@ -184,8 +184,8 @@ function createPages(project) {
         sectionId: page.section || '',
         sectionTitle: section?.title || '',
         menu: page.menu !== false,
-        sourceType: page.sourceType || (page.view ? 'vue' : 'unknown'),
-        source: page.source || page.view || '',
+        sourceType: page.sourceType || 'unknown',
+        source: page.source || '',
         documentPath,
       };
     });

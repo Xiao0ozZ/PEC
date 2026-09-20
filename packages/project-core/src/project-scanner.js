@@ -1,4 +1,3 @@
-import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 import { importJavaScriptFile, readJsonFile, resolveExistingPathInsideRoot } from './filesystem.js';
@@ -17,16 +16,9 @@ function summarizePageRuntime(manifest, definitions) {
     clients[client.id] = pages.reduce(
       (summary, page) => {
         if (page?.sourceType === 'html-template') summary.htmlTemplate += 1;
-        else if (
-          String(page?.view || '')
-            .toLowerCase()
-            .endsWith('.vue')
-        ) {
-          summary.vueSfc += 1;
-        }
         return summary;
       },
-      { htmlTemplate: 0, vueSfc: 0 },
+      { htmlTemplate: 0 },
     );
   }
   return { clients };
@@ -61,14 +53,13 @@ export async function scanProjectPackages(projectsRoot, { cache, mounts = {} } =
         if (!definitionsPath) {
           errors.push(`找不到页面定义文件：${manifest.pageDefinitions}。`);
         } else {
-          const definitionsSource = await fs.readFile(definitionsPath, 'utf8');
           const definitionsModule = await importJavaScriptFile(definitionsPath, {
             cacheKey: `${Date.now()}-${location.projectId}`,
           });
           const definitions = definitionsModule.clientPageDefinitions || definitionsModule.default;
           pageRuntime = summarizePageRuntime(manifest, definitions);
           errors.push(
-            ...(await validateProjectDefinitions(manifest, projectRoot, definitions, definitionsSource, {
+            ...(await validateProjectDefinitions(manifest, projectRoot, definitions, {
               mounts,
             })),
           );

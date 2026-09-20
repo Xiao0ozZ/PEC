@@ -1,11 +1,8 @@
-import { isSupportedPlatformExportFormat } from './html-export-format.js';
-
 const INLINE_EVENT_PATTERN = /\son[a-z]+\s*=/giu;
 const EXTERNAL_RESOURCE_PATTERN = /<(?:script|link|img)\b[^>]+(?:src|href)=["']https?:\/\//giu;
 const SIDEBAR_CLASS_PATTERN = /<aside\b[^>]*class=["'][^"']*prototype-sidebar/giu;
 const LOCATION_NAVIGATION_PATTERN =
   /window\.location(?:\.href)?\s*=(?!=)|window\.location\.(?:assign|replace)\s*\(/gu;
-const DIALOG_TAG_PATTERN = /<(?:el-dialog|el-drawer)\b/giu;
 const RELATIVE_HTML_LINK_PATTERN = /<a\b[^>]*href=["']([^"'#][^"']*)["'][^>]*>/giu;
 
 function countMatches(source, pattern) {
@@ -63,8 +60,7 @@ export function inspectHtmlPrototype(
   const errors = [];
   const warnings = [];
   const manifest = readManifest(html);
-  const isRoundTripExport = Boolean(manifest?.exportFormat);
-  const isEditableTemplate = manifest?.templateVersion === 1 && !isRoundTripExport;
+  const isEditableTemplate = manifest?.templateVersion === 1;
   const markup = html.replace(/<!--[\s\S]*?-->/gu, '');
   const contentCount = countMatches(markup, /<[^>]*\bdata-page-content(?:\s|=|>)[^>]*>/giu);
   const businessContentCount = countMatches(markup, /<[^>]*\bdata-business-content(?:\s|=|>)[^>]*>/giu);
@@ -90,14 +86,6 @@ export function inspectHtmlPrototype(
       if (!String(manifest[field] || '').trim()) {
         errors.push(issue('manifest-field-missing', `页面 Manifest 缺少 ${field}。`, field));
       }
-    }
-    if (manifest.exportFormat !== undefined && !isSupportedPlatformExportFormat(manifest.exportFormat)) {
-      errors.push(
-        issue(
-          'unsupported-export-format',
-          `Manifest 的 exportFormat「${manifest.exportFormat}」不受支持，回导时会被拒绝。`,
-        ),
-      );
     }
   }
 
@@ -130,18 +118,6 @@ export function inspectHtmlPrototype(
       if (!html.includes(marker)) {
         errors.push(issue('template-marker-missing', `模板编辑边界缺失：${marker}`, marker));
       }
-    }
-    const overlaysRegion =
-      /\[AI-EDIT\] PAGE_OVERLAYS_START([\s\S]*?)PAGE_OVERLAYS_END/u.exec(html)?.[1] || '';
-    const dialogTotal = countMatches(markup, DIALOG_TAG_PATTERN);
-    const dialogInsideOverlays = countMatches(overlaysRegion, DIALOG_TAG_PATTERN);
-    if (dialogTotal > dialogInsideOverlays) {
-      errors.push(
-        issue(
-          'dialog-outside-overlays',
-          `检测到 ${dialogTotal - dialogInsideOverlays} 个弹窗/抽屉写在 PAGE_OVERLAYS 区域之外，直读和导入时不会按弹窗处理。`,
-        ),
-      );
     }
   }
 
@@ -217,7 +193,6 @@ export function inspectHtmlPrototype(
       errors: errors.length,
       warnings: warnings.length,
       template: isEditableTemplate,
-      roundTrip: isRoundTripExport,
       document: requireDocument,
       contentCount,
       businessContentCount,

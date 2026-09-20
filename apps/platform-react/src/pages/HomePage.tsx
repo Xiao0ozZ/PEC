@@ -22,6 +22,7 @@ import {
   getClientRuntimeStatus,
   visibleProjects,
 } from '@/features/projects/project-model';
+import { DEFAULT_PROJECT_THEME } from '@/features/projects/project-config-model';
 import {
   Alert,
   Avatar,
@@ -43,10 +44,10 @@ import {
   FolderOpenOutlined,
   MobileOutlined,
   SettingOutlined,
-  UploadOutlined,
 } from '@/ui/ant/icons';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 import { AnimatedPillNav } from '@/ui/platform/AnimatedPillNav';
+import { PlatformBrand } from '@/ui/platform/PlatformBrand';
 
 const { Text, Title } = Typography;
 const TOOLS_VISIBILITY_KEY = 'project-platform:home-engineering-tools';
@@ -99,29 +100,43 @@ export function HomePage() {
     const capsule = topbarCapsuleRef.current;
     if (!homePage || !capsule) return;
 
+    let frameId: number | null = null;
+    let disposed = false;
+
     const syncShellWidth = () => {
-      const width = Math.round(capsule.getBoundingClientRect().width);
+      frameId = null;
+      if (disposed) return;
+
+      const width = capsule.getBoundingClientRect().width;
       if (width > 0) homePage.style.setProperty('--home-shell-width', `${width}px`);
     };
 
-    syncShellWidth();
-    const resizeObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(syncShellWidth);
+    const scheduleShellWidthSync = () => {
+      if (disposed) return;
+      if (frameId !== null) cancelAnimationFrame(frameId);
+
+      frameId = requestAnimationFrame(() => {
+        frameId = requestAnimationFrame(syncShellWidth);
+      });
+    };
+
+    scheduleShellWidthSync();
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(scheduleShellWidthSync);
     resizeObserver?.observe(capsule);
-    window.addEventListener('resize', syncShellWidth);
+    window.addEventListener('resize', scheduleShellWidthSync);
+    document.fonts?.ready.then(scheduleShellWidthSync).catch(() => undefined);
 
     return () => {
+      disposed = true;
+      if (frameId !== null) cancelAnimationFrame(frameId);
       resizeObserver?.disconnect();
-      window.removeEventListener('resize', syncShellWidth);
+      window.removeEventListener('resize', scheduleShellWidthSync);
     };
-  }, [projects.length, showTools]);
+  }, [catalogQuery.isPending, projectQuery.isPending, projects.length, showTools]);
 
   function selectProject(projectId: string) {
     navigate(projectId ? `/?project=${encodeURIComponent(projectId)}` : '/', { replace: true });
-  }
-
-  function openPageTransfer() {
-    if (!selectedProject) return;
-    navigate(`/tools/page-transfer?project=${encodeURIComponent(selectedProject.id)}`);
   }
 
   if (projectQuery.isPending || catalogQuery.isPending) {
@@ -138,10 +153,7 @@ export function HomePage() {
       <header className="home-topbar home-topbar--ant">
         <div ref={topbarCapsuleRef} className="home-topbar__capsule">
           <Button className="home-brand home-brand--ant" type="text" onClick={() => selectProject('')}>
-            <Avatar shape="square" icon={<AppstoreOutlined />} />
-            <span className="home-brand__text">
-              <strong>产品功能体验中心</strong>
-            </span>
+            <PlatformBrand variant="full" />
           </Button>
 
           <AnimatedPillNav
@@ -188,14 +200,6 @@ export function HomePage() {
                   aria-label="项目管理"
                   title="项目管理"
                   onClick={() => navigate('/tools/projects')}
-                />
-                <Button
-                  type="text"
-                  icon={<UploadOutlined />}
-                  aria-label="导入导出"
-                  title="导入导出"
-                  disabled={!selectedProject}
-                  onClick={openPageTransfer}
                 />
                 <Button
                   type="text"
@@ -250,7 +254,7 @@ function ProjectWorkspace({
   const entries = [...(project.entries ?? [])].sort((left, right) => (left.order ?? 0) - (right.order ?? 0));
   const productEntries = entries.filter((entry) => entry.kind !== 'docs');
   const documentEntries = entries.filter((entry) => entry.kind === 'docs');
-  const accent = project.theme?.primary || '#1677ff';
+  const accent = project.theme?.primary || DEFAULT_PROJECT_THEME.primary;
 
   return (
     <ConfigProvider theme={{ token: { colorPrimary: accent, colorInfo: accent } }}>
@@ -411,7 +415,7 @@ function ProjectEntryButton({
 
 function getEntryStatus(runtimeStatus: ReturnType<typeof getClientRuntimeStatus> | null) {
   if (!runtimeStatus) return { tag: '', color: undefined, description: '' };
-  if (runtimeStatus.state === 'ready' || runtimeStatus.state === 'partial') {
+  if (runtimeStatus.state === 'ready') {
     return {
       tag: `${runtimeStatus.runnablePageCount} 页`,
       color: 'processing' as const,

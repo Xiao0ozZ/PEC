@@ -1,0 +1,478 @@
+/* ==========================================================================
+   ds-* 圖表基元 — 六張看板共用
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → module-*.css
+
+   本檔只放跨模組複用的基元：狀態語義映射、量值條、比例帶、圖例、指標塊、
+   排名列、表格、空狀態、告警動效。各模組的專屬版面寫在自己的 module-*.css。
+
+   原先這些規則放在 module-exception.css 段一，導致其餘模組都得依賴異常通報
+   模組的樣式檔才能用 ds-band / ds-legend。抽出後各模組只依賴本檔。
+
+   全檔零字面色值 —— 顏色一律來自 tokens.css 的語義層。
+   ========================================================================== */
+
+/* ==========================================================================
+   段〇：面板
+   --------------------------------------------------------------------------
+   參考圖裡的基本單位是「一張圖表一張卡」，不是模組外殼再套一層底色。
+   因此卡片下沉到面板這一層：模組根元素只做佈局、保持透明，面板才有底、
+   邊、圓角與質感。這同時滿足了兩個要求 —— 展示模式不出現雙層方塊，
+   而版面又是參考圖那種緊挨著的卡片陣列。
+
+   質感全部由 token 提供，因此三套主題差異不只顏色：
+     標準淺色  純白 + 1px 實線，無陰影無光暈，清爽靠留白
+     品牌黑黃  實色卡片 + 頂緣品牌細光
+     深藍科技  玻璃漸層 + 青色發光描邊 + 內側冷光 + 四角括號
+   ========================================================================== */
+
+.ds-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    /* 內距由主題決定：極簡靠留白，科技風靠密度 */
+    padding: var(--fx-panel-pad, 14px);
+    background: var(--fx-panel-bg, var(--sf-card));
+    border: 1px solid var(--ln-card);
+    border-radius: var(--fx-r-panel);
+    box-shadow: var(--fx-panel-ring, 0 0 0 transparent), var(--fx-shadow);
+    overflow: hidden;
+}
+
+/* 頂緣細光：儀表面板的上緣高光，不是裝飾漸層。 */
+.ds-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--fx-panel-top, none);
+    opacity: var(--fx-panel-top-opacity, 0);
+    pointer-events: none;
+}
+
+/* 四角括號：科技風面板的招牌細節。用四道漸層畫在單一 after 上，
+   不額外增加 DOM；淺色主題把 --fx-corner-size 設為 0 即整體消失。 */
+.ds-panel::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: calc(var(--fx-r-panel) - 4px);
+    pointer-events: none;
+    background:
+        linear-gradient(var(--fx-corner), var(--fx-corner)) left top,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) left top,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) right top,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) right top,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) left bottom,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) left bottom,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) right bottom,
+        linear-gradient(var(--fx-corner), var(--fx-corner)) right bottom;
+    background-repeat: no-repeat;
+    background-size:
+        var(--fx-corner-size) 1px, 1px var(--fx-corner-size),
+        var(--fx-corner-size) 1px, 1px var(--fx-corner-size),
+        var(--fx-corner-size) 1px, 1px var(--fx-corner-size),
+        var(--fx-corner-size) 1px, 1px var(--fx-corner-size);
+}
+
+/* --- 面板標題 ------------------------------------------------------------
+   標題前一道短accent 條：參考圖兩張都有這個記號，用來把標題與資料分層。
+   ------------------------------------------------------------------------ */
+.ds-panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    flex: none;
+    margin-bottom: var(--sp-2);
+}
+
+.ds-panel-head h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: 0;
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--ink-1);
+}
+
+.ds-panel-head h4::before {
+    content: "";
+    width: 3px;
+    height: 13px;
+    border-radius: 2px;
+    background: var(--fx-title-bar, var(--brand));
+    flex: none;
+}
+
+.ds-panel-head > b {
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    color: var(--ink-3);
+    white-space: nowrap;
+}
+
+/* --- 標題旁的說明提示 ----------------------------------------------------
+   說明文字不常駐佔一行 —— 大屏上那是旁白，不是資料。收進一個 info 圖示，
+   懸停才顯示。用 CSS tooltip 而非 title 屬性：原生 title 有 1 秒延遲，
+   且樣式不受控。
+   ------------------------------------------------------------------------ */
+.ds-info {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 15px;
+    height: 15px;
+    flex: none;
+    border-radius: 999px;
+    color: var(--ink-3);
+    cursor: help;
+}
+
+.ds-info > svg, .ds-info > i { width: 13px; height: 13px; }
+
+.ds-info:hover { color: var(--ink-2); }
+
+.ds-info::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    z-index: 30;
+    width: max-content;
+    max-width: 260px;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--fx-r-inner);
+    background: var(--sf-chrome);
+    border: 1px solid var(--ln-card);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .3);
+    color: var(--ink-2);
+    font-size: var(--fs-micro);
+    font-weight: 400;
+    line-height: 1.6;
+    white-space: normal;
+    text-align: left;
+    transform: translateX(-50%) translateY(-3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--mo-fast) var(--ease), transform var(--mo-fast) var(--ease);
+}
+
+.ds-info:hover::after,
+.ds-info:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* 靠右的面板，提示往左收，避免溢出卡片 */
+.ds-panel-head .ds-info::after { left: 0; transform: translateX(0) translateY(-3px); }
+.ds-panel-head .ds-info:hover::after { transform: translateX(0) translateY(0); }
+
+.ds-panel-sub {
+    flex: none;
+    margin: 0 0 var(--sp-2);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   段一：可複用圖表基元
+   ========================================================================== */
+
+/* --- 狀態語義映射 --------------------------------------------------------
+   掛上 .is-void / .is-low / .is-notice / .is-warn / .is-critical / .is-offline
+   即取得該等級的三個值。組件內部只引用 --lv-*，不直接碰 --st-*，
+   因此新增等級不必改組件。
+   ------------------------------------------------------------------------ */
+.is-void { --lv: var(--st-void); --lv-soft: var(--st-void-soft); --lv-line: var(--st-void-line); }
+.is-low { --lv: var(--st-info); --lv-soft: var(--st-info-soft); --lv-line: var(--st-info-line); }
+.is-normal { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); --lv-line: var(--st-normal-line); }
+.is-notice { --lv: var(--st-notice); --lv-soft: var(--st-notice-soft); --lv-line: var(--st-notice-line); }
+.is-warn { --lv: var(--st-warn); --lv-soft: var(--st-warn-soft); --lv-line: var(--st-warn-line); }
+.is-critical { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); --lv-line: var(--st-critical-line); }
+.is-offline { --lv: var(--st-offline); --lv-soft: var(--st-offline-soft); --lv-line: var(--st-offline-line); }
+
+/* --- 狀態標籤：顏色 + 圖示 + 文字，三者齊備 ------------------------------
+   狀態永不只靠顏色傳達。色弱、灰階列印、forced-colors 下文字仍在。
+   ------------------------------------------------------------------------ */
+.ds-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 2px var(--sp-2);
+    border-radius: 999px;
+    background: var(--lv-soft, var(--sf-inset));
+    border: 1px solid var(--lv-line, var(--ln-hair));
+    color: var(--lv, var(--ink-2));
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.ds-flag > svg,
+.ds-flag > i {
+    width: 11px;
+    height: 11px;
+    flex: none;
+}
+
+/* --- 量值條 --------------------------------------------------------------
+   細記號、資料端 4px 圓角、貼齊基線。元素上給 --v: 0~100。
+   軌道做極淺內凹，讓條像是嵌在儀表面板上而不是浮在白底。
+   ------------------------------------------------------------------------ */
+.ds-bar {
+    position: relative;
+    display: block;
+    height: var(--mk-bar-h-sm);
+    border-radius: 999px;
+    background: var(--sf-inset);
+    box-shadow: var(--fx-track-inset);
+    overflow: hidden;
+}
+
+.ds-bar > b {
+    display: block;
+    width: calc(var(--v, 0) * 1%);
+    height: 100%;
+    border-radius: 0 var(--mk-end-r) var(--mk-end-r) 0;
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--lv, var(--seq-hue)) 62%, transparent),
+        var(--lv, var(--seq-hue)));
+    box-shadow: var(--fx-data-glow);
+    transition: width var(--mo-slow) var(--ease);
+}
+
+/* --- 比例帶：部分對全體 --------------------------------------------------
+   段與段之間留 2px 表面間隙，而不是給每段描邊。
+
+   分段不是純平色：上緣打一道高光，讓條看起來是有厚度的實體而不是色塊。
+   高光比例與發光強度由主題的 --fx-data-sheen / --fx-data-glow 決定 ——
+   兩套深色主題發光，淺色主題兩者皆為零，靠實色與留白取得清爽感。
+   ------------------------------------------------------------------------ */
+.ds-band {
+    display: flex;
+    gap: var(--mk-gap);
+    height: var(--mk-bar-h);
+    border-radius: 999px;
+    background: var(--sf-inset);
+    box-shadow: var(--fx-track-inset);
+    overflow: hidden;
+}
+
+.ds-band > i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--seg, var(--lv, var(--seq-hue))) calc(100% - var(--fx-data-sheen)), var(--fx-sheen-tint)),
+        var(--seg, var(--lv, var(--seq-hue))));
+    box-shadow: var(--fx-data-glow);
+    transition: width var(--mo-slow) var(--ease);
+}
+
+.ds-band > i:first-child { border-radius: 999px 0 0 999px; }
+.ds-band > i:last-child { border-radius: 0 999px 999px 0; }
+.ds-band > i:only-child { border-radius: 999px; }
+
+/* --- 圖例 ---------------------------------------------------------------- */
+.ds-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-4);
+    font-size: var(--fs-micro);
+    color: var(--ink-2);
+}
+
+.ds-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+}
+
+.ds-legend > span::before {
+    content: "";
+    width: var(--mk-dot);
+    height: var(--mk-dot);
+    border-radius: 999px;
+    background: var(--seg, var(--ink-3));
+    flex: none;
+}
+
+/* --- 指標塊 --------------------------------------------------------------
+   主指標用窄體儀表數字。比例數字（非 tabular）—— 等寬只用在需要縱向對齊
+   的表格與刻度，大號數字用等寬會顯得鬆散。
+   ------------------------------------------------------------------------ */
+.ds-metric {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+}
+
+.ds-metric > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-l);
+    font-weight: 600;
+    line-height: .92;
+    letter-spacing: -.01em;
+    color: var(--ink-1);
+}
+
+.ds-metric > span {
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+}
+
+.ds-metric.is-sm > strong { font-size: var(--fs-num-s); }
+.ds-metric.is-md > strong { font-size: var(--fs-num-m); }
+.ds-metric.is-tinted > strong { color: var(--lv, var(--ink-1)); }
+
+/* --- 排名列 -------------------------------------------------------------- */
+.ds-rank {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: var(--mk-hit);
+    padding: var(--sp-1) 0;
+    border-bottom: 1px solid var(--ln-hair);
+}
+
+.ds-rank:last-of-type { border-bottom: 0; }
+
+.ds-rank-no {
+    font-family: var(--fx-font-mono);
+    font-size: var(--fs-micro);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+    text-align: right;
+}
+
+.ds-rank-name {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.ds-rank-name > strong {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ds-rank-val {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-1);
+    white-space: nowrap;
+}
+
+.ds-rank-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--lv, var(--ink-1));
+}
+
+.ds-rank-val > span {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- 表格視圖：每張圖表的無障礙孿生 --------------------------------------
+   淺色主題下部分色階低於 3:1，數值必須有第二條可讀路徑，
+   不能只能靠 tooltip 讀到。
+   ------------------------------------------------------------------------ */
+.ds-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-note);
+}
+
+.ds-table th,
+.ds-table td {
+    padding: var(--sp-2) var(--sp-3);
+    text-align: right;
+    border-bottom: 1px solid var(--ln-hair);
+    font-variant-numeric: tabular-nums;
+}
+
+.ds-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--sf-chrome);
+    color: var(--ink-2);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: .06em;
+    white-space: nowrap;
+}
+
+.ds-table td { color: var(--ink-1); }
+
+.ds-table th:first-child,
+.ds-table td:first-child {
+    text-align: left;
+    font-variant-numeric: normal;
+}
+
+.ds-table tbody tr:hover td { background: var(--sf-hover); }
+
+/* --- 空狀態 --------------------------------------------------------------
+   無資料絕不畫成 0 值圖表，必須說明是「當前條件下沒有資料」。
+   ------------------------------------------------------------------------ */
+.ds-empty {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    padding: var(--sp-6) var(--sp-4);
+    color: var(--ink-3);
+    font-size: var(--fs-note);
+    text-align: center;
+}
+
+.ds-empty > svg,
+.ds-empty > i {
+    width: 20px;
+    height: 20px;
+    opacity: .7;
+}
+
+/* --- 動效基元 ------------------------------------------------------------
+   Ping   單向擴散後重置 —— 有新的東西要看
+   Breath 0/100 與 50 之間往復 —— 這個狀態還沒解除
+   兩者語義不同，不可混用。週期由 --mo-ping-* 控制：等級越高越快。
+   ------------------------------------------------------------------------ */
+@keyframes dsPing {
+    0% { opacity: .72; transform: scale(.8); }
+    100% { opacity: 0; transform: scale(1.3); }
+}
+
+.ds-ping {
+    position: absolute;
+    inset: -5px;
+    border-radius: inherit;
+    border: 1px solid var(--lv);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.is-critical > .ds-ping,
+.is-critical .ds-ping {
+    animation: dsPing var(--mo-ping-critical) ease-out infinite;
+}

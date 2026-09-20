@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瞰車大數據看板</title>
+    <!-- Inter 統一拉丁字母與數字；Noto Sans TC 承接繁中字形。 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- 執行期依賴
+         vue.global.prod.js 是含模板編譯器的完整建置，元件可直接寫 template
+         字串，不需要任何打包步驟 —— 這份原型要能雙擊開啟。
+         全部用 classic script 而非 type="module"：file:// 下 ES module 會被
+         CORS 攔掉，classic script 不會。 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.js"></script>
+
+    <!-- 樣式層。順序即依賴順序：
+         style   舊原型的外殼樣式，原封保留（含 focus-mode 全螢幕、快捷欄等細節）
+         tokens  設計 token 與三套主題，並讓既有外殼具備主題感知
+         board   看板承載層：畫布與卡位
+         ds      六張看板共用的圖表基元
+         module-* 各模組專屬版面 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/ds.css">
+    <link rel="stylesheet" href="css/motion.css">
+    <link rel="stylesheet" href="css/module-ops-status.css">
+    <link rel="stylesheet" href="css/module-utilization.css">
+    <link rel="stylesheet" href="css/module-driver-score.css">
+    <link rel="stylesheet" href="css/module-alcohol.css">
+    <link rel="stylesheet" href="css/module-temperature.css">
+    <link rel="stylesheet" href="css/module-exception.css">
+</head>
+
+<body class="theme-tech theme-dark">
+    <!-- 外殼結構與類名沿用舊原型，逐字保留，因此 style.css 內所有既有樣式
+         （含全螢幕 focus-mode 的細節處理）都仍然生效。
+         改變的只有驅動方式：由 Vue 綁定取代手工 DOM 操作。 -->
+    <div id="app">
+        <div class="app-container" :class="{ 'is-shared-view': isShared }">
+            <!-- Sidebar -->
+            <nav v-if="!isShared" class="sidebar">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Platform Logo" class="logo-img">
+                    <span class="app-name">瞰車大</span>
+                </div>
+
+                <ul class="nav-menu">
+                    <li class="nav-item active">
+                        <a href="#" class="nav-link" @click.prevent>
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-system-note">此處為瞰車大原系統選單</div>
+            </nav>
+
+            <!-- Topbar -->
+            <header v-if="!isShared" class="topbar">
+                <div class="topbar-system-note">此處為瞰車大原系統頂欄</div>
+
+                <button class="action-btn" title="通知">
+                    <i data-lucide="bell"></i>
+                    <span class="badge-dot"></span>
+                </button>
+
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span class="user-name">管理員</span>
+                        <span class="user-role">系統管理</span>
+                    </div>
+                    <div class="avatar">管</div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content" :class="{ 'shared-main-content': isShared }">
+                <header class="dashboard-header">
+                    <div class="header-left">
+                        <img v-if="branding.visible" :src="branding.logo" alt="企業 Logo" class="customer-brand-logo">
+
+                        <div class="dashboard-title-wrapper">
+                            <h1 class="page-title">{{ boardName }}</h1>
+                            <button v-if="!isShared" class="dashboard-select-btn" title="切換看板"
+                                    @click.stop="togglePanel('board')">
+                                <i data-lucide="chevron-down"></i>
+                            </button>
+
+                            <div v-if="!isShared" class="dashboard-dropdown" :class="{ open: openPanel === 'board' }" @click.stop>
+                                <div class="dropdown-section">
+                                    <span class="dropdown-label">標準看板</span>
+                                    <div>
+                                        <div v-for="b in boards" :key="b.id" class="dropdown-item-wrapper">
+                                            <button class="dropdown-item" :class="{ active: b.id === boardId }"
+                                                    @click="switchBoard(b.id)">
+                                                <i :data-lucide="b.icon"></i> {{ b.name }}
+                                            </button>
+                                            <button class="icon-btn pin-btn" :class="{ 'is-pinned': isPinned(b.id) }"
+                                                    :title="isPinned(b.id) ? '取消固定' : '固定到快捷區'"
+                                                    @click.stop="togglePin(b.id)">
+                                                <i data-lucide="star"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-section">
+                                    <span class="dropdown-label">我的看板</span>
+                                    <div>
+                                        <div v-for="b in customBoards" :key="b.id" class="dropdown-item-wrapper">
+                                            <button class="dropdown-item" :class="{ active: b.id === boardId }"
+                                                    @click="switchBoard(b.id)">
+                                                <i data-lucide="layout-template"></i> {{ b.name }}
+                                            </button>
+                                            <button class="icon-btn pin-btn" :class="{ 'is-pinned': isPinned(b.id) }"
+                                                    :title="isPinned(b.id) ? '取消固定' : '固定到快捷區'"
+                                                    @click.stop="togglePin(b.id)">
+                                                <i data-lucide="star"></i>
+                                            </button>
+                                            <button class="icon-btn del-btn" title="刪除看板"
+                                                    @click.stop="deleteBoard(b.id)">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                        <p v-if="!customBoards.length" class="dropdown-empty">暫無自定義看板</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item create-new" @click="openCreateBoard">
+                                    <i data-lucide="plus"></i> 新建看板
+                                </button>
+                                <button class="dropdown-item save-as" @click="saveAsCopy">
+                                    <i data-lucide="copy"></i> 另存副本
+                                </button>
+                            </div>
+                        </div>
+
+                        <div v-if="!isShared" class="header-edit-tools">
+                            <button class="header-inline-btn" title="新增模組" @click="libraryOpen = true">
+                                <i data-lucide="plus"></i>
+                                <span>新增模組</span>
+                            </button>
+
+                            <div class="header-popover">
+                                <button class="header-inline-btn" title="篩選條件"
+                                        :class="{ active: openPanel === 'filter' }"
+                                        @click.stop="togglePanel('filter')">
+                                    <i data-lucide="filter"></i>
+                                    <span>篩選</span>
+                                </button>
+                                <div class="header-panel filter-dropdown-panel"
+                                     :class="{ open: openPanel === 'filter' }" @click.stop>
+                                    <div class="header-panel-title">篩選條件</div>
+                                    <div class="inline-filter-grid">
+                                        <label v-for="(meta, key) in filterFields" :key="key" class="inline-field">
+                                            <span>{{ meta.label }}</span>
+                                            <select v-model="filters[key]">
+                                                <option v-for="o in meta.options" :key="o.value" :value="o.value">
+                                                    {{ o.label }}
+                                                </option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="theme-switcher">
+                                <button class="header-inline-btn" title="切換主題"
+                                        :class="{ active: openPanel === 'theme' }"
+                                        @click.stop="togglePanel('theme')">
+                                    <i data-lucide="palette"></i>
+                                    <span>主題</span>
+                                </button>
+                                <div class="theme-dropdown" :class="{ open: openPanel === 'theme' }" @click.stop>
+                                    <button v-for="t in themes" :key="t.id"
+                                            class="theme-option" :class="{ active: t.id === theme }"
+                                            @click="setTheme(t.id)">
+                                        <span class="theme-swatch" :class="'theme-swatch-' + t.id.replace('theme-','')"></span>
+                                        <span>{{ t.label }}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="header-popover">
+                                <button class="header-inline-btn" title="看板設定"
+                                        :class="{ active: openPanel === 'config' }"
+                                        @click.stop="togglePanel('config')">
+                                    <i data-lucide="settings-2"></i>
+                                    <span>設定</span>
+                                </button>
+                                <div class="header-panel config-dropdown-panel"
+                                     :class="{ open: openPanel === 'config' }" @click.stop>
+                                    <div class="header-panel-title">看板設定</div>
+                                    <div class="inline-settings-stack">
+                                        <label class="inline-field">
+                                            <span>當前看板名稱</span>
+                                            <input type="text" v-model="nameDraft" placeholder="請輸入看板名稱">
+                                        </label>
+                                        <label class="inline-field">
+                                            <span>登入後預設顯示看板</span>
+                                            <select v-model="defaultBoardId">
+                                                <option v-for="b in allBoards" :key="b.id" :value="b.id">{{ b.name }}</option>
+                                            </select>
+                                        </label>
+                                        <label class="inline-field">
+                                            <span>看板自動輪播</span>
+                                            <select v-model.number="rotationMinutes">
+                                                <option :value="0">不自動切換</option>
+                                                <option :value="5">每 5 分鐘</option>
+                                                <option :value="10">每 10 分鐘</option>
+                                            </select>
+                                        </label>
+                                        <p class="inline-setting-note">依快捷看板由左至右的順序循環切換；至少需固定兩張看板。</p>
+                                        <div class="inline-brand-block">
+                                            <div class="inline-brand-preview">
+                                                <img :src="branding.logo" alt="企業 Logo 預覽">
+                                            </div>
+                                            <div class="inline-brand-fields">
+                                                <label class="inline-field">
+                                                    <span>上傳企業 Logo</span>
+                                                    <input type="file" accept="image/*" @change="uploadLogo">
+                                                </label>
+                                                <label class="inline-toggle-field">
+                                                    <input type="checkbox" v-model="branding.visible">
+                                                    <span>顯示企業 Logo</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="inline-panel-actions">
+                                            <button class="header-inline-btn panel-save-btn" @click="saveConfig">
+                                                <i data-lucide="save"></i>
+                                                <span>儲存設定</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="header-inline-btn" title="重置本地配置" @click="resetAll">
+                                <i data-lucide="rotate-ccw"></i>
+                                <span>重置</span>
+                            </button>
+                        </div>
+
+                        <div v-if="!isShared" class="quick-access-bar">
+                            <button v-for="(b, i) in pinnedBoards" :key="b.id"
+                                    class="quick-dash-pill" :class="{ active: b.id === boardId }"
+                                    :title="'快捷切換：Alt + ' + (i + 1)"
+                                    @click="switchBoard(b.id)">
+                                {{ b.name }}
+                            </button>
+                            <span v-if="!pinnedBoards.length" class="quick-access-hint">
+                                把常用看板固定到這裡
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="header-right">
+                        <template v-if="!isShared">
+                        <button class="header-inline-btn" :title="focusMode ? '退出全螢幕' : '全螢幕'"
+                                @click="toggleFullscreen">
+                            <i :data-lucide="focusMode ? 'minimize' : 'maximize'"></i>
+                            <span>{{ focusMode ? '退出全螢幕' : '全螢幕' }}</span>
+                        </button>
+                        <button class="header-inline-btn" title="切換編輯與展示模式"
+                                @click="editMode = !editMode">
+                            <i :data-lucide="editMode ? 'monitor-play' : 'pencil'"></i>
+                            <span>{{ editMode ? '展示模式' : '編輯模式' }}</span>
+                        </button>
+                        <div class="dashboard-status-chip">
+                            <span class="dashboard-status-label">同步時間</span>
+                            <strong>{{ syncedAt || '--:--' }}</strong>
+                        </div>
+                        <button class="header-inline-btn sync-trigger" title="同步資料"
+                                :class="{ 'is-syncing': syncing }" @click="sync">
+                            <i data-lucide="refresh-cw"></i>
+                            <span>同步</span>
+                        </button>
+                        <button class="header-inline-btn" title="分享目前看板" @click="shareOpen = true">
+                            <i data-lucide="share-2"></i>
+                            <span>分享</span>
+                        </button>
+                        </template>
+                        <div v-else class="dashboard-status-chip shared-status-chip">
+                            <span class="dashboard-status-label">資料時間</span>
+                            <strong>{{ syncedAt || '--:--' }}</strong>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- 展示模式的公共篩選條。
+                     編輯模式不顯示：編輯時要看的是版面與卡位，篩選只會佔掉一列高度，
+                     而且編輯中改條件沒有意義。編輯模式仍可從標頭的「篩選」按鈕進入。
+                     選擇後自動刷新，不設查詢與重置按鈕（V7 第 3 頁）。 -->
+                <div v-if="!editMode && !isShared" class="board-filterbar">
+                    <div class="filterbar-fields">
+                        <label v-for="key in filterOrder" :key="key" class="filterbar-field">
+                            <span>{{ filterFields[key].label }}</span>
+                            <select v-model="filters[key]">
+                                <option v-for="o in filterFields[key].options" :key="o.value" :value="o.value">
+                                    {{ o.label }}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="filterbar-period">
+                        <span class="filterbar-period-label">期間</span>
+                        <div class="filterbar-seg" role="group" aria-label="統計期間">
+                            <button v-for="o in filterFields.time.options" :key="o.value"
+                                    :class="{ 'is-on': filters.time === o.value }"
+                                    :aria-pressed="filters.time === o.value"
+                                    @click="filters.time = o.value">{{ o.short }}</button>
+                        </div>
+                        <span class="filterbar-range">
+                            <span>{{ periodRange }}</span>
+                            <i data-lucide="calendar-days"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div ref="canvas" class="board-canvas"
+                     :class="{ 'is-editing': editMode, 'is-empty-state': !slots.length, 'is-syncing': syncing }"
+                     :data-empty-label="boardName + ' 尚未配置模組'">
+                    <div v-for="(slot, i) in slots" :key="slot.id + '-' + i"
+                         class="board-slot" :class="'is-' + slot.size">
+                        <button v-if="editMode" class="board-slot-grip">
+                            <i data-lucide="grip-horizontal"></i><span>拖動排序</span>
+                        </button>
+
+                        <!-- 模組操作件。結構與類名沿用舊原型，style.css 內既有樣式
+                             因此全部生效。不放「查看詳情」眼睛：詳情由圖表物件本身
+                             點擊進入，模組層再開一個入口是多餘的。 -->
+                        <div v-if="!isShared" class="widget-card-controls">
+                            <div class="widget-menu-wrap">
+                                <button class="icon-btn widget-menu-btn" title="模組操作"
+                                        @click.stop="toggleSlotMenu(i)">
+                                    <i data-lucide="more-horizontal"></i>
+                                </button>
+                                <div class="widget-action-menu" :class="{ open: openSlotMenu === i }" @click.stop>
+                                    <div class="widget-action-group">模組規格</div>
+                                    <button v-for="s in moduleOf(slot.id).sizes" :key="s" type="button"
+                                            :aria-current="s === slot.size ? 'true' : null"
+                                            @click="resizeModule(i, s)">
+                                        <i :data-lucide="sizeIcon(s)"></i><span>{{ sizeLabel(s) }}</span>
+                                    </button>
+                                    <div class="widget-action-sep"></div>
+                                    <button type="button" @click="duplicateModule(i)">
+                                        <i data-lucide="copy"></i><span>複製模組</span>
+                                    </button>
+                                    <button type="button" @click="removeModule(i)">
+                                        <i data-lucide="trash-2"></i><span>刪除模組</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <component :is="moduleOf(slot.id).component"
+                                       :filters="filters" :size="slot.size" @pick="onPick" />
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Module Library Modal。結構與類名沿用舊原型，含搜尋與兩級分類。 -->
+        <div v-if="!isShared" class="modal-backdrop" :class="{ open: libraryOpen }" @click.self="libraryOpen = false">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2>模組庫</h2>
+                    <div class="search-container">
+                        <i data-lucide="search"></i>
+                        <input type="text" v-model="librarySearch" placeholder="搜尋模組...">
+                    </div>
+                    <button class="close-modal-btn" @click="libraryOpen = false">
+                        <i data-lucide="x"></i>
+                    </button>
+                </header>
+                <div class="modal-body">
+                    <!-- 分類暫以「所屬看板」分組：重做期間最需要知道的是某個模組
+                         屬於哪張看板，而不是它的業務類別。 -->
+                    <nav class="category-nav">
+                        <button v-for="c in categories" :key="c.key"
+                                class="category-btn" :class="{ active: c.key === libraryCategory }"
+                                @click="setLibraryCategory(c.key)">{{ c.label }}</button>
+                    </nav>
+                    <div class="component-grid">
+                        <div v-for="m in libraryList" :key="m.id" class="component-preview">
+                            <div class="preview-visual">
+                                <div style="text-align:center;">
+                                    <i :data-lucide="m.icon" style="opacity:0.72; width:34px; height:34px;"></i>
+                                </div>
+                            </div>
+                            <div class="component-info">
+                                <div style="display:flex; justify-content:space-between; align-items:start;">
+                                    <h4>{{ m.title }}</h4>
+                                    <div class="size-selector">
+                                        <button v-for="s in m.sizes" :key="s" class="size-btn"
+                                                :class="{ selected: isLibraryPicked(m.id, s) }"
+                                                :aria-pressed="isLibraryPicked(m.id, s)"
+                                                :title="sizeLabel(s)" @click.stop="toggleLibraryPick(m.id, s)">
+                                            {{ sizeShort(s) }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <p>{{ m.desc }}</p>
+                                <div class="library-item-meta">{{ boardLabelOf(m.board) }}</div>
+                            </div>
+                        </div>
+                        <div v-if="!libraryList.length" class="library-empty-state">找不到符合條件的模組。</div>
+                    </div>
+                    <footer class="library-submit-bar">
+                        <div class="library-selection-summary">
+                            <strong>已選 {{ libraryPickCount }} 個模組規格</strong>
+                            <span>可同時選擇不同模組與不同尺寸，提交後一次加入目前看板。</span>
+                        </div>
+                        <div class="library-submit-actions">
+                            <button class="library-clear-btn" :disabled="!libraryPickCount" @click="clearLibraryPicks">清除</button>
+                            <button class="library-add-btn" :disabled="!libraryPickCount" @click="addSelectedModules">
+                                <i data-lucide="plus"></i> 加入看板{{ libraryPickCount ? '（' + libraryPickCount + '）' : '' }}
+                            </button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Board Modal -->
+        <div v-if="!isShared" class="modal-backdrop" :class="{ open: createBoardOpen }" @click.self="createBoardOpen = false">
+            <div class="modal-content modal-size-sm create-board-modal">
+                <header class="modal-header">
+                    <h2>新建看板</h2>
+                    <button class="close-modal-btn" @click="createBoardOpen = false"><i data-lucide="x"></i></button>
+                </header>
+                <div class="modal-body create-board-body">
+                    <p>建立後會開啟一張空白看板，可再從模組庫一次加入所需模組。</p>
+                    <label class="inline-field">
+                        <span>看板名稱</span>
+                        <input v-model="createBoardName" type="text" maxlength="30" placeholder="例如：北區營運監控" @keyup.enter="createBoard">
+                    </label>
+                    <div class="create-board-actions">
+                        <button class="library-clear-btn" @click="createBoardOpen = false">取消</button>
+                        <button class="library-add-btn" :disabled="!createBoardName.trim()" @click="createBoard">
+                            <i data-lucide="plus"></i> 建立看板
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Modal -->
+        <div v-if="!isShared" class="modal-backdrop" :class="{ open: shareOpen }" @click.self="shareOpen = false">
+            <div class="modal-content modal-size-sm share-modal">
+                <header class="modal-header">
+                    <h2>分享目前看板</h2>
+                    <button class="close-modal-btn" @click="shareOpen = false"><i data-lucide="x"></i></button>
+                </header>
+                <div class="modal-body share-modal-body">
+                    <p>此為本機原型演示連結，已帶入目前看板的名稱、Logo、主題、篩選值與模組配置。</p>
+                    <textarea class="share-link-field" readonly :value="shareUrl" @focus="$event.target.select()"></textarea>
+                    <p class="share-mode-note"><i data-lucide="monitor-play"></i> 開啟後僅保留 Logo、看板名稱、資料時間與圖表內容。</p>
+                    <div class="create-board-actions">
+                        <button class="library-clear-btn" @click="copyShareLink">
+                            <i data-lucide="copy"></i> {{ shareCopied ? '已複製' : '複製連結' }}
+                        </button>
+                        <button class="library-add-btn" @click="openShareDemo">
+                            <i data-lucide="external-link"></i> 開啟演示
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Modal -->
+        <div v-if="!isShared" class="modal-backdrop" :class="{ open: !!detail }" @click.self="detail = null">
+            <div class="modal-content modal-size-md">
+                <header class="modal-header">
+                    <h2>{{ detail ? (detail.objectLabel || '物件') + '摘要 · ' + detail.name : '' }}</h2>
+                    <button class="close-modal-btn" @click="detail = null">
+                        <i data-lucide="x"></i>
+                    </button>
+                </header>
+                <div class="modal-body">
+                    <p class="ds-panel-sub">
+                        二層摘要欄位、彈窗形式與跳轉目標仍在確認中（需求文檔 12.3）。
+                        此處預留內容區，確認後填入該物件的狀態明細與進入既有功能頁的入口。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 資料與圖表基礎 -->
+    <script src="js/tokens.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/data.js"></script>
+    <!-- 地圖底圖：必須在用到 geo 的模組之前註冊 -->
+    <script src="js/taiwan-geo.js"></script>
+
+    <!-- 模組。每支檔案把自己註冊進 window.KCD.modules -->
+    <script src="js/modules/ops-status.js"></script>
+    <script src="js/modules/utilization.js"></script>
+    <script src="js/modules/driver-score.js"></script>
+    <script src="js/modules/alcohol.js"></script>
+    <script src="js/modules/temperature.js"></script>
+    <script src="js/modules/exception-notice.js"></script>
+    <script src="js/modules/exception-events.js"></script>
+
+    <!-- 掛載 -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>

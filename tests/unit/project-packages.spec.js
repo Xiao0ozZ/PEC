@@ -18,7 +18,7 @@ async function createProjectFixture() {
   await fs.writeFile(path.join(root, 'package.json'), '{"type":"module"}', 'utf8');
   const projectsRoot = path.join(root, 'projects');
   const packageRoot = path.join(projectsRoot, 'sample-project');
-  await fs.mkdir(path.join(packageRoot, 'views', 'admin'), { recursive: true });
+  await fs.mkdir(path.join(packageRoot, 'html-pages', 'admin'), { recursive: true });
   await fs.writeFile(
     path.join(packageRoot, 'project.json'),
     JSON.stringify({
@@ -28,18 +28,18 @@ async function createProjectFixture() {
       pageDefinitions: 'page-definitions.js',
       clients: [{ id: 'admin', name: '管理端', defaultPage: 'home' }],
       entries: [{ id: 'admin', kind: 'client', clientId: 'admin', name: '管理端' }],
-      features: { pageTransfer: true },
+      features: { designSystem: true },
     }),
     'utf8',
   );
   await fs.writeFile(
     path.join(packageRoot, 'page-definitions.js'),
-    `export const clientPageDefinitions = { admin: { sections: [{ id: 'workspace', title: '工作区' }], pages: [{ path: 'home', name: 'admin-home', title: '首页', view: 'admin/HomeView.vue', section: 'workspace', icon: 'House' }] } };\n// <generator:admin-pages>\n`,
+    `export const clientPageDefinitions = { admin: { sections: [{ id: 'workspace', title: '工作区' }], pages: [{ path: 'home', name: 'admin-home', title: '首页', sourceType: 'html-template', source: 'home.html', section: 'workspace', icon: 'House' }] } };\n// <generator:admin-pages>\n`,
     'utf8',
   );
   await fs.writeFile(
-    path.join(packageRoot, 'views', 'admin', 'HomeView.vue'),
-    '<template><main>首页</main></template>',
+    path.join(packageRoot, 'html-pages', 'admin', 'home.html'),
+    '<!doctype html><html><head><meta charset="UTF-8"><title>首页</title></head><body><main>首页</main></body></html>',
     'utf8',
   );
   return { projectsRoot, packageRoot };
@@ -58,12 +58,12 @@ describe('project package scanner', () => {
     expect(result.projects.map((project) => project.id)).toEqual(['sample-project']);
   });
 
-  it('rejects a package with a missing registered view', async () => {
+  it('rejects a package with a missing registered HTML page', async () => {
     const { projectsRoot, packageRoot } = await createProjectFixture();
-    await fs.rm(path.join(packageRoot, 'views', 'admin', 'HomeView.vue'));
+    await fs.rm(path.join(packageRoot, 'html-pages', 'admin', 'home.html'));
     const result = await scanProjectPackages(projectsRoot);
     expect(result.projects).toEqual([]);
-    expect(result.invalidProjects[0].errors).toContain('页面文件不存在：admin/HomeView.vue。');
+    expect(result.invalidProjects[0].errors).toContain('HTML 页面文件不存在：admin/home.html。');
   });
 
   it('rejects an unregistered custom client entry page', async () => {
@@ -83,7 +83,7 @@ describe('project package scanner', () => {
     const definitionsPath = path.join(packageRoot, 'page-definitions.js');
     await fs.writeFile(
       definitionsPath,
-      `export const clientPageDefinitions = {\n  admin: { sections: [{ id: 'workspace', title: '工作区' }], pages: [{ path: 'home', name: 'admin-home', title: '首页', view: 'admin/HomeView.vue', section: 'workspace', icon: 'House' }] },\n  legacy: { sections: [{ id: 'workspace', title: '旧客户端' }], pages: [] },\n};\n// <generator:admin-pages>\n`,
+      `export const clientPageDefinitions = {\n  admin: { sections: [{ id: 'workspace', title: '工作区' }], pages: [{ path: 'home', name: 'admin-home', title: '首页', sourceType: 'html-template', source: 'home.html', section: 'workspace', icon: 'House' }] },\n  legacy: { sections: [{ id: 'workspace', title: '旧客户端' }], pages: [] },\n};\n// <generator:admin-pages>\n`,
       'utf8',
     );
     const result = await scanProjectPackages(projectsRoot);
@@ -109,7 +109,7 @@ describe('project package scanner', () => {
           { id: 'docs', kind: 'docs', name: '产品文档' },
         ],
         docs: { enabled: true, root: externalDocsRoot },
-        features: { pageTransfer: true },
+        features: { designSystem: true },
       }),
       'utf8',
     );
@@ -192,13 +192,13 @@ describe('project package scanner', () => {
     expect(result.roots['sample-project'][0]).toMatchObject({ clientId: 'admin' });
   });
 
-  it('marks platform exports for content-only shell rendering', async () => {
+  it('marks template HTML for content-only shell rendering', async () => {
     const { projectsRoot, packageRoot } = await createProjectFixture();
-    const prototypeRoot = path.join(path.dirname(projectsRoot), 'export-html');
+    const prototypeRoot = path.join(path.dirname(projectsRoot), 'template-html');
     await fs.mkdir(prototypeRoot, { recursive: true });
     await fs.writeFile(
       path.join(prototypeRoot, 'dashboard.html'),
-      '<script type="application/json" id="prototype-page-manifest">{"templateVersion":1,"exportFormat":"vue-sfc","pageKey":"export-dashboard","pageTitle":"导出仪表板","menuTitle":"导出仪表板菜单","menuSection":"workspace","menuIcon":"DataBoard","menu":false,"client":"admin","routePath":"/admin/export-dashboard"}</script><script type="text/plain" id="prototype-editable-template" data-source-format="vue-sfc-template"><main /></script>',
+      '<script type="application/json" id="prototype-page-manifest">{"templateVersion":1,"pageKey":"template-dashboard","pageTitle":"模板仪表板","menuTitle":"模板仪表板菜单","menuSection":"workspace","menuIcon":"DataBoard","menu":false,"client":"admin","routePath":"/admin/template-dashboard"}</script><script type="text/plain" id="prototype-editable-template"><main /></script>',
       'utf8',
     );
     await fs.writeFile(
@@ -216,8 +216,8 @@ describe('project package scanner', () => {
 
     const result = await scanHtmlPrototypePages(projectsRoot);
     expect(result.projects['sample-project'].admin[0]).toMatchObject({
-      path: 'export-dashboard',
-      title: '导出仪表板',
+      path: 'template-dashboard',
+      title: '模板仪表板',
       sourceType: 'html-direct',
       renderMode: 'content-only',
       section: 'workspace',
@@ -226,7 +226,7 @@ describe('project package scanner', () => {
     });
   });
 
-  it('treats templateized legacy HTML as content-only shell pages', async () => {
+  it('treats template HTML as content-only shell pages', async () => {
     const { projectsRoot, packageRoot } = await createProjectFixture();
     const prototypeRoot = path.join(path.dirname(projectsRoot), 'templateized-html');
     await fs.mkdir(prototypeRoot, { recursive: true });

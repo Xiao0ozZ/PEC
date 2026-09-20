@@ -4,13 +4,7 @@ import { PAGE_PATH_PATTERN, PROJECT_ID_PATTERN } from './constants.js';
 import { isSafeRelativePath, resolveExistingPathInsideRoot } from './filesystem.js';
 import { hasExternalPrototypePage } from './project-manifest.js';
 
-export async function validateProjectDefinitions(
-  manifest,
-  projectRoot,
-  definitions,
-  definitionsSource = '',
-  { mounts = {} } = {},
-) {
+export async function validateProjectDefinitions(manifest, projectRoot, definitions, { mounts = {} } = {}) {
   const errors = [];
   if (!definitions || typeof definitions !== 'object' || Array.isArray(definitions)) {
     return ['page-definitions.js 必须导出 clientPageDefinitions 对象。'];
@@ -59,39 +53,23 @@ export async function validateProjectDefinitions(
           `页面 ${client.id}/${page.path || '未知'} 引用了不存在的菜单分组：${page.section || '空值'}。`,
         );
       }
-      if (page.sourceType === 'html-template') {
-        const source = String(page.source || '').replaceAll('\\', '/');
+      const sourceType = String(page.sourceType || '').trim();
+      const source = String(page.source || '').replaceAll('\\', '/');
+      if (!['html-template', 'html-direct'].includes(sourceType)) {
+        errors.push(`页面 ${client.id}/${page.path || '未知'} 必须声明 HTML sourceType。`);
+        continue;
+      }
+      if (!isSafeRelativePath(source) || !['.html', '.htm'].includes(path.extname(source).toLowerCase())) {
+        errors.push(`页面 ${client.id}/${page.path || '未知'} 的 HTML source 路径无效。`);
+        continue;
+      }
+      if (sourceType === 'html-template') {
         const sourcePath = await resolveExistingPathInsideRoot(
           path.resolve(projectRoot, 'html-pages', client.id),
           source,
           { allowedExtensions: new Set(['.html', '.htm']) },
         );
-        if (
-          !isSafeRelativePath(source) ||
-          !['.html', '.htm'].includes(path.extname(source).toLowerCase()) ||
-          !sourcePath
-        ) {
-          errors.push(`HTML 页面文件不存在或路径无效：${client.id}/${source || '空值'}。`);
-        }
-        continue;
-      }
-      if (!isSafeRelativePath(page.view) || path.extname(page.view || '').toLowerCase() !== '.vue') {
-        errors.push(`页面 ${client.id}/${page.path || '未知'} 的 view 路径无效。`);
-        continue;
-      }
-      const packageView = await resolveExistingPathInsideRoot(path.resolve(projectRoot, 'views'), page.view, {
-        allowedExtensions: new Set(['.vue']),
-      });
-      const compatibilityRoot = manifest.compatibility?.legacyViewRoot
-        ? path.resolve(projectRoot, '..', '..', manifest.compatibility.legacyViewRoot)
-        : '';
-      const compatibilityView = compatibilityRoot
-        ? await resolveExistingPathInsideRoot(compatibilityRoot, page.view, {
-            allowedExtensions: new Set(['.vue']),
-          })
-        : null;
-      if (!packageView && !compatibilityView) {
-        errors.push(`页面文件不存在：${page.view}。`);
+        if (!sourcePath) errors.push(`HTML 页面文件不存在：${client.id}/${source}。`);
       }
     }
 
@@ -109,10 +87,6 @@ export async function validateProjectDefinitions(
       !(await hasExternalPrototypePage(manifest, projectRoot, client.id, client.entry.page, mounts))
     ) {
       errors.push(`客户端 ${client.id} 的自定义入口页面未登记：${client.entry.page}。`);
-    }
-    if (manifest.features?.pageTransfer) {
-      const marker = `// <generator:${client.id}-pages>`;
-      if (!definitionsSource.includes(marker)) errors.push(`页面定义缺少导入生成器标记：${marker}。`);
     }
   }
   return errors;

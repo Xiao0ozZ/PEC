@@ -1,0 +1,3789 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>车辆控制台</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+    <style data-page-style>
+        .vehicle-console .time-help-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #94a3b8;
+            border-radius: 50%;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: help;
+        }
+
+        .prototype-workspace:has(.vehicle-console) {
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .prototype-main:has(.vehicle-console) {
+            display: flex;
+            flex: 1 1 0;
+            height: auto;
+            max-height: none;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .vehicle-console {
+            display: flex;
+            flex: 1 1 0;
+            width: 100%;
+            height: auto;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .vehicle-console .console-business {
+            display: flex;
+            flex: 1 1 0;
+            width: 100%;
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vehicle-console .console-layout {
+            display: flex;
+            flex: 1 1 0;
+            width: 100%;
+            height: auto;
+            max-height: none;
+            min-height: 0;
+            min-width: 0;
+            gap: 24px;
+            overflow: hidden;
+        }
+
+        .vehicle-console .vehicle-selector {
+            display: flex;
+            flex: 0 0 320px;
+            width: 320px;
+            height: 100%;
+            max-height: none;
+            min-height: 0;
+            align-self: stretch;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .vehicle-console .filter-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .vehicle-console .filter-controls .filter-full {
+            grid-column: 1 / -1;
+        }
+
+        .vehicle-console .vehicle-list {
+            flex: 1 1 0;
+            height: auto;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-gutter: stable;
+        }
+
+        .vehicle-console .console-main {
+            display: flex;
+            flex: 1;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .vehicle-console .vehicle-summary {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 76px;
+            padding: 14px 18px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .vehicle-console .vehicle-summary-main {
+            display: flex;
+            min-width: 0;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .vehicle-console .vehicle-summary-photo {
+            flex: 0 0 72px;
+            width: 72px;
+            height: 56px;
+            overflow: hidden;
+            border: 1px solid var(--app-color-border-subtle);
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .vehicle-console .vehicle-summary-photo .el-image,
+        .vehicle-console .vehicle-summary-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .vehicle-console .vehicle-photo-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .vehicle-console .vehicle-summary-copy {
+            min-width: 0;
+        }
+
+        .vehicle-console .vehicle-title-row,
+        .vehicle-console .vehicle-meta {
+            display: flex;
+            min-width: 0;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            align-items: center;
+        }
+
+        .vehicle-console .vehicle-meta span {
+            overflow-wrap: anywhere;
+        }
+
+        .vehicle-console .upper-grid {
+            display: grid;
+            grid-template-columns: 336px minmax(0, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: stretch;
+        }
+
+        .vehicle-console .map-card,
+        .vehicle-console .remote-card {
+            min-width: 0;
+            min-height: 204px;
+            height: auto;
+            align-self: stretch;
+        }
+
+        .vehicle-console .console-panel-header {
+            display: flex;
+            flex: 0 0 44px;
+            height: 44px;
+            min-height: 44px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-width: 0;
+            padding: 0 14px;
+            border-bottom: 1px solid var(--app-color-border-light);
+            background: rgb(248 250 252 / 0.5);
+        }
+
+        .vehicle-console .remote-card-body {
+            flex: 1;
+            min-height: 0;
+            padding: 12px;
+        }
+
+        .vehicle-console .remote-card-body .remote-grid {
+            height: 100%;
+        }
+
+        .vehicle-console .remote-grid {
+            display: grid;
+            flex: 1;
+            min-height: 0;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .vehicle-console .lower-grid {
+            display: flex;
+            flex: 0 0 auto;
+            min-height: 0;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .vehicle-console .status-panel {
+            display: flex;
+            flex: 0 0 336px;
+            width: 336px;
+            min-height: 0;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .vehicle-console .status-scroll {
+            flex: 1;
+            min-height: 0;
+            padding: 10px 12px;
+            overflow-y: auto;
+        }
+
+        /* 状态矩阵分组卡片样式 */
+        .vehicle-console .matrix-section {
+            margin-bottom: 12px;
+            background: #fff;
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .vehicle-console .matrix-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .vehicle-console .matrix-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .vehicle-console .matrix-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+            font-size: 12px;
+            transition: background-color 150ms ease;
+        }
+
+        .vehicle-console .matrix-item:last-child {
+            border-bottom: 0;
+        }
+
+        .vehicle-console .matrix-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .vehicle-console .matrix-item-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #475569;
+            font-size: 12px;
+            min-width: 0;
+        }
+
+        .vehicle-console .matrix-item-label .el-icon {
+            font-size: 14px;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+
+        .vehicle-console .matrix-gauge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 110px;
+        }
+
+        .vehicle-console .matrix-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .vehicle-console .matrix-progress-inner {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* 更多状态信息抽屉样式重构 */
+        .vehicle-console-overlay .el-drawer__header,
+        .el-drawer__header {
+            margin-bottom: 0 !important;
+            padding: 14px 20px 12px !important;
+            border-bottom: 1px solid var(--app-color-border-subtle) !important;
+        }
+
+        .vehicle-console-overlay .el-drawer__title,
+        .el-drawer__title {
+            color: var(--app-color-text-primary) !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+        }
+
+        .vehicle-console-overlay .el-drawer__body,
+        .el-drawer__body {
+            padding: 14px 18px 24px !important;
+        }
+
+        .vehicle-console-overlay .detail-status-sections,
+        .detail-status-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 0 !important;
+        }
+
+        .vehicle-console-overlay .detail-status-section,
+        .detail-status-section {
+            overflow: hidden;
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .vehicle-console-overlay .detail-status-title,
+        .detail-status-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+            color: var(--app-color-text-primary);
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .vehicle-console-overlay .detail-grid-2col,
+        .detail-grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1px;
+            background: #f1f5f9;
+        }
+
+        .vehicle-console-overlay .detail-grid-item,
+        .detail-grid-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 10px 14px;
+            background: #fff;
+        }
+
+        .vehicle-console-overlay .detail-grid-item.col-span-2,
+        .detail-grid-item.col-span-2 {
+            grid-column: span 2;
+        }
+
+        .vehicle-console-overlay .detail-grid-label,
+        .detail-grid-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .vehicle-console-overlay .detail-grid-val,
+        .detail-grid-val {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #1e293b;
+            font-family: var(--app-font-family-mono);
+            font-size: 13px;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .vehicle-console-overlay .copy-icon-btn,
+        .copy-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border: 0;
+            border-radius: 4px;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 150ms ease;
+        }
+
+        .vehicle-console-overlay .copy-icon-btn:hover,
+        .copy-icon-btn:hover {
+            color: var(--app-color-primary);
+            background: #e2e8f0;
+        }
+
+        .vehicle-console-overlay .detail-status-row,
+        .detail-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 40px;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+        }
+
+        .vehicle-console-overlay .detail-status-row:last-child {
+            border-bottom: 0;
+        }
+
+        .vehicle-console-overlay .detail-status-label {
+            min-width: 0;
+            color: var(--app-color-text-muted);
+            font-size: 13px;
+        }
+
+        .vehicle-console-overlay .detail-status-value {
+            max-width: 65%;
+            overflow: hidden;
+            color: var(--app-color-text-primary);
+            font-family: var(--app-font-family-mono);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: right;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .vehicle-console-overlay .detail-status-value.is-success {
+            color: var(--app-color-success);
+        }
+
+        .vehicle-console-overlay .detail-status-value.is-warning {
+            color: #d97706;
+        }
+
+        .vehicle-console-overlay .detail-status-value.is-danger {
+            color: var(--app-color-danger);
+        }
+
+        .vehicle-console-overlay .detail-status-value.is-info {
+            color: var(--app-color-text-secondary);
+        }
+
+        .vehicle-console-overlay .battery-slot-list,
+        .battery-slot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .vehicle-console-overlay .battery-slot-card,
+        .battery-slot-card {
+            overflow: hidden;
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 10px;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .vehicle-console-overlay .battery-slot-card.is-installed,
+        .battery-slot-card.is-installed {
+            border-color: #86efac;
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
+        }
+
+        .vehicle-console-overlay .battery-slot-card.is-empty,
+        .battery-slot-card.is-empty {
+            border-color: var(--app-color-border-light);
+            background: #fafafa;
+        }
+
+        .vehicle-console-overlay .battery-slot-title,
+        .battery-slot-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+            color: var(--app-color-text-primary);
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .vehicle-console-overlay .battery-slot-fields,
+        .battery-slot-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .vehicle-console-overlay .battery-slot-field,
+        .battery-slot-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-width: 0;
+            min-height: 36px;
+            padding: 6px 12px;
+            border-bottom: 1px solid var(--app-color-border-subtle);
+        }
+
+        .vehicle-console-overlay .battery-slot-field:nth-child(odd),
+        .battery-slot-field:nth-child(odd) {
+            border-right: 1px solid var(--app-color-border-subtle);
+        }
+
+        .vehicle-console-overlay .battery-slot-field.col-span-2,
+        .battery-slot-field.col-span-2 {
+            grid-column: span 2;
+            border-right: 0;
+        }
+
+        .vehicle-console-overlay .battery-slot-field:last-child,
+        .battery-slot-field:last-child {
+            border-bottom: 0;
+        }
+
+        .vehicle-console-overlay .battery-slot-fields:not(:has(.col-span-2)) .battery-slot-field:nth-last-child(2),
+        .battery-slot-fields:not(:has(.col-span-2)) .battery-slot-field:nth-last-child(2) {
+            border-bottom: 0;
+        }
+
+        .vehicle-console-overlay .battery-slot-label,
+        .battery-slot-label {
+            min-width: 0;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .vehicle-console-overlay .battery-slot-value,
+        .battery-slot-value {
+            flex: 0 0 auto;
+            max-width: 65%;
+            overflow: hidden;
+            color: var(--app-color-text-primary);
+            font-family: var(--app-font-family-mono);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: right;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .vehicle-console .history-panel {
+            display: flex;
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            flex-direction: column;
+            align-self: stretch;
+            overflow: hidden;
+        }
+
+        .vehicle-console .history-panel>.p-0 {
+            flex: 1 1 0;
+            min-height: 0;
+        }
+
+        .vehicle-console .console-panel-header>* {
+            min-width: 0;
+        }
+
+        .vehicle-console .console-panel-header>.flex {
+            flex: 0 0 auto;
+            flex-wrap: nowrap;
+        }
+
+        .vehicle-console .console-panel-header .el-button {
+            white-space: nowrap;
+        }
+
+        .vehicle-console .type-filter-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+        }
+
+        .vehicle-console .vehicle-type-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .vehicle-console .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .vehicle-console .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .vehicle-console .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .vehicle-console .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .vehicle-console .remote-btn {
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+
+        .vehicle-console .remote-btn.el-button--primary {
+            --el-button-bg-color: var(--app-color-primary);
+            --el-button-border-color: var(--app-color-primary);
+            --el-button-hover-bg-color: var(--app-color-primary-hover);
+            --el-button-hover-border-color: var(--app-color-primary-hover);
+            --el-button-active-bg-color: var(--app-color-primary-active);
+            --el-button-active-border-color: var(--app-color-primary-active);
+        }
+
+        .vehicle-console .status-detail-trigger {
+            color: var(--app-color-primary);
+            transition: color 0.2s;
+        }
+
+        .vehicle-console .status-detail-trigger:hover {
+            color: var(--app-color-primary-hover);
+        }
+
+        .vehicle-console .vehicle-driving-tag {
+            --el-tag-bg-color: var(--app-color-primary);
+            --el-tag-border-color: var(--app-color-primary);
+            --el-tag-text-color: #fff;
+        }
+
+        .vehicle-console .remote-btn:active {
+            transform: scale(0.96);
+        }
+
+        .vehicle-console .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .vehicle-console .status-dot.online {
+            background-color: #10b981;
+            box-shadow: 0 0 4px #10b981;
+        }
+
+        .vehicle-console .status-dot.offline {
+            background-color: #9ca3af;
+        }
+
+        .vehicle-console .status-dot.driving {
+            background-color: var(--app-color-primary);
+            box-shadow: 0 0 4px var(--app-color-primary);
+        }
+
+        .vehicle-console .map-placeholder {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%23e2e8f0"/><path d="M0,50 Q25,20 50,50 T100,50" fill="none" stroke="%23cbd5e1" stroke-width="2"/><path d="M50,0 L50,100" fill="none" stroke="%23cbd5e1" stroke-width="2"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .vehicle-console .map-open-action {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+        }
+
+        .vehicle-console .map-location-marker {
+            left: 50% !important;
+            top: 50% !important;
+            margin: 0 !important;
+            z-index: 1;
+            transform: translate(-50%, -100%);
+            transform-origin: center bottom;
+        }
+
+        .vehicle-console .map-location-marker:hover {
+            transform: translate(-50%, -100%) scale(1.1);
+        }
+
+        .vehicle-console-overlay .map-dialog-marker {
+            left: 50% !important;
+            top: 50% !important;
+            margin: 0 !important;
+            transform: translate(-50%, -100%);
+            transform-origin: center bottom;
+        }
+
+        .vehicle-console .vehicle-card {
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+        }
+
+        .vehicle-console .vehicle-card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .vehicle-console .vehicle-card-copy {
+            min-width: 0;
+        }
+
+        .vehicle-console .vehicle-card-title {
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .vehicle-console .vehicle-card-model {
+            margin-top: 3px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .vehicle-console .vehicle-card-meta {
+            margin-top: 3px;
+            font-size: 10px;
+            line-height: 1.1;
+        }
+
+        .vehicle-console .vehicle-card-side {
+            gap: 3px;
+        }
+
+        .vehicle-console .remote-grid-moto {
+            grid-template-columns: minmax(0, 1fr);
+            align-items: stretch;
+        }
+
+        .vehicle-console .remote-grid-moto>.moto-test-card {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            margin: 0;
+            padding: 16px 18px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .vehicle-console .remote-grid-moto>.moto-no-control-card {
+            grid-column: 1 / -1;
+            min-height: 132px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #6b7280;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-title {
+            align-self: flex-start;
+            color: #9ca3af;
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-body {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 0;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-icon {
+            margin: 0;
+            flex: 0 0 auto;
+            justify-self: center;
+        }
+
+        .vehicle-console .moto-test-copy {
+            min-width: 0;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-text {
+            color: #374151;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-desc {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .vehicle-console .moto-test-card .moto-test-button {
+            margin: 0;
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+
+        .el-cascader__dropdown .el-cascader-panel {
+            max-width: min(760px, 90vw);
+        }
+
+        .el-cascader__dropdown .el-cascader-menu {
+            min-width: 190px;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar .toolbar-item {
+            min-width: 0;
+            flex: 1 1 220px;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-range {
+            flex: 1.35 1 360px;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-operator {
+            flex: 1 1 240px;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-action {
+            flex: 0.9 1 200px;
+        }
+
+        .vehicle-console-overlay .dialog-toolbar .toolbar-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto;
+        }
+
+        .vehicle-console-overlay .history-dialog-table {
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .vehicle-console-overlay .history-dialog-pagination {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 12px;
+        }
+
+        .vehicle-console-overlay .map-dialog-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vehicle-console-overlay .map-dialog-canvas {
+            height: 420px;
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #eef2f7;
+        }
+
+        .vehicle-console-overlay .map-dialog-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .vehicle-console-overlay .map-dialog-meta-item {
+            padding: 12px;
+            border: 1px solid var(--app-color-border-light);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .vehicle-console .location-time {
+            color: var(--app-color-text-secondary);
+            font-size: 12px;
+            font-family: var(--app-font-family-mono);
+        }
+
+        @media (max-width: 1680px) {
+            .vehicle-console .console-layout {
+                gap: 16px;
+            }
+
+            .vehicle-console .vehicle-selector {
+                flex-basis: 292px;
+                width: 292px;
+            }
+
+            .vehicle-console .status-panel {
+                flex-basis: 320px;
+                width: 320px;
+            }
+
+            .vehicle-console .upper-grid {
+                grid-template-columns: 320px minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .prototype-workspace:has(.vehicle-console) {
+                overflow: hidden;
+            }
+
+            .prototype-main:has(.vehicle-console) {
+                display: block;
+                flex: 1 1 auto;
+                height: auto;
+                max-height: none;
+                overflow: auto;
+            }
+
+            .vehicle-console {
+                height: auto;
+                min-height: 100%;
+                overflow: visible;
+            }
+
+            .vehicle-console .console-business {
+                width: 100%;
+                height: auto;
+                min-width: 0;
+                min-height: auto;
+            }
+
+            .vehicle-console .console-layout {
+                flex: none;
+                width: 100%;
+                height: auto;
+                max-height: none;
+                min-width: 0;
+                flex-direction: column;
+                overflow: visible;
+            }
+
+            .vehicle-console .vehicle-selector {
+                flex: none;
+                width: 100%;
+                height: 360px;
+                max-height: 360px;
+                overflow: hidden;
+            }
+
+            .vehicle-console .filter-controls {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                align-items: end;
+            }
+
+            .vehicle-console .filter-controls .filter-full {
+                grid-column: 1 / -1;
+            }
+
+            .vehicle-console .vehicle-list {
+                display: grid;
+                height: auto;
+                max-height: none;
+                grid-template-columns: repeat(3, minmax(220px, 1fr));
+                gap: 8px;
+            }
+
+            .vehicle-console .vehicle-list>div {
+                margin-bottom: 0 !important;
+            }
+
+            .vehicle-console .console-main {
+                overflow: visible;
+            }
+
+            .vehicle-console .upper-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console .map-card,
+            .vehicle-console .remote-card {
+                grid-column: 1 / -1;
+                height: auto;
+                min-height: 204px;
+            }
+
+            .vehicle-console .lower-grid {
+                flex-direction: column;
+            }
+
+            .vehicle-console .status-panel {
+                flex: none;
+                width: 100%;
+                max-height: 600px;
+            }
+
+            .vehicle-console .history-panel {
+                min-height: 380px;
+            }
+        }
+
+        @media (max-width: 1280px) {
+            .vehicle-console .vehicle-summary {
+                align-items: flex-start;
+            }
+
+            .vehicle-console .vehicle-summary-main {
+                align-items: flex-start;
+            }
+
+            .vehicle-console .vehicle-meta {
+                flex-wrap: wrap;
+            }
+
+            .vehicle-console .remote-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                overflow-y: auto;
+            }
+
+            .vehicle-console .remote-card {
+                height: auto;
+                min-height: 204px;
+            }
+
+            .vehicle-console .remote-grid>*:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .vehicle-console .filter-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console .vehicle-list {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console .vehicle-summary {
+                flex-direction: column;
+            }
+
+            .vehicle-console .vehicle-summary-main {
+                width: 100%;
+            }
+
+            .vehicle-console .remote-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console .remote-grid>*:last-child:nth-child(odd) {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .vehicle-console .vehicle-summary {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .vehicle-console .vehicle-summary>.el-button {
+                margin-left: auto;
+            }
+
+            .vehicle-console .console-panel-header {
+                height: auto;
+                min-height: 44px;
+                padding: 8px 12px;
+                flex-wrap: wrap;
+            }
+
+            .vehicle-console .console-panel-header>.flex {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .vehicle-console .history-panel>.flex-1 {
+                overflow: auto !important;
+            }
+
+            .vehicle-console .history-panel .el-table {
+                min-width: 940px;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .prototype-main:has(.vehicle-console) {
+                padding: 16px;
+            }
+
+            .vehicle-console .console-layout {
+                gap: 12px;
+            }
+
+            .vehicle-console .upper-grid {
+                gap: 12px;
+            }
+
+            .vehicle-console .vehicle-summary {
+                padding: 16px;
+            }
+
+            .vehicle-console .vehicle-summary-main {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .vehicle-console .vehicle-title-row {
+                row-gap: 8px;
+            }
+
+            .vehicle-console .vehicle-meta {
+                gap: 8px 12px;
+            }
+
+            .vehicle-console .map-card,
+            .vehicle-console .remote-card {
+                height: auto;
+                min-height: 204px;
+            }
+
+            .vehicle-console .moto-test-card .moto-test-body {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .vehicle-console .moto-test-card .moto-test-button {
+                width: 100%;
+            }
+
+            .vehicle-console .history-panel {
+                min-height: 320px;
+            }
+
+            .vehicle-console-overlay .map-dialog-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console-overlay .battery-slot-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console-overlay .battery-slot-field:nth-child(odd) {
+                border-right: 0;
+            }
+
+            .vehicle-console-overlay .battery-slot-field:nth-last-child(-n + 2) {
+                border-bottom: 1px solid var(--app-color-border-subtle);
+            }
+
+            .vehicle-console-overlay .battery-slot-field:last-child {
+                border-bottom: 0;
+            }
+
+            .vehicle-console-overlay .dialog-toolbar {
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .vehicle-console-overlay .dialog-toolbar .toolbar-item,
+            .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-range,
+            .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-operator,
+            .vehicle-console-overlay .dialog-toolbar .toolbar-item.is-action {
+                flex: 1 1 100%;
+            }
+
+            .vehicle-console-overlay .dialog-toolbar .toolbar-actions {
+                margin-left: 0;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .prototype-main:has(.vehicle-console) {
+                display: flex;
+                flex: 1 1 0;
+                min-height: 0;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .vehicle-console {
+                height: auto;
+                min-height: 0;
+                overflow: visible;
+            }
+
+            .vehicle-console .console-layout {
+                flex: 0 0 auto;
+                height: auto;
+                min-height: 0;
+                flex-direction: row;
+                align-items: flex-start;
+                overflow: visible;
+            }
+
+            .vehicle-console .console-main {
+                height: auto;
+                overflow: visible;
+            }
+        }
+
+        @media (min-width: 1181px) and (max-width: 1480px) {
+            .vehicle-console .console-layout {
+                gap: 16px;
+            }
+
+            .vehicle-console .vehicle-selector {
+                flex-basis: 292px;
+                width: 292px;
+            }
+
+            .vehicle-console .upper-grid {
+                grid-template-columns: 320px minmax(0, 1fr);
+            }
+        }
+
+        @media (min-width: 1181px) {
+            .vehicle-console .status-panel,
+            .vehicle-console .history-panel {
+                height: 440px;
+            }
+        }
+
+        @media (min-width: 901px) and (max-width: 1180px) {
+            .vehicle-console .console-layout {
+                gap: 12px;
+            }
+
+            .vehicle-console .vehicle-selector {
+                flex: 0 0 248px;
+                width: 248px;
+            }
+
+            .vehicle-console .upper-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-console .lower-grid {
+                flex-direction: column;
+            }
+
+            .vehicle-console .status-panel {
+                flex: 0 0 auto;
+                width: 100%;
+                max-height: 360px;
+            }
+
+            .vehicle-console .history-panel {
+                min-height: 360px;
+            }
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+    <!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+    <script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "vehicle-console",
+  "pageTitle": "车辆控制台",
+  "fileName": "vehicle_console_responsive.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/vehicle-console",
+  "menuSection": "dispatch",
+  "menuTitle": "车辆控制台",
+  "menuIcon": "Setting",
+  "menu": true,
+  "rootClass": "vehicle-console",
+  "overlayRootClass": "vehicle-console-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com",
+    "https://unpkg.com/dayjs@1.11.10/dayjs.min.js"
+  ],
+  "assets": []
+}
+    </script>
+    <!-- PAGE_MANIFEST_END -->
+
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+<body>
+    <div id="app" class="prototype-app" v-cloak>
+        <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+        <!-- PROTOTYPE_SHELL_START -->
+        <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+            <div class="prototype-brand">
+                <span data-shell-project-name>RIMO Rental</span>
+                <small data-shell-client-name>营运端</small>
+            </div>
+            <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+                <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">车辆营运与调度</div>
+                <a class="prototype-menu-item is-active" href="./vehicle_console.html" aria-current="page"
+                    data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Setting"
+                        aria-hidden="true"></span><span>车辆控制台</span></a>
+                <!-- SHELL_NAV_END -->
+            </nav>
+        </aside>
+
+        <div class="prototype-workspace">
+            <header class="prototype-topbar" data-prototype-shell="topbar">
+                <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 车辆控制台</div>
+                <el-dropdown trigger="click">
+                    <button class="prototype-user" type="button" aria-label="账号菜单">
+                        <span class="prototype-avatar">A</span>
+                        <span>Admin</span>
+                    </button>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </header>
+            <!-- PROTOTYPE_SHELL_END -->
+
+            <main class="prototype-main">
+                <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+                <section class="legacy-page legacy-vehicle-console vehicle-console" data-page-content
+                    data-page-root="vehicle-console" data-page-key="vehicle-console">
+                    <div class="console-business" data-business-content data-layout-type="legacy">
+                        <div class="flex justify-between items-end shrink-0">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800 tracking-tight">车辆控制台</h1>
+                                <p class="text-gray-500 text-sm mt-1">远程实时操作车辆硬件接口，监控底盘、门锁、网络终端与微电动车电池状态。</p>
+                            </div>
+                        </div>
+
+                        <div class="console-layout">
+                            <div class="vehicle-selector bg-white rounded-xl shadow-sm border border-gray-100">
+                                <div class="p-4 border-b border-gray-100 bg-gray-50">
+                                    <div class="font-bold text-gray-800 mb-3 flex items-center">
+                                        <el-icon class="mr-2 text-blue-600">
+                                            <Van></Van>
+                                        </el-icon>
+                                        目标车辆检索
+                                    </div>
+                                    <div class="filter-controls">
+                                        <el-cascader v-model="filters.stationIds" :options="orgData"
+                                            :props="stationCascaderProps" placeholder="请选择车行 / 门市 / 据点（支持多选）"
+                                            class="w-full" clearable filterable collapse-tags collapse-tags-tooltip>
+                                        </el-cascader>
+                                        <div class="type-filter-row">
+                                            <el-select v-model="filters.vehicleType" aria-label="车辆类型" class="w-full">
+                                                <el-option label="全部车辆类型" value="ALL"></el-option>
+                                                <el-option label="汽车" value="Vehicle"></el-option>
+                                                <el-option label="微电动车" value="MicroEV"></el-option>
+                                            </el-select>
+                                        </div>
+                                        <el-input v-model="filters.keyword" placeholder="搜索车牌号/VIN/车型/CID"
+                                            prefix-icon="Search" clearable class="filter-search filter-full"></el-input>
+                                    </div>
+                                </div>
+
+                                <div class="vehicle-list custom-scroll p-2">
+                                    <div v-if="filteredVehicles.length === 0"
+                                        class="flex flex-col items-center justify-center h-40 text-gray-400">
+                                        <el-icon class="text-3xl mb-2">
+                                            <DataLine></DataLine>
+                                        </el-icon>
+                                        <span class="text-sm">未找到匹配车辆</span>
+                                    </div>
+
+                                    <div v-for="v in filteredVehicles" :key="v.id" @click="selectVehicle(v)"
+                                        class="vehicle-card rounded-lg border cursor-pointer transition-all duration-200"
+                                        :class="activeVehicle?.id === v.id ? 'bg-blue-50 border-blue-300 shadow-sm' : 'bg-white border-transparent hover:border-gray-200 hover:bg-gray-50'">
+                                        <div class="vehicle-card-body">
+                                            <div class="vehicle-card-copy">
+                                                <div class="flex items-center gap-2 flex-wrap">
+                                                    <div class="vehicle-card-title font-bold text-gray-800">{{
+                                                        v.licensePlate }}</div>
+                                                    <el-tag size="small"
+                                                        :type="v.vehicleType === 'MicroEV' ? 'warning' : 'info'"
+                                                        effect="plain">
+                                                        {{ getVehicleTypeName(v.vehicleType) }}
+                                                    </el-tag>
+                                                </div>
+                                                <div class="vehicle-card-model text-gray-500 truncate">{{ v.model }}
+                                                </div>
+                                                <div class="vehicle-card-meta text-gray-400 font-mono">CID {{ v.iduId }}
+                                                </div>
+                                            </div>
+                                            <div class="vehicle-card-side flex flex-col items-end shrink-0">
+                                                <el-tag size="small" :type="v.isDriving ? 'primary' : 'info'"
+                                                    effect="light" round>
+                                                    <span class="status-dot mr-1"
+                                                        :class="v.isDriving ? 'driving' : 'offline'"
+                                                        style="width: 6px; height: 6px;"></span>
+                                                    {{ v.isDriving ? '行驶中' : '静止' }}
+                                                </el-tag>
+                                                <span class="text-[10px] text-gray-400" v-if="v.isOnline">在线</span>
+                                                <span class="text-[10px] text-red-400" v-else>离线</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="console-main" v-if="activeVehicle">
+                                <div
+                                    class="vehicle-summary bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-4 shrink-0">
+                                    <div class="vehicle-summary-main">
+                                        <div class="vehicle-summary-photo">
+                                            <el-image :src="getVehiclePhoto(activeVehicle)" fit="cover"
+                                                :alt="activeVehicle.model">
+                                                <template #error>
+                                                    <div class="vehicle-photo-fallback">{{ activeVehicle.vehicleType ===
+                                                        'MicroEV' ? '微电动车' : '汽车' }}</div>
+                                                </template>
+                                            </el-image>
+                                        </div>
+                                        <div class="vehicle-summary-copy">
+                                            <div class="vehicle-title-row">
+                                                <h2 class="text-2xl font-bold text-gray-800">{{
+                                                    activeVehicle.licensePlate }}</h2>
+                                                <el-tag
+                                                    :type="activeVehicle.vehicleType === 'MicroEV' ? 'warning' : 'info'"
+                                                    effect="plain">
+                                                    {{ getVehicleTypeName(activeVehicle.vehicleType) }}
+                                                </el-tag>
+                                                <el-tag :type="activeVehicle.isDriving ? 'primary' : 'info'"
+                                                    :class="{ 'vehicle-driving-tag': activeVehicle.isDriving }"
+                                                    effect="dark">
+                                                    <div class="flex items-center">
+                                                        <span class="status-dot bg-white mr-1.5"
+                                                            :style="activeVehicle.isDriving ? 'box-shadow: 0 0 5px white;' : ''"></span>
+                                                        {{ activeVehicle.isDriving ? '车辆行驶中' : '车辆已静止' }}
+                                                    </div>
+                                                </el-tag>
+                                                <el-tag :type="isDeviceOnline ? 'success' : 'info'" effect="plain">
+                                                    {{ deviceConnectionText }}
+                                                </el-tag>
+                                            </div>
+                                            <div class="vehicle-meta text-sm text-gray-500 mt-1 font-mono">
+                                                <span>所属：{{ getVehicleOrganizationText(activeVehicle) }}</span>
+                                                <span>CID: {{ activeVehicle.iduId }}</span>
+                                                <span class="inline-flex items-center gap-1">平台接收时间
+                                                    <el-tooltip content="平台接收并写入本次车机资料的时间，由后端 receivedAt 产生。"
+                                                        placement="top">
+                                                        <span class="time-help-icon" aria-label="平台接收时间说明">?</span>
+                                                    </el-tooltip>:
+                                                    <span class="text-gray-800 font-medium">{{ platformReceivedTime
+                                                        }}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <el-button @click="refreshTelemetry" :loading="isRefreshing"
+                                        icon="Refresh">手动刷新状态</el-button>
+                                </div>
+
+                                <div class="upper-grid shrink-0">
+                                    <div
+                                        class="map-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                                        <div class="console-panel-header">
+                                            <span class="font-bold text-sm text-gray-700">最新定位</span>
+                                            <span class="location-time inline-flex items-center gap-1">
+                                                {{ telemetry.iduGpsTime }}
+                                                <el-tooltip content="车机记录的定位时间，取自 iduGpsTime 字段；与平台接收时间可能不同。"
+                                                    placement="top">
+                                                    <span class="time-help-icon" aria-label="最新定位时间说明">?</span>
+                                                </el-tooltip>
+                                            </span>
+                                        </div>
+                                        <div class="flex-1 map-placeholder relative group">
+                                            <div class="map-open-action">
+                                                <el-button type="primary" size="small" plain
+                                                    @click="openMapDialog"><el-icon class="mr-1">
+                                                        <Location></Location>
+                                                    </el-icon>打开地图窗口</el-button>
+                                            </div>
+                                            <div
+                                                class="map-location-marker absolute top-1/2 left-1/2 -mt-4 -ml-3 text-red-500 drop-shadow-md cursor-pointer hover:scale-110 transition-transform">
+                                                <svg viewBox="0 0 24 24" class="w-8 h-8 fill-current">
+                                                    <path
+                                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="p-3 text-xs text-gray-600 bg-white truncate"
+                                            :title="telemetry.address">
+                                            <el-icon class="mr-1 text-gray-400">
+                                                <Position></Position>
+                                            </el-icon>
+                                            {{ telemetry.address }}
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="remote-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                                        <div class="console-panel-header font-bold text-sm text-gray-700">
+                                            <span>远程指令中枢</span>
+                                        </div>
+
+                                        <div class="remote-card-body">
+                                            <div v-if="activeVehicle.vehicleType === 'Vehicle'" class="remote-grid">
+                                                <div class="border rounded-lg p-4 flex flex-col justify-center items-center gap-3 relative overflow-hidden"
+                                                    :class="telemetry.doorLockStatus ? 'bg-gray-50 border-gray-200' : 'bg-emerald-50 border-emerald-200'">
+                                                    <div class="absolute top-2 left-2 text-[10px] text-gray-400">车门中控
+                                                    </div>
+                                                    <div class="text-3xl"
+                                                        :class="telemetry.doorLockStatus ? 'text-gray-400' : 'text-emerald-500'">
+                                                        <el-icon v-if="telemetry.doorLockStatus">
+                                                            <Lock></Lock>
+                                                        </el-icon>
+                                                        <el-icon v-else>
+                                                            <Unlock></Unlock>
+                                                        </el-icon>
+                                                    </div>
+                                                    <div class="font-bold text-gray-700 tracking-widest">{{
+                                                        telemetry.doorLockStatus ? '已落锁' : '已解锁' }}</div>
+                                                    <div class="flex gap-2 mt-1 w-full px-2">
+                                                        <el-button type="success" size="small" class="flex-1 remote-btn"
+                                                            :disabled="!isDeviceOnline"
+                                                            @click="sendCommand('LOCK_DOOR')">上锁</el-button>
+                                                        <el-button type="danger" size="small" class="flex-1 remote-btn"
+                                                            :disabled="!isDeviceOnline"
+                                                            @click="sendCommand('UNLOCK_DOOR')">解锁</el-button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="border rounded-lg p-4 flex flex-col justify-center items-center gap-3 relative overflow-hidden"
+                                                    :class="telemetry.securityOn ? 'bg-gray-50 border-gray-200' : 'bg-emerald-50 border-emerald-200'">
+                                                    <div class="absolute top-2 left-2 text-[10px] text-gray-400">保全 / 防盗
+                                                    </div>
+                                                    <div class="text-3xl"
+                                                        :class="telemetry.securityOn ? 'text-gray-400' : 'text-emerald-500'">
+                                                        <el-icon>
+                                                            <Warning></Warning>
+                                                        </el-icon>
+                                                    </div>
+                                                    <div class="font-bold text-gray-700 tracking-widest">{{
+                                                        telemetry.securityOn ? '已上锁' : '已解除' }}</div>
+                                                    <div class="flex gap-2 mt-1 w-full px-2">
+                                                        <el-button type="warning" size="small" class="flex-1 remote-btn"
+                                                            :disabled="!isDeviceOnline"
+                                                            @click="sendCommand('ENABLE_IMMOBILIZER')">上锁</el-button>
+                                                        <el-button type="info" size="small" class="flex-1 remote-btn"
+                                                            :disabled="!isDeviceOnline"
+                                                            @click="sendCommand('DISABLE_IMMOBILIZER')">解除</el-button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex flex-col gap-3 min-h-0">
+                                                    <el-button type="primary"
+                                                        class="w-full flex-1 remote-btn !m-0 rounded-lg shadow-sm"
+                                                        :disabled="!isDeviceOnline"
+                                                        @click="sendCommand('FIND_VEHICLE')">
+                                                        <div class="flex flex-col items-center">
+                                                            <el-icon class="text-lg mb-1">
+                                                                <Bell></Bell>
+                                                            </el-icon>
+                                                            <span class="font-bold tracking-wider">远程寻车 (鸣笛/闪灯)</span>
+                                                        </div>
+                                                    </el-button>
+                                                    <div
+                                                        class="w-full flex-1 border rounded-lg bg-gray-50 flex items-center justify-between px-4 text-sm">
+                                                        <span class="text-gray-500">电子钥匙回位</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.iButtonReturned ? 'success' : 'danger'"
+                                                            effect="dark">{{ telemetry.iButtonReturned ? '在位' : '已拔出'
+                                                            }}</el-tag>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div v-else class="remote-grid remote-grid-moto">
+                                                <!-- MicroEV 远程指令待供应商确认正式 MethodName 后再开放；现保留原测试交互源码。 -->
+                                                <div v-if="false"
+                                                    class="moto-test-card border rounded-lg flex flex-col bg-slate-50 border-slate-200">
+                                                    <div class="moto-test-title">车机在线测试</div>
+                                                    <div class="moto-test-body">
+                                                        <el-icon class="moto-test-icon text-3xl"
+                                                            :class="motoOnlineTestExecuted ? (telemetry.gprsStatus ? 'text-green-500' : 'text-gray-400') : 'text-gray-400'">
+                                                            <Connection></Connection>
+                                                        </el-icon>
+                                                        <div class="moto-test-copy">
+                                                            <div class="moto-test-text">{{ motoOnlineTestExecuted ?
+                                                                (telemetry.gprsStatus ? '车机当前在线' : '车机当前离线') :
+                                                                '点击按钮测试车机在线状态' }}</div>
+                                                            <div class="moto-test-desc">用于后台测试微电动车车机在线状态；租约相关指令由 APP
+                                                                下发并记录台账。</div>
+                                                        </div>
+                                                        <el-button type="primary" class="remote-btn moto-test-button"
+                                                            @click="sendCommand('TEST_MOTO_ONLINE')">测试车机是否在线</el-button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="moto-no-control-card border rounded-lg bg-gray-50 border-gray-200">
+                                                    <el-icon class="text-3xl text-gray-400">
+                                                        <Connection></Connection>
+                                                    </el-icon>
+                                                    <span>微电车暂无控制功能</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="lower-grid">
+                                    <div
+                                        class="status-panel w-72 shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col">
+                                        <div class="console-panel-header font-bold text-sm text-gray-700">
+                                            <span>终端与车辆状态矩阵</span>
+                                            <button type="button"
+                                                class="status-detail-trigger text-xs font-medium"
+                                                @click="openStatusDrawer">查看更多状态 &gt;</button>
+                                        </div>
+                                        <div class="status-scroll custom-scroll">
+                                            <!-- 汽车状态矩阵：按 通讯 / 动力 / 车身 / 能耗 4大业务维度分组 -->
+                                            <template v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                                <!-- 分组1: 终端通讯 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>终端通讯与定位</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Location></Location>
+                                                            </el-icon>GPS 定位状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.gpsStatus ? 'success' : 'info'"
+                                                            effect="plain" round>
+                                                            <span class="status-dot mr-1"
+                                                                :class="telemetry.gpsStatus ? 'online' : 'offline'"
+                                                                style="width: 5px; height: 5px;"></span>
+                                                            {{ telemetry.gpsStatus ? '有效' : '无效' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Connection></Connection>
+                                                            </el-icon>GPRS 连线</span>
+                                                        <el-tag size="small" :type="isDeviceOnline ? 'success' : 'info'"
+                                                            effect="plain" round>
+                                                            <span class="status-dot mr-1"
+                                                                :class="isDeviceOnline ? 'online' : 'offline'"
+                                                                style="width: 5px; height: 5px;"></span>
+                                                            {{ deviceConnectionText }}
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 分组2: 动力与保全 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>动力与保全</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Key></Key>
+                                                            </el-icon>ACC 发动</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.accOn ? 'success' : 'info'" effect="plain">
+                                                            {{ telemetry.accOn ? '发动车' : '熄火' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Cpu></Cpu>
+                                                            </el-icon>引擎状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.powerOn ? 'success' : 'info'"
+                                                            effect="plain">
+                                                            {{ telemetry.powerOn ? '开启' : '关闭' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Warning></Warning>
+                                                            </el-icon>防盗锁状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.securityOn ? 'info' : 'success'"
+                                                            effect="plain">
+                                                            {{ telemetry.securityOn ? '已设防' : '已解除' }}
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 分组3: 车身与车门 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>车身与车门</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Lock>
+                                                            </el-icon>车门锁状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.doorLockStatus ? 'info' : 'success'"
+                                                            effect="plain">
+                                                            {{ telemetry.doorLockStatus ? '全部上锁' : '有门解锁' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Unlock>
+                                                            </el-icon>车门物理状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.doorOpen ? 'success' : 'info'"
+                                                            effect="plain">
+                                                            {{ telemetry.doorOpen ? '有车门开启' : '全部关闭' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Sunny></Sunny>
+                                                            </el-icon>灯光状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.lightOn ? 'success' : 'info'"
+                                                            effect="plain">
+                                                            {{ telemetry.lightOn ? '开启' : '关闭' }}
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 分组4: 能耗与电瓶 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>能耗与电瓶</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Odometer></Odometer>
+                                                            </el-icon>剩余油量</span>
+                                                        <div class="matrix-gauge-wrap">
+                                                            <div class="matrix-progress-bar">
+                                                                <div class="matrix-progress-inner"
+                                                                    :style="{ width: telemetry.remainFuel + '%', backgroundColor: Number(telemetry.remainFuel) < 10 ? '#ef4444' : (Number(telemetry.remainFuel) < 30 ? '#f59e0b' : '#10b981') }">
+                                                                </div>
+                                                            </div>
+                                                            <span class="text-xs font-mono font-bold"
+                                                                :class="Number(telemetry.remainFuel) < 10 ? 'text-red-500' : (Number(telemetry.remainFuel) < 30 ? 'text-amber-500' : 'text-emerald-600')">
+                                                                {{ telemetry.remainFuel }}%
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Compass></Compass>
+                                                            </el-icon>低电压警示</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.lowVoltage ? 'danger' : 'success'"
+                                                            effect="plain">
+                                                            {{ telemetry.lowVoltage ? '异常' : '正常' }} ({{
+                                                            telemetry.batteryVoltage }}V)
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+                                            </template>
+
+                                            <!-- 微电动车状态矩阵 -->
+                                            <template v-else>
+                                                <!-- 分组1: 终端通讯 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>终端通讯与定位</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Location></Location>
+                                                            </el-icon>GPS 定位状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.gpsStatus ? 'success' : 'info'"
+                                                            effect="plain" round>
+                                                            <span class="status-dot mr-1"
+                                                                :class="telemetry.gpsStatus ? 'online' : 'offline'"
+                                                                style="width: 5px; height: 5px;"></span>
+                                                            {{ telemetry.gpsStatus ? '有效' : '无效' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Connection></Connection>
+                                                            </el-icon>GPRS 连线</span>
+                                                        <el-tag size="small" :type="isDeviceOnline ? 'success' : 'info'"
+                                                            effect="plain" round>
+                                                            <span class="status-dot mr-1"
+                                                                :class="isDeviceOnline ? 'online' : 'offline'"
+                                                                style="width: 5px; height: 5px;"></span>
+                                                            {{ deviceConnectionText }}
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 分组2: 动力与马达 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>动力与马达</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Key></Key>
+                                                            </el-icon>发动状态</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.accOn ? 'success' : 'info'" effect="plain">
+                                                            {{ telemetry.accOn ? '发动车' : '熄火' }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Cpu></Cpu>
+                                                            </el-icon>马达启动</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.motorStarted ? 'success' : 'info'"
+                                                            effect="plain">
+                                                            {{ telemetry.motorStarted ? '已启动' : '关闭' }}
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 分组3: 电量与续航 -->
+                                                <div class="matrix-section">
+                                                    <div class="matrix-section-header">
+                                                        <span>电池与续航</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Odometer></Odometer>
+                                                            </el-icon>总电量 (SOC)</span>
+                                                        <div class="matrix-gauge-wrap">
+                                                            <div class="matrix-progress-bar">
+                                                                <div class="matrix-progress-inner"
+                                                                    :style="{ width: telemetry.rsoc + '%', backgroundColor: Number(telemetry.rsoc) < 10 ? '#ef4444' : (Number(telemetry.rsoc) < 30 ? '#f59e0b' : '#10b981') }">
+                                                                </div>
+                                                            </div>
+                                                            <span class="text-xs font-mono font-bold"
+                                                                :class="Number(telemetry.rsoc) < 10 ? 'text-red-500' : (Number(telemetry.rsoc) < 30 ? 'text-amber-500' : 'text-emerald-600')">
+                                                                {{ telemetry.rsoc }}%
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Timer></Timer>
+                                                            </el-icon>预估续航</span>
+                                                        <span class="text-xs font-mono font-bold text-gray-700">{{
+                                                            telemetry.remainingDistance }} km</span>
+                                                    </div>
+                                                    <div class="matrix-item">
+                                                        <span class="matrix-item-label"><el-icon>
+                                                                <Compass></Compass>
+                                                            </el-icon>低电压警示</span>
+                                                        <el-tag size="small"
+                                                            :type="telemetry.lowVoltage ? 'danger' : 'success'"
+                                                            effect="plain">
+                                                            {{ telemetry.lowVoltage ? '异常' : '正常' }} ({{
+                                                            telemetry.dcVoltage }}V)
+                                                        </el-tag>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <div class="history-panel bg-white rounded-xl shadow-sm border border-gray-100">
+                                        <div class="console-panel-header">
+                                            <span class="font-bold text-sm text-gray-700">车辆远程控制指令台账（最新 10 条）</span>
+                                            <div class="flex items-center gap-2">
+                                                <el-button size="small" plain @click="openHistoryDialog"><el-icon
+                                                        class="mr-1">
+                                                        <Tickets></Tickets>
+                                                    </el-icon>查看全部台账</el-button>
+                                                <el-button size="small" plain icon="Refresh"
+                                                    @click="fetchHistory">刷新日志</el-button>
+                                            </div>
+                                        </div>
+                                        <div class="p-0 overflow-hidden">
+                                            <el-table :data="historyLogs" height="100%" stripe size="small"
+                                                class="w-full">
+                                                <el-table-column prop="time" label="下发时间" width="150">
+                                                    <template #default="{ row }"><span
+                                                            class="font-mono text-xs text-gray-600">{{ row.time
+                                                            }}</span></template>
+                                                </el-table-column>
+                                                <el-table-column prop="operator" label="操作人"
+                                                    width="110"></el-table-column>
+                                                <el-table-column prop="action" label="控制指令" width="160">
+                                                    <template #default="{ row }"><span class="font-bold text-xs">{{
+                                                            getActionName(row.action) }}</span></template>
+                                                </el-table-column>
+                                                <el-table-column prop="plate" label="关联车牌"
+                                                    width="120"></el-table-column>
+                                                <el-table-column prop="cid" label="CID" width="100"></el-table-column>
+                                                <el-table-column prop="status" label="执行结果" width="100">
+                                                    <template #default="{ row }">
+                                                        <el-tag size="small" :type="getHistoryStatusType(row.status)"
+                                                            effect="dark">{{ getHistoryStatusText(row.status)
+                                                            }}</el-tag>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column prop="note" label="备注说明" min-width="200">
+                                                    <template #default="{ row }">
+                                                        <span v-if="row.status === 'FAIL'"
+                                                            class="text-red-500 text-xs">{{ row.note }}</span>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-else
+                                class="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-gray-400">
+                                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e5e7eb' width='120' height='120'><path d='M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.08 3.11H5.77L6.85 7zM19 17H5v-5h14v5z'/><circle cx='7.5' cy='14.5' r='1.5'/><circle cx='16.5' cy='14.5' r='1.5'/></svg>"
+                                    alt="Select Car" class="mb-4 opacity-50">
+                                <h3 class="text-xl font-bold text-gray-500 mb-2">未选择监控车辆</h3>
+                                <p class="text-sm">请在左侧检索栏中选择一台车辆以开启实时控制与监控面板</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- PAGE_CONTENT_END -->
+            </main>
+        </div>
+
+        <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+        <div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层"
+            class="vehicle-console-overlay" v-cloak>
+            <el-drawer v-model="statusDetailVisible"
+                :title="activeVehicle ? `${activeVehicle.licensePlate} · 更多状态信息` : '更多状态信息'" size="580px"
+                class="vehicle-console-overlay" modal-class="vehicle-console-overlay-modal" destroy-on-close>
+                <div v-if="activeVehicle" class="detail-status-sections">
+                    <!-- 卡片 1: 车机硬件与通讯参数 -->
+                    <section class="detail-status-section">
+                        <div class="detail-status-title">
+                            <span class="flex items-center gap-1.5">
+                                <el-icon class="text-blue-600">
+                                    <Cpu></Cpu>
+                                </el-icon>
+                                车机硬件与通讯参数
+                            </span>
+                        </div>
+                        <div class="detail-grid-2col">
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">
+                                    <span>设备 CID</span>
+                                    <button type="button" class="copy-icon-btn" title="复制 CID"
+                                        @click="copyText(telemetry.iduId, 'CID')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val text-blue-600">{{ telemetry.iduId }}</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">安装车辆类别</div>
+                                <div class="detail-grid-val">{{ activeVehicle.vehicleType === 'MicroEV' ? 'MicroEV / 微电动车' : 'Vehicle / 汽车' }}</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">车机厂商 / 型号</div>
+                                <div class="detail-grid-val">{{ telemetry.iduBrandName }} / {{ telemetry.iduModelName }}
+                                </div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">车机韧体版本</div>
+                                <div class="detail-grid-val">{{ telemetry.iduFW }}</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">
+                                    <span>IMEI 识别码</span>
+                                    <button type="button" class="copy-icon-btn" title="复制 IMEI"
+                                        @click="copyText(telemetry.iduIMEI, 'IMEI')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val font-mono text-xs">{{ telemetry.iduIMEI }}</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">
+                                    <span>ICCID 物联网卡号</span>
+                                    <button type="button" class="copy-icon-btn" title="复制 ICCID"
+                                        @click="copyText(telemetry.iduICCID, 'ICCID')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val font-mono text-xs">{{ telemetry.iduICCID }}</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">GPS 定位状态</div>
+                                <div class="detail-grid-val">
+                                    <span
+                                        :class="telemetry.gpsStatus ? 'text-green-600 font-bold' : 'text-gray-400 font-bold'">
+                                        {{ telemetry.gpsStatus ? '● 有效定位' : '○ 无效' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">GPRS 通讯状态</div>
+                                <div class="detail-grid-val">
+                                    <span
+                                        :class="isDeviceOnline ? 'text-green-600 font-bold' : 'text-gray-400 font-bold'">
+                                        {{ isDeviceOnline ? '● ' + deviceConnectionText : '○ ' + deviceConnectionText }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item col-span-2">
+                                <div class="detail-grid-label">
+                                    <span>当前经纬度坐标</span>
+                                    <button type="button" class="copy-icon-btn" title="复制经纬度"
+                                        @click="copyText(`{{ telemetry.latitude }}, {{ telemetry.longitude }}`, '经纬度坐标')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val font-mono text-xs text-gray-700">
+                                    {{ telemetry.latitude }}, {{ telemetry.longitude }}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 卡片 2: 车辆运行与安防状态 -->
+                    <section class="detail-status-section">
+                        <div class="detail-status-title">
+                            <span class="flex items-center gap-1.5">
+                                <el-icon class="text-blue-600">
+                                    <Lock></Lock>
+                                </el-icon>
+                                车辆运行与安防状态
+                            </span>
+                        </div>
+                        <div class="detail-grid-2col">
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">当前租约状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.rentalActive ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.rentalActive ? '有租约' : '无租约' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">ACC 发动状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.accOn ? 'success' : 'info'" effect="plain">
+                                        {{ telemetry.accOn ? '发动车' : '熄火' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">引擎运转状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.powerOn ? 'success' : 'info'" effect="plain">
+                                        {{ telemetry.powerOn ? '开启' : '关闭' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-else>
+                                <div class="detail-grid-label">马达启动状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.motorStarted ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.motorStarted ? '已启动' : '关闭' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">防盗锁状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.securityOn ? 'info' : 'success'"
+                                        effect="plain">
+                                        {{ telemetry.securityOn ? '已上锁设防' : '已解除' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">车门中控锁</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.doorLockStatus ? 'info' : 'success'"
+                                        effect="plain">
+                                        {{ telemetry.doorLockStatus ? '全部上锁' : '有车门解锁' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">车门物理开闭</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.doorOpen ? 'success' : 'info'" effect="plain">
+                                        {{ telemetry.doorOpen ? '有车门开启' : '全部关闭' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">车辆灯光状态</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.lightOn ? 'success' : 'info'" effect="plain">
+                                        {{ telemetry.lightOn ? '开启' : '关闭' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">电子钥匙在位</div>
+                                <div class="detail-grid-val">
+                                    <el-tag size="small" :type="telemetry.iButtonReturned ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.iButtonReturned ? '钥匙已挂回' : '钥匙未挂回' }}
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">
+                                    <span>iButton 钥匙编号</span>
+                                    <button type="button" class="copy-icon-btn" title="复制 iButton"
+                                        @click="copyText(telemetry.iButtonId, 'iButton 编号')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val font-mono text-xs">{{ telemetry.iButtonId || 'NA' }}</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 卡片 3: 行驶工况与能耗监控 -->
+                    <section class="detail-status-section">
+                        <div class="detail-status-title">
+                            <span class="flex items-center gap-1.5">
+                                <el-icon class="text-blue-600">
+                                    <Odometer></Odometer>
+                                </el-icon>
+                                行驶工况与能耗监控
+                            </span>
+                        </div>
+                        <div class="detail-grid-2col">
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">{{ activeVehicle.vehicleType === 'MicroEV' ? '直流侧电压' : '低压蓄电池电压' }}</div>
+                                <div class="detail-grid-val"
+                                    :class="telemetry.lowVoltage ? 'text-red-500 font-bold' : 'text-emerald-600 font-bold'">
+                                    {{ activeVehicle.vehicleType === 'MicroEV' ? telemetry.dcVoltage + ' V' : telemetry.batteryVoltage + ' V' }}
+                                    <span class="text-xs font-normal ml-1"
+                                        :class="telemetry.lowVoltage ? 'text-red-500' : 'text-gray-400'">({{
+                                        telemetry.lowVoltage ? '低电压异常' : '电压正常' }})</span>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">实时车速</div>
+                                <div class="detail-grid-val font-mono">{{ telemetry.speed }} km/h</div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">{{ activeVehicle.vehicleType === 'MicroEV' ? '马达端电流' : '引擎转速' }}</div>
+                                <div class="detail-grid-val font-mono">
+                                    {{ activeVehicle.vehicleType === 'MicroEV' ? telemetry.current + ' A' : telemetry.rpm + ' rpm' }}
+                                </div>
+                            </div>
+                            <div class="detail-grid-item">
+                                <div class="detail-grid-label">总行驶里程</div>
+                                <div class="detail-grid-val font-mono">{{ telemetry.mileage }} km</div>
+                            </div>
+                            <div class="detail-grid-item col-span-2" v-if="activeVehicle.vehicleType === 'Vehicle'">
+                                <div class="detail-grid-label">
+                                    <span>剩余油量 (Fuel Level)</span>
+                                    <span class="font-mono font-bold"
+                                        :class="Number(telemetry.remainFuel) < 10 ? 'text-red-500' : (Number(telemetry.remainFuel) < 30 ? 'text-amber-500' : 'text-emerald-600')">{{
+                                        telemetry.remainFuel }}%</span>
+                                </div>
+                                <div class="mt-1">
+                                    <el-progress :percentage="Number(telemetry.remainFuel)"
+                                        :color="Number(telemetry.remainFuel) < 10 ? '#ef4444' : (Number(telemetry.remainFuel) < 30 ? '#f59e0b' : '#10b981')"
+                                        :show-text="false" :stroke-width="8"></el-progress>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item col-span-2" v-else>
+                                <div class="detail-grid-label">
+                                    <span>总剩余电量 (SOC) / 预估续航</span>
+                                    <span class="font-mono font-bold"
+                                        :class="Number(telemetry.rsoc) < 10 ? 'text-red-500' : (Number(telemetry.rsoc) < 30 ? 'text-amber-500' : 'text-emerald-600')">{{
+                                        telemetry.rsoc }}% (约 {{ telemetry.remainingDistance }} km)</span>
+                                </div>
+                                <div class="mt-1">
+                                    <el-progress :percentage="Number(telemetry.rsoc)"
+                                        :color="Number(telemetry.rsoc) < 10 ? '#ef4444' : (Number(telemetry.rsoc) < 30 ? '#f59e0b' : '#10b981')"
+                                        :show-text="false" :stroke-width="8"></el-progress>
+                                </div>
+                            </div>
+                            <div class="detail-grid-item col-span-2" v-if="activeVehicle.vin">
+                                <div class="detail-grid-label">
+                                    <span>车辆识别代码 (VIN)</span>
+                                    <button type="button" class="copy-icon-btn" title="复制 VIN"
+                                        @click="copyText(activeVehicle.vin, 'VIN')">
+                                        <el-icon>
+                                            <CopyDocument></CopyDocument>
+                                        </el-icon>
+                                    </button>
+                                </div>
+                                <div class="detail-grid-val font-mono text-xs text-gray-700">{{ activeVehicle.vin }}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 卡片 4 (微电动车专享): 多仓电池状态卡 -->
+                    <section class="detail-status-section" v-if="activeVehicle.vehicleType === 'MicroEV'">
+                        <div class="detail-status-title">
+                            <span class="flex items-center gap-1.5">
+                                <el-icon class="text-blue-600">
+                                    <Coin></Coin>
+                                </el-icon>
+                                多仓电池状态与实时参数
+                            </span>
+                        </div>
+                        <div class="battery-slot-list">
+                            <!-- 1号仓 -->
+                            <article class="battery-slot-card"
+                                :class="telemetry.mba !== 'NA' ? 'is-installed' : 'is-empty'">
+                                <div class="battery-slot-title">
+                                    <span>1号仓电池</span>
+                                    <el-tag size="small" :type="telemetry.mba !== 'NA' ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.mba !== 'NA' ? '已识别电池' : '未识别电池' }}
+                                    </el-tag>
+                                </div>
+                                <div v-if="telemetry.mba !== 'NA'" class="battery-slot-fields">
+                                    <div class="battery-slot-field"><span class="battery-slot-label">剩余电量</span><span
+                                            class="battery-slot-value font-bold" :class="Number(telemetry.mba) < 10 ? 'text-red-500' : (Number(telemetry.mba) < 30 ? 'text-amber-500' : 'text-emerald-600')">{{ telemetry.mba
+                                            }}%</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">目前电流</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.mbaa }} A</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">温度范围</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.mbaTempLow }} ~ {{
+                                            telemetry.mbaTempHigh }} ℃</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">电池韧体</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.mbaFw || 'NA' }}</span>
+                                    </div>
+                                    <div class="battery-slot-field col-span-2">
+                                        <span class="battery-slot-label flex items-center gap-1">
+                                            <span>电池序号</span>
+                                            <button type="button" class="copy-icon-btn" title="复制电池 SN"
+                                                @click="copyText(telemetry.mbaSn, '电池 SN')">
+                                                <el-icon>
+                                                    <CopyDocument></CopyDocument>
+                                                </el-icon>
+                                            </button>
+                                        </span>
+                                        <span class="battery-slot-value font-mono text-xs text-gray-800">{{
+                                            telemetry.mbaSn }}</span>
+                                    </div>
+                                </div>
+                                <div v-else class="p-3 text-center text-xs text-gray-400">
+                                    当前仓位未检测到电池组件
+                                </div>
+                            </article>
+
+                            <!-- 2号仓 -->
+                            <article class="battery-slot-card"
+                                :class="telemetry.rba !== 'NA' ? 'is-installed' : 'is-empty'">
+                                <div class="battery-slot-title">
+                                    <span>2号仓电池</span>
+                                    <el-tag size="small" :type="telemetry.rba !== 'NA' ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.rba !== 'NA' ? '已识别电池' : '未识别电池' }}
+                                    </el-tag>
+                                </div>
+                                <div v-if="telemetry.rba !== 'NA'" class="battery-slot-fields">
+                                    <div class="battery-slot-field"><span class="battery-slot-label">剩余电量</span><span
+                                            class="battery-slot-value font-bold" :class="Number(telemetry.rba) < 10 ? 'text-red-500' : (Number(telemetry.rba) < 30 ? 'text-amber-500' : 'text-emerald-600')">{{ telemetry.rba
+                                            }}%</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">目前电流</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.rbaa }} A</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">温度范围</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.rbaTempLow }} ~ {{
+                                            telemetry.rbaTempHigh }} ℃</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">电池韧体</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.rbaFw || 'NA' }}</span>
+                                    </div>
+                                    <div class="battery-slot-field col-span-2">
+                                        <span class="battery-slot-label flex items-center gap-1">
+                                            <span>电池序号</span>
+                                            <button type="button" class="copy-icon-btn" title="复制电池 SN"
+                                                @click="copyText(telemetry.rbaSn, '电池 SN')">
+                                                <el-icon>
+                                                    <CopyDocument></CopyDocument>
+                                                </el-icon>
+                                            </button>
+                                        </span>
+                                        <span class="battery-slot-value font-mono text-xs text-gray-800">{{
+                                            telemetry.rbaSn }}</span>
+                                    </div>
+                                </div>
+                                <div v-else class="p-3 text-center text-xs text-gray-400">
+                                    当前仓位未检测到电池组件
+                                </div>
+                            </article>
+
+                            <!-- 3号仓 -->
+                            <article class="battery-slot-card"
+                                :class="telemetry.lba !== 'NA' ? 'is-installed' : 'is-empty'">
+                                <div class="battery-slot-title">
+                                    <span>3号仓电池</span>
+                                    <el-tag size="small" :type="telemetry.lba !== 'NA' ? 'success' : 'info'"
+                                        effect="plain">
+                                        {{ telemetry.lba !== 'NA' ? '已识别电池' : '未识别电池' }}
+                                    </el-tag>
+                                </div>
+                                <div v-if="telemetry.lba !== 'NA'" class="battery-slot-fields">
+                                    <div class="battery-slot-field"><span class="battery-slot-label">剩余电量</span><span
+                                            class="battery-slot-value font-bold" :class="Number(telemetry.lba) < 10 ? 'text-red-500' : (Number(telemetry.lba) < 30 ? 'text-amber-500' : 'text-emerald-600')">{{ telemetry.lba
+                                            }}%</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">目前电流</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.lbaa }} A</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">温度范围</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.lbaTempLow }} ~ {{
+                                            telemetry.lbaTempHigh }} ℃</span></div>
+                                    <div class="battery-slot-field"><span class="battery-slot-label">电池韧体</span><span
+                                            class="battery-slot-value font-mono">{{ telemetry.lbaFw }}</span></div>
+                                    <div class="battery-slot-field col-span-2">
+                                        <span class="battery-slot-label flex items-center gap-1">
+                                            <span>电池序号</span>
+                                            <button type="button" class="copy-icon-btn" title="复制电池 SN"
+                                                @click="copyText(telemetry.lbaSn, '电池 SN')">
+                                                <el-icon>
+                                                    <CopyDocument></CopyDocument>
+                                                </el-icon>
+                                            </button>
+                                        </span>
+                                        <span class="battery-slot-value font-mono text-xs text-gray-800">{{
+                                            telemetry.lbaSn }}</span>
+                                    </div>
+                                </div>
+                                <div v-else class="p-3 text-center text-xs text-gray-400">
+                                    当前仓位未检测到电池组件
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </el-drawer>
+
+            <el-dialog v-model="historyDialogVisible"
+                :title="activeVehicle ? `${activeVehicle.licensePlate} · 历史台账` : '历史台账'" width="min(1080px, 92vw)"
+                destroy-on-close>
+                <div class="dialog-toolbar">
+                    <div class="toolbar-item is-range">
+                        <el-date-picker v-model="historyFilters.dateRange" type="datetimerange" range-separator="至"
+                            start-placeholder="开始时间" end-placeholder="结束时间" value-format="YYYY-MM-DD HH:mm:ss"
+                            class="w-full" clearable />
+                    </div>
+                    <div class="toolbar-item is-operator">
+                        <el-select v-model="historyFilters.operatorKeyword" class="w-full" placeholder="操作人关键字"
+                            filterable clearable allow-create default-first-option>
+                            <el-option v-for="item in historyOperatorOptions" :key="item" :label="item"
+                                :value="item"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="toolbar-item is-action">
+                        <el-select v-model="historyFilters.action" class="w-full" placeholder="指令类型" clearable>
+                            <el-option label="全部指令" value="ALL"></el-option>
+                            <el-option v-for="item in historyActionOptions" :key="item" :label="getActionName(item)"
+                                :value="item"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <el-button plain @click="resetHistoryFilters">重置筛选</el-button>
+                    </div>
+                </div>
+                <div class="history-dialog-table">
+                    <el-table :data="pagedHistoryArchive" height="460" stripe size="small">
+                        <el-table-column prop="time" label="下发时间" width="170"></el-table-column>
+                        <el-table-column prop="operator" label="操作人" width="160"></el-table-column>
+                        <el-table-column prop="action" label="控制指令" width="180">
+                            <template #default="{ row }">{{ getActionName(row.action) }}</template>
+                        </el-table-column>
+                        <el-table-column prop="plate" label="关联车牌" width="120"></el-table-column>
+                        <el-table-column prop="cid" label="CID" width="100"></el-table-column>
+                        <el-table-column prop="status" label="执行结果" width="110">
+                            <template #default="{ row }">
+                                <el-tag size="small" :type="getHistoryStatusType(row.status)" effect="dark">{{
+                                    getHistoryStatusText(row.status) }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注信息" min-width="220">
+                            <template #default="{ row }">
+                                <span :class="row.status === 'FAIL' ? 'text-red-500' : 'text-gray-400'">{{
+                                    row.note || '-' }}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div class="history-dialog-pagination">
+                    <el-pagination v-model:current-page="historyPage" v-model:page-size="historyPageSize"
+                        :page-sizes="[10, 20, 50, 100]" :total="filteredHistoryArchive.length"
+                        layout="total, sizes, prev, pager, next" background></el-pagination>
+                </div>
+            </el-dialog>
+
+            <el-dialog v-model="mapDialogVisible"
+                :title="activeVehicle ? `${activeVehicle.licensePlate} · 地图定位` : '地图定位'" width="min(880px, 92vw)"
+                destroy-on-close>
+                <div class="map-dialog-body" v-if="activeVehicle">
+                    <div class="map-dialog-canvas map-placeholder relative">
+                        <div
+                            class="absolute top-4 left-4 px-3 py-1.5 bg-white/90 rounded-lg text-xs text-gray-700 shadow-sm">
+                            最新定位时间：{{ telemetry.iduGpsTime }}</div>
+                        <div
+                            class="absolute top-4 right-4 px-3 py-1.5 bg-white/90 rounded-lg text-xs text-gray-700 shadow-sm">
+                            经纬度：{{ telemetry.latitude }}, {{ telemetry.longitude }}</div>
+                        <div class="map-dialog-marker absolute text-red-500 drop-shadow-md">
+                            <svg viewBox="0 0 24 24" class="w-10 h-10 fill-current">
+                                <path
+                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="map-dialog-meta">
+                        <div class="map-dialog-meta-item">
+                            <div class="text-xs text-gray-500 mb-1">定位地址</div>
+                            <div class="text-sm text-gray-700">{{ telemetry.address }}</div>
+                        </div>
+                        <div class="map-dialog-meta-item">
+                            <div class="text-xs text-gray-500 mb-1">定位状态</div>
+                <div class="text-sm text-gray-700">{{ telemetry.gpsStatus ? 'GPS 有效' : 'GPS 无效' }} / {{
+                                deviceConnectionText }}</div>
+                        </div>
+                    </div>
+                </div>
+            </el-dialog>
+        </div>
+        <!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
+    <script data-prototype-menu-icon-renderer>
+        (() => {
+            const renderMenuIcons = () => {
+                if (!window.Vue || !window.ElementPlusIconsVue) return;
+                document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+                    if (host.dataset.prototypeMenuIconReady === 'true') return;
+                    const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+                    const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+                    if (!icon) return;
+                    window.Vue.render(window.Vue.h(icon), host);
+                    host.dataset.prototypeMenuIconReady = 'true';
+                });
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+                    once: true,
+                });
+            } else {
+                requestAnimationFrame(renderMenuIcons);
+            }
+        })();
+    </script>
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+        /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+        function pageSetup() {
+            const { ref, computed, reactive, watch, onMounted, onBeforeUnmount } = Vue;
+            const orgData = [
+                {
+                    value: 'car-north',
+                    label: 'RIMO 北区车行',
+                    children: [
+                        {
+                            value: 'store-taipei',
+                            label: '台北车站门市',
+                            children: [
+                                { value: 's-1', label: '台北车站前据点' },
+                                { value: 's-6', label: '台北车站东门据点' }
+                            ]
+                        },
+                        {
+                            value: 'store-songshan',
+                            label: '松山机场门市',
+                            children: [
+                                { value: 's-2', label: '松山机场 T1 据点' }
+                            ]
+                        },
+                        {
+                            value: 'store-xinyi',
+                            label: '信义门市',
+                            children: [
+                                { value: 's-3', label: '信义 CBD 据点' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    value: 'car-south',
+                    label: 'RIMO 南区车行',
+                    children: [
+                        {
+                            value: 'store-zuoying',
+                            label: '左营高铁门市',
+                            children: [
+                                { value: 's-4', label: '左营高铁站据点' }
+                            ]
+                        },
+                        {
+                            value: 'store-pier2',
+                            label: '驳二门市',
+                            children: [
+                                { value: 's-5', label: '驳二艺术特区据点' }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            const stationCascaderProps = {
+                multiple: true,
+                emitPath: false,
+                checkStrictly: false,
+                value: 'value',
+                label: 'label',
+                children: 'children'
+            };
+
+            const allVehicles = ref([
+                { id: 1, stationId: 's-1', vehicleType: 'Vehicle', iduId: '1234', licensePlate: 'RAB-1234', model: 'Toyota Corolla Cross Hybrid', vin: 'JTNK1234567890123', isDriving: true, isOnline: true },
+                { id: 2, stationId: 's-1', vehicleType: 'Vehicle', iduId: '1235', licensePlate: 'RDZ-5566', model: 'Honda CR-V e:HEV', vin: 'MRHRW1840RP012345', isDriving: false, isOnline: true },
+                { id: 6, stationId: 's-1', vehicleType: 'MicroEV', iduId: '1239', licensePlate: 'MEV-1028', model: 'RIMO 微电动车 M1', vin: 'MEV00000000001239', isDriving: false, isOnline: true },
+                { id: 3, stationId: 's-2', vehicleType: 'Vehicle', iduId: '1236', licensePlate: 'TCD-9900', model: 'Toyota Alphard', vin: 'LSGXXXXXXXX111111', isDriving: false, isOnline: false },
+                { id: 4, stationId: 's-4', vehicleType: 'Vehicle', iduId: '1237', licensePlate: 'REN-8888', model: 'Porsche Macan', vin: 'WP0XXXXXXXX222222', isDriving: true, isOnline: true },
+                { id: 5, stationId: 's-5', vehicleType: 'Vehicle', iduId: '1238', licensePlate: 'EAB-1234', model: 'Tesla Model Y', vin: 'LRWYGCEK8MC333333', isDriving: false, isOnline: true },
+                { id: 7, stationId: 's-2', vehicleType: 'Vehicle', iduId: '1240', licensePlate: 'KBC-7281', model: 'Toyota Camry Hybrid', vin: 'JTNB11HK0N4124001', isDriving: false, isOnline: true },
+                { id: 8, stationId: 's-3', vehicleType: 'Vehicle', iduId: '1241', licensePlate: 'BQK-5816', model: 'Lexus UX 300e', vin: 'JTHAA8BH0P2124002', isDriving: true, isOnline: true },
+                { id: 9, stationId: 's-4', vehicleType: 'MicroEV', iduId: '1242', licensePlate: 'MEV-2036', model: 'RIMO 微电动车 M1', vin: 'MEV00000000001242', isDriving: false, isOnline: true },
+                { id: 10, stationId: 's-5', vehicleType: 'Vehicle', iduId: '1243', licensePlate: 'BCP-7315', model: 'Mazda CX-5', vin: 'JM7KF4WLA0124003', isDriving: false, isOnline: true },
+                { id: 11, stationId: 's-3', vehicleType: 'MicroEV', iduId: '1244', licensePlate: 'MEV-3168', model: 'RIMO 微电动车 M2', vin: 'MEV00000000001244', isDriving: true, isOnline: true },
+                { id: 12, stationId: 's-2', vehicleType: 'Vehicle', iduId: '1245', licensePlate: 'AJU-6621', model: 'Mercedes-Benz E300', vin: 'WDDZF8EB8PA124004', isDriving: false, isOnline: false },
+                { id: 13, stationId: 's-1', vehicleType: 'Vehicle', iduId: '1246', licensePlate: 'BXR-8899', model: 'Lexus ES 250', vin: 'JTHB11B10P2124005', isDriving: false, isOnline: true },
+                { id: 14, stationId: 's-4', vehicleType: 'Vehicle', iduId: '1247', licensePlate: 'KLA-2108', model: 'Toyota Alphard', vin: 'JTNGS3DH7P8124006', isDriving: true, isOnline: true },
+                { id: 15, stationId: 's-5', vehicleType: 'MicroEV', iduId: '1248', licensePlate: 'MEV-4280', model: 'RIMO 微电动车 S1', vin: 'MEV00000000001248', isDriving: false, isOnline: true },
+                { id: 16, stationId: 's-3', vehicleType: 'Vehicle', iduId: '1249', licensePlate: 'TFD-5326', model: 'Toyota Camry', vin: 'JTNB23HK2P3124007', isDriving: false, isOnline: true },
+                { id: 17, stationId: 's-2', vehicleType: 'Vehicle', iduId: '1250', licensePlate: 'RCM-7358', model: 'Skoda Superb', vin: 'TMBLJ7NP8P7124008', isDriving: false, isOnline: true },
+                { id: 18, stationId: 's-1', vehicleType: 'MicroEV', iduId: '1251', licensePlate: 'MEV-5392', model: 'RIMO 微电动车 M2', vin: 'MEV00000000001251', isDriving: false, isOnline: false }
+            ]);
+
+            const filters = reactive({
+                stationIds: [],
+                vehicleType: 'ALL',
+                keyword: ''
+            });
+
+            const filteredVehicles = computed(() => {
+                const keyword = filters.keyword.trim().toUpperCase();
+                return allVehicles.value.filter((v) => {
+                    if (filters.stationIds.length && !filters.stationIds.includes(v.stationId)) return false;
+                    if (filters.vehicleType !== 'ALL' && v.vehicleType !== filters.vehicleType) return false;
+                    if (keyword) {
+                        const haystack = [v.licensePlate, v.model, v.vin, v.iduId].join(' ').toUpperCase();
+                        if (!haystack.includes(keyword)) return false;
+                    }
+                    return true;
+                });
+            });
+
+            const activeVehicle = ref(null);
+            const isRefreshing = ref(false);
+            const telemetry = reactive({});
+            const freshnessCheckTime = ref(Date.now());
+            let freshnessTimer = null;
+            const historyLogs = ref([]);
+            const historyArchive = ref([]);
+            const historyByVehicle = new Map();
+            const statusDetailVisible = ref(false);
+            const historyDialogVisible = ref(false);
+            const mapDialogVisible = ref(false);
+            const motoOnlineTestExecuted = ref(false);
+            const historyFilters = reactive({
+                dateRange: [],
+                operatorKeyword: '',
+                action: 'ALL'
+            });
+            const historyPage = ref(1);
+            const historyPageSize = ref(10);
+
+            const getVehicleTypeName = (type) => type === 'MicroEV' ? '微电动车' : '汽车';
+            const getVehiclePhoto = (vehicle) => {
+                if (vehicle.photoUrl) return vehicle.photoUrl;
+                return vehicle.vehicleType === 'MicroEV'
+                    ? 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=500&auto=format&fit=crop'
+                    : 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=500&auto=format&fit=crop';
+            };
+            const getVehicleOrganizationText = (vehicle) => {
+                if (!vehicle?.stationId) return '-';
+                for (const carDealer of orgData) {
+                    for (const store of carDealer.children || []) {
+                        const station = (store.children || []).find((item) => item.value === vehicle.stationId);
+                        if (station) return `${carDealer.label} / ${store.label} / ${station.label}`;
+                    }
+                }
+                return vehicle.stationId;
+            };
+            const valueText = (value, suffix = '') => (value === null || value === undefined || value === '' || value === 'NA') ? 'NA' : `${value}${suffix}`;
+            const isTrueValue = (value) => value === true || value === 1 || value === '1';
+            const yesNo = (value, yes = '是', no = '否') => isTrueValue(value) ? yes : no;
+            // receivedAt 由 RIMO 后端在收到 immediateInfoUpload 时写入；供应商 ts 仅保留为来源上报时间。
+            const platformReceivedTime = computed(() => telemetry.receivedAt ? dayjs(Number(telemetry.receivedAt)).format('YYYY-MM-DD HH:mm:ss') : 'NA');
+            // 供应商 Error Code 004 定义：超过 10 分钟未上报资料，营运端按离线处理。
+            const isTelemetryStale = computed(() => !telemetry.receivedAt || freshnessCheckTime.value - Number(telemetry.receivedAt) > 10 * 60 * 1000);
+            const isDeviceOnline = computed(() => !isTelemetryStale.value && isTrueValue(telemetry.gprsStatus));
+            const deviceConnectionText = computed(() => isTelemetryStale.value ? '逾时未上报' : (isDeviceOnline.value ? '在线' : '离线'));
+
+            const historyOperatorOptions = computed(() => Array.from(new Set(historyArchive.value.map(item => item.operator))));
+            const historyActionOptions = computed(() => Array.from(new Set(historyArchive.value.map(item => item.action))));
+            const filteredHistoryArchive = computed(() => {
+                return historyArchive.value.filter((item) => {
+                    if (historyFilters.operatorKeyword && !String(item.operator).toLowerCase().includes(String(historyFilters.operatorKeyword).toLowerCase())) return false;
+                    if (historyFilters.action && historyFilters.action !== 'ALL' && item.action !== historyFilters.action) return false;
+                    if (historyFilters.dateRange && historyFilters.dateRange.length === 2) {
+                        const [start, end] = historyFilters.dateRange;
+                        const ts = dayjs(item.time).valueOf();
+                        if (ts < dayjs(start).valueOf() || ts > dayjs(end).valueOf()) return false;
+                    }
+                    return true;
+                });
+            });
+            const pagedHistoryArchive = computed(() => {
+                const start = (historyPage.value - 1) * historyPageSize.value;
+                return filteredHistoryArchive.value.slice(start, start + historyPageSize.value);
+            });
+            watch(filteredHistoryArchive, () => {
+                historyPage.value = 1;
+            });
+
+            const resetHistoryFilters = () => {
+                historyFilters.dateRange = [];
+                historyFilters.operatorKeyword = '';
+                historyFilters.action = 'ALL';
+                historyPage.value = 1;
+            };
+
+            const openHistoryDialog = () => {
+                if (!activeVehicle.value) return;
+                resetHistoryFilters();
+                historyDialogVisible.value = true;
+            };
+
+            const openMapDialog = () => {
+                if (!activeVehicle.value) return;
+                mapDialogVisible.value = true;
+            };
+
+            const carTelemetry = (vehicle) => {
+                let remainFuel = 75;
+                let batteryVoltage = 13.4;
+                let lowVoltage = false;
+                let securityOn = false;
+                let doorOpen = false;
+                let doorLockStatus = true;
+
+                if (vehicle.licensePlate === 'RDZ-5566') {
+                    // 低于 30% (橙色) 演示车：Honda CR-V (油量 22%, 有车门开启，门锁未锁)
+                    remainFuel = 22;
+                    batteryVoltage = 12.1;
+                    doorOpen = true;
+                    doorLockStatus = false;
+                } else if (vehicle.licensePlate === 'KBC-7281') {
+                    // 低于 30% (橙色) 演示车：Toyota Camry (油量 15%)
+                    remainFuel = 15;
+                    batteryVoltage = 11.9;
+                } else if (vehicle.licensePlate === 'TCD-9900') {
+                    // 低于 10% (红色) 演示车：Toyota Alphard (极低油量 6% + 低电压警示 10.5V + 防盗已设防)
+                    remainFuel = 6;
+                    batteryVoltage = 10.5;
+                    lowVoltage = true;
+                    securityOn = true;
+                } else if (vehicle.licensePlate === 'BCP-7315') {
+                    // 低于 10% (红色) 演示车：Mazda CX-5 (极低油量 8% + 低电压异常 10.8V)
+                    remainFuel = 8;
+                    batteryVoltage = 10.8;
+                    lowVoltage = true;
+                } else if (vehicle.id === 2) {
+                    remainFuel = 46;
+                    batteryVoltage = 12.0;
+                }
+
+                return {
+                    dataType: 'IduRealTimeInfo',
+                    iduId: vehicle.iduId,
+                    iduType: 'Vehicle',
+                    iduBrandName: 'RITI',
+                    iduModelName: 'IDU-420OB',
+                    iduFW: '402OB-20230801',
+                    iduIMEI: '866011054943972',
+                    iduICCID: '89886017157804948615',
+                    ts: dayjs().subtract(35, 'second').valueOf(),
+                    receivedAt: dayjs().subtract(30, 'second').valueOf(),
+                    // iduGpsTime 为车机定位时间（UTC+0），与平台收到资料的 ts 分别展示。
+                    iduGpsTime: dayjs().subtract(1, 'minute').format('YYYY/MM/DD HH:mm:ss'),
+                    gpsStatus: true,
+                    latitude: '25.0521',
+                    longitude: '121.5206',
+                    gprsStatus: vehicle.isOnline,
+                    // signalStrength、tboxPower 当前仅保留在模拟资料层，页面暂不展示，后续确认营运展示需求后再开放。
+                    signalStrength: vehicle.isOnline ? (vehicle.isDriving ? '极好' : '良好') : '离线',
+                    tboxPower: true,
+                    rentalActive: vehicle.id === 1,
+                    accOn: vehicle.isDriving,
+                    powerOn: vehicle.isDriving,
+                    securityOn: securityOn,
+                    doorOpen: doorOpen,
+                    doorLockStatus: doorLockStatus,
+                    lightOn: vehicle.isDriving,
+                    iButtonReturned: true,
+                    iButtonId: '8600001739726C01',
+                    batteryVoltage: batteryVoltage,
+                    lowVoltage: lowVoltage,
+                    drivingBehavior: 'NE',
+                    speed: vehicle.isDriving ? 60 : 0,
+                    rpm: vehicle.isDriving ? 1680 : 0,
+                    mileage: vehicle.id === 2 ? 3221 : 18540,
+                    remainFuel: remainFuel,
+                    boxDeviceVersion: '23L01-F1',
+                    waitSecurityOn: false,
+                    address: vehicle.isDriving ? '台北市大安區建國南路高架桥近信义路下匝道' : '台北市中山區南京东路三段219号B2层车库'
+                };
+            };
+
+            const motoTelemetry = (vehicle) => {
+                let rsoc = '79';
+                let remainingDistance = '73';
+                let dcVoltage = '54.35';
+                let lowVoltage = false;
+                let lba = '79';
+
+                if (vehicle.licensePlate === 'MEV-2036') {
+                    // 低于 30% (橙色) 演示车：RIMO 微电动车 M1 (电量 18%, 续航 16 km)
+                    rsoc = '18';
+                    remainingDistance = '16';
+                    dcVoltage = '48.20';
+                    lba = '18';
+                } else if (vehicle.licensePlate === 'MEV-4280') {
+                    // 低于 30% (橙色) 演示车：RIMO 微电动车 S1 (电量 25%, 续航 22 km)
+                    rsoc = '25';
+                    remainingDistance = '22';
+                    dcVoltage = '49.10';
+                    lba = '25';
+                } else if (vehicle.licensePlate === 'MEV-3168') {
+                    // 低于 10% (红色) 演示车：RIMO 微电动车 M2 (极低电量 5% + 低电压异常 43.8V)
+                    rsoc = '5';
+                    remainingDistance = '4';
+                    dcVoltage = '43.80';
+                    lowVoltage = true;
+                    lba = '5';
+                } else if (vehicle.licensePlate === 'MEV-5392') {
+                    // 低于 10% (红色) 演示车：RIMO 微电动车 M2 (极低电量 3% + 离线)
+                    rsoc = '3';
+                    remainingDistance = '2';
+                    dcVoltage = '42.50';
+                    lowVoltage = true;
+                    lba = '3';
+                }
+
+                return {
+                    dataType: 'IduRealTimeInfo',
+                    iduId: vehicle.iduId,
+                    iduType: 'MicroEV',
+                    iduBrandName: 'RITI',
+                    iduModelName: 'IDU-420OB',
+                    iduFW: '420OB-20260601',
+                    iduIMEI: '866011054943972',
+                    iduICCID: '89886972003761333339',
+                    ts: dayjs().subtract(vehicle.isOnline ? 35 : 665, 'second').valueOf(),
+                    receivedAt: dayjs().subtract(vehicle.isOnline ? 30 : 660, 'second').valueOf(),
+                    // iduGpsTime 为车机定位时间（UTC+0），与平台收到资料的 ts 分别展示。
+                    iduGpsTime: dayjs().subtract(vehicle.isOnline ? 1 : 12, 'minute').format('YYYY/MM/DD HH:mm:ss'),
+                    gpsStatus: true,
+                    latitude: '24.9971306',
+                    longitude: '121.4848972',
+                    gprsStatus: vehicle.isOnline,
+                    // signalStrength 当前仅保留在模拟资料层，页面暂不展示。
+                    signalStrength: vehicle.isOnline ? '良好' : '离线',
+                    rentalActive: true,
+                    accOn: vehicle.isDriving,
+                    motorStarted: vehicle.isDriving,
+                    lowVoltage: lowVoltage,
+                    dcVoltage: dcVoltage,
+                    speed: vehicle.isDriving ? '25' : '0',
+                    mileage: '2061.7',
+                    current: vehicle.isDriving ? '8.4' : '0.0',
+                    rsoc: rsoc,
+                    remainingDistance: remainingDistance,
+                    mba: 'NA',
+                    mbaa: 'NA',
+                    mbaTempHigh: 'NA',
+                    mbaTempLow: 'NA',
+                    rba: 'NA',
+                    rbaa: 'NA',
+                    rbaTempHigh: 'NA',
+                    rbaTempLow: 'NA',
+                    lba: lba,
+                    lbaa: '0.11',
+                    lbaTempHigh: '25',
+                    lbaTempLow: '24',
+                    mbaSn: 'NA',
+                    mbaFw: 'NA',
+                    rbaSn: 'NA',
+                    rbaFw: 'NA',
+                    lbaSn: '0880AAKH30F23210V1',
+                    lbaFw: '3E55',
+                    // 当前原型暂按供应商字段顺序映射：MBA=1号仓、RBA=2号仓、LBA=3号仓；实体仓位需由供应商最终确认。
+                    address: '台北市中山區南京东路三段219号B2层微电动车停放区'
+                };
+            };
+
+            const resetTelemetry = (payload) => {
+                Object.keys(telemetry).forEach((key) => delete telemetry[key]);
+                Object.assign(telemetry, payload);
+            };
+
+            const openStatusDrawer = () => {
+                if (!activeVehicle.value) return;
+                statusDetailVisible.value = true;
+            };
+
+            const selectVehicle = (vehicle) => {
+                const isNewVehicle = !activeVehicle.value || activeVehicle.value.id !== vehicle.id;
+                statusDetailVisible.value = false;
+                historyDialogVisible.value = false;
+                mapDialogVisible.value = false;
+                motoOnlineTestExecuted.value = false;
+
+                activeVehicle.value = vehicle;
+                resetTelemetry(vehicle.vehicleType === 'MicroEV' ? motoTelemetry(vehicle) : carTelemetry(vehicle));
+                freshnessCheckTime.value = Date.now();
+                fetchHistory();
+
+                if (isNewVehicle) {
+                    ElementPlus.ElMessage.info({
+                        message: `已切换至 ${vehicle.licensePlate}，正在刷新获取最新状态…`,
+                        duration: 1600
+                    });
+                    refreshTelemetry();
+                }
+            };
+
+            const refreshTelemetry = () => {
+                if (!activeVehicle.value) return;
+                isRefreshing.value = true;
+                setTimeout(() => {
+                    // 原型刷新模拟平台收到一笔新上报；实际接入保留供应商 ts，并在平台接收成功时写入 receivedAt。
+                    telemetry.ts = Date.now();
+                    telemetry.receivedAt = Date.now();
+                    telemetry.iduGpsTime = dayjs().format('YYYY/MM/DD HH:mm:ss');
+                    freshnessCheckTime.value = Date.now();
+                        telemetry.gprsStatus = activeVehicle.value.isOnline;
+                    telemetry.signalStrength = activeVehicle.value.isOnline ? ['极好', '良好', '一般'][Math.floor(Math.random() * 3)] : '离线';
+
+                    if (activeVehicle.value.vehicleType === 'MicroEV') {
+                        const nextSoc = Math.max(10, Number(telemetry.rsoc || 79) - Math.floor(Math.random() * 2));
+                        telemetry.rsoc = String(nextSoc);
+                        telemetry.remainingDistance = String(Math.max(8, Math.round(nextSoc * 0.92)));
+                        telemetry.dcVoltage = (53.8 + Math.random() * 1.3).toFixed(2);
+                        telemetry.current = activeVehicle.value.isDriving ? (6 + Math.random() * 5).toFixed(1) : '0.0';
+                        telemetry.speed = activeVehicle.value.isDriving ? String(18 + Math.floor(Math.random() * 18)) : '0';
+                        telemetry.accOn = activeVehicle.value.isDriving;
+                        telemetry.motorStarted = activeVehicle.value.isDriving;
+                    } else {
+                        telemetry.batteryVoltage = (11.8 + Math.random() * 2).toFixed(1);
+                        telemetry.accOn = activeVehicle.value.isDriving;
+                        telemetry.powerOn = activeVehicle.value.isDriving;
+                        telemetry.speed = activeVehicle.value.isDriving ? 45 + Math.floor(Math.random() * 30) : 0;
+                        telemetry.rpm = activeVehicle.value.isDriving ? 1400 + Math.floor(Math.random() * 900) : 0;
+                        telemetry.doorLockStatus = true;
+                    }
+
+                    isRefreshing.value = false;
+                    ElementPlus.ElMessage.success({ message: '车机状态已刷新', duration: 1500 });
+                }, 700);
+            };
+
+            const getActionName = (code) => {
+                const map = {
+                    UNLOCK_DOOR: '解锁车门',
+                    LOCK_DOOR: '锁定车门',
+                    ENABLE_IMMOBILIZER: '保全上锁',
+                    DISABLE_IMMOBILIZER: '解除保全',
+                    FIND_VEHICLE: '远程寻车 (鸣笛闪灯)',
+                    TEST_MOTO_ONLINE: '测试车机是否在线',
+                    SET_MOTO_LEASE: '微电动车设置租约',
+                    RELEASE_MOTO_LEASE: '微电动车解除租约',
+                    BLE_MOTO_LEASE: '微电动车 BLE 租约'
+                };
+                return map[code] || code;
+            };
+            const getHistoryStatusText = (status) => ({
+                PENDING: '待回执',
+                SUCCESS: '成功',
+                FAIL: '失败'
+            }[status] || status);
+            const getHistoryStatusType = (status) => ({
+                PENDING: 'warning',
+                SUCCESS: 'success',
+                FAIL: 'danger'
+            }[status] || 'info');
+
+            const memberNames = ['王小明', '陈建宏', '林雅婷', '李欣怡', '张志豪', '周怡君', '黄柏翰', '吴佳颖'];
+            const motoLeaseActions = ['SET_MOTO_LEASE', 'RELEASE_MOTO_LEASE', 'BLE_MOTO_LEASE'];
+            const memberDoorActions = ['UNLOCK_DOOR', 'LOCK_DOOR'];
+
+            const buildVehicleHistory = (vehicle) => {
+                const isMoto = vehicle.vehicleType === 'MicroEV';
+                const actionCycle = isMoto
+                    ? ['SET_MOTO_LEASE', 'BLE_MOTO_LEASE', 'RELEASE_MOTO_LEASE', 'TEST_MOTO_ONLINE']
+                    : ['UNLOCK_DOOR', 'LOCK_DOOR', 'UNLOCK_DOOR', 'LOCK_DOOR', 'FIND_VEHICLE', 'ENABLE_IMMOBILIZER', 'DISABLE_IMMOBILIZER'];
+                const baseTime = dayjs().subtract((vehicle.id % 6) * 3, 'minute');
+
+                return Array.from({ length: 28 }, (_, index) => {
+                    const action = actionCycle[index % actionCycle.length];
+                    const isAppAction = isMoto ? motoLeaseActions.includes(action) : memberDoorActions.includes(action);
+                    const status = index === 0
+                        ? 'PENDING'
+                        : (index === 2 || (index + vehicle.id) % 13 === 0 ? 'FAIL' : 'SUCCESS');
+                    let note = '';
+                    let errorStep = '';
+                    let errorCode = '';
+
+                    if (status === 'FAIL') {
+                        note = '车机未在规定时间内回执';
+                        errorStep = '等待车机回执';
+                        errorCode = '004';
+                    }
+
+                    return {
+                        id: `${vehicle.id}-${index}`,
+                        time: baseTime.subtract(index * 2 + (index % 4), 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                        operator: isAppAction
+                            ? memberNames[(index + vehicle.id) % memberNames.length]
+                            : (action === 'TEST_MOTO_ONLINE' ? '系统自动处理' : ['调度员小周', '值班管理员', '系统自动处理'][(index + vehicle.id) % 3]),
+                        action,
+                        plate: vehicle.licensePlate,
+                        cid: vehicle.iduId,
+                        cmdId: `CMD-${vehicle.iduId}-${String(1000 - index).padStart(4, '0')}`,
+                        status,
+                        errorStep,
+                        errorCode,
+                        note
+                    };
+                });
+            };
+
+            const fetchHistory = () => {
+                if (!activeVehicle.value) return;
+                const vehicleId = activeVehicle.value.id;
+                if (!historyByVehicle.has(vehicleId)) {
+                    historyByVehicle.set(vehicleId, buildVehicleHistory(activeVehicle.value));
+                }
+                const logs = [...historyByVehicle.get(vehicleId)]
+                    .sort((a, b) => dayjs(b.time).valueOf() - dayjs(a.time).valueOf());
+                historyArchive.value = logs;
+                historyLogs.value = logs.slice(0, 10);
+            };
+
+            const sendCommand = (actionCode) => {
+                if (!activeVehicle.value) return;
+                if (!isDeviceOnline.value) {
+                    ElementPlus.ElMessage.error('车机离线或逾时未上报，无法下发控制指令');
+                    return;
+                }
+                ElementPlus.ElMessageBox.confirm(
+                    `确定要对车辆 ${activeVehicle.value.licensePlate} 执行【${getActionName(actionCode)}】操作吗？`,
+                    '安全操作确认',
+                    {
+                        confirmButtonText: '确定执行',
+                        cancelButtonText: '取消',
+                        type: actionCode.includes('IMMOBILIZER') || actionCode.includes('NO_RENTAL') ? 'warning' : 'info'
+                    }
+                ).then(() => {
+                    const loading = ElementPlus.ElLoading.service({
+                        lock: true,
+                        text: '正在通过专用网关下发指令，请等待车机回执...',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+
+                    setTimeout(() => {
+                        loading.close();
+                        // 对方 API 的 HTTP 200 仅代表指令已受理；实际成功或失败必须以后续回执为准。
+                        const newLog = {
+                            id: Date.now(),
+                            time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                            operator: '当前账号 (SysAdmin)',
+                            action: actionCode,
+                            plate: activeVehicle.value.licensePlate,
+                            cid: activeVehicle.value.iduId,
+                            cmdId: `CMD-${activeVehicle.value.iduId}-${Date.now()}`,
+                            status: 'PENDING',
+                            errorStep: '',
+                            errorCode: '',
+                            note: ''
+                        };
+                        historyArchive.value.unshift(newLog);
+                        historyByVehicle.set(activeVehicle.value.id, [...historyArchive.value]);
+                        historyLogs.value = historyArchive.value.slice(0, 10);
+                        ElementPlus.ElMessage.info('指令已下发，等待车机回执');
+                    }, 1200);
+                }).catch(() => { });
+            };
+
+            onMounted(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryPlate = urlParams.get('plate');
+                const foundVehicle = queryPlate ? allVehicles.value.find(v => v.licensePlate.toUpperCase() === queryPlate.toUpperCase()) : null;
+                if (foundVehicle) {
+                    selectVehicle(foundVehicle);
+                } else if (filteredVehicles.value.length > 0) {
+                    selectVehicle(filteredVehicles.value[0]);
+                }
+                freshnessTimer = window.setInterval(() => {
+                    freshnessCheckTime.value = Date.now();
+                }, 60 * 1000);
+            });
+
+            onBeforeUnmount(() => {
+                if (freshnessTimer) window.clearInterval(freshnessTimer);
+            });
+
+            const copyText = (text, label = '内容') => {
+                if (!text || text === 'NA' || text === '-') {
+                    ElementPlus.ElMessage.warning('暂无有效内容可复制');
+                    return;
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(String(text)).then(() => {
+                        ElementPlus.ElMessage.success({ message: `已复制 ${label}`, duration: 1500 });
+                    }).catch(() => {
+                        ElementPlus.ElMessage.success({ message: `已复制 ${label}`, duration: 1500 });
+                    });
+                } else {
+                    const input = document.createElement('textarea');
+                    input.value = String(text);
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                    ElementPlus.ElMessage.success({ message: `已复制 ${label}`, duration: 1500 });
+                }
+            };
+
+            return {
+                orgData,
+                stationCascaderProps,
+                filters,
+                filteredVehicles,
+                activeVehicle,
+                selectVehicle,
+                getVehicleTypeName,
+                getVehiclePhoto,
+                getVehicleOrganizationText,
+                telemetry,
+                statusDetailVisible,
+                historyDialogVisible,
+                mapDialogVisible,
+                motoOnlineTestExecuted,
+                historyFilters,
+                filteredHistoryArchive,
+                pagedHistoryArchive,
+                historyPage,
+                historyPageSize,
+                historyOperatorOptions,
+                historyActionOptions,
+                openStatusDrawer,
+                openHistoryDialog,
+                resetHistoryFilters,
+                openMapDialog,
+                platformReceivedTime,
+                isDeviceOnline,
+                deviceConnectionText,
+                refreshTelemetry,
+                isRefreshing,
+                historyLogs,
+                fetchHistory,
+                sendCommand,
+                getActionName,
+                getHistoryStatusText,
+                getHistoryStatusType,
+                copyText
+            };
+        }
+        /* PAGE_LOGIC_END */
+
+        /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+        const app = Vue.createApp({ setup: pageSetup });
+        function registerLegacyComponents(app) {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component)
+            }
+        }
+        registerLegacyComponents(app);
+        app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+        if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+        }
+        window.appVm = app.mount('#app');
+        /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+</body>
+
+</html>

@@ -6,6 +6,11 @@ import type {
 
 export type ClientPreset = 'standard' | 'topnav' | 'simple' | 'immersive' | 'html-full' | 'login' | 'custom';
 
+export const DEFAULT_PROJECT_THEME = {
+  primary: '#2563eb',
+  pageBackground: '#f5f7fb',
+} as const;
+
 interface PrototypeClientConfig {
   root?: string;
   shellMode?: string;
@@ -112,8 +117,8 @@ export function draftFromProject(project: ProjectManifest | null): ProjectDraft 
       name: '',
       version: '0.1.0',
       description: '',
-      primary: '#2563eb',
-      pageBackground: '#f5f7fb',
+      primary: DEFAULT_PROJECT_THEME.primary,
+      pageBackground: DEFAULT_PROJECT_THEME.pageBackground,
       homepageVisible: true,
       docsRoot: '',
       storedDocsRoot: 'docs',
@@ -131,8 +136,8 @@ export function draftFromProject(project: ProjectManifest | null): ProjectDraft 
     name: project.name,
     version: project.version || '0.1.0',
     description: project.description || '',
-    primary: project.theme?.primary || '#2563eb',
-    pageBackground: project.theme?.pageBackground || '#f5f7fb',
+    primary: project.theme?.primary || DEFAULT_PROJECT_THEME.primary,
+    pageBackground: project.theme?.pageBackground || DEFAULT_PROJECT_THEME.pageBackground,
     homepageVisible: project.homepage?.visible !== false,
     docsRoot: project.docs?.enabled ? project.docs.root || 'docs' : '',
     storedDocsRoot: project.docs?.root || 'docs',
@@ -251,11 +256,7 @@ export function buildProjectPayload(draft: ProjectDraft, editing: boolean) {
       clients: prototypeClients,
     },
     mobile: draft.source?.mobile || { enabled: false, entry: 'mobile/app.html' },
-    features: draft.source?.features || {
-      pageTransfer: true,
-      designSystem: true,
-      legacyI18n: false,
-    },
+    features: draft.source?.features || { designSystem: true, legacyI18n: false },
     compatibility: draft.source?.compatibility || { legacyRoutes: false },
   };
 }

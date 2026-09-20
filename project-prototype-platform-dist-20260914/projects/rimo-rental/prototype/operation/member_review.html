@@ -1,0 +1,2236 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>资质认证审核</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.member-review .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .member-review .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .member-review .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .member-review .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .member-review .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .member-review .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .member-review .review-section {
+            border: 1px solid #e5e7eb;
+            transition: all 0.25s ease;
+            background: #fff;
+        }
+
+        .member-review .review-section:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Drawer Styles */
+        .member-review-overlay .el-drawer__body {
+            background: #f8f9fb;
+            padding: 0 !important;
+        }
+
+        .member-review-overlay .el-drawer__header {
+            margin-bottom: 0;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eef0f3;
+        }
+
+        .member-review-overlay .drawer-member-card {
+            background: linear-gradient(135deg, var(--app-color-primary-light-9) 0%, var(--app-color-primary-light-9) 100%);
+            border: 1px solid var(--app-color-primary-light-8);
+        }
+
+        .member-review-overlay .drawer-step-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .member-review-overlay .drawer-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 28px;
+            border-top: 1px solid #eef0f3;
+        }
+
+        .member-review-overlay .drawer-info-grid.is-three-column {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .member-review-overlay .drawer-info-item {
+            min-width: 0;
+            padding: 8px 0 7px;
+            border-bottom: 1px solid #eef0f3;
+        }
+
+        .member-review-overlay .drawer-info-item.is-wide {
+            grid-column: 1 / -1;
+        }
+
+        .member-review-overlay .drawer-info-item dt {
+            margin-bottom: 3px;
+            color: #8a94a6;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 18px;
+        }
+
+        .member-review-overlay .drawer-info-item dd {
+            min-height: 20px;
+            color: #1f2937;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .member-review-overlay .drawer-photo-card {
+            background: #fafbfc;
+            border: 1px dashed #e5e7eb;
+            border-radius: 10px;
+            padding: 6px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .member-review-overlay .drawer-photo-card:hover {
+            border-color: #93c5fd;
+            background: var(--app-color-primary-light-9);
+        }
+
+        .member-review-overlay .drawer-photo-card .photo-label {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .member-review-overlay .drawer-section-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #9ca3af;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .member-review-overlay .drawer-section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .member-review-overlay .history-card {
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            padding: 0 12px;
+        }
+
+        .member-review-overlay .drawer-data-table {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .member-review-overlay .drawer-data-table .el-table__header th.el-table__cell {
+            height: 34px;
+            padding: 0;
+            color: var(--app-color-text-secondary);
+            background: var(--app-color-surface-subtle);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .member-review-overlay .drawer-data-table .el-table__body td.el-table__cell {
+            padding: 6px 0;
+            color: #344054;
+            font-size: 13px;
+        }
+
+        .member-review-overlay .drawer-data-table::before,
+        .member-review-overlay .drawer-data-table .el-table__inner-wrapper::before {
+            display: none;
+        }
+
+        .member-review-overlay .card-number {
+            color: #344054;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            letter-spacing: 0.03em;
+        }
+
+        .member-review .member-review-filter-toolbar {
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .member-review .member-review-filter-toolbar > .el-button + .el-button {
+            margin-left: 0 !important;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "member-review",
+  "pageTitle": "资质认证审核",
+  "fileName": "member_review.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/member-review",
+  "menuSection": "customers",
+  "menuTitle": "资质认证审核",
+  "menuIcon": "Document",
+  "menu": true,
+  "rootClass": "member-review",
+  "overlayRootClass": "member-review-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": [],
+  "prdFiles": [
+    "../../PRD/会员管理/会员资质认证审核.md"
+  ]
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">客户中心</div>
+<a class="prototype-menu-item is-active" href="./member_review.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Document" aria-hidden="true"></span><span>资质认证审核</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 资质认证审核</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-member-review member-review" data-page-content data-page-root="member-review" data-page-key="member-review">
+  <div data-business-content data-layout-type="legacy">
+<!-- Page Title -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">资质认证审核</h1>
+                        <p class="text-sm text-gray-500 mt-1">审核会员注册申请，管理审核流程</p>
+                    </div>
+                </div>
+
+
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-xl p-4 border shadow-sm stat-card cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'pending' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'pending'"
+                        @click="applySummaryFilter('pending')" @keydown.enter.prevent="applySummaryFilter('pending')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">待审核</div>
+                        <div class="text-2xl font-bold text-orange-500">{{ stats.pending }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm stat-card cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'todayNew' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'todayNew'"
+                        @click="applySummaryFilter('todayNew')" @keydown.enter.prevent="applySummaryFilter('todayNew')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">今日新增</div>
+                        <div class="text-2xl font-bold text-blue-600">{{ stats.todayNew }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm stat-card cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'todayApproved' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'todayApproved'"
+                        @click="applySummaryFilter('todayApproved')" @keydown.enter.prevent="applySummaryFilter('todayApproved')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">今日通过</div>
+                        <div class="text-2xl font-bold text-green-600">{{ stats.todayApproved }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm stat-card cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'todayRejected' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'todayRejected'"
+                        @click="applySummaryFilter('todayRejected')" @keydown.enter.prevent="applySummaryFilter('todayRejected')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">今日驳回</div>
+                        <div class="text-2xl font-bold text-red-500">{{ stats.todayRejected }}</div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col min-h-[600px]">
+                    <!-- Toolbar -->
+                 <div class="member-review-filter-toolbar p-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-3">
+                            <el-input v-model="filters.keyword" placeholder="搜索姓名或手机号" prefix-icon="Search"
+                                style="width: 200px"></el-input>
+                            <el-select v-model="filters.status" placeholder="审核状态" style="width: 120px" size="default">
+                                 <el-option label="全部状态" value=""></el-option>
+                                 <el-option label="待审核" value="pending"></el-option>
+                                 <el-option label="已通过" value="approved"></el-option>
+                                 <el-option label="已驳回" value="rejected"></el-option>
+                            </el-select>
+                            <el-select v-model="filters.channel" placeholder="注册渠道" style="width: 120px" size="default">
+                                <el-option label="全部渠道" value=""></el-option>
+                                <el-option label="iOS APP" value="ios"></el-option>
+                                <el-option label="Android APP" value="android"></el-option>
+                                <el-option label="Web 官网" value="web"></el-option>
+                            </el-select>
+                            <el-date-picker v-model="filters.dateRange" type="daterange" range-separator="-"
+                                start-placeholder="提交起始" end-placeholder="提交结束" size="default"
+                                style="width: 240px"></el-date-picker>
+                            <el-button circle @click="resetFilters" icon="RefreshRight" title="重置筛选"></el-button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <el-button type="primary" :disabled="selectedRows.length === 0" @click="handleBatchApprove">
+                                <el-icon class="mr-1">
+                                    <Check></Check>
+                                </el-icon> 批量审核
+                            </el-button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <el-table :data="filteredList" stripe style="width: 100%" class="flex-1"
+                        @selection-change="handleSelectionChange"
+                        :header-cell-style="{ backgroundColor: '#f9fafb', color: '#374151', fontWeight: 'bold' }">
+                        <el-table-column type="selection" width="55"
+                            :selectable="row => (row.status === 'pending' || row.status === 'rejected') && !row.isHighRisk"></el-table-column>
+                        <el-table-column prop="id" label="用户ID" width="100" show-overflow-tooltip></el-table-column>
+                        <el-table-column label="姓名" width="120">
+                            <template #default="{ row }">
+                                <div class="flex items-center">
+                                    <el-avatar :size="24" class="mr-2" :src="row.avatar">{{ row.name.charAt(0)
+                                        }}</el-avatar>
+                                    <span class="font-medium">{{ row.name }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
+                        <el-table-column label="渠道" width="100">
+                            <template #default="{ row }">
+                                <div class="flex items-center" v-if="row.channel === 'ios'">
+                                    <el-icon class="text-gray-500 mr-1">
+                                        <Iphone></Iphone>
+                                    </el-icon> iOS
+                                </div>
+                                <div class="flex items-center" v-else-if="row.channel === 'android'">
+                                    <el-icon class="text-green-600 mr-1">
+                                        <Iphone></Iphone>
+                                    </el-icon> Android
+                                </div>
+                                <div class="flex items-center" v-else>
+                                    <el-icon class="text-blue-500 mr-1">
+                                        <Monitor></Monitor>
+                                    </el-icon> Web
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="submitTime" label="提交时间" min-width="160"></el-table-column>
+                        <el-table-column label="等待时长" width="150">
+                            <template #default="{ row }">
+                                <el-tag :type="getWaitTimeType(row.submitTime)" effect="plain" size="small">
+                                    {{ getWaitTime(row.submitTime) }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="状态" width="100">
+                            <template #default="{ row }">
+                                 <el-tag v-if="row.status === 'pending'" type="warning" effect="light">待审核</el-tag>
+                                 <el-tag v-else-if="row.isHighRisk" type="danger" effect="dark">高风险</el-tag>
+                                 <el-tag v-else-if="row.status === 'approved'" type="success" effect="light">已通过</el-tag>
+                                 <el-tag v-else-if="row.status === 'rejected'" type="danger" effect="light">已驳回</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="100" fixed="right">
+                            <template #default="{ row }">
+                                <el-button v-if="!row.isHighRisk" link type="primary" @click="openReviewDrawer(row)">
+                                    审核
+                                </el-button>
+                                <span v-else class="text-xs text-gray-400">不可复审</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <!-- Pagination -->
+                    <div class="p-4 border-t border-gray-100 flex justify-end">
+                        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                            :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper"
+                            :total="totalCount" background ></el-pagination>
+                    </div>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="member-review-overlay">
+<el-dialog v-model="submitReviewDialogVisible" :title="reviewSubmitMode === 'batch' ? '批量提交审核' : '提交审核'" width="760px" class="member-review-overlay">
+                <el-tabs v-model="submitTab">
+                    <el-tab-pane label="新版审核" name="new">
+                    <div class="space-y-4">
+                        <div class="rounded-xl border border-gray-200 p-4">
+                            <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">资料审核结果</div>
+                                <div class="text-xs text-gray-500 mt-1">逐项确认通过或不通过；不通过时必须选择驳回原因。</div>
+                            </div>
+                            <el-tag v-if="reviewSubmitMode === 'batch'" type="warning" effect="plain">
+                                已选 {{ selectedRows.length }} 名会员
+                            </el-tag>
+                        </div>
+                        <div class="space-y-3">
+                            <div v-for="item in reviewItems" :key="item.key"
+                                class="flex items-center gap-3 rounded-lg bg-gray-50 border border-gray-100 px-3 py-2">
+                                <div class="w-28 text-sm font-semibold text-gray-700">{{ item.label }}</div>
+                                <el-radio-group v-model="reviewSubmitForm[item.key].status" size="small">
+                                    <el-radio-button label="approved">通过</el-radio-button>
+                                    <el-radio-button label="rejected">不通过</el-radio-button>
+                                </el-radio-group>
+                                <el-select v-if="reviewSubmitForm[item.key].status === 'rejected'"
+                                    v-model="reviewSubmitForm[item.key].reason" placeholder="选择或输入驳回原因"
+                                    size="small" filterable allow-create default-first-option class="flex-1">
+                                    <el-option v-for="reason in rejectOptions[item.key]" :key="reason" :label="reason"
+                                        :value="reason"></el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div v-if="submitRejectReasonText"
+                            class="mt-3 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-xs text-red-700">
+                            驳回内容：{{ submitRejectReasonText }}
+                        </div>
+                        <div v-if="hasRejectedItems && reviewSubmitMode === 'single'"
+                            class="mt-3 border-t border-gray-100 pt-3">
+                            <el-checkbox v-model="isHighRisk">
+                                <span class="text-red-600 font-medium">高风险用户，不再提供复审</span>
+                            </el-checkbox>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border border-gray-200 p-4">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">用户可用载具类型</div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    驾驶执照通过后写入会员资料；批量审核时同一选择会套用到本次选中的会员。
+                                </div>
+                            </div>
+                            <el-checkbox-group v-model="selectedAvailableVehicleTypes" :disabled="isDriverLicenseRejected"
+                                class="flex flex-wrap justify-end gap-x-4 gap-y-1">
+                                <el-checkbox v-for="item in vehicleTypeOptions" :key="item.value" :label="item.value">
+                                    {{ item.label }}
+                                </el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">
+                            {{ vehicleTypeRuleText }}
+                        </div>
+                    </div>
+
+                        <el-alert :title="submitReviewSummary" type="info" show-icon :closable="false"></el-alert>
+                    </div>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="旧版示例" name="legacy">
+                        <div class="space-y-3">
+                            <!-- 卡片一：审核结果 + 不通过原因 + 高风险 -->
+                            <div class="rounded-xl border border-gray-200 p-4 space-y-3">
+                                <div>
+                                    <div class="text-sm font-bold text-gray-800 mb-1">审核结果</div>
+                                    <div class="text-xs text-gray-500 mb-2">对本次申请整体判定通过或不通过。</div>
+                                    <el-radio-group v-model="legacyForm.decision" size="default">
+                                        <el-radio-button label="approved">通过</el-radio-button>
+                                        <el-radio-button label="rejected">不通过</el-radio-button>
+                                    </el-radio-group>
+                                </div>
+
+                                <template v-if="legacyForm.decision === 'rejected'">
+                                    <div class="border-t border-gray-100"></div>
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-800 mb-1">不通过类型</div>
+                                        <div class="text-xs text-gray-500 mb-2">选择本次不通过的原因类型，可多选。</div>
+                                        <el-checkbox-group v-model="legacyForm.rejectTypes" class="!grid grid-cols-2 gap-x-6 gap-y-1.5">
+                                            <el-checkbox v-for="item in legacyRejectTypeOptions" :key="item.value" :label="item.value">
+                                                {{ item.label }}
+                                            </el-checkbox>
+                                        </el-checkbox-group>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-800 mb-1">备注说明</div>
+                                        <div class="text-xs text-gray-500 mb-2">点击下方常用原因可快速填写，也可直接输入。</div>
+                                        <div class="flex flex-wrap gap-1.5 mb-2">
+                                            <el-tag
+                                                v-for="r in legacyRemarkOptions"
+                                                :key="r"
+                                                size="small"
+                                                class="cursor-pointer"
+                                                :type="isLegacyRemarkSelected(r) ? 'success' : 'info'"
+                                                effect="plain"
+                                                @click="toggleLegacyRemark(r)"
+                                            >{{ r }}</el-tag>
+                                        </div>
+                                        <el-input v-model="legacyForm.remark" type="textarea" :rows="2" placeholder="填写驳回备注说明"></el-input>
+                                    </div>
+                                    <div v-if="reviewSubmitMode === 'single'">
+                                        <el-checkbox v-model="legacyForm.isHighRisk">
+                                            <span class="text-red-600 font-medium">高风险用户，不再提供复审</span>
+                                        </el-checkbox>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- 卡片二：用户可用载具类型 -->
+                            <div class="rounded-xl border border-gray-200 p-4">
+                                <div class="text-sm font-bold text-gray-800 mb-1">用户可用载具类型</div>
+                                <div class="text-xs text-gray-500 mb-2">驾驶执照通过后写入会员资料；批量审核时同一选择会套用到本次选中的会员。</div>
+                                <el-checkbox-group v-model="legacyForm.vehicleTypes"
+                                    class="flex flex-wrap gap-x-6 gap-y-1.5">
+                                    <el-checkbox v-for="item in vehicleTypeOptions" :key="item.value" :label="item.value">
+                                        {{ item.label }}
+                                    </el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="submitReviewDialogVisible = false">取消</el-button>
+                        <el-button type="primary" :loading="submitting" @click="handleSubmitReview">确认提交</el-button>
+                    </span>
+                </template>
+            </el-dialog>
+<el-drawer v-model="drawerVisible" size="760px" :show-close="false" custom-class="review-drawer" class="member-review-overlay">
+                <template #header="{ close, titleId, titleClass }">
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-3">
+                            <h4 class="text-lg font-bold text-gray-900">审核详情</h4>
+                            <el-tag v-if="currentMember?.status === 'pending'" type="warning" effect="dark"
+                                size="small">待审核</el-tag>
+                            <el-tag v-else-if="currentMember?.status === 'rejected'" type="danger" effect="dark"
+                                size="small">已驳回</el-tag>
+                        </div>
+                        <el-button link @click="close">
+                            <el-icon class="text-xl text-gray-400 hover:text-gray-600">
+                                <Close></Close>
+                            </el-icon>
+                        </el-button>
+                    </div>
+                </template>
+
+                <div class="px-6 pt-2 pb-20 space-y-2" v-if="currentMember"
+                    style="background:#f8f9fb; min-height:100%;">
+
+                    <!-- Member Summary Card -->
+                    <div class="drawer-member-card rounded-xl p-3 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <el-avatar :size="48"
+                                style="background:linear-gradient(135deg,var(--app-color-primary),var(--app-color-primary)); color:#fff; font-size:18px; font-weight:700;">
+                                {{ currentMember.name?.charAt(0) }}
+                            </el-avatar>
+                            <div>
+                                <div class="font-bold text-gray-900 text-base">{{ currentMember.name }}
+                                    <el-tag size="small" effect="plain" class="ml-2" type="info">{{
+                                        currentMember.id }}</el-tag>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1 flex items-center gap-3">
+                                    <span class="flex items-center gap-1">
+                                        <el-icon v-if="currentMember.channel === 'ios'" class="text-gray-500">
+                                            <Iphone></Iphone>
+                                        </el-icon>
+                                        <el-icon v-else-if="currentMember.channel === 'android'" class="text-green-500">
+                                            <Iphone></Iphone>
+                                        </el-icon>
+                                        <el-icon v-else class="text-blue-500">
+                                            <Monitor></Monitor>
+                                        </el-icon>
+                                        {{ currentMember.channel === 'ios' ? 'iOS APP' :
+                                        currentMember.channel === 'android' ? 'Android APP' : 'Web 官网' }}
+                                    </span>
+                                    <span class="text-gray-300">|</span>
+                                    <span>提交于 {{ currentMember.submitTime }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-400 mb-1">等待时长</div>
+                            <div class="text-sm font-bold" :class="getWaitTimeColor(currentMember.submitTime)">
+                                {{ getWaitTime(currentMember.submitTime) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1. Basic Info -->
+                    <div class="review-section rounded-xl p-3 relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="drawer-step-badge bg-blue-50 text-blue-600">1</div>
+                                <h5 class="font-bold text-gray-800 text-sm">基本资料</h5>
+                            </div>
+                            <div class="text-xs text-gray-400">提交审核时确认</div>
+                        </div>
+
+                        <!-- Identity Info -->
+                        <div class="drawer-section-divider mb-2">身份信息</div>
+                        <dl class="drawer-info-grid mb-2">
+                            <div class="drawer-info-item">
+                                <dt>姓名</dt>
+                                <dd>{{ currentMember.name }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>性别</dt>
+                                <dd>{{ currentMember.gender === 'male' ? '男' : '女' }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>出生日期</dt>
+                                <dd class="font-mono">{{ currentMember.dob }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>身份证号码</dt>
+                                <dd class="font-mono">{{ currentMember.idNumber || '-' }}</dd>
+                            </div>
+                        </dl>
+
+                        <!-- Contact and Account -->
+                        <div class="drawer-section-divider mb-2">联系与账户</div>
+                        <dl class="drawer-info-grid mb-2">
+                            <div class="drawer-info-item">
+                                <dt>手机号</dt>
+                                <dd class="font-mono">{{ currentMember.phone }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>电子邮箱</dt>
+                                <dd class="font-mono">{{ currentMember.email }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>注册渠道</dt>
+                                <dd>{{ getChannelLabel(currentMember.channel) }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>注册时间</dt>
+                                <dd class="font-mono">{{ currentMember.registerTime || '-' }}</dd>
+                            </div>
+                            <div class="drawer-info-item is-wide">
+                                <dt>最后登录</dt>
+                                <dd class="font-mono">{{ currentMember.lastLoginTime || '-' }}</dd>
+                            </div>
+                        </dl>
+
+                        <!-- Address -->
+                        <div class="drawer-section-divider mb-2">地址信息</div>
+                        <dl class="drawer-info-grid mb-2">
+                            <div class="drawer-info-item is-wide">
+                                <dt>户籍地址</dt>
+                                <dd>{{ currentMember.householdAddress }}</dd>
+                            </div>
+                            <div class="drawer-info-item is-wide">
+                                <dt>通讯地址</dt>
+                                <dd>{{ currentMember.mailingAddress }}</dd>
+                            </div>
+                        </dl>
+
+                        <!-- Emergency Contact -->
+                        <div class="drawer-section-divider mb-2">紧急联络人</div>
+                        <dl class="drawer-info-grid is-three-column">
+                            <div class="drawer-info-item">
+                                <dt>姓名</dt>
+                                <dd>{{ currentMember.emergencyContact?.name }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>关系</dt>
+                                <dd>{{ currentMember.emergencyContact?.relationship }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>联系电话</dt>
+                                <dd class="font-mono">{{ currentMember.emergencyContact?.phone }}</dd>
+                            </div>
+                        </dl>
+
+                    </div>
+
+                    <!-- 2. ID Card -->
+                    <div class="review-section rounded-xl p-3 relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="drawer-step-badge bg-green-50 text-green-600">2</div>
+                                <h5 class="font-bold text-gray-800 text-sm">身份证</h5>
+                            </div>
+                            <div class="text-xs text-gray-400">提交审核时确认</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">身份证正面</div>
+                                <el-image :src="currentMember.idCardFront"
+                                    :preview-src-list="[currentMember.idCardFront]" fit="cover"
+                                    class="w-full h-36 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">身份证反面</div>
+                                <el-image :src="currentMember.idCardBack" :preview-src-list="[currentMember.idCardBack]"
+                                    fit="cover" class="w-full h-36 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Driver License -->
+                    <div class="review-section rounded-xl p-3 relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="drawer-step-badge bg-amber-50 text-amber-600">3</div>
+                                <h5 class="font-bold text-gray-800 text-sm">驾驶执照</h5>
+                            </div>
+                            <div class="text-xs text-gray-400">提交审核时确认</div>
+                        </div>
+
+                        <!-- Driver License Info -->
+                        <div class="grid grid-cols-4 gap-3 mb-2">
+                            <div class="drawer-info-item">
+                                <dt>驾照类型</dt>
+                                <dd>{{ currentMember.driverLicense?.type || '-' }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>签发地</dt>
+                                <dd>{{ currentMember.driverLicense?.issuePlace || '-' }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>驾照号码</dt>
+                                <dd class="font-mono">{{ currentMember.driverLicense?.number || '-' }}</dd>
+                            </div>
+                            <div class="drawer-info-item">
+                                <dt>有效日期</dt>
+                                <dd class="font-mono">{{ currentMember.driverLicense?.expiryDate || '-' }}</dd>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">驾照正面</div>
+                                <el-image :src="currentMember.dlFront" :preview-src-list="[currentMember.dlFront]"
+                                    fit="cover" class="w-full h-36 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">驾照反面</div>
+                                <el-image :src="currentMember.dlBack" :preview-src-list="[currentMember.dlBack]"
+                                    fit="cover" class="w-full h-36 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Selfie -->
+                    <div class="review-section rounded-xl p-3 relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="drawer-step-badge bg-[color:var(--app-color-primary-light-9)] text-[color:var(--app-color-primary)]">4</div>
+                                <h5 class="font-bold text-gray-800 text-sm">手持证件自拍</h5>
+                            </div>
+                            <div class="text-xs text-gray-400">提交审核时确认</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">手持身份证自拍</div>
+                                <el-image :src="currentMember.selfie" :preview-src-list="[currentMember.selfie]"
+                                    fit="cover" class="w-full h-44 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                            <div class="drawer-photo-card">
+                                <div class="photo-label">其他证件照</div>
+                                <el-image :src="currentMember.otherDocument"
+                                    :preview-src-list="[currentMember.otherDocument]" fit="cover"
+                                    class="w-full h-44 rounded-lg cursor-zoom-in"></el-image>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Cards -->
+                    <div class="review-section rounded-xl p-3 relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="drawer-step-badge bg-cyan-50 text-cyan-600">5</div>
+                                <h5 class="font-bold text-gray-800 text-sm">信用卡资料</h5>
+                            </div>
+                            <div class="text-xs text-gray-400">仅供审核核对</div>
+                        </div>
+                        <el-table :data="currentMember.creditCards || []" table-layout="fixed"
+                            class="drawer-data-table" empty-text="暂无信用卡资料">
+                            <el-table-column prop="cardName" label="信用卡名称" min-width="130"></el-table-column>
+                            <el-table-column prop="holderName" label="持卡人姓名" width="110"></el-table-column>
+                            <el-table-column label="信用卡号" min-width="170">
+                                <template #default="scope">
+                                    <span class="card-number">{{ scope.row.cardNumber }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="expiryDate" label="有效期限" width="90"></el-table-column>
+                            <el-table-column label="默认" width="70" align="center">
+                                <template #default="scope">
+                                    <el-tag v-if="scope.row.isDefault" type="success" size="small" effect="plain">是</el-tag>
+                                    <span v-else class="text-gray-400">否</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                    <!-- Review History -->
+                    <div class="history-card">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="drawer-step-badge bg-slate-100 text-slate-600">6</div>
+                            <h5 class="font-bold text-gray-800 text-sm">审核历史</h5>
+                        </div>
+                        <el-table :data="currentMember.history || []" table-layout="fixed" max-height="250"
+                            class="drawer-data-table" empty-text="暂无审核记录">
+                            <el-table-column prop="time" label="时间" width="150"></el-table-column>
+                            <el-table-column label="结果" width="90" align="center">
+                                <template #default="scope">
+                                    <el-tag :type="getHistoryTagType(scope.row.type)" size="small" effect="plain">
+                                        {{ getHistoryResultLabel(scope.row) }}
+                                    </el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="content" label="审核说明" min-width="230" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="审核人" width="100">
+                                <template #default="scope">{{ scope.row.operator || getHistoryOperator(scope.row) }}</template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                </div>
+
+                <!-- Footer (Sticky) -->
+                <div 
+                    class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-sm border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50">
+                    <div class="flex items-center gap-4">
+                        <div class="text-sm text-gray-500">点击提交审核后，统一确认四项资料审核结果。</div>
+                    </div>
+                    <div class="flex gap-3">
+                        <el-button @click="drawerVisible = false">关闭</el-button>
+                        <el-button type="primary" @click="openSubmitReviewDialog('single')" :loading="submitting">
+                            <el-icon class="mr-1" v-if="!submitting">
+                                <Check></Check>
+                            </el-icon>
+                            提交审核
+                        </el-button>
+                    </div>
+                </div>
+            </el-drawer>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed, watch } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+// State
+                const drawerVisible = ref(false);
+                const submitReviewDialogVisible = ref(false);
+                const reviewSubmitMode = ref('single');
+                const currentMember = ref(null);
+                const submitting = ref(false);
+                const selectedRows = ref([]);
+                const selectedAvailableVehicleTypes = ref([]);
+                const isHighRisk = ref(false);
+                const submitTab = ref('new');
+                const legacyForm = reactive({
+                    decision: 'approved',
+                    rejectTypes: [],
+                    remark: '',
+                    isHighRisk: false,
+                    vehicleTypes: []
+                });
+
+                const reviewItems = [
+                    { key: 'basicInfo', label: '基本资料', rejectTypeLabel: '会员基本资料错误' },
+                    { key: 'idCard', label: '身份证', rejectTypeLabel: '身份证资料错误' },
+                    { key: 'driverLicense', label: '驾驶执照', rejectTypeLabel: '驾驶执照资料错误' },
+                    { key: 'selfie', label: '手持证件自拍', rejectTypeLabel: '自拍照资料错误' }
+                ];
+
+                const legacyRejectTypeOptions = reviewItems.map(item => ({
+                    value: item.rejectTypeLabel,
+                    label: item.rejectTypeLabel,
+                    itemLabel: item.label
+                }));
+
+                const rejectOptions = {
+                    basicInfo: ['信息填写不完整', '紧急联络人资料不完整', '手机号无法验证'],
+                    idCard: ['照片模糊，请重新拍摄', '信息与证件不符', '证件已过期', '疑似伪造证件'],
+                    driverLicense: ['照片模糊，请重新拍摄', '驾照已过期', '驾照类型不符', '疑似伪造驾照'],
+                    selfie: ['照片模糊，请重新拍摄', '人脸与证件不符', '未手持证件', '未露脸', '非本人照片']
+                };
+
+                const legacyRemarkOptions = [...new Set(Object.values(rejectOptions).flat())];
+
+                const reviewSubmitForm = reactive({
+                    basicInfo: { status: 'approved', reason: '' },
+                    idCard: { status: 'approved', reason: '' },
+                    driverLicense: { status: 'approved', reason: '' },
+                    selfie: { status: 'approved', reason: '' }
+                });
+
+                const vehicleTypeOptions = [
+                    { value: 'car', label: '汽车' },
+                    { value: 'motorcycle', label: '摩托车' },
+                    { value: 'microElectric', label: '微电车' }
+                ];
+
+                const inferAvailableVehicleTypes = (driverLicense = {}) => {
+                    const result = ['microElectric'];
+                    if (driverLicense.type === 'LT01' || driverLicense.type === 'LT04') result.unshift('car');
+                    if (driverLicense.type === 'LT02' || driverLicense.type === 'LT03') result.unshift('motorcycle');
+                    return [...new Set(result)];
+                };
+
+                // Data Loading (Static Mock Data for Demo - Decoupled & Enhanced)
+                const allMembers = ref([
+                    {
+                        id: 'M_Review_001', name: '王小敏', phone: '0988000111', email: 'xiaomin@example.com',
+                        channel: 'ios', submitTime: '2026-02-10 13:00', status: 'pending', reviewStatus: 'pending',
+                        registerTime: '2025-12-18 09:20', lastLoginTime: '2026-02-10 12:46',
+                        gender: 'female', dob: '2000-01-01', idNumber: 'E223456789',
+                        householdAddress: '台中市西屯区台湾大道三段99号', mailingAddress: '台中市西屯区',
+                        emergencyContact: { name: '张伟', relationship: '朋友', phone: '0911-000-111' },
+                        driverLicense: { type: 'LT01', issuePlace: '台中市', number: 'DL888999', expiryDate: '2032-01-01' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        idCardBack: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Back',
+                        dlFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=DL+Front',
+                        dlBack: 'https://placehold.co/400x250/e2e8f0/64748b?text=DL+Back',
+                        selfie: 'https://placehold.co/300x400/e2e8f0/64748b?text=Selfie',
+                        otherDocument: 'https://placehold.co/400x250/f1f5f9/64748b?text=Other+Document',
+                        creditCards: [
+                            { cardName: '中国信托 VISA', holderName: '王小敏', cardNumber: '**** **** **** 8899', expiryDate: '09/29', isDefault: true },
+                            { cardName: '国泰世华 Mastercard', holderName: '王小敏', cardNumber: '**** **** **** 2608', expiryDate: '03/28', isDefault: false }
+                        ],
+                        history: [
+                            { time: '2026-02-10 13:00', content: '提交会员资料审核申请', type: 'info', result: '已提交', operator: '王小敏' },
+                            { time: '2026-02-10 13:01', content: '完成手机号码验证', type: 'success', result: '已验证', operator: '系统' },
+                            { time: '2026-02-10 13:05', content: '资料完整性检查通过', type: 'success', result: '初审通过', operator: '系统' }
+                        ]
+                    },
+                    {
+                        id: 'M_Review_002', name: '陈志强', phone: '0988000222', email: 'zhiqiang@example.com',
+                        channel: 'android', submitTime: '2026-02-10 14:30', status: 'pending', reviewStatus: 'pending',
+                        registerTime: '2026-01-06 16:15', lastLoginTime: '2026-02-10 14:12',
+                        gender: 'male', dob: '1995-05-05', idNumber: 'F123456789',
+                        householdAddress: '高雄市左营区博爱二路777号', mailingAddress: '高雄市左营区',
+                        emergencyContact: { name: '林美华', relationship: '配偶', phone: '0922-333-444' },
+                        driverLicense: { type: 'LT01', issuePlace: '高雄市', number: 'DL777666', expiryDate: '2028-05-05' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        idCardBack: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Back',
+                        history: [
+                            { time: '2026-02-10 14:30', content: '提交申请', type: 'info' },
+                            { time: '2026-02-10 14:32', content: '完成实名认证', type: 'success' }
+                        ]
+                    },
+                    {
+                        id: 'M_Review_003', name: '林美玲', phone: '0988000333', email: 'meiling@example.com',
+                        channel: 'web', submitTime: '2026-02-10 10:15', status: 'pending', reviewStatus: 'pending',
+                        registerTime: '2026-01-25 11:08', lastLoginTime: '2026-02-10 10:02',
+                        gender: 'female', dob: '1998-08-08', idNumber: 'G223456789',
+                        householdAddress: '台北市信义区松仁路100号', mailingAddress: '台北市信义区',
+                        emergencyContact: { name: '王大明', relationship: '父亲', phone: '0933-444-555' },
+                        driverLicense: { type: 'LT01', issuePlace: '台北市', number: 'DL555444', expiryDate: '2030-08-08' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        history: [{ time: '2026-02-10 10:15', content: '提交申请', type: 'info' }]
+                    },
+                    {
+                        id: 'M_Review_004', name: '黄大伟', phone: '0988000444', email: 'dawei@example.com',
+                        channel: 'ios', submitTime: '2026-02-09 16:20', status: 'pending', reviewStatus: 'pending',
+                        registerTime: '2025-11-08 08:35', lastLoginTime: '2026-02-09 16:02',
+                        gender: 'male', dob: '1992-12-12', idNumber: 'H123456789',
+                        householdAddress: '桃园市中坜区中正路1号', mailingAddress: '桃园市中坜区',
+                        emergencyContact: { name: '李晓梅', relationship: '母亲', phone: '0944-555-666' },
+                        driverLicense: { type: 'LT01', issuePlace: '桃园市', number: 'DL333222', expiryDate: '2029-12-12' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        history: [
+                            { time: '2026-02-08 10:00', content: '提交申请', type: 'info' },
+                            { time: '2026-02-09 09:30', content: '审核驳回: 照片不清晰', type: 'danger' },
+                            { time: '2026-02-09 10:00', content: '用户重新提交资料', type: 'warning' }
+                        ]
+                    },
+                    {
+                        id: 'M_Review_005', name: '李驳回', phone: '0988000555', email: 'rejected@example.com',
+                        channel: 'web', submitTime: '2026-02-09 09:00', status: 'rejected', reviewStatus: 'rejected',
+                        registerTime: '2025-10-19 14:28', lastLoginTime: '2026-02-10 08:46',
+                        gender: 'male', dob: '1990-03-03', idNumber: 'J123456789',
+                        householdAddress: '新竹市东区光复路二段101号', mailingAddress: '新竹市东区',
+                        emergencyContact: { name: '陈小红', relationship: '同事', phone: '0955-666-777' },
+                        driverLicense: { type: 'LT01', issuePlace: '新竹市', number: 'DL111000', expiryDate: '2027-03-03' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        history: [
+                            { time: '2026-02-09 09:00', content: '提交申请', type: 'info' },
+                            { time: '2026-02-09 09:05', content: '系统初审通过', type: 'success' },
+                            { time: '2026-02-10 09:00', content: '审核驳回: 证件模糊', type: 'danger' }
+                        ]
+                    },
+                    {
+                        id: 'M_Review_006', name: '张建国', phone: '0988000666', email: 'jianguo@example.com',
+                        channel: 'android', submitTime: '2026-02-08 11:30', status: 'rejected', reviewStatus: 'rejected',
+                        registerTime: '2025-09-12 10:10', lastLoginTime: '2026-02-09 13:40',
+                        gender: 'male', dob: '1985-06-06', idNumber: 'K123456789',
+                        householdAddress: '嘉义市西区中山路300号', mailingAddress: '嘉义市西区',
+                        emergencyContact: { name: '刘美芳', relationship: '妻子', phone: '0966-777-888' },
+                        driverLicense: { type: 'LT01', issuePlace: '嘉义市', number: 'DL999888', expiryDate: '2025-06-06' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        idCardFront: 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        history: [
+                            { time: '2026-02-08 11:30', content: '提交申请', type: 'info' },
+                            { time: '2026-02-09 14:00', content: '审核驳回: 身份证过期', type: 'danger' }
+                        ]
+                    }
+                ]);
+
+                // localStorage logic removed to decouple
+
+                // Simplify Stats calculation based on allMembers
+                // This is a rough approximation for demo
+                const stats = reactive({
+                    pending: computed(() => allMembers.value.filter(m => m.reviewStatus === 'pending').length),
+                    todayNew: 2,
+                    todayApproved: computed(() => allMembers.value.filter(m => m.reviewStatus === 'approved').length),
+                    todayRejected: computed(() => allMembers.value.filter(m => m.reviewStatus === 'rejected').length)
+                });
+
+                const filters = reactive({
+                    keyword: '',
+                    status: 'pending',
+                    channel: '',
+                    dateRange: []
+                });
+                const activeSummaryCard = ref('');
+                let isApplyingSummaryFilter = false;
+
+                const parseDateTime = (value) => {
+                    if (!value) return null;
+                    if (value instanceof Date) return value;
+                    const parsed = new Date(String(value).replace(' ', 'T'));
+                    return Number.isNaN(parsed.getTime()) ? null : parsed;
+                };
+
+                // Computed Review List
+                const reviewList = computed(() => {
+                    return allMembers.value.map(m => ({
+                        ...m,
+                        submitTime: m.submitTime || m.createTime || '2024-05-10 10:00',
+                        status: m.reviewStatus || 'approved', // Map reviewStatus to local status for compatibility
+                        channel: m.channel || 'web',
+                        idCardFront: m.idCardFront || 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Front',
+                        idCardBack: m.idCardBack || 'https://placehold.co/400x250/e2e8f0/64748b?text=ID+Back',
+                        dlFront: m.dlFront || 'https://placehold.co/400x250/e2e8f0/64748b?text=DL+Front',
+                        dlBack: m.dlBack || 'https://placehold.co/400x250/e2e8f0/64748b?text=DL+Back',
+                        selfie: m.selfie || 'https://placehold.co/300x400/e2e8f0/64748b?text=Selfie',
+                        otherDocument: m.otherDocument || 'https://placehold.co/400x250/f1f5f9/64748b?text=Other+Document',
+                        creditCards: m.creditCards || [],
+                        history: m.history || []
+                    }));
+                });
+
+                // Computed
+                const filteredList = computed(() => {
+                    return reviewList.value.filter(item => {
+                        const matchStatus = !filters.status || item.status === filters.status;
+                        const matchChannel = !filters.channel || item.channel === filters.channel;
+                        const matchKeyword = !filters.keyword || item.name.includes(filters.keyword) || item.phone.includes(filters.keyword);
+                        const submitTimestamp = parseDateTime(item.submitTime)?.getTime();
+                        const startTimestamp = filters.dateRange?.[0]
+                            ? new Date(filters.dateRange[0]).setHours(0, 0, 0, 0)
+                            : null;
+                        const endTimestamp = filters.dateRange?.[1]
+                            ? new Date(filters.dateRange[1]).setHours(23, 59, 59, 999)
+                            : null;
+                        const matchDate = startTimestamp === null || endTimestamp === null
+                            || (Number.isFinite(submitTimestamp) && submitTimestamp >= startTimestamp && submitTimestamp <= endTimestamp);
+                        return matchStatus && matchChannel && matchKeyword && matchDate;
+                    });
+                });
+
+                const currentPage = ref(1);
+                const pageSize = ref(10);
+                const totalCount = computed(() => filteredList.value.length);
+
+                watch(() => [
+                    filters.keyword,
+                    filters.status,
+                    filters.channel,
+                    filters.dateRange?.[0] ? new Date(filters.dateRange[0]).getTime() : '',
+                    filters.dateRange?.[1] ? new Date(filters.dateRange[1]).getTime() : ''
+                ], () => {
+                    if (!isApplyingSummaryFilter) {
+                        activeSummaryCard.value = '';
+                    }
+                    currentPage.value = 1;
+                }, { flush: 'sync' });
+                const hasRejectedItems = computed(() => reviewItems.some(item => reviewSubmitForm[item.key].status === 'rejected'));
+                const isDriverLicenseRejected = computed(() => reviewSubmitForm.driverLicense.status === 'rejected');
+
+                const vehicleTypeRuleText = computed(() => {
+                    if (isDriverLicenseRejected.value) {
+                        return '驾驶执照不通过，本次不更新会员可用载具类型，保留原值。';
+                    }
+                    if (hasRejectedItems.value) {
+                        return '其他资料不通过时整体审核仍驳回；驾驶执照通过，仍更新会员可用载具类型。';
+                    }
+                    return '微电车默认不要求驾照；汽车、摩托车仍按现有驾照资料与审核结果判断。';
+                });
+
+                const submitReviewSummary = computed(() => {
+                    const rejectedItems = reviewItems.filter(item => reviewSubmitForm[item.key].status === 'rejected');
+                    const targetText = reviewSubmitMode.value === 'batch'
+                        ? `本次批量审核 ${selectedRows.value.length} 名会员`
+                        : `本次审核 ${currentMember.value?.name || '当前会员'}`;
+                    if (rejectedItems.length === 0) {
+                        return `${targetText}，四项资料均通过，提交后走原通过流程，并写入用户可用载具类型。`;
+                    }
+                    const rejectedLabels = rejectedItems.map(item => item.label).join('、');
+                    const highRiskText = reviewSubmitMode.value === 'single' && isHighRisk.value ? '，并标记为高风险且不再提供复审' : '';
+                    const vehicleTypeText = isDriverLicenseRejected.value
+                        ? '驾驶执照不通过，不更新用户可用载具类型'
+                        : '驾驶执照通过，仍更新用户可用载具类型';
+                    return `${targetText}，${rejectedLabels}不通过，提交后走原不通过流程${highRiskText}；${vehicleTypeText}。`;
+                });
+
+                const submitRejectReasonText = computed(() => {
+                    return reviewItems
+                        .filter(item => reviewSubmitForm[item.key].status === 'rejected' && reviewSubmitForm[item.key].reason)
+                        .map(item => `${item.label}：${reviewSubmitForm[item.key].reason}`)
+                        .join('；');
+                });
+
+                // Methods
+                const getWaitTime = (time) => {
+                    const diff = new Date() - new Date(time);
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    return `${hours}小时 ${minutes}分`;
+                };
+
+                const getWaitTimeColor = (time) => {
+                    const diff = new Date() - new Date(time);
+                    const hours = diff / (1000 * 60 * 60);
+                    if (hours < 4) return 'text-green-600';
+                    if (hours < 12) return 'text-amber-500';
+                    return 'text-red-500';
+                };
+
+                const getWaitTimeType = (time) => {
+                    const diff = new Date() - new Date(time);
+                    const hours = diff / (1000 * 60 * 60);
+                    if (hours < 4) return 'success';
+                    if (hours < 12) return 'warning';
+                    return 'danger';
+                };
+
+                const getChannelLabel = (channel) => {
+                    const labels = { ios: 'iOS APP', android: 'Android APP', web: 'Web 官网' };
+                    return labels[channel] || '-';
+                };
+
+                const isLegacyRemarkSelected = (option) => legacyForm.remark.split('；').map(s => s.trim()).filter(Boolean).includes(option);
+
+                const toggleLegacyRemark = (option) => {
+                    const parts = legacyForm.remark.split('；').map(s => s.trim()).filter(Boolean);
+                    const idx = parts.indexOf(option);
+                    if (idx >= 0) {
+                        parts.splice(idx, 1);
+                    } else {
+                        parts.push(option);
+                    }
+                    legacyForm.remark = parts.join('；');
+                };
+
+                const getHistoryTagType = (type) => {
+                    const types = { success: 'success', danger: 'danger', warning: 'warning', info: 'info' };
+                    return types[type] || 'info';
+                };
+
+                const getHistoryResultLabel = (record) => {
+                    if (record.result) return record.result;
+                    if (record.type === 'danger') return '不通过';
+                    if (record.type === 'warning') return '已重提';
+                    if (record.type === 'success') return '通过';
+                    return '已提交';
+                };
+
+                const getHistoryOperator = (record) => {
+                    if (record.type === 'info' || record.type === 'warning') return currentMember.value?.name || '会员';
+                    if (record.content?.includes('系统')) return '系统';
+                    return '营运管理员';
+                };
+
+                const openReviewDrawer = (row) => {
+                    currentMember.value = row;
+                    drawerVisible.value = true;
+                };
+
+                const saveToStorage = () => {
+                    // console.log('Mock save disabled for decoupled mode');
+                };
+
+                const resetReviewSubmitForm = () => {
+                    reviewItems.forEach(item => {
+                        reviewSubmitForm[item.key].status = 'approved';
+                        reviewSubmitForm[item.key].reason = '';
+                    });
+                    isHighRisk.value = false;
+                };
+
+                const openSubmitReviewDialog = (mode = 'single') => {
+                    if (mode === 'single' && !currentMember.value) return;
+                    if (mode === 'batch' && selectedRows.value.length === 0) {
+                        ElMessage.warning('请选择需要审核的会员');
+                        return;
+                    }
+
+                    reviewSubmitMode.value = mode;
+                    resetReviewSubmitForm();
+
+                    // 重置旧版示例表单，避免上次操作的状态残留
+                    legacyForm.decision = 'approved';
+                    legacyForm.rejectTypes = [];
+                    legacyForm.remark = '';
+                    legacyForm.isHighRisk = false;
+                    legacyForm.vehicleTypes = [];
+
+                    if (mode === 'single') {
+                        selectedAvailableVehicleTypes.value = Array.isArray(currentMember.value.availableVehicleTypes)
+                            ? [...currentMember.value.availableVehicleTypes]
+                            : inferAvailableVehicleTypes(currentMember.value.driverLicense);
+                    } else {
+                        selectedAvailableVehicleTypes.value = [];
+                    }
+
+                    submitReviewDialogVisible.value = true;
+                };
+
+                const validateReviewSubmit = () => {
+                    for (const item of reviewItems) {
+                        const result = reviewSubmitForm[item.key];
+                        if (!result.status) {
+                            ElMessage.warning(`请选择${item.label}审核结果`);
+                            return null;
+                        }
+                        if (result.status === 'rejected' && !String(result.reason || '').trim()) {
+                            ElMessage.warning(`请选择${item.label}驳回原因`);
+                            return null;
+                        }
+                    }
+
+                    const rejectedItems = reviewItems.filter(item => reviewSubmitForm[item.key].status === 'rejected');
+                    if (!isDriverLicenseRejected.value && selectedAvailableVehicleTypes.value.length === 0) {
+                        ElMessage.warning('请至少选择一个用户可用载具类型');
+                        return null;
+                    }
+
+                    const reasonText = rejectedItems
+                        .map(item => `${item.label}：${String(reviewSubmitForm[item.key].reason).trim()}`)
+                        .join('；');
+                    const rejectTypes = rejectedItems.map(item => item.rejectTypeLabel);
+
+                    return {
+                        isRejected: rejectedItems.length > 0,
+                        reasonText,
+                        rejectTypes,
+                        shouldUpdateVehicleTypes: !isDriverLicenseRejected.value,
+                        isHighRisk: rejectedItems.length > 0 && reviewSubmitMode.value === 'single' && isHighRisk.value
+                    };
+                };
+
+                const applyReviewResult = (target, reviewResult) => {
+                    if (!target) return;
+                    if (!target.history) target.history = [];
+                    if (reviewResult.shouldUpdateVehicleTypes) {
+                        target.availableVehicleTypes = [...selectedAvailableVehicleTypes.value];
+                    }
+
+                    if (reviewResult.isRejected) {
+                        target.reviewStatus = 'rejected';
+                        target.status = 'active';
+                        target.isHighRisk = reviewResult.isHighRisk;
+                        target.allowReviewResubmit = !reviewResult.isHighRisk;
+                        target.lastRejectTypes = [...reviewResult.rejectTypes];
+                        const highRiskText = reviewResult.isHighRisk ? '；已标记高风险，不再提供复审' : '';
+                        const vehicleTypeText = reviewResult.shouldUpdateVehicleTypes
+                            ? '；驾驶执照通过，已更新可用载具类型'
+                            : '；驾驶执照不通过，未更新可用载具类型';
+                        target.history.push({
+                            time: new Date().toLocaleString(),
+                            content: `审核驳回：${reviewResult.reasonText}${vehicleTypeText}${highRiskText}`,
+                            type: 'danger',
+                            color: '#f56c6c'
+                        });
+                    } else {
+                        target.reviewStatus = 'approved';
+                        target.status = 'active';
+                        target.history.push({
+                            time: new Date().toLocaleString(),
+                            content: '审核通过: 会员已激活，并更新可用载具类型',
+                            type: 'success',
+                            color: '#67c23a'
+                        });
+                    }
+                };
+
+                const confirmSubmitReview = async () => {
+                    const reviewResult = validateReviewSubmit();
+                    if (!reviewResult) return;
+
+                    if (reviewResult.isHighRisk) {
+                        try {
+                            await ElMessageBox.confirm(
+                                '确认将该会员标记为高风险用户吗？提交后不再提供复审。',
+                                '高风险操作确认',
+                                { confirmButtonText: '确认提交', cancelButtonText: '取消', type: 'warning' }
+                            );
+                        } catch (error) {
+                            return;
+                        }
+                    }
+
+                    submitting.value = true;
+                    setTimeout(() => {
+                        const targets = reviewSubmitMode.value === 'batch'
+                            ? allMembers.value.filter(member => selectedRows.value.some(row => row.id === member.id))
+                            : allMembers.value.filter(member => member.id === currentMember.value.id);
+
+                        targets.forEach(target => applyReviewResult(target, reviewResult));
+                        saveToStorage();
+
+                        if (reviewSubmitMode.value === 'batch') {
+                            ElMessage[reviewResult.isRejected ? 'warning' : 'success'](`已批量提交 ${targets.length} 名会员审核`);
+                            selectedRows.value = [];
+                        } else {
+                            ElMessage[reviewResult.isRejected ? 'warning' : 'success'](reviewResult.isRejected ? '已驳回该会员申请' : '会员审核已通过');
+                            drawerVisible.value = false;
+                        }
+
+                        submitting.value = false;
+                        submitReviewDialogVisible.value = false;
+                    }, 1000);
+                };
+
+                const confirmLegacyReview = async () => {
+                    if (legacyForm.decision === 'rejected' && legacyForm.rejectTypes.length === 0) {
+                        ElMessage.warning('请选择至少一个不通过类型');
+                        return;
+                    }
+                    if (legacyForm.vehicleTypes.length === 0 && !legacyForm.rejectTypes.includes('驾驶执照资料错误')) {
+                        ElMessage.warning('请至少选择一个用户可用载具类型');
+                        return;
+                    }
+
+                    if (legacyForm.decision === 'rejected' && legacyForm.isHighRisk) {
+                        try {
+                            await ElMessageBox.confirm(
+                                '确认将该会员标记为高风险用户吗？提交后不再提供复审。',
+                                '高风险操作确认',
+                                { confirmButtonText: '确认提交', cancelButtonText: '取消', type: 'warning' }
+                            );
+                        } catch (error) {
+                            return;
+                        }
+                    }
+
+                    submitting.value = true;
+                    setTimeout(() => {
+                        const targets = reviewSubmitMode.value === 'batch'
+                            ? allMembers.value.filter(member => selectedRows.value.some(row => row.id === member.id))
+                            : allMembers.value.filter(member => member.id === currentMember.value.id);
+
+                        const isRejected = legacyForm.decision === 'rejected';
+                        const shouldUpdateVehicleTypes = !legacyForm.rejectTypes.includes('驾驶执照资料错误');
+
+                        targets.forEach(target => {
+                            if (!target.history) target.history = [];
+                            if (shouldUpdateVehicleTypes) {
+                                target.availableVehicleTypes = [...legacyForm.vehicleTypes];
+                            }
+                            if (isRejected) {
+                                target.reviewStatus = 'rejected';
+                                target.status = 'active';
+                                target.isHighRisk = legacyForm.isHighRisk;
+                                target.allowReviewResubmit = !legacyForm.isHighRisk;
+                                target.lastRejectTypes = [...legacyForm.rejectTypes];
+                                target.lastRejectReason = legacyForm.remark;
+                                const highRiskText = legacyForm.isHighRisk ? '；已标记高风险，不再提供复审' : '';
+                                const remarkText = legacyForm.remark ? `；备注：${legacyForm.remark}` : '';
+                                target.history.push({
+                                    time: new Date().toLocaleString(),
+                                    content: `审核驳回：${legacyForm.rejectTypes.join('、')}${remarkText}${highRiskText}`,
+                                    type: 'danger',
+                                    color: '#f56c6c'
+                                });
+                            } else {
+                                target.reviewStatus = 'approved';
+                                target.status = 'active';
+                                target.history.push({
+                                    time: new Date().toLocaleString(),
+                                    content: '审核通过: 会员已激活，并更新可用载具类型',
+                                    type: 'success',
+                                    color: '#67c23a'
+                                });
+                            }
+                        });
+
+                        if (reviewSubmitMode.value === 'batch') {
+                            ElMessage.success(`已批量提交 ${targets.length} 名会员审核`);
+                            selectedRows.value = [];
+                        } else {
+                            ElMessage.success(isRejected ? '已驳回该会员申请' : '会员审核已通过');
+                            drawerVisible.value = false;
+                        }
+
+                        submitting.value = false;
+                        submitReviewDialogVisible.value = false;
+                    }, 1000);
+                };
+
+                const handleSubmitReview = () => {
+                    if (submitTab.value === 'new') {
+                        return confirmSubmitReview();
+                    }
+                    return confirmLegacyReview();
+                };
+
+                const handleSelectionChange = (val) => {
+                    selectedRows.value = val;
+                };
+
+                const handleBatchApprove = () => {
+                    openSubmitReviewDialog('batch');
+                };
+
+                const clearReviewFilters = () => {
+                    filters.keyword = '';
+                    filters.status = '';
+                    filters.channel = '';
+                    filters.dateRange = [];
+                };
+
+                const getTodayRange = () => {
+                    const today = new Date();
+                    return [
+                        new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+                        new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999)
+                    ];
+                };
+
+                const applySummaryFilter = (type) => {
+                    isApplyingSummaryFilter = true;
+
+                    if (activeSummaryCard.value === type) {
+                        clearReviewFilters();
+                        activeSummaryCard.value = '';
+                        currentPage.value = 1;
+                        isApplyingSummaryFilter = false;
+                        return;
+                    }
+
+                    clearReviewFilters();
+                    if (type === 'pending') {
+                        filters.status = 'pending';
+                    }
+                    if (type === 'todayNew') {
+                        filters.dateRange = getTodayRange();
+                    }
+                    if (type === 'todayApproved') {
+                        filters.status = 'approved';
+                        filters.dateRange = getTodayRange();
+                    }
+                    if (type === 'todayRejected') {
+                        filters.status = 'rejected';
+                        filters.dateRange = getTodayRange();
+                    }
+
+                    activeSummaryCard.value = type;
+                    currentPage.value = 1;
+                    isApplyingSummaryFilter = false;
+                };
+
+                const resetFilters = () => {
+                    isApplyingSummaryFilter = true;
+                    filters.keyword = '';
+                    filters.status = 'pending';
+                    filters.channel = '';
+                    filters.dateRange = [];
+                    activeSummaryCard.value = '';
+                    currentPage.value = 1;
+                    isApplyingSummaryFilter = false;
+                };
+
+                return {
+                    drawerVisible,
+                    submitReviewDialogVisible,
+                    reviewSubmitMode,
+                    currentMember,
+                    submitting,
+                    selectedRows,
+                    submitTab,
+                    legacyForm,
+                    legacyRejectTypeOptions,
+                    legacyRemarkOptions,
+                    isLegacyRemarkSelected,
+                    toggleLegacyRemark,
+                    stats,
+                    filters,
+                    activeSummaryCard,
+                    filteredList,
+                    reviewItems,
+                    rejectOptions,
+                    reviewSubmitForm,
+                    isHighRisk,
+                    hasRejectedItems,
+                    isDriverLicenseRejected,
+                    selectedAvailableVehicleTypes,
+                    vehicleTypeOptions,
+                    vehicleTypeRuleText,
+                    submitReviewSummary,
+                    submitRejectReasonText,
+                    currentPage,
+                    pageSize,
+                    totalCount,
+                    // Methods
+                    getWaitTime,
+                    getWaitTimeColor,
+                    getWaitTimeType,
+                    getChannelLabel,
+                    getHistoryTagType,
+                    getHistoryResultLabel,
+                    getHistoryOperator,
+                    openReviewDrawer,
+                    openSubmitReviewDialog,
+                    confirmSubmitReview,
+                    confirmLegacyReview,
+                    handleSubmitReview,
+                    handleSelectionChange,
+                    handleBatchApprove,
+                    resetFilters,
+                    applySummaryFilter
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

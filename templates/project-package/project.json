@@ -65,7 +65,6 @@
     "enabled": false
   },
   "features": {
-    "pageTransfer": true,
     "designSystem": true
   }
 }

@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>权限管理</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.permissions .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .permissions .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* 角色列表选中态 */
+        .permissions .role-item.active {
+            background-color: #f0f9ff;
+            border-left: 4px solid var(--app-color-primary);
+        }
+
+        .permissions .role-item {
+            border-left: 4px solid transparent;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "permissions",
+  "pageTitle": "权限管理",
+  "fileName": "permissions.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/permissions",
+  "menuSection": "system",
+  "menuTitle": "权限管理",
+  "menuIcon": "Lock",
+  "menu": true,
+  "rootClass": "permissions",
+  "overlayRootClass": "permissions-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">系统管理</div>
+<a class="prototype-menu-item is-active" href="./permissions.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Lock" aria-hidden="true"></span><span>权限管理</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 权限管理</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-permissions permissions" data-page-content data-page-root="permissions" data-page-key="permissions">
+  <div data-business-content data-layout-type="legacy">
+<!-- Back Button -->
+                <div class="mb-4 shrink-0">
+                    <el-button @click="goBack" plain>
+                        <svg class="mr-1 w-4 h-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" ></path>
+                        </svg>返回
+                    </el-button>
+                </div>
+
+                <div class="flex-1 flex min-h-0 gap-6">
+
+                    <!-- 左侧：角色列表 -->
+                    <div class="w-72 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col">
+                        <div 
+                            class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-xl">
+                            <span class="font-bold text-gray-700">角色列表</span>
+                            <el-button type="primary" link icon="Plus" @click="openAddRoleDialog">新增</el-button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scroll p-2 space-y-1">
+                            <div v-for="role in roles" :key="role.id"
+                                class="role-item p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                                :class="{ 'active': currentRole.id === role.id }" @click="selectRole(role)">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="font-medium text-gray-800">{{ role.name }}</div>
+                                        <div class="text-xs text-gray-400 mt-1 line-clamp-2">{{ role.description }}
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1 ml-2 shrink-0">
+                                        <el-tag v-if="role.isSystem" size="small" type="info">预设</el-tag>
+                                        <el-tag v-if="role.type" size="small"
+                                            :type="role.type === 'HEADQUARTERS' ? 'danger' : (role.type === 'STORE' ? 'warning' : 'success')"
+                                            effect="plain">
+                                            {{ getRoleTypeLabel(role.type) }}
+                                        </el-tag>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：权限配置矩阵 -->
+                    <div 
+                        class="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
+                        <!-- 头部信息 -->
+                        <div class="p-6 border-b border-gray-100">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                                        <el-icon class="mr-2 text-white">
+                                            <UserFilled></UserFilled>
+                                        </el-icon>
+                                        {{ currentRole.name }}
+                                        <el-tag v-if="currentRole.code" class="ml-2" type="info">{{ currentRole.code
+                                            }}</el-tag>
+                                    </h2>
+                                    <p class="text-gray-500 text-sm mt-1">{{ currentRole.description }}</p>
+                                </div>
+                                <div class="space-x-3 flex items-center">
+                                    <!-- 编辑/删除按钮 (仅自定义角色可见) -->
+                                    <template v-if="!currentRole.isSystem">
+                                        <el-tooltip content="编辑角色信息" placement="top">
+                                            <el-button circle icon="Edit" @click="openEditRoleDialog"></el-button>
+                                        </el-tooltip>
+                                        <el-tooltip content="删除角色" placement="top">
+                                            <el-button circle type="danger" plain icon="Delete"
+                                                @click="deleteRole"></el-button>
+                                        </el-tooltip>
+                                        <el-divider direction="vertical"></el-divider>
+                                    </template>
+
+                                    <el-button @click="resetPermissions">重置</el-button>
+                                    <el-button type="primary" @click="savePermissions">
+                                        <el-icon class="mr-1">
+                                            <Check></Check>
+                                        </el-icon> 保存配置
+                                    </el-button>
+                                </div>
+                            </div>
+
+                            <!-- 业务线授权开关 (Scope Authorization) -->
+                            <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                                <div class="text-sm font-bold text-blue-800 mb-3 flex items-center">
+                                    <el-icon class="mr-1">
+                                        <Key></Key>
+                                    </el-icon> 业务线授权 (Business Scope Authorization)
+                                </div>
+                                <el-checkbox-group v-model="currentRole.scopes">
+                                    <el-checkbox label="SHARING_ROUND">同站租还</el-checkbox>
+                                    <el-checkbox label="SHARING_ONEWAY">甲租乙还</el-checkbox>
+                                    <el-checkbox label="STORE_STANDARD">门市租车</el-checkbox>
+                                    <el-checkbox label="STORE_24H">24h门市租车</el-checkbox>
+                                    <el-checkbox label="GOV_FLEET">公务车</el-checkbox>
+                                    <el-checkbox label="SYSTEM_GLOBAL">系统配置</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+
+                        <!-- 权限详情 Tabs -->
+                        <div class="flex-1 overflow-hidden flex flex-col">
+                            <el-tabs v-model="activeTab" class="h-full flex flex-col custom-tabs" type="border-card">
+
+                                <el-tab-pane label="分时-同站" name="SHARING_ROUND"
+                                    :disabled="!currentRole.scopes.includes('SHARING_ROUND')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="订单管理" :permissions="permissions.SHARING_ROUND.ORDER"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="车辆与网点" :permissions="permissions.SHARING_ROUND.VEHICLE"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="定价策略" :permissions="permissions.SHARING_ROUND.PRICING"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="分时-异地" name="SHARING_ONEWAY"
+                                    :disabled="!currentRole.scopes.includes('SHARING_ONEWAY')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="调度管理"
+                                            :permissions="permissions.SHARING_ONEWAY.DISPATCH"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="网点管理" :permissions="permissions.SHARING_ONEWAY.STATION"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="门店-标准" name="STORE_STANDARD"
+                                    :disabled="!currentRole.scopes.includes('STORE_STANDARD')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="订单业务" :permissions="permissions.STORE_STANDARD.ORDER"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="车辆整备" :permissions="permissions.STORE_STANDARD.VEHICLE"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="POS结算"
+                                            :permissions="permissions.STORE_STANDARD.FINANCIAL"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="门店-24H" name="STORE_24H"
+                                    :disabled="!currentRole.scopes.includes('STORE_24H')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="自助设备监控" :permissions="permissions.STORE_24H.DEVICE"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="异常订单介入" :permissions="permissions.STORE_24H.ORDER"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="公务车" name="GOV_FLEET"
+                                    :disabled="!currentRole.scopes.includes('GOV_FLEET')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="审批流程" :permissions="permissions.GOV_FLEET.APPROVAL"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="月结账单" :permissions="permissions.GOV_FLEET.FINANCIAL"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="系统配置" name="SYSTEM_GLOBAL"
+                                    :disabled="!currentRole.scopes.includes('SYSTEM_GLOBAL')">
+                                    <div class="p-4 h-full overflow-y-auto custom-scroll">
+                                        <permission-group title="组织架构" :permissions="permissions.SYSTEM_GLOBAL.ORG"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="系统设置" :permissions="permissions.SYSTEM_GLOBAL.SETTINGS"
+                                            v-model="currentRole.permissions"></permission-group>
+                                        <permission-group title="安全与日志"
+                                            :permissions="permissions.SYSTEM_GLOBAL.SECURITY"
+                                            v-model="currentRole.permissions"></permission-group>
+                                    </div>
+                                </el-tab-pane>
+
+                            </el-tabs>
+                        </div>
+                    </div>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="permissions-overlay">
+<el-dialog v-model="addRoleDialogVisible" :title="isEditRole ? '编辑角色' : '新增角色'" width="500px" destroy-on-close class="permissions-overlay">
+                <el-form :model="roleForm" :rules="roleRules" ref="roleFormRef" label-position="top">
+                    <!-- 角色名称 -->
+                    <el-form-item label="角色名称" prop="name">
+                        <el-input v-model="roleForm.name" placeholder="例如：财务助理"></el-input>
+                    </el-form-item>
+
+                    <!-- 角色类型 -->
+                    <el-form-item label="角色类型" prop="type">
+                        <el-select v-model="roleForm.type" placeholder="请选择角色所属层级" style="width: 100%">
+                            <el-option v-for="type in roleTypes" :key="type.value" :label="type.label"
+                                :value="type.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    <!-- 角色描述 -->
+                    <el-form-item label="角色描述" prop="description">
+                        <el-input v-model="roleForm.description" type="textarea" :rows="3"
+                            placeholder="简要描述该角色的职责范围..."></el-input>
+                    </el-form-item>
+                </el-form>
+                <template #footer>
+                    <div class="dialog-footer">
+                        <el-button @click="addRoleDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="confirmRoleDialog">
+                            {{ isEditRole ? '保存修改' : '确认创建' }}
+                        </el-button>
+                    </div>
+                </template>
+            </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed } = Vue;
+
+        // 权限组组件
+        const PermissionGroup = {
+            props: ['title', 'permissions', 'modelValue'],
+            emits: ['update:modelValue'],
+            template: `
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-3 border-l-4 border-[color:var(--app-color-primary)] pl-3 leading-none">{{ title }}</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <label v-for="perm in permissions" :key="perm.id" 
+                            class="flex items-start p-3 rounded border border-gray-200 hover:border-[color:var(--app-color-primary-light-7)] hover:bg-gray-50 cursor-pointer transition-all">
+                            <input type="checkbox" :value="perm.id" 
+                                :checked="modelValue.includes(perm.id)"
+                                @change="togglePermission(perm.id)"
+                                class="mt-1 mr-2 w-4 h-4 text-[color:var(--app-color-primary)] rounded focus:ring-[color:var(--app-color-primary)]">
+                            <div>
+                                <div class="font-medium text-gray-800 text-sm">{{ perm.name }}</div>
+                                <div class="text-xs text-gray-400 mt-0.5">{{ perm.desc }}</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            `,
+            setup(props, { emit }) {
+                const togglePermission = (id) => {
+                    const newValue = [...props.modelValue];
+                    const index = newValue.indexOf(id);
+                    if (index > -1) {
+                        newValue.splice(index, 1);
+                    } else {
+                        newValue.push(id);
+                    }
+                    emit('update:modelValue', newValue);
+                };
+                return { togglePermission };
+            }
+        };
+// 图标注册
+                const icons = [
+                    'Van', 'Ticket', 'DocumentAdd', 'List', 'Document', 'PriceTag',
+                    'Grid', 'ShoppingCart', 'Setting', 'Location', 'Briefcase',
+                    'HomeFilled', 'Check', 'UserFilled', 'Lock', 'Key', 'Plus'
+                ];
+
+                // 模拟角色数据
+                const roles = ref([
+                    { id: 2, code: 'SYS_ADMIN', name: '系统管理员', description: '负责用户管理、系统参数配置及日志审计', isSystem: true, scopes: ['SYSTEM_GLOBAL'], permissions: ['sys.user.manage', 'sys.role.manage', 'sys.log.view'] },
+                    { id: 3, code: 'STORE_MGR', name: '门市店长', description: '负责门店日常运营、车辆排程看板及订单处理', isSystem: false, type: 'STORE', scopes: ['STORE_STANDARD', 'STORE_24H'], permissions: ['store.order.view', 'store.order.create', 'store.order.edit'] },
+                    { id: 4, code: 'SHARING_OPS', name: '分时运营经理', description: '负责分时租赁业务的运力调度及网点管理', isSystem: false, type: 'STATION', scopes: ['SHARING_ROUND', 'SHARING_ONEWAY'], permissions: ['sharing.monitor', 'sharing.remote'] },
+                    { id: 5, code: 'FINANCE', name: '财务专员', description: '负责全业务线的营收核对与报表导出', isSystem: false, type: 'HEADQUARTERS', scopes: ['SHARING_ROUND', 'SHARING_ONEWAY', 'STORE_STANDARD', 'STORE_24H', 'GOV_FLEET'], permissions: ['store.financial.view', 'gov.financial.view'] }
+                ]);
+
+                // 模拟权限定义 (Permissions Definition)
+                const permissions = reactive({
+                    SHARING_ROUND: {
+                        ORDER: [
+                            { id: 'sharing.round.order.view', name: '查看订单', desc: '查看同站分时订单列表及详情' },
+                            { id: 'sharing.round.order.finish', name: '强制还车', desc: '处理异常订单，强制结束计费' }
+                        ],
+                        VEHICLE: [
+                            { id: 'sharing.round.vehicle.monitor', name: '状态监控', desc: '查看车辆位置、电量及状态' },
+                            { id: 'sharing.round.vehicle.remote', name: '远程控车', desc: '远程开锁、关锁、鸣笛寻车' }
+                        ],
+                        PRICING: [
+                            { id: 'sharing.round.pricing.view', name: '查看价格', desc: '查看分时计费规则' },
+                            { id: 'sharing.round.pricing.edit', name: '修改费率', desc: '调整分时租赁价格表' }
+                        ]
+                    },
+                    SHARING_ONEWAY: {
+                        DISPATCH: [
+                            { id: 'sharing.oneway.dispatch.view', name: '查看调度单', desc: '查看异地还车调度任务' },
+                            { id: 'sharing.oneway.dispatch.create', name: '创建调度', desc: '手动创建车辆排程看板工单' }
+                        ],
+                        STATION: [
+                            { id: 'sharing.oneway.station.manage', name: '网点管理', desc: '新增或调整还车网点围栏' }
+                        ]
+                    },
+                    STORE_STANDARD: {
+                        ORDER: [
+                            { id: 'store.std.order.view', name: '查看订单', desc: '查看门市订单列表' },
+                            { id: 'store.std.order.create', name: '新建订单', desc: '录入新的门市租赁订单' },
+                            { id: 'store.std.order.edit', name: '编辑订单', desc: '修改订单信息、延期等' },
+                            { id: 'store.std.order.delete', name: '删除订单', desc: '删除无效或测试订单' }
+                        ],
+                        VEHICLE: [
+                            { id: 'store.std.vehicle.inspec', name: '整备检查', desc: '录入车辆整备、清洗记录' }
+                        ],
+                        FINANCIAL: [
+                            { id: 'store.std.financial.pos', name: 'POS结算', desc: '处理线下POS机刷卡收款' },
+                            { id: 'store.std.financial.auth', name: '预授权管理', desc: '发起或撤销信用卡预授权' }
+                        ]
+                    },
+                    STORE_24H: {
+                        DEVICE: [
+                            { id: 'store.24h.device.monitor', name: '设备监控', desc: '监控自助钥匙柜及车辆状态' }
+                        ],
+                        ORDER: [
+                            { id: 'store.24h.order.intervention', name: '人工介入', desc: '处理自助取还车过程中的异常' }
+                        ]
+                    },
+                    GOV_FLEET: {
+                        APPROVAL: [
+                            { id: 'gov.approval.view', name: '查看审批', desc: '查看公务用车审批进度' },
+                            { id: 'gov.approval.audit', name: '审批订单', desc: '审核公务用车申请' }
+                        ],
+                        FINANCIAL: [
+                            { id: 'gov.financial.bill', name: '月结账单', desc: '生成企业客户月结对账单' }
+                        ]
+                    },
+                    SYSTEM_GLOBAL: {
+                        ORG: [
+                            { id: 'sys.user.manage', name: '用户管理', desc: '新增、编辑、禁用后台账号' },
+                            { id: 'sys.role.manage', name: '角色权限', desc: '配置角色及分配权限' }
+                        ],
+                        SETTINGS: [
+                            { id: 'sys.setting.rule', name: '规则配置', desc: '修改全局租车规则及参数' }
+                        ],
+                        SECURITY: [
+                            { id: 'sys.log.view', name: '日志审计', desc: '查看系统操作日志及安全审计' }
+                        ]
+                    }
+                });
+
+                const currentRole = ref(roles.value[0]);
+                const activeTab = ref('SHARING_ROUND');
+
+                const selectRole = (role) => {
+                    // 深拷贝以模拟独立编辑状态
+                    currentRole.value = JSON.parse(JSON.stringify(role));
+                    // 自动切换到第一个有权限的Tab
+                    if (role.scopes.length > 0) {
+                        activeTab.value = role.scopes[0];
+                    }
+                };
+
+                const createNewRole = () => {
+                    const newRole = {
+                        id: Date.now(),
+                        name: '新角色',
+                        description: '请设置角色描述',
+                        isSystem: false,
+                        scopes: [],
+                        permissions: []
+                    };
+                    roles.value.push(newRole);
+                    selectRole(newRole);
+                };
+
+                const savePermissions = () => {
+                    // 模拟保存
+                    const index = roles.value.findIndex(r => r.id === currentRole.value.id);
+                    if (index !== -1) {
+                        roles.value[index] = JSON.parse(JSON.stringify(currentRole.value));
+                    }
+                    ElementPlus.ElMessage.success('权限配置已保存');
+                };
+
+                const resetPermissions = () => {
+                    const original = roles.value.find(r => r.id === currentRole.value.id);
+                    if (original) {
+                        currentRole.value = JSON.parse(JSON.stringify(original));
+                        ElementPlus.ElMessage.info('已重置为保存状态');
+                    }
+                };
+
+                // Add/Edit Role Dialog State
+                const addRoleDialogVisible = ref(false);
+                const isEditRole = ref(false); // Track mode
+                const roleFormRef = ref(null);
+                const roleForm = reactive({
+                    name: '',
+                    type: '',
+                    description: ''
+                });
+
+                const roleTypes = [
+                    { label: '营运 (Headquarters)', value: 'HEADQUARTERS' },
+                    { label: '车行 (Provider)', value: 'PROVIDER' },
+                    { label: '门市 (Store)', value: 'STORE' },
+                    { label: '站点 (Station)', value: 'STATION' }
+                ];
+
+                const roleRules = {
+                    name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+                    type: [{ required: true, message: '请选择角色类型', trigger: 'change' }]
+                };
+
+                const getRoleTypeLabel = (type) => {
+                    let label = '';
+                    const typeObj = roleTypes.find(t => t.value === type);
+                    return typeObj ? typeObj.label.split(' ')[0] : type;
+                };
+
+                const openAddRoleDialog = () => {
+                    isEditRole.value = false;
+                    roleForm.name = '';
+                    roleForm.type = '';
+                    roleForm.description = '';
+                    addRoleDialogVisible.value = true;
+                };
+
+                const openEditRoleDialog = () => {
+                    if (currentRole.value.isSystem) return;
+                    isEditRole.value = true;
+                    // Populate form with current role data
+                    roleForm.name = currentRole.value.name;
+                    roleForm.type = currentRole.value.type;
+                    roleForm.description = currentRole.value.description;
+                    addRoleDialogVisible.value = true;
+                };
+
+                const deleteRole = () => {
+                    if (currentRole.value.isSystem) return;
+                    ElementPlus.ElMessageBox.confirm(
+                        `确定要删除角色 "${currentRole.value.name}" 吗？此操作无法撤销。`,
+                        '删除确认',
+                        {
+                            confirmButtonText: '确定删除',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }
+                    )
+                        .then(() => {
+                            const index = roles.value.findIndex(r => r.id === currentRole.value.id);
+                            if (index !== -1) {
+                                roles.value.splice(index, 1);
+                                ElementPlus.ElMessage.success('角色已删除');
+                                // Switch to first available role
+                                if (roles.value.length > 0) {
+                                    selectRole(roles.value[0]);
+                                }
+                            }
+                        })
+                        .catch(() => { });
+                };
+
+                const confirmRoleDialog = async () => {
+                    if (!roleFormRef.value) return;
+                    await roleFormRef.value.validate((valid) => {
+                        if (valid) {
+                            if (isEditRole.value) {
+                                // Update existing role
+                                const targetRole = roles.value.find(r => r.id === currentRole.value.id);
+                                if (targetRole) {
+                                    targetRole.name = roleForm.name;
+                                    targetRole.type = roleForm.type;
+                                    targetRole.description = roleForm.description;
+
+                                    // Also update current view
+                                    currentRole.value.name = roleForm.name;
+                                    currentRole.value.type = roleForm.type;
+                                    currentRole.value.description = roleForm.description;
+
+                                    // Optional: If type changed, maybe we should warn about scope reset? 
+                                    // For now, let's keep scopes as is unless logic demands reset.
+                                }
+                                ElementPlus.ElMessage.success('角色信息已更新');
+                            } else {
+                                // Create new role
+                                const newRole = {
+                                    id: Date.now(),
+                                    name: roleForm.name,
+                                    type: roleForm.type,
+                                    description: roleForm.description || '暂无描述',
+                                    isSystem: false,
+                                    scopes: [],
+                                    permissions: []
+                                };
+
+                                // Initialize default scopes based on type
+                                if (newRole.type === 'HEADQUARTERS') newRole.scopes = ['SYSTEM_GLOBAL'];
+                                if (newRole.type === 'STORE') newRole.scopes = ['STORE_STANDARD'];
+                                if (newRole.type === 'STATION') newRole.scopes = ['SHARING_ROUND'];
+
+                                roles.value.push(newRole);
+                                selectRole(newRole);
+                                ElementPlus.ElMessage.success('角色创建成功');
+                            }
+                            addRoleDialogVisible.value = false;
+                        }
+                    });
+                };
+
+                const goBack = () => {
+                    window.location.href = 'employees.html';
+                };
+
+                return {
+                    roles,
+                    currentRole,
+                    activeTab,
+                    permissions,
+                    icons,
+                    selectRole,
+                    createNewRole,
+                    savePermissions,
+                    resetPermissions,
+                    // New additions
+                    addRoleDialogVisible,
+                    roleForm,
+                    roleFormRef,
+                    roleTypes,
+                    roleRules,
+                    getRoleTypeLabel,
+                    openAddRoleDialog,
+                    openEditRoleDialog,
+                    deleteRole,
+                    confirmRoleDialog,
+                    goBack
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component)
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

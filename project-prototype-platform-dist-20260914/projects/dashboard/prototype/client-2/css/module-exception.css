@@ -1,0 +1,733 @@
+/* ==========================================================================
+   異常通報 — 模組版面
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → module-*.css
+
+   設計方向 —— 儀表與路政警示，不是通用科幻霓虹。
+   題材世界取自這套系統自己的器物：感溫計、壓縮機起訖、電子圍籬、以及既有
+   系統本身的黑黃配色。運輸業的黑黃是路政標誌與重機械的語言，所以視覺語彙
+   走「錶頭、警示燈、蝕刻金屬」。
+
+   簽名元素：警示燈陣列（annunciator panel）——卡車儀表台上那排警告燈。
+   各監測條件各自靜默或告警，這既是業務語義本身，也是題材世界裡的真實器物。
+     無通報  熄滅，燈罩內凹，字壓暗
+     低頻    冷光微亮
+     中度    琥珀點亮，燈罩透光
+     嚴重    紅色點亮 + 脈衝 + 燈罩溢光
+     停訊    紫色，訊號斷裂
+
+   卡片質感一律來自 ds.css 的 .ds-panel。全檔零字面色值。
+   ========================================================================== */
+
+/* ==========================================================================
+   M04-1 車輛通報狀況總覽（帶狀 W）
+   結構與 M01-1 一致：主數靠左、狀態磁貼居中、比例帶壓底。
+   兩個帶狀模組共用同一種讀法，使用者不必在每張看板重新學一次版面。
+   ========================================================================== */
+
+.exn-band {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+}
+
+.exn-band-lead {
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-right: var(--sp-4);
+    border-right: 1px solid var(--ln-hair);
+}
+
+.exn-lead-label { font-size: var(--fs-note); color: var(--ink-2); white-space: nowrap; }
+
+.exn-lead-val { display: flex; align-items: baseline; gap: var(--sp-1); }
+
+.exn-lead-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -.01em;
+}
+
+.exn-lead-val > em { font-style: normal; font-size: var(--fs-note); color: var(--ink-2); }
+
+.exn-band-cells { display: flex; align-items: stretch; gap: var(--sp-2); min-width: 0; }
+
+.exn-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    flex: 1 1 0;
+    min-width: 0;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--fx-r-inner);
+    background: var(--lv-soft);
+    border: 1px solid var(--lv-line);
+}
+
+.exn-cell-icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    border-radius: var(--fx-r-inner);
+    background: color-mix(in srgb, var(--lv) 16%, transparent);
+    color: var(--lv);
+    box-shadow: var(--fx-data-glow);
+}
+
+.exn-cell-icon > svg, .exn-cell-icon > i { width: 16px; height: 16px; }
+
+.exn-cell-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.exn-cell-label { font-size: var(--fs-note); color: var(--ink-2); white-space: nowrap; }
+.exn-cell-val { display: inline-flex; align-items: baseline; gap: var(--sp-2); white-space: nowrap; }
+
+.exn-cell-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-s);
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--lv);
+}
+
+.exn-cell-val > strong em {
+    font-style: normal;
+    margin-left: 2px;
+    font-family: var(--fx-font-ui);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    color: var(--ink-3);
+}
+
+.exn-cell-pct {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.exn-band-bar { grid-column: 2; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.exn-band-bar > .ds-band { height: var(--mk-bar-h); }
+.exn-band-note { color: var(--ink-3); font-size: var(--fs-micro); }
+
+.exn-band .ds-band > i { --seg: var(--lv); }
+
+@media (max-width: 1100px) {
+    .exn-band { grid-template-columns: minmax(0, 1fr); }
+    .exn-band-lead {
+        grid-row: auto;
+        padding-right: 0;
+        border-right: 0;
+        padding-bottom: var(--sp-2);
+        border-bottom: 1px solid var(--ln-hair);
+    }
+    .exn-band-bar { grid-column: 1; }
+}
+
+.exn-band.is-stacked { grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--sp-3); }
+.exn-band.is-stacked .exn-band-lead {
+    grid-row: auto;
+    padding-right: 0;
+    border-right: 0;
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--ln-hair);
+}
+.exn-band.is-stacked .exn-band-cells { flex-direction: column; }
+.exn-band.is-stacked .exn-band-bar { grid-column: 1; }
+
+/* ==========================================================================
+   M04-2 異常表現對象
+   最佳與預警並列。兩組用同一種排名列，差別只在狀態色與小標，因此讀者不需要
+   分別學兩種版面。
+   ========================================================================== */
+
+.exn-objects-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--sp-3);
+    align-content: start;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.exn-objects-split > section { display: flex; flex-direction: column; min-width: 0; }
+
+.exn-objects.is-compact .exn-objects-split {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.exn-objects-cap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    align-self: flex-start;
+    margin-bottom: var(--sp-1);
+    padding: 2px var(--sp-2);
+    border-radius: 999px;
+    background: var(--lv-soft);
+    border: 1px solid var(--lv-line);
+    color: var(--lv);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+}
+
+.exn-objects-cap > svg, .exn-objects-cap > i { width: 12px; height: 12px; }
+
+/* 排名列在此模組是可點的，補上按鈕語義下的重置與互動態 */
+.exn-objects .ds-rank {
+    width: 100%;
+    padding: var(--sp-1) var(--sp-2);
+    border: 0;
+    border-bottom: 1px solid var(--ln-hair);
+    border-radius: var(--fx-r-inner);
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.exn-objects .ds-rank:hover { background: var(--sf-hover); }
+.exn-objects .ds-rank:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+@media (max-width: 1100px) {
+    .exn-objects-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   M04-3 各項異常通報監測 —— 警示燈陣列
+   ========================================================================== */
+
+.exn-pareto {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 160px;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+}
+
+.exn-pareto > .ds-band { height: var(--mk-bar-h-sm); }
+
+/* L 規格：燈陣列在左、件數排序條在右，兩種讀法互補 —— 陣列看「哪些項目在
+   告警」，排序條看「量級落差」。M 規格只留陣列。 */
+/* L 規格：燈陣列在左、件數排序條在右，兩種讀法互補 —— 陣列看「哪些項目在
+   告警」，排序條看「量級落差」。M 規格只留陣列。
+   兩欄各自收頂並對齊頂緣：卡位不再提供 max-height，長內容必須由模組自己收，
+   否則 12 個項目會把整張看板撐到 1700px 以上。 */
+.exn-matrix-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-3);
+    align-items: start;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.exn-matrix-body.is-wide { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+
+.exn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+    gap: var(--sp-2);
+    align-content: start;
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.exn-matrix-chart { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.exn-matrix-chart > .kcd-chart { flex: 1 1 auto; min-height: 0; }
+
+.exn-chart-cap {
+    margin-bottom: var(--sp-1);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+}
+
+/* --- 單顆警示燈 ----------------------------------------------------------- */
+.exn-lamp {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    padding: var(--sp-2) var(--sp-3) var(--sp-2);
+    border-radius: var(--fx-r-inner);
+    background: var(--lv-soft);
+    border: 1px solid var(--lv-line);
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease), border-color var(--mo-fast) var(--ease),
+                transform var(--mo-fast) var(--ease);
+}
+
+.exn-lamp:hover { transform: translateY(-1px); border-color: var(--lv); }
+.exn-lamp:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.exn-lamp-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+
+/* 燈罩：亮起時透光並溢出微光；熄滅時內凹 */
+.exn-lamp-icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: var(--fx-r-inner);
+    background: color-mix(in srgb, var(--lv) 18%, transparent);
+    color: var(--lv);
+    box-shadow: var(--fx-data-glow);
+}
+
+.exn-lamp-icon > svg, .exn-lamp-icon > i { width: 15px; height: 15px; }
+
+/* 無通報：燈熄滅 —— 內凹、無光、字壓暗。零值與正常必須是不同的視覺。 */
+.exn-lamp.is-void .exn-lamp-icon {
+    background: var(--sf-inset);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .22);
+    color: var(--ink-3);
+}
+
+.exn-lamp.is-void { opacity: .78; }
+.exn-lamp.is-void .exn-lamp-val > strong { color: var(--ink-3); }
+
+/* 停訊：訊號斷裂 —— 用虛線邊與紫色，和「嚴重」明確區分 */
+.exn-lamp.is-offline { border-style: dashed; }
+
+.exn-lamp-label {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.exn-lamp-val { display: flex; align-items: baseline; gap: var(--sp-1); }
+
+.exn-lamp-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-s);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--lv);
+}
+
+.exn-lamp-val > em { font-style: normal; font-size: var(--fs-micro); color: var(--ink-3); }
+
+.exn-lamp-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+}
+
+.exn-lamp-foot > b {
+    color: var(--ink-2);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 92px;
+}
+
+/* ==========================================================================
+   M04-4 近期異常事件
+   --------------------------------------------------------------------------
+   時序視角：左側時間軸、中間事件、右側嚴重度。時間軸上的節點用狀態色，
+   一眼看出這段時間裡告警的密度與嚴重度分布。
+   ========================================================================== */
+
+.exn-events-tally {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    flex-wrap: wrap;
+    flex: none;
+    margin-bottom: var(--sp-2);
+}
+
+.exn-events-total { margin-left: auto; color: var(--ink-3); font-size: var(--fs-micro); }
+
+.exn-events-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.exn-event {
+    display: grid;
+    grid-template-columns: 40px 12px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    border-radius: var(--fx-r-inner);
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.exn-event:hover { background: var(--sf-hover); }
+.exn-event:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+.exn-event-time {
+    font-family: var(--fx-font-mono);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+}
+
+/* ========================================================================
+   2026-08 科技戰情版
+   以參考圖的「高密度監控台」語彙重排 M04-1～M04-4；所有顏色仍由 token
+   提供，淺色主題可正常降級，不把科技藍寫死在模組內。
+   ======================================================================== */
+
+.exn-command {
+    padding: var(--sp-2) var(--sp-3);
+}
+
+.exn-command-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex: none;
+    margin-bottom: var(--sp-2);
+}
+
+.exn-command-head h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: 0;
+    font-size: var(--fs-lead);
+    color: var(--ink-1);
+}
+
+.exn-command-head h4::before {
+    content: "";
+    width: 3px;
+    height: 14px;
+    background: var(--brand);
+    box-shadow: var(--fx-data-glow);
+}
+
+.exn-command-head > b {
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+}
+
+.exn-command-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.exn-command-kpi {
+    --lv: var(--st-info);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    column-gap: var(--sp-2);
+    min-width: 0;
+    padding: 7px 12px;
+    border: 1px solid var(--lv-line);
+    border-radius: var(--fx-r-inner);
+    background: linear-gradient(110deg, var(--lv-soft), transparent 75%);
+    overflow: hidden;
+}
+
+.exn-command-kpi::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--lv), transparent 72%);
+    opacity: .8;
+}
+
+.exn-command-kpi > span {
+    grid-column: 1;
+    color: var(--ink-2);
+    font-size: var(--fs-micro);
+    white-space: nowrap;
+}
+
+.exn-command-kpi > strong {
+    grid-column: 1;
+    color: var(--lv);
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 600;
+    line-height: 1;
+    text-shadow: var(--fx-data-glow);
+}
+
+.exn-command-kpi > strong em {
+    margin-left: 3px;
+    color: var(--ink-3);
+    font-family: var(--fx-font-ui);
+    font-size: var(--fs-micro);
+    font-style: normal;
+}
+
+.exn-command-kpi > small {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    white-space: nowrap;
+}
+
+.exn-command-kpi.is-info { --lv: var(--st-info); --lv-soft: var(--st-info-soft); --lv-line: var(--st-info-line); }
+.exn-command-kpi.is-normal { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); --lv-line: var(--st-normal-line); }
+.exn-command-kpi.is-warn { --lv: var(--st-warn); --lv-soft: var(--st-warn-soft); --lv-line: var(--st-warn-line); }
+.exn-command-kpi.is-critical { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); --lv-line: var(--st-critical-line); }
+
+.exn-best-strip {
+    display: flex;
+    align-items: stretch;
+    gap: var(--sp-2);
+    flex: none;
+    margin-bottom: var(--sp-2);
+}
+
+.exn-best-strip > span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 0 var(--sp-2);
+    color: var(--st-normal);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.exn-best-strip > span svg { width: 13px; height: 13px; }
+
+.exn-best-strip > button {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 6px 9px;
+    border: 1px solid var(--st-normal-line);
+    border-radius: var(--fx-r-inner);
+    background: var(--st-normal-soft);
+    color: var(--ink-1);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.exn-best-strip > button strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.exn-best-strip > button em {
+    flex: none;
+    color: var(--st-normal);
+    font-size: var(--fs-micro);
+    font-style: normal;
+}
+
+.exn-risk-list {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.exn-risk-row {
+    display: grid;
+    grid-template-columns: auto minmax(88px, 1fr) minmax(60px, .75fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: 36px;
+    padding: 5px var(--sp-2);
+    border: 0;
+    border-bottom: 1px solid var(--ln-hair);
+    background: transparent;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.exn-risk-row:hover { background: var(--sf-hover); }
+
+.exn-risk-name { display: flex; flex-direction: column; min-width: 0; }
+.exn-risk-name strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-body); }
+.exn-risk-name small { color: var(--ink-3); font-size: var(--fs-micro); }
+
+.exn-risk-bar {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--sf-inset);
+    overflow: hidden;
+}
+
+.exn-risk-bar i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--st-warn), var(--st-critical));
+    box-shadow: 0 0 8px var(--st-critical-line);
+}
+
+.exn-risk-value { color: var(--ink-2); font-size: var(--fs-micro); white-space: nowrap; }
+.exn-risk-value strong { color: var(--ink-1); font-family: var(--fx-font-num); font-size: var(--fs-num-s); }
+.exn-risk-rate { min-width: 44px; color: var(--st-critical); font-family: var(--fx-font-num); text-align: right; }
+
+body.theme-tech .exn-events-tally {
+    padding: 5px 7px;
+    border: 1px solid var(--ln-hair);
+    border-radius: var(--fx-r-inner);
+    background: rgba(9, 31, 62, .72);
+}
+
+body.theme-tech .exn-event {
+    grid-template-columns: 42px 9px minmax(0, 1fr) auto;
+    min-height: 44px;
+    border-bottom: 1px solid var(--ln-hair);
+    border-radius: 0;
+}
+
+body.theme-tech .exn-event-icon {
+    background: var(--lv-soft);
+    border: 1px solid var(--lv-line);
+    box-shadow: var(--fx-data-glow);
+}
+
+body.theme-tech .exn-matrix-body.is-wide {
+    grid-template-columns: minmax(0, 1.8fr) minmax(260px, .9fr);
+}
+
+body.theme-tech .exn-grid {
+    grid-template-columns: repeat(4, minmax(118px, 1fr));
+}
+
+body.theme-tech .exn-lamp {
+    min-height: 104px;
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--lv) 12%, transparent), transparent 62%),
+        var(--sf-inset);
+    border-color: color-mix(in srgb, var(--lv) 38%, var(--ln-card));
+    box-shadow: inset 0 0 18px color-mix(in srgb, var(--lv) 6%, transparent);
+}
+
+body.theme-tech .exn-lamp.is-critical {
+    box-shadow: inset 0 0 24px var(--st-critical-soft), 0 0 14px var(--st-critical-line);
+}
+
+body.theme-tech .exn-matrix-chart {
+    padding-left: var(--sp-3);
+    border-left: 1px solid var(--ln-hair);
+}
+
+@media (max-width: 1280px) {
+    .exn-command-kpi > small { display: none; }
+    body.theme-tech .exn-grid { grid-template-columns: repeat(3, minmax(110px, 1fr)); }
+}
+
+/* 時間軸：節點 + 連線。連線用 ::after 畫，最後一筆不畫。 */
+.exn-event-rail {
+    position: relative;
+    display: block;
+    height: 100%;
+    min-height: 34px;
+}
+
+.exn-event-rail > i {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--lv);
+    box-shadow: var(--fx-data-glow);
+}
+
+.exn-event-rail::after {
+    content: "";
+    position: absolute;
+    top: 16px;
+    bottom: -8px;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+    background: var(--ln-hair);
+}
+
+.exn-event:last-child .exn-event-rail::after { display: none; }
+
+.exn-event-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.exn-event-head { display: flex; align-items: center; gap: var(--sp-1); min-width: 0; }
+
+.exn-event-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    border-radius: var(--fx-r-inner);
+    background: color-mix(in srgb, var(--lv) 16%, transparent);
+    color: var(--lv);
+}
+
+.exn-event-icon > svg, .exn-event-icon > i { width: 12px; height: 12px; }
+
+.exn-event-head > strong {
+    font-family: var(--fx-font-mono);
+    font-size: var(--fs-note);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.exn-event-obj {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.exn-event-text {
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    line-height: 1.5;
+}

@@ -150,10 +150,15 @@ export function prdContentPlugin({
           extensions: DOCUMENT_PUBLIC_EXTENSIONS,
         })) {
           const relativePath = toWebPath(path.relative(docsRoot, absolutePath));
+          const isMarkdown = path.extname(absolutePath).toLowerCase() === '.md';
           this.emitFile({
             type: 'asset',
-            fileName: `projects/${projectId}/docs/content/${relativePath}`,
-            source: await fs.readFile(absolutePath),
+            fileName: `projects/${projectId}/docs/content/${
+              isMarkdown ? relativePath.replace(/\.md$/iu, '.json') : relativePath
+            }`,
+            source: isMarkdown
+              ? JSON.stringify({ content: await fs.readFile(absolutePath, 'utf8') })
+              : await fs.readFile(absolutePath),
           });
         }
       }

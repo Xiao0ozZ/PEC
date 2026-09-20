@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
-import pluginVue from 'eslint-plugin-vue';
 import tseslint from 'typescript-eslint';
 
 export default [
@@ -22,7 +21,6 @@ export default [
     ],
   },
   js.configs.recommended,
-  ...pluginVue.configs['flat/essential'],
   {
     files: ['apps/platform-react/**/*.{ts,tsx}'],
     languageOptions: {
@@ -56,7 +54,7 @@ export default [
     },
   },
   {
-    files: ['projects/*/page-definitions.js', 'projects/*/views/**/*.{js,vue}'],
+    files: ['projects/*/page-definitions.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -67,16 +65,10 @@ export default [
     },
     rules: {
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      'vue/multi-word-component-names': 'off',
     },
   },
   {
-    files: [
-      'scripts/**/*.{js,cjs,mjs}',
-      'plugins/**/*.js',
-      'vite.config.js',
-      'playwright.config.js',
-    ],
+    files: ['scripts/**/*.{js,cjs,mjs}', 'plugins/**/*.js', 'vite.config.js', 'playwright.config.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -89,7 +81,7 @@ export default [
     },
   },
   {
-    files: ['tests/**/*.{js,vue}', 'vitest.config.js'],
+    files: ['tests/**/*.js', 'vitest.config.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -100,24 +92,6 @@ export default [
     },
     rules: {
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-    },
-  },
-  {
-    files: [
-      'projects/*/views/operation/**/*.vue',
-      'projects/*/views/enterprise/**/*.vue',
-    ],
-    rules: {
-      'no-constant-binary-expression': 'off',
-      'no-constant-condition': 'off',
-      'no-dupe-else-if': 'off',
-      'no-empty': 'off',
-      'no-undef': 'off',
-      'no-unused-vars': 'off',
-      'vue/no-ref-as-operand': 'off',
-      'vue/no-unused-components': 'off',
-      'vue/no-unused-vars': 'off',
-      'vue/return-in-computed-property': 'off',
     },
   },
   prettier,

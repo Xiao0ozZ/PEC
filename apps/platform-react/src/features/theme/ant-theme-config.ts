@@ -6,9 +6,15 @@ const FONT_FAMILY =
   "'SF Pro Text', 'SF Pro Display', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif";
 const FONT_FAMILY_CODE =
   "'SFMono-Regular', 'SF Mono', ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+const PLATFORM_PRIMARY_COLOR = '#1677FF';
+const LIGHT_SOLID_TEXT_COLOR = 'var(--ant-color-text-light-solid)';
+const CONTROL_HEIGHT = 32;
+const HEADER_HEIGHT = 56;
+const BORDER_RADIUS = 6;
+const BORDER_RADIUS_LG = 8;
 const MENU_ITEM_HEIGHT = 36;
 const MENU_ITEM_MARGIN_BLOCK = 2;
-const MENU_ITEM_BORDER_RADIUS = 8;
+const MENU_ITEM_BORDER_RADIUS = BORDER_RADIUS_LG;
 const HORIZONTAL_MENU_ITEM_BORDER_RADIUS = MENU_ITEM_HEIGHT / 2;
 
 const LIGHT_LAYOUT = {
@@ -35,31 +41,36 @@ const DARK_LAYOUT = {
   triggerColor: 'rgba(255, 255, 255, 0.85)',
 } as const;
 
+const LIGHT_TOKEN_OVERRIDES = {
+  colorBgLayout: '#f5f7fa',
+  colorBgContainer: 'rgba(255, 255, 255, 0.68)',
+  colorBgElevated: 'rgba(255, 255, 255, 0.9)',
+  colorBorderSecondary: 'rgba(5, 5, 5, 0.1)',
+} as const;
+
+const DARK_TOKEN_OVERRIDES = {
+  colorBgLayout: '#000000',
+  colorBgContainer: '#141414',
+  colorBgElevated: '#1f1f1f',
+  colorBorderSecondary: 'rgba(255, 255, 255, 0.14)',
+} as const;
+
 export function createAntThemeConfig(resolvedMode: ResolvedThemeMode): ThemeConfig {
   const isDark = resolvedMode === 'dark';
   const algorithms = [isDark ? theme.darkAlgorithm : theme.defaultAlgorithm];
 
   const layout = isDark ? DARK_LAYOUT : LIGHT_LAYOUT;
-  const progressTextColor = isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)';
-  const progressRemainingColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.06)';
 
   return {
     cssVar: { key: 'product-experience-center' },
     algorithm: algorithms,
     token: {
-      colorPrimary: '#1677FF',
-      colorInfo: '#1677FF',
-      ...(isDark
-        ? {}
-        : {
-            colorBgLayout: '#f5f7fa',
-            colorBgContainer: 'rgba(255, 255, 255, 0.68)',
-            colorBgElevated: 'rgba(255, 255, 255, 0.9)',
-            colorBorderSecondary: 'rgba(5, 5, 5, 0.1)',
-          }),
-      borderRadius: 6,
-      borderRadiusLG: 8,
-      controlHeight: 32,
+      colorPrimary: PLATFORM_PRIMARY_COLOR,
+      colorInfo: PLATFORM_PRIMARY_COLOR,
+      ...(isDark ? DARK_TOKEN_OVERRIDES : LIGHT_TOKEN_OVERRIDES),
+      borderRadius: BORDER_RADIUS,
+      borderRadiusLG: BORDER_RADIUS_LG,
+      controlHeight: CONTROL_HEIGHT,
       fontFamily: FONT_FAMILY,
       fontFamilyCode: FONT_FAMILY_CODE,
       fontSize: 14,
@@ -67,7 +78,7 @@ export function createAntThemeConfig(resolvedMode: ResolvedThemeMode): ThemeConf
       motion: true,
     },
     components: {
-      Layout: { ...layout, headerHeight: 56, headerPadding: '0 24px' },
+      Layout: { ...layout, headerHeight: HEADER_HEIGHT, headerPadding: '0 24px' },
       Menu: {
         activeBarBorderWidth: 0,
         itemBg: 'transparent',
@@ -76,7 +87,7 @@ export function createAntThemeConfig(resolvedMode: ResolvedThemeMode): ThemeConf
         itemHeight: MENU_ITEM_HEIGHT,
         itemMarginBlock: MENU_ITEM_MARGIN_BLOCK,
         itemSelectedBg: 'var(--ant-color-primary)',
-        itemSelectedColor: '#fff',
+        itemSelectedColor: LIGHT_SOLID_TEXT_COLOR,
         itemHoverBg: 'var(--ant-color-fill-tertiary)',
         horizontalLineHeight: MENU_ITEM_HEIGHT,
         horizontalItemBorderRadius: HORIZONTAL_MENU_ITEM_BORDER_RADIUS,
@@ -86,20 +97,20 @@ export function createAntThemeConfig(resolvedMode: ResolvedThemeMode): ThemeConf
         horizontalItemSelectedColor: 'var(--ant-color-primary)',
         subMenuItemBorderRadius: MENU_ITEM_BORDER_RADIUS,
       },
-      Button: { borderRadius: 6 },
-      Card: { borderRadiusLG: 8, headerHeight: 56, bodyPadding: 24 },
-      Modal: { borderRadiusLG: 8 },
+      Button: { borderRadius: BORDER_RADIUS },
+      Card: { borderRadiusLG: BORDER_RADIUS_LG, headerHeight: HEADER_HEIGHT, bodyPadding: 24 },
+      Modal: { borderRadiusLG: BORDER_RADIUS_LG },
       Progress: {
-        circleTextColor: progressTextColor,
-        defaultColor: '#1677FF',
-        remainingColor: progressRemainingColor,
+        circleTextColor: 'var(--ant-color-text)',
+        defaultColor: 'var(--ant-color-primary)',
+        remainingColor: 'var(--ant-color-fill-tertiary)',
       },
       Table: {
         cellPaddingBlock: 12,
         cellPaddingInline: 8,
-        headerBg: isDark ? undefined : '#fafafa',
-        headerBorderRadius: 8,
-        rowHoverBg: isDark ? undefined : '#f5f8ff',
+        headerBg: 'var(--ant-color-fill-quaternary)',
+        headerBorderRadius: BORDER_RADIUS_LG,
+        rowHoverBg: 'var(--ant-color-primary-bg)',
       },
       Tabs: { horizontalItemGutter: 24 },
     },

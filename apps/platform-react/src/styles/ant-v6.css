@@ -51,6 +51,7 @@
   --platform-home-radius-card: 20px;
   --platform-home-radius-control: 999px;
   --platform-home-control-height: 40px;
+  --platform-home-brand-height: 36px;
   --platform-home-content-width: min(720px, calc(100% - 48px));
   --app-header-height: var(--ant-layout-header-height, 56px);
 }
@@ -60,9 +61,10 @@ html[data-theme='dark'] {
   --platform-surface: #141414;
   --platform-root-canvas: #000;
   --platform-material-surface: color-mix(in srgb, var(--ant-color-bg-container, #141414) 72%, transparent);
+  /* 顶栏与侧栏共用更深的导航材质，避免白色 HTML 内容把玻璃层托成灰白。 */
   --platform-material-surface-strong: color-mix(
     in srgb,
-    var(--ant-color-bg-elevated, #1f1f1f) 82%,
+    var(--ant-color-bg-container, #141414) 94%,
     transparent
   );
   --platform-material-border: rgb(255 255 255 / 14%);
@@ -74,25 +76,12 @@ html[data-theme='dark'] {
     inset 0 1px 0 rgb(255 255 255 / 8%), 8px 0 24px rgb(0 0 0 / 38%), 0 0 1px rgb(0 0 0 / 32%);
   --platform-material-control-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), 0 8px 24px rgb(0 0 0 / 26%);
   --platform-material-backdrop-filter: blur(24px) saturate(140%);
-  /*
-   * 深色玻璃不能继续叠加浅色主题的低透明白色渐变：
-   * 原型 iframe 滚动到白色内容后，会把顶栏一起托成白色。
-   * 这里保留足够的半透明度和 blur，让白色原型内容能被柔化地感知，
-   * 同时用深色基底锁住主题对比度，避免顶栏被白底托白。
-   */
-  --platform-material-glass-background: linear-gradient(
-    117deg,
-    rgb(45 49 58 / 78%) 17%,
-    rgb(20 23 28 / 72%) 51%
-  );
+  /* 顶栏胶囊、平台侧栏、业务侧栏和窄屏抽屉统一使用这一深色 token。 */
+  --platform-material-glass-background: var(--platform-material-surface-strong);
   --platform-material-glass-backdrop-filter: blur(40px) saturate(150%);
   --platform-material-glass-shadow:
     inset 0 1px 0 rgb(255 255 255 / 16%), 0 10px 34px rgb(0 0 0 / 42%), 0 3px 8px rgb(0 0 0 / 30%);
-  --platform-material-glass-sider-background: linear-gradient(
-    145deg,
-    rgb(42 45 52 / 84%) 0%,
-    rgb(26 28 34 / 88%) 100%
-  );
+  --platform-material-glass-sider-background: var(--platform-material-surface-strong);
   --platform-material-glass-sider-shadow:
     inset 0 1px 0 rgb(255 255 255 / 12%), 0 0 0 1px rgb(255 255 255 / 14%), 6px 0 18px -12px rgb(0 0 0 / 36%),
     0 6px 16px 0 rgb(0 0 0 / 18%), 0 3px 6px -4px rgb(0 0 0 / 24%), 0 9px 28px 8px rgb(0 0 0 / 12%);
@@ -163,7 +152,7 @@ body {
   border: 1px solid var(--ant-color-border-secondary);
   border-radius: 14px;
   background: var(--platform-shell-canvas);
-  box-shadow: 0 2px 12px rgb(0 0 0 / 10%);
+  box-shadow: var(--platform-material-surface-shadow);
 }
 
 .app-frame > .app-route-loading,
@@ -358,7 +347,7 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .ant-modal:not(.project-config-modal) .ant-modal-content,
 .ant-drawer .ant-drawer-content {
   border: 1px solid var(--ant-color-border-secondary);
-  box-shadow: 0 16px 48px rgb(0 0 0 / 14%);
+  box-shadow: var(--ant-box-shadow-secondary);
 }
 
 .ant-modal:not(.project-config-modal) .ant-modal-title,
@@ -554,7 +543,7 @@ html[data-theme='glass'] .system-result-page .ant-result {
 }
 
 .platform-workspace__brand > span {
-  color: #fff;
+  color: var(--ant-color-text-light-solid);
   background: var(--ant-color-primary);
   box-shadow: none;
 }
@@ -631,19 +620,12 @@ html[data-theme='glass'] .system-result-page .ant-result {
   background: var(--ant-color-bg-container);
 }
 
-.platform-workspace .ant-table-thead > tr > th,
-.platform-workspace .project-target-row,
-.platform-workspace .transfer-upload-row,
-.platform-workspace .transfer-export-toolbar,
-.platform-workspace .transfer-export-submit,
-.platform-workspace .transfer-manifest-preview {
+.platform-workspace .ant-table-thead > tr > th {
   color: var(--ant-color-text-secondary);
   background: var(--ant-color-fill-quaternary);
 }
 
-.platform-workspace .ant-table-tbody > tr > td,
 .platform-workspace .routes-panel__heading,
-.platform-workspace .transfer-panel__heading,
 .platform-workspace .surface-heading {
   border-color: var(--ant-color-border-secondary);
 }
@@ -683,7 +665,6 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .route-group > header,
 .route-order-hint,
 .prd-dialog-target,
-.transfer-header__context,
 .impact-toolbar,
 .context-page-detail .ant-descriptions {
   border-color: var(--ant-color-border-secondary);
@@ -693,16 +674,12 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .project-config-grid--divide,
 .project-visibility-row,
 .route-client-tabs,
-.transfer-form-heading,
 .context-page-detail,
 .context-page-detail section,
 .context-callouts,
 .context-callouts > div + div,
 .context-workspace .ant-table-wrapper,
 .backup-panel .ant-table-wrapper,
-.export-page-list section,
-.export-page-list header,
-.export-page-list .ant-checkbox-wrapper,
 .gallery-overview,
 .gallery-overview > div + div,
 .gallery-action-row,
@@ -714,7 +691,6 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .route-group,
 .route-group .ant-collapse,
 .route-group .ant-collapse-content,
-.export-page-list section,
 .context-page-detail,
 .gallery-overview {
   background: var(--ant-color-bg-container);
@@ -729,11 +705,6 @@ html[data-theme='glass'] .system-result-page .ant-result {
 .route-group .ant-table small,
 .route-table-actions > small,
 .route-order-hint,
-.transfer-header__context .ant-typography,
-.transfer-header__context small,
-.project-target-row > .ant-typography,
-.transfer-export-toolbar > div:last-child,
-.export-page-list .ant-checkbox + span small,
 .context-callouts > div,
 .context-workspace .ant-table small,
 .context-page-detail .ant-descriptions-item-label,
@@ -762,31 +733,16 @@ html[data-theme='glass'] .system-result-page .ant-result {
   background: color-mix(in srgb, var(--project-accent) 11%, var(--ant-color-bg-container));
 }
 
-.route-group .ant-table-thead > tr > th,
-.export-page-list header,
-.transfer-upload-row,
-.transfer-export-toolbar,
-.transfer-manifest-preview {
+.route-group .ant-table-thead > tr > th {
   color: var(--ant-color-text-secondary);
   background: var(--ant-color-fill-quaternary);
 }
 
-.transfer-manifest-preview strong,
 .context-callouts strong,
 .context-page-detail li:hover {
   color: var(--ant-color-text);
 }
 
-.transfer-upload-row {
-  border-color: var(--ant-color-border);
-}
-
-.inspection-summary {
-  border-color: var(--ant-color-success-border);
-  background: var(--ant-color-success-bg);
-}
-
-.inspection-summary.is-invalid,
 .project-config-error {
   border-color: var(--ant-color-error-border);
   color: var(--ant-color-error-text);
@@ -865,6 +821,12 @@ html[data-theme='glass'] .system-result-page .ant-result {
   width: 32px;
   height: 32px;
   border-radius: 11px;
+}
+
+.home-brand--ant .platform-brand--full {
+  width: auto;
+  height: var(--platform-home-brand-height);
+  max-width: 220px;
 }
 
 .home-brand__text strong {
@@ -1188,7 +1150,7 @@ html[data-theme='glass'] .system-result-page .ant-result {
   flex: 0 0 32px;
   place-items: center;
   border-radius: var(--ant-border-radius, 6px);
-  color: #fff !important;
+  color: var(--ant-color-text-light-solid) !important;
   background: var(--project-accent, var(--ant-color-primary));
   font-size: 16px !important;
   box-shadow: none;
@@ -1196,9 +1158,19 @@ html[data-theme='glass'] .system-result-page .ant-result {
 
 .client-brand__mark .anticon,
 .client-brand__mark svg {
-  color: #fff !important;
+  color: var(--ant-color-text-light-solid) !important;
   fill: currentcolor;
   font-size: 18px;
+}
+
+.client-brand__mark:has(.platform-brand) {
+  border-radius: 0;
+  background: transparent;
+}
+
+.client-brand__mark > .platform-brand--mark {
+  width: 100%;
+  height: 100%;
 }
 
 .client-brand__copy {
@@ -1316,9 +1288,9 @@ html[data-theme='glass'] .system-result-page .ant-result {
   border-color: var(--ant-color-border-secondary);
 }
 
-.docs-file-list .ant-list-item.is-active .ant-btn,
-.docs-outline .ant-list-item.is-active .ant-btn,
-.prd-review-panel__outline .ant-list-item.is-active .ant-btn {
+.docs-file-list li.is-active .ant-btn,
+.docs-outline__list li.is-active .ant-btn,
+.prd-review-panel__outline-list li.is-active .ant-btn {
   color: var(--ant-color-primary);
   background: var(--ant-color-primary-bg);
   font-weight: 600;
@@ -1386,16 +1358,19 @@ html[data-theme='glass'] .system-result-page .ant-result {
   padding: 6px 8px !important;
 }
 
-.client-login__brand > span:first-child {
+.client-login__brand-mark {
   display: grid;
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
   place-items: center;
-  border-radius: 6px;
-  color: #fff;
-  background: var(--project-accent, var(--ant-color-primary));
-  font-weight: 600;
+  border-radius: 0;
+  background: transparent;
+}
+
+.client-login__brand-mark > .platform-brand--mark {
+  width: 100%;
+  height: 100%;
 }
 
 .client-login__brand > div {
@@ -1485,7 +1460,6 @@ html[data-theme='dark'] .platform-workspace .ant-card,
 html[data-theme='dark'] .route-group,
 html[data-theme='dark'] .route-group .ant-collapse,
 html[data-theme='dark'] .route-group .ant-collapse-content,
-html[data-theme='dark'] .export-page-list section,
 html[data-theme='dark'] .context-page-detail,
 html[data-theme='dark'] .gallery-overview,
 html[data-theme='dark'] .home-topbar--ant,
@@ -1521,6 +1495,18 @@ html[data-theme='dark'] .mobile-preview-header {
   -webkit-backdrop-filter: var(--platform-material-backdrop-filter);
 }
 
+/* 深色导航材质统一覆盖所有侧栏形态，避免 Ant 默认容器色覆盖玻璃层。 */
+html[data-theme='dark'] .app-sider,
+html[data-theme='dark'] .app-sider-drawer,
+html[data-theme='dark'] .client-sider,
+html[data-theme='dark'] .platform-workspace__sider {
+  border-color: var(--platform-material-border) !important;
+  background: var(--platform-material-surface-strong) !important;
+  box-shadow: var(--platform-material-glass-sider-shadow);
+  backdrop-filter: var(--platform-material-glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--platform-material-glass-backdrop-filter);
+}
+
 html[data-theme='glass'] .platform-workspace__global-header,
 html[data-theme='glass'] .platform-workspace__sider,
 html[data-theme='glass'] .home-topbar--ant,
@@ -1542,7 +1528,6 @@ html[data-theme='glass'] .platform-workspace .ant-card,
 html[data-theme='glass'] .route-group,
 html[data-theme='glass'] .route-group .ant-collapse,
 html[data-theme='glass'] .route-group .ant-collapse-content,
-html[data-theme='glass'] .export-page-list section,
 html[data-theme='glass'] .context-page-detail,
 html[data-theme='glass'] .gallery-overview,
 html[data-theme='glass'] .home-project-picker,
@@ -1578,13 +1563,8 @@ html[data-theme='glass'] .platform-workspace .ant-table-tbody > tr > td {
 }
 
 html[data-theme='glass'] .platform-workspace .ant-table-thead > tr > th,
-html[data-theme='glass'] .platform-workspace .ant-table-tbody > tr:hover > td,
-html[data-theme='glass'] .project-target-row,
-html[data-theme='glass'] .transfer-upload-row,
-html[data-theme='glass'] .transfer-export-toolbar,
-html[data-theme='glass'] .transfer-export-submit,
-html[data-theme='glass'] .transfer-manifest-preview {
-  background: rgb(255 255 255 / 34%) !important;
+html[data-theme='glass'] .platform-workspace .ant-table-tbody > tr:hover > td {
+  background: var(--platform-material-hover-surface) !important;
 }
 
 /* 首页顶栏与业务页顶栏保持同一结构：外层只负责定位，材质只落在内部胶囊。 */

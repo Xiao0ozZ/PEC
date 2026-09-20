@@ -44,13 +44,6 @@ const componentRows = [
     use: '分组、排序、页面关联与备份',
   },
   {
-    name: '页面导入导出',
-    area: '工程工具',
-    status: '受控',
-    statusColor: 'processing',
-    use: '检查、确认、进度与导出结果',
-  },
-  {
     name: 'AI 上下文中心',
     area: '交付协作',
     status: '迭代中',

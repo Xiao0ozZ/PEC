@@ -1,0 +1,2154 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>合作通路租车券</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.channel-ticket-batches .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .channel-ticket-batches .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .channel-ticket-batches .table-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .channel-ticket-batches .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .channel-ticket-batches .info-table th {
+            width: 136px;
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .channel-ticket-batches .info-table th,
+        .channel-ticket-batches .info-table td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 12px;
+        }
+
+        .channel-ticket-batches .el-table th.el-table__cell {
+            background: var(--app-color-surface-subtle);
+            color: var(--app-color-text-secondary);
+        }
+
+        .channel-ticket-batches .official-more-filter-button {
+            min-width: 116px;
+        }
+
+        .channel-ticket-batches .ticket-filter-daterange {
+            width: 100% !important;
+        }
+
+        .channel-ticket-batches .ticket-filter-daterange-wrap {
+            width: 360px;
+            max-width: 100%;
+            flex: 0 0 360px;
+        }
+
+        .channel-ticket-batches .ticket-filter-daterange-wrap .el-date-editor {
+            width: 100% !important;
+        }
+
+        .channel-ticket-batches .ticket-filter-daterange .el-range-input {
+            width: 88px;
+            font-size: 12px;
+        }
+
+        .channel-ticket-batches .ticket-filter-daterange .el-range-separator {
+            width: 20px;
+            padding: 0 4px;
+        }
+
+        .channel-ticket-batches .station-range-tooltip {
+            max-width: 420px;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        .adaptive-filter-toolbar,
+        .adaptive-filter-controls {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .adaptive-filter-controls > *,
+        .adaptive-filter-actions > * {
+            flex: 0 0 auto;
+        }
+
+        .adaptive-filter-actions {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .channel-ticket-batches .adaptive-filter-controls,
+        .channel-ticket-batches .adaptive-filter-actions {
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .channel-ticket-batches .adaptive-filter-controls > .el-button + .el-button,
+        .channel-ticket-batches .adaptive-filter-actions > .el-button + .el-button {
+            margin-left: 0 !important;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "channel-ticket-batches",
+  "pageTitle": "合作通路租车券",
+  "fileName": "channel_ticket_batches.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/channel-ticket-batches",
+  "menuSection": "marketing",
+  "menuTitle": "合作通路租车券",
+  "menuIcon": "Tickets",
+  "menu": true,
+  "rootClass": "channel-ticket-batches",
+  "overlayRootClass": "channel-ticket-batches-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">营销中心</div>
+<a class="prototype-menu-item is-active" href="./channel_ticket_batches.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Tickets" aria-hidden="true"></span><span>合作通路租车券</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 合作通路租车券</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-channel-ticket-batches channel-ticket-batches" data-page-content data-page-root="channel-ticket-batches" data-page-key="channel-ticket-batches">
+  <div data-business-content data-layout-type="legacy">
+<div class="mb-5 flex justify-between items-start">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">合作通路租车券</h1>
+                        <p class="text-sm text-gray-500 mt-1">用于合作通路企业发放免支付租車券，用券人使用后预约租还车辆，费用归属到租車券所属企业。</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <el-button type="primary" size="large" class="shadow-md shadow-[color:var(--app-color-primary-shadow)]"
+                            @click="openBatchDialog()">
+                            <el-icon class="mr-1">
+                                <Plus></Plus>
+                            </el-icon> 新增批次
+                        </el-button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-4 mb-5">
+                    <button type="button" @click="toggleBatchCard('ALL')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeBatchCard === 'ALL' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">全部批次</div>
+                        <div class="text-[28px] leading-tight font-bold text-gray-800 mt-1">{{ batchStats.total }}</div>
+                    </button>
+                    <button type="button" @click="toggleBatchCard('启用')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeBatchCard === '启用' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">启用</div>
+                        <div class="text-[28px] leading-tight font-bold text-emerald-600 mt-1">{{ batchStats.enabled }}</div>
+                    </button>
+                    <button type="button" @click="toggleBatchCard('停用')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeBatchCard === '停用' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">停用</div>
+                        <div class="text-[28px] leading-tight font-bold text-gray-600 mt-1">{{ batchStats.disabled }}</div>
+                    </button>
+                    <button type="button" @click="toggleBatchCard('待导入名单')"
+                        class="text-left bg-white rounded-lg border p-5 transition-all"
+                        :class="activeBatchCard === '待导入名单' ? 'border-[color:var(--app-color-primary)] ring-2 ring-[color:var(--app-color-primary-light-8)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]'">
+                        <div class="text-sm text-gray-500">待导入名单</div>
+                        <div class="text-[28px] leading-tight font-bold text-amber-500 mt-1">{{ batchStats.pendingImport }}</div>
+                    </button>
+                </div>
+
+                <section class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 bg-gray-50">
+                        <div ref="filterToolbar" class="adaptive-filter-toolbar flex flex-wrap items-center justify-between gap-3">
+                            <div class="adaptive-filter-controls flex flex-wrap items-center gap-3">
+                                <el-input v-model="filters.keyword" placeholder="批次名称 / 批次编号" clearable class="w-56"></el-input>
+                                <el-select v-if="filterLayoutTier >= 2" v-model="filters.enterprise" placeholder="合作通路企业" clearable class="w-52">
+                                    <el-option label="金门风狮爷旅行社" value="金门风狮爷旅行社"></el-option>
+                                    <el-option label="金门蓝湾旅行社" value="金门蓝湾旅行社"></el-option>
+                                    <el-option label="海峡科技股份有限公司" value="海峡科技股份有限公司"></el-option>
+                                    <el-option label="金门环岛假期" value="金门环岛假期"></el-option>
+                                </el-select>
+                                <el-select v-model="filters.status" placeholder="批次状态" clearable class="w-36"
+                                    @change="syncBatchCard">
+                                    <el-option label="待导入名单" value="待导入名单"></el-option>
+                                    <el-option label="启用" value="启用"></el-option>
+                                    <el-option label="停用" value="停用"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier >= 3" v-model="filters.issueMode" placeholder="发券方式" clearable class="w-40">
+                                    <el-option label="名单发放" value="LIST"></el-option>
+                                    <el-option label="数量生成" value="QUANTITY"></el-option>
+                                </el-select>
+                                <el-button type="primary" icon="Filter" plain
+                                    @click="moreFiltersVisible = !moreFiltersVisible">
+                                    {{ moreFiltersVisible ? '收起筛选' : '更多筛选' }}
+                                </el-button>
+                                <el-tooltip content="重置筛选" placement="top">
+                                    <el-button circle @click="resetFilters">
+                                        <el-icon>
+                                            <Refresh></Refresh>
+                                        </el-icon>
+                                    </el-button>
+                                </el-tooltip>
+                            </div>
+                            <div class="text-sm text-gray-500">共 {{ filteredBatches.length }} 个批次</div>
+                        </div>
+                        <div v-show="moreFiltersVisible" class="mt-3 border-t border-gray-200 pt-3">
+                            <div class="adaptive-filter-controls flex flex-wrap items-center gap-3">
+                                <el-select v-if="filterLayoutTier < 2" v-model="filters.enterprise" placeholder="合作通路企业" clearable class="w-52">
+                                    <el-option label="金门风狮爷旅行社" value="金门风狮爷旅行社"></el-option>
+                                    <el-option label="金门蓝湾旅行社" value="金门蓝湾旅行社"></el-option>
+                                    <el-option label="海峡科技股份有限公司" value="海峡科技股份有限公司"></el-option>
+                                    <el-option label="金门环岛假期" value="金门环岛假期"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier < 3" v-model="filters.issueMode" placeholder="发券方式" clearable class="w-40">
+                                    <el-option label="名单发放" value="LIST"></el-option>
+                                    <el-option label="数量生成" value="QUANTITY"></el-option>
+                                </el-select>
+                                <el-select v-model="filters.stationTypes" placeholder="适用据点类型" clearable filterable multiple collapse-tags collapse-tags-tooltip class="w-64" @change="handleFilterStationTypeChange">
+                                    <el-option v-for="option in stationTypeOptions" :key="option.value" :label="option.label" :value="option.value">
+                                        <div class="flex items-center justify-between gap-3 w-full">
+                                            <span>{{ option.label }}</span>
+                                            <el-tag size="small" :type="getStationTypeEntryTagType(option)" effect="plain">
+                                                {{ getStationTypeEntryText(option) }}
+                                            </el-tag>
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="filters.station" placeholder="适用据点" clearable filterable class="w-56">
+                                    <el-option v-for="option in filterStationOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                                </el-select>
+                                <div class="ticket-filter-daterange-wrap">
+                                    <el-date-picker v-model="filters.pickupRange" type="datetimerange" range-separator="至"
+                                        start-placeholder="取车开始" end-placeholder="取车结束"
+                                        value-format="YYYY-MM-DD HH:mm:ss" class="ticket-filter-daterange"></el-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <el-table :data="filteredBatches" class="w-full" row-key="id">
+                        <el-table-column prop="batchNo" label="批次编号" width="170"></el-table-column>
+                        <el-table-column label="批次名称" min-width="180">
+                            <template #default="{ row }">
+                                <div class="font-semibold text-gray-900">{{ row.name }}</div>
+                                <div class="text-xs text-gray-500">同站租还 / 租車券</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="enterprise" label="所属合作企业" min-width="160"></el-table-column>
+                        <el-table-column label="适用据点范围" min-width="160">
+                            <template #default="{ row }">
+                                <el-tooltip :content="formatStationRangeTooltip(row)" placement="top" effect="dark" popper-class="station-range-tooltip">
+                                    <div>
+                                        <div class="text-sm text-gray-900 truncate">{{ formatStationRangeSummary(row) }}</div>
+                                        <div class="text-xs text-gray-500 truncate">{{ formatStationTypeRange(row) }}</div>
+                                    </div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="固定取还车时间" min-width="230">
+                            <template #default="{ row }">
+                                <div>{{ row.pickupAt }}</div>
+                                <div class="text-xs text-gray-500">{{ row.returnAt }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="可用时间段" min-width="230">
+                            <template #default="{ row }">
+                                <div>{{ row.availableStartAt }}</div>
+                                <div class="text-xs text-gray-500">{{ row.availableEndAt }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="发券方式" width="110">
+                            <template #default="{ row }">
+                                <el-tag type="info" effect="plain">{{ getIssueModeLabel(row.issueMode) }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="数量 / 发放使用统计" width="210">
+                            <template #default="{ row }">
+                                <div class="text-sm text-gray-900">总数 {{ row.totalCount }}</div>
+                                <div class="text-xs text-gray-500">{{ formatIssueUsageSummary(row) }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="状态" width="100">
+                            <template #default="{ row }">
+                                <el-tag :type="row.status === '启用' ? 'success' : (row.status === '待导入名单' ? 'warning' : 'info')" effect="plain">{{ row.status }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="210" fixed="right">
+                            <template #default="{ row }">
+                                <el-button type="primary" link @click="openDetailPage(row)">查看详情</el-button>
+                                <el-button type="primary" link @click="openBatchDialog(row)">编辑</el-button>
+                                <el-tooltip :content="row.status === '待导入名单' ? '进入详情页导入名单后再启用' : '进入详情页填写原因后处理'" placement="top">
+                                    <el-button :type="row.status === '启用' ? 'danger' : 'primary'" link @click="openDetailPage(row)">{{ row.status === '待导入名单' ? '导入名单' : (row.status === '启用' ? '停用' : '启用') }}</el-button>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </section>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="channel-ticket-batches-overlay">
+<el-dialog v-model="detailVisible" title="批次详情" width="min(1320px, 92vw)" class="channel-ticket-batches-overlay">
+            <div v-if="currentBatch" class="space-y-5">
+                <table class="info-table">
+                    <tbody>
+                        <tr>
+                            <th>批次编号</th>
+                            <td>{{ currentBatch.batchNo }}</td>
+                            <th>批次名称</th>
+                            <td>{{ currentBatch.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>所属合作企业</th>
+                            <td>{{ currentBatch.enterprise }}</td>
+                            <th>适用服务</th>
+                            <td>分时租赁 / 同站租还</td>
+                        </tr>
+                        <tr>
+                            <th>适用据点类型</th>
+                            <td>
+                                <div>{{ formatStationTypeRange(currentBatch) }}</div>
+                            </td>
+                            <th>批次状态</th>
+                            <td>
+                                <el-tag :type="currentBatch.status === '启用' ? 'success' : (currentBatch.status === '待导入名单' ? 'warning' : 'info')" effect="plain">
+                                    {{ currentBatch.status }}
+                                </el-tag>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>适用据点</th>
+                            <td>{{ formatStationRange(currentBatch) }}</td>
+                            <th>发券方式</th>
+                            <td>{{ getIssueModeLabel(currentBatch.issueMode) }}</td>
+                        </tr>
+                        <tr>
+                            <th>时间规则</th>
+                            <td>固定取还车时间</td>
+                            <th>固定时长模式</th>
+                            <td>预留，未开放</td>
+                        </tr>
+                        <tr>
+                            <th>固定取车时间</th>
+                            <td>{{ currentBatch.pickupAt }}</td>
+                            <th>固定还车时间</th>
+                            <td>{{ currentBatch.returnAt }}</td>
+                        </tr>
+                        <tr>
+                            <th>票券可用开始</th>
+                            <td>{{ currentBatch.availableStartAt }}</td>
+                            <th>票券可用结束</th>
+                            <td>{{ currentBatch.availableEndAt }}</td>
+                        </tr>
+                        <tr>
+                            <th>租車券数量</th>
+                            <td>{{ currentBatch.totalCount }}</td>
+                            <th>发放统计</th>
+                            <td>{{ formatIssueSummary(currentBatch) }} / 失败 {{ currentBatch.issueFailedCount }}</td>
+                        </tr>
+                        <tr>
+                            <th>使用统计</th>
+                            <td>未使用 {{ currentBatch.unusedCount }} / 已使用 {{ currentBatch.usedCount }} / 已过期 {{ currentBatch.expiredCount }}</td>
+                            <th>库存口径</th>
+                            <td>不保留车辆，按实时可用车辆查询</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-gray-900">租車券列表</h3>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs text-gray-500">创建订单即已使用；订单取消后未过期前恢复未使用，可重新预约</span>
+                            <el-button type="primary" plain size="small" @click="openAddTicketDialog">
+                                <el-icon class="mr-1">
+                                    <Plus></Plus>
+                                </el-icon> 新增租車券
+                            </el-button>
+                            <el-button type="primary" plain size="small" title="导出 Excel：租車券列表 + 订单完整数据" @click="exportCodesMock">
+                                <el-icon class="mr-1">
+                                    <Download></Download>
+                                </el-icon> 导出
+                            </el-button>
+                        </div>
+                    </div>
+                    <el-table :data="currentBatch.codes" border>
+                        <el-table-column prop="code" label="租車券编号" min-width="150"></el-table-column>
+                        <el-table-column label="用券人信息" min-width="145">
+                            <template #default="{ row }">
+                                <div v-if="row.visitorName" class="text-sm text-gray-900">{{ row.visitorName }}</div>
+                                <div v-if="row.documentNo" class="text-xs text-gray-500">{{ row.documentNo }}</div>
+                                <span v-if="!row.visitorName && !row.documentNo" class="text-gray-400">-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="发放状态" width="100">
+                            <template #default="{ row }">
+                                <el-tag :type="getIssueStatusType(row.issueStatus)" effect="plain">
+                                    {{ row.issueStatus }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="使用状态" width="100">
+                            <template #default="{ row }">
+                                <el-tag :type="getTicketStatusType(row.status)" effect="plain">
+                                    {{ row.status }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="member" label="使用会员" min-width="135"></el-table-column>
+                        <el-table-column prop="orderNo" label="订单号" min-width="145">
+                            <template #default="{ row }">
+                                <div v-if="row.orderNo" class="space-y-1">
+                                    <div class="font-medium text-gray-900 break-all">{{ row.orderNo }}</div>
+                                    <el-tag size="small" :type="getOrderStatusType(row.orderStatus)" effect="plain">
+                                        {{ row.orderStatus || '订单已建立' }}
+                                    </el-tag>
+                                </div>
+                                <span v-else class="text-gray-400">-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单结算" min-width="165">
+                            <template #default="{ row }">
+                                <span v-if="!row.orderNo" class="text-gray-400">-</span>
+                                <div v-else-if="row.settlementStatus === 'OVERDUE_IN_PROGRESS'" class="space-y-1">
+                                    <el-tag type="warning" effect="plain" size="small">逾时中</el-tag>
+                                    <div class="text-xs text-amber-700">已逾时 {{ row.overdueMinutes }} 分钟</div>
+                                    <div class="text-xs text-gray-500">费用待结算</div>
+                                </div>
+                                <div v-else-if="Number(row.abnormalFeeTotal || 0) > 0" class="space-y-1">
+                                    <div class="text-sm font-medium text-red-600">逾时 {{ row.overdueMinutes }} 分钟</div>
+                                    <div class="text-xs text-gray-600">异常费用 NT$ {{ Number(row.abnormalFeeTotal).toLocaleString() }}</div>
+                                </div>
+                                <span v-else-if="row.orderStatus === '已取消'" class="text-gray-500">订单已取消</span>
+                                <span v-else-if="row.orderStatus === '已完成'" class="text-green-600">正常结算</span>
+                                <div v-else class="text-gray-500">
+                                    <div>暂无异常费用</div>
+                                    <div class="text-xs mt-1">待结算</div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="usedAt" label="使用时间" min-width="140"></el-table-column>
+                        <el-table-column label="操作" width="120" fixed="right">
+                            <template #default="{ row }">
+                                <el-button type="primary" link :disabled="!row.orderNo" @click="openOrder(row)">查看订单</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+        </el-dialog>
+<el-dialog v-model="addTicketDialogVisible" title="新增租車券" width="560px" class="channel-ticket-batches-overlay">
+            <div v-if="currentBatch" class="space-y-4">
+                <div class="rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm text-blue-900">
+                    新增租車券将继承当前批次的合作企业、固定取还车时间、可用时间段和适用据点范围。
+                </div>
+                <el-form label-width="110px">
+                    <el-form-item label="当前批次">
+                        <div class="text-sm text-gray-900">{{ currentBatch.name }}</div>
+                    </el-form-item>
+                    <el-form-item label="发券方式">
+                        <el-tag type="info" effect="plain">{{ getIssueModeLabel(currentBatch.issueMode) }}</el-tag>
+                    </el-form-item>
+                    <template v-if="currentBatch.issueMode === 'LIST'">
+                        <el-form-item label="用券人姓名" required>
+                            <el-input v-model="addTicketForm.visitorName" placeholder="请输入用券人姓名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="证件号码" required>
+                            <el-input v-model="addTicketForm.documentNo" placeholder="请输入证件号码"></el-input>
+                            <div class="mt-1 text-xs text-gray-500">可填写身份证或入台证号码，不选择证件类型。匹配会员已认证资料时直接发放，未匹配时保持待发放。</div>
+                        </el-form-item>
+                    </template>
+                    <template v-else>
+                        <el-form-item label="新增数量" required>
+                            <el-input-number v-model="addTicketForm.count" :min="1" :max="99" controls-position="right"></el-input-number>
+                            <div class="mt-1 text-xs text-gray-500">保存后生成对应数量的租車券和兑换码，初始状态为未领取。</div>
+                        </el-form-item>
+                    </template>
+                    <el-form-item label="新增原因" required>
+                        <el-input v-model="addTicketForm.reason" type="textarea" :rows="3"
+                            placeholder="例如：名单遗漏、活动临时加名额、现场补发"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <template #footer>
+                <el-button @click="addTicketDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="saveAddTicketMock">保存</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="batchDialogVisible" :title="editingBatch ? '编辑批次' : '新增批次'" width="960px" class="channel-ticket-batches-overlay">
+            <el-form label-width="120px">
+                <div class="grid grid-cols-2 gap-4" style="align-items: flex-start;">
+                    <el-form-item label="批次名称" required>
+                        <el-input v-model="batchForm.name" placeholder="例如：海峡科技员工活动租車券"></el-input>
+                    </el-form-item>
+                    <el-form-item label="所属合作企业" required>
+                        <el-select v-model="batchForm.enterprise" placeholder="选择合作通路企业" filterable class="w-full">
+                            <el-option label="金门风狮爷旅行社" value="金门风狮爷旅行社"></el-option>
+                            <el-option label="金门蓝湾旅行社" value="金门蓝湾旅行社"></el-option>
+                            <el-option label="金门环岛假期" value="金门环岛假期"></el-option>
+                            <el-option label="海峡科技股份有限公司" value="海峡科技股份有限公司"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <el-form-item label="适用营运类型" required>
+                    <el-radio-group v-model="batchForm.serviceMode">
+                        <el-radio-button label="同站租还"></el-radio-button>
+                        <el-radio-button label="甲租乙还" disabled></el-radio-button>
+                    </el-radio-group>
+                    <div class="mt-1 text-xs text-gray-500">本期仅支持同站租还。</div>
+                </el-form-item>
+                <el-form-item label="时间规则" required>
+                    <el-radio-group v-model="batchForm.timeRuleType">
+                        <el-radio-button label="FIXED_PERIOD">固定取还车时间</el-radio-button>
+                        <el-radio-button label="FIXED_DURATION" disabled>固定租用时长（预留）</el-radio-button>
+                    </el-radio-group>
+                    <div class="mt-1 text-xs text-gray-500">固定租用时长用于金门后续迭代及台湾市场扩展，本期不可选择。</div>
+                </el-form-item>
+                <div class="grid grid-cols-2 gap-4" style="align-items: flex-start;">
+                    <el-form-item label="适用据点类型" required>
+                        <el-select v-model="batchForm.stationTypes" placeholder="请选择适用据点类型" filterable class="w-full"
+                            multiple collapse-tags collapse-tags-tooltip @change="handleStationTypeChange">
+                            <el-option v-for="option in stationTypeOptions" :key="option.value" :label="option.label" :value="option.value">
+                                <div class="flex items-center justify-between gap-3 w-full">
+                                    <span>{{ option.label }}</span>
+                                    <el-tag size="small" :type="getStationTypeEntryTagType(option)" effect="plain">
+                                        {{ getStationTypeEntryText(option) }}
+                                    </el-tag>
+                                </div>
+                            </el-option>
+                        </el-select>
+                        <div class="mt-1 text-xs text-gray-500">普通企业活动可选择一般预约可用的据点类型；专用活动可选择不开放一般预约的据点类型。</div>
+                    </el-form-item>
+                    <el-form-item label="适用据点" required>
+                        <el-select v-model="batchForm.stations" placeholder="请选择适用据点" filterable class="w-full"
+                            multiple collapse-tags collapse-tags-tooltip>
+                            <el-option v-for="option in availableStationOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                        </el-select>
+                        <div class="mt-1 text-xs text-gray-500">用券人只能在本批次选定的据点范围内查询车辆和预约订单。</div>
+                    </el-form-item>
+                </div>
+                <div class="grid grid-cols-2 gap-4" style="align-items: flex-start;">
+                    <el-form-item label="取车时间" required>
+                        <el-date-picker v-model="batchForm.pickupAt" type="datetime" placeholder="选择取车时间"
+                            class="w-full" style="width: 100%;"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="还车时间" required>
+                        <el-date-picker v-model="batchForm.returnAt" type="datetime" placeholder="选择还车时间"
+                            class="w-full" style="width: 100%;"></el-date-picker>
+                    </el-form-item>
+                </div>
+                <div class="grid grid-cols-2 gap-4" style="align-items: flex-start;">
+                    <el-form-item label="可用开始时间">
+                        <el-date-picker v-model="batchForm.availableStartAt" type="datetime" placeholder="正式批次建立时自动生成"
+                            class="w-full" style="width: 100%;" disabled></el-date-picker>
+                        <div class="mt-1 text-xs text-gray-500">系统固定取正式批次建立成功时间，不提供人工选择。</div>
+                    </el-form-item>
+                    <el-form-item label="可用结束时间">
+                        <el-date-picker v-model="batchForm.availableEndAt" type="datetime" placeholder="默认固定还车时间"
+                            class="w-full" style="width: 100%;" disabled></el-date-picker>
+                        <div class="mt-1 text-xs text-gray-500">系统固定等于固定还车时间，不提供人工选择。</div>
+                    </el-form-item>
+                </div>
+                <el-form-item label="发券方式">
+                    <el-radio-group v-model="batchForm.issueMode">
+                        <el-radio-button label="LIST">名单发放</el-radio-button>
+                        <el-radio-button label="QUANTITY">数量生成</el-radio-button>
+                    </el-radio-group>
+                    <div class="mt-1 text-xs text-gray-500">两种方式都固定取还车时间；数量生成后由合作企业对外发放兑换码，用户在 APP 主动兑换。</div>
+                </el-form-item>
+                <div class="grid grid-cols-2 gap-4" style="align-items: flex-start;">
+                    <el-form-item label="租車券数量" v-if="batchForm.issueMode === 'QUANTITY'" required>
+                        <el-input-number v-model="batchForm.totalCount" :min="0" :max="999" class="w-full"></el-input-number>
+                        <div class="mt-1 text-xs text-gray-500">数量生成时由营运人员填写。</div>
+                    </el-form-item>
+                    <el-form-item label="批次状态">
+                        <template v-if="batchForm.issueMode === 'LIST' && !batchForm.hasImportedVisitors">
+                            <el-tag type="warning" effect="plain">待导入名单</el-tag>
+                            <div class="mt-1 text-xs text-gray-500">名单发放可先保存批次基础信息；保存后不会生成租車券，也不会在 APP 展示。</div>
+                        </template>
+                        <el-radio-group v-else v-model="batchForm.status">
+                            <el-radio-button label="启用"></el-radio-button>
+                            <el-radio-button label="停用"></el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                </div>
+                <el-form-item v-if="batchForm.issueMode === 'LIST'" label="用券人名单">
+                    <div class="w-full">
+                        <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div>
+                                    <div class="text-sm font-semibold text-gray-900">名单发放</div>
+                                    <div class="text-xs text-gray-500 mt-1">支持创建时导入，也可先保存批次后在详情页导入 / 追加名单；不支持覆盖原名单。</div>
+                                </div>
+                                <el-button type="primary" plain size="small" @click="openImportDialog">
+                                    <el-icon class="mr-1">
+                                        <Upload></Upload>
+                                    </el-icon> 导入名单
+                                </el-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-form-item>
+                <div class="ml-[120px] mb-4">
+                    <div class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 space-y-2">
+                        <div class="flex items-start gap-3">
+                            <div class="w-[84px] shrink-0 pt-0.5 text-xs font-medium text-gray-700">
+                                {{ batchForm.issueMode === 'LIST' ? '名单汇入结果' : '生成数量' }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <el-tag :type="batchForm.issueMode === 'LIST' ? (batchForm.hasImportedVisitors ? 'info' : 'warning') : (batchForm.totalCount > 0 ? 'success' : 'warning')" effect="plain" size="small">
+                                        {{ batchForm.issueMode === 'LIST' ? (batchForm.hasImportedVisitors ? '已汇入' : '待汇入') : (batchForm.totalCount > 0 ? '已填写' : '待填写') }}
+                                    </el-tag>
+                                    <div class="text-xs leading-5"
+                                        :class="batchForm.issueMode === 'LIST' ? (batchForm.hasImportedVisitors ? 'text-blue-700' : 'text-amber-700') : 'text-blue-700'">
+                                        {{ batchForm.issueMode === 'LIST'
+                                            ? (batchForm.hasImportedVisitors
+                                                ? `名单 ${batchForm.totalCount} 行；已匹配会员 ${batchForm.matchedCount} 行；待匹配会员 ${batchForm.pendingMatchCount} 行。`
+                                                : '尚未导入用券人名单；可先保存为待导入名单，后续在详情页导入 / 追加。')
+                                            : `批次保存后生成 ${batchForm.totalCount || 0} 张租車券及兑换码。` }}
+                                    </div>
+                                </div>
+                                <div class="text-xs mt-0.5 leading-5 text-gray-500">
+                                    {{ batchForm.issueMode === 'LIST'
+                                        ? (batchForm.hasImportedVisitors
+                                            ? '同一批次证件号码不得重复；未匹配会员的租車券保留待发放。'
+                                            : '支持字段：用券人姓名、证件号码；不设置证件类型；创建后只允许追加导入。')
+                                        : '数量生成不预绑定证件号码；用户在 APP 兑换后，租車券绑定到当前会员账户。' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-200"></div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-[84px] shrink-0 pt-0.5 text-xs font-medium text-gray-700">车辆库存提醒</div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <el-tag :type="capacityHint.hasRisk ? 'warning' : 'success'" effect="plain" size="small">
+                                        {{ capacityHint.tag }}
+                                    </el-tag>
+                                </div>
+                                <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                                    <span>当前批次 <b class="text-gray-800">{{ capacityHint.currentDemand }} 张</b></span>
+                                    <span>适用据点可用 <b class="text-gray-800">{{ capacityHint.availableVehicleCount }} 台</b></span>
+                                    <span>其他相关批次最多占用 <b class="text-gray-800">{{ capacityHint.relatedMaxOccupancy }} 台</b></span>
+                                    <span>预计剩余 <b :class="capacityHint.hasRisk ? 'text-amber-700' : 'text-emerald-700'">{{ capacityHint.remainingVehicleCount }} 台</b></span>
+                                </div>
+                            </div>
+                            <div class="ml-auto shrink-0">
+                                <div class="mb-1 text-right text-[11px] text-gray-400">原型状态</div>
+                                <el-button-group>
+                                    <el-button size="small" :type="capacityDemoMode === 'SAFE' ? 'primary' : 'default'"
+                                        @click="capacityDemoMode = 'SAFE'">无库存风险</el-button>
+                                    <el-button size="small" :type="capacityDemoMode === 'RISK' ? 'warning' : 'default'"
+                                        @click="capacityDemoMode = 'RISK'">有库存风险</el-button>
+                                </el-button-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </el-form>
+            <template #footer>
+                <el-button @click="batchDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="saveBatchMock">保存</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="importDialogVisible" title="导入用券人名单" width="680px" class="channel-ticket-batches-overlay">
+            <div class="space-y-4">
+                <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">名单模板</div>
+                            <div class="text-xs text-gray-500 mt-1">模板字段：用券人姓名、证件号码，不包含证件类型。同一批次证件号码不得重复；后续只允许追加导入。</div>
+                        </div>
+                        <el-button plain size="small" @click="downloadTemplateMock">
+                            <el-icon class="mr-1">
+                                <Download></Download>
+                            </el-icon> 下载模板
+                        </el-button>
+                    </div>
+                </div>
+                <div class="rounded-lg border border-dashed border-slate-300 bg-white p-5 text-center">
+                    <el-icon class="text-2xl text-slate-400">
+                        <UploadFilled></UploadFilled>
+                    </el-icon>
+                    <div class="text-sm text-gray-900 mt-2">选择名单文件</div>
+                    <div class="text-xs text-gray-500 mt-1">原型示意为直接生成汇入结果</div>
+                    <div class="mt-3 flex items-center justify-center gap-2">
+                        <el-button type="primary" plain size="small" @click="previewImportMock(false)">模拟成功导入</el-button>
+                        <el-button type="danger" plain size="small" @click="previewImportMock(true)">模拟格式异常</el-button>
+                    </div>
+                </div>
+                <div v-if="importPreviewReady" class="rounded-lg border border-blue-100 bg-blue-50 p-4">
+                    <el-alert 
+                        :title="importSummary.status === 'success' ? '导入成功' : '导入异常'"
+                        :type="importSummary.status === 'success' ? 'success' : 'error'"
+                        show-icon
+                        :closable="false"
+                    >
+                        <template #default>{{ importSummary.message }}</template>
+                    </el-alert>
+                    <div v-if="importSummary.status === 'success'" class="grid grid-cols-3 gap-3 mt-3 text-sm">
+                        <div class="bg-white rounded-lg border border-blue-100 p-3">
+                            <div class="text-gray-500 text-xs">名单行数</div>
+                            <div class="font-semibold text-gray-900">{{ importSummary.total }} 行</div>
+                        </div>
+                        <div class="bg-white rounded-lg border border-blue-100 p-3">
+                            <div class="text-gray-500 text-xs">已匹配会员</div>
+                            <div class="font-semibold text-emerald-700">{{ importSummary.matched }} 行</div>
+                        </div>
+                        <div class="bg-white rounded-lg border border-blue-100 p-3">
+                            <div class="text-gray-500 text-xs">待匹配会员</div>
+                            <div class="font-semibold text-amber-700">{{ importSummary.pending }} 行</div>
+                        </div>
+                    </div>
+                    <el-table v-else :data="importSummary.errors" size="small" class="mt-3" border>
+                        <el-table-column prop="rowNo" label="行号" width="80"></el-table-column>
+                        <el-table-column prop="documentNo" label="证件号码" width="160"></el-table-column>
+                        <el-table-column prop="reason" label="异常原因" min-width="220"></el-table-column>
+                    </el-table>
+                </div>
+            </div>
+            <template #footer>
+                <el-button @click="importDialogVisible = false">取消</el-button>
+                <el-button type="primary" :disabled="!importPreviewReady || importSummary.status !== 'success'" @click="confirmImportVisitors">确认汇入</el-button>
+            </template>
+        </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed, watch, onMounted, onBeforeUnmount } = Vue;
+const filters = reactive({
+                    keyword: '',
+                    enterprise: '',
+                    status: '',
+                    issueMode: '',
+                    stationTypes: [],
+                    station: '',
+                    pickupRange: []
+                });
+                const moreFiltersVisible = ref(false);
+                const filterToolbar = ref(null);
+                const filterLayoutTier = ref(1);
+                let filterResizeObserver = null;
+                const updateFilterLayout = () => {
+                    const width = filterToolbar.value?.clientWidth || 0;
+                    if (width >= 1080) filterLayoutTier.value = 3;
+                    else if (width >= 820) filterLayoutTier.value = 2;
+                    else filterLayoutTier.value = 1;
+                };
+                onMounted(() => {
+                    filterResizeObserver = new ResizeObserver(updateFilterLayout);
+                    if (filterToolbar.value) filterResizeObserver.observe(filterToolbar.value);
+                    updateFilterLayout();
+                });
+                onBeforeUnmount(() => filterResizeObserver?.disconnect());
+                const activeBatchCard = ref('');
+
+                const batches = ref([
+                    {
+                        id: 1,
+                        batchNo: 'GT-KM-20260501-001',
+                        name: '金门 5 月 A 团租車券',
+                        enterprise: '金门风狮爷旅行社',
+                        issueMode: 'LIST',
+                        stationTypes: ['旅行社团体专用'],
+                        stations: ['金城民生停车场'],
+                        pickupAt: '2026-05-01 09:00',
+                        returnAt: '2026-05-01 17:00',
+                        availableStartAt: '2026-04-20 00:00',
+                        availableEndAt: '2026-05-01 17:00',
+                        totalCount: 12,
+                        unusedCount: 8,
+                        usedCount: 4,
+                        expiredCount: 0,
+                        issuedCount: 9,
+                        pendingIssueCount: 3,
+                        issueFailedCount: 0,
+                        availabilityStatus: '已过期',
+                        status: '启用',
+                        visitors: [
+                            { name: '王志明', documentNo: 'A123456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                            { name: '林雅婷', documentNo: 'B223456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                            { name: '许家豪', documentNo: '110101199001011234', memberStatus: '待匹配会员', issueStatus: '待发放', issueRemark: '证件认证匹配后自动发放' },
+                            { name: '吴佳颖', documentNo: '110101199202022345', memberStatus: '待匹配会员', issueStatus: '待发放', issueRemark: '证件认证匹配后自动发放' }
+                        ],
+                        codes: [
+                            { code: 'KM-A0501-001', visitorName: '王志明', documentNo: 'A123456789', issueStatus: '已发放', status: '已使用', member: '王志明 A123456789', orderNo: 'TS-KM-20260501-0001', orderStatus: '已完成', settlementStatus: 'SETTLED', overdueMinutes: 0, abnormalFeeTotal: 0, usedAt: '2026-04-25 10:16' },
+                            { code: 'KM-A0501-002', visitorName: '林雅婷', documentNo: 'B223456789', issueStatus: '已发放', status: '已使用', member: '林雅婷 B223456789', orderNo: 'TS-KM-20260501-0002', orderStatus: '已完成', settlementStatus: 'SETTLED', overdueMinutes: 42, abnormalFeeTotal: 480, usedAt: '2026-04-25 10:21' },
+                            { code: 'KM-A0501-003', visitorName: '许家豪', documentNo: '110101199001011234', issueStatus: '待发放', status: '未使用', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-A0501-004', visitorName: '吴佳颖', documentNo: '110101199202022345', issueStatus: '待发放', status: '未使用', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-A0501-005', visitorName: '陈柏翰', documentNo: 'C123456789', issueStatus: '已发放', status: '已使用', member: '陈柏翰 C123456789', orderNo: 'TS-KM-20260501-0008', orderStatus: '用车中', settlementStatus: 'OVERDUE_IN_PROGRESS', overdueMinutes: 35, abnormalFeeTotal: null, usedAt: '2026-04-25 11:03' },
+                            { code: 'KM-A0501-006', visitorName: '张怡君', documentNo: 'D223456789', issueStatus: '已发放', status: '已使用', member: '张怡君 D223456789', orderNo: 'TS-KM-20260501-0011', orderStatus: '已预约', usedAt: '2026-04-25 11:44' }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        batchNo: 'GT-KM-20260503-002',
+                        name: '蓝湾旅行社机场接驳团',
+                        enterprise: '金门蓝湾旅行社',
+                        issueMode: 'LIST',
+                        stationTypes: ['旅行社团体专用'],
+                        stations: ['金湖机场停车场'],
+                        pickupAt: '2026-05-03 13:30',
+                        returnAt: '2026-05-03 19:30',
+                        availableStartAt: '2026-04-25 00:00',
+                        availableEndAt: '2026-05-03 19:30',
+                        totalCount: 8,
+                        unusedCount: 6,
+                        usedCount: 2,
+                        expiredCount: 0,
+                        issuedCount: 5,
+                        pendingIssueCount: 3,
+                        issueFailedCount: 0,
+                        availabilityStatus: '已过期',
+                        status: '启用',
+                        visitors: [
+                            { name: '黄俊杰', documentNo: 'E123456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                            { name: '蔡佳玲', documentNo: 'F223456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                            { name: '周冠宇', documentNo: '110101198805053456', memberStatus: '待匹配会员', issueStatus: '待发放', issueRemark: '证件认证匹配后自动发放' }
+                        ],
+                        codes: [
+                            { code: 'KM-B0503-001', visitorName: '黄俊杰', documentNo: 'E123456789', issueStatus: '已发放', status: '已使用', member: '黄俊杰 E123456789', orderNo: 'TS-KM-20260503-0003', orderStatus: '已完成', usedAt: '2026-04-25 12:12' },
+                            { code: 'KM-B0503-002', visitorName: '蔡佳玲', documentNo: 'F223456789', issueStatus: '已发放', status: '已使用', member: '蔡佳玲 F223456789', orderNo: 'TS-KM-20260503-0006', orderStatus: '已取消', usedAt: '2026-04-25 12:18' },
+                            { code: 'KM-B0503-003', visitorName: '周冠宇', documentNo: '110101198805053456', issueStatus: '待发放', status: '未使用', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-B0503-004', visitorName: '赵怡安', documentNo: 'G123456789', issueStatus: '已发放', status: '未使用', member: '赵怡安 G123456789', orderNo: '', usedAt: '-' }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        batchNo: 'GT-KM-20260508-004',
+                        name: '金门环岛假期待导入名单批次',
+                        enterprise: '金门环岛假期',
+                        issueMode: 'LIST',
+                        stationTypes: ['旅行社团体专用'],
+                        stations: ['金湖机场停车场'],
+                        pickupAt: '2026-05-08 10:00',
+                        returnAt: '2026-05-08 18:00',
+                        availableStartAt: '2026-05-01 00:00',
+                        availableEndAt: '2026-05-08 18:00',
+                        totalCount: 0,
+                        unusedCount: 0,
+                        usedCount: 0,
+                        expiredCount: 0,
+                        issuedCount: 0,
+                        pendingIssueCount: 0,
+                        issueFailedCount: 0,
+                        availabilityStatus: '待导入名单',
+                        status: '待导入名单',
+                        visitors: [],
+                        codes: []
+                    },
+                    {
+                        id: 3,
+                        batchNo: 'GT-KM-20260510-003',
+                        name: '海峡科技员工活动租車券',
+                        enterprise: '海峡科技股份有限公司',
+                        issueMode: 'QUANTITY',
+                        stationTypes: ['普通营运据点', '企业活动合作据点'],
+                        stations: ['山外车站停车场', '台北信义企业停车场'],
+                        pickupAt: '2026-05-10 08:30',
+                        returnAt: '2026-05-10 16:30',
+                        availableStartAt: '2026-05-01 00:00',
+                        availableEndAt: '2026-05-10 16:30',
+                        totalCount: 20,
+                        unusedCount: 18,
+                        usedCount: 0,
+                        expiredCount: 2,
+                        issuedCount: 0,
+                        pendingIssueCount: 20,
+                        issueFailedCount: 0,
+                        availabilityStatus: '不可使用',
+                        status: '停用',
+                        visitors: [],
+                        codes: [
+                            { code: 'KM-C0510-001', visitorName: '-', documentNo: '-', issueStatus: '未领取', status: '未使用', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-C0510-002', visitorName: '-', documentNo: '-', issueStatus: '未领取', status: '未使用', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-C0510-003', visitorName: '-', documentNo: '-', issueStatus: '未领取', status: '已过期', member: '-', orderNo: '', usedAt: '-' },
+                            { code: 'KM-C0510-004', visitorName: '-', documentNo: '-', issueStatus: '未领取', status: '已过期', member: '-', orderNo: '', usedAt: '-' }
+                        ]
+                    }
+                ]);
+
+                const detailVisible = ref(false);
+                const batchDialogVisible = ref(false);
+                const addTicketDialogVisible = ref(false);
+                const importDialogVisible = ref(false);
+                const importPreviewReady = ref(false);
+                const currentBatch = ref(null);
+                const editingBatch = ref(null);
+                const addTicketForm = reactive({
+                    visitorName: '',
+                    documentNo: '',
+                    count: 1,
+                    reason: ''
+                });
+                const batchForm = reactive({
+                    name: '',
+                    enterprise: '',
+                    serviceMode: '同站租还',
+                    timeRuleType: 'FIXED_PERIOD',
+                    issueMode: 'LIST',
+                    stationTypes: [],
+                    stations: [],
+                    pickupAt: '',
+                    returnAt: '',
+                    availableStartAt: '',
+                    availableEndAt: '',
+                    totalCount: 0,
+                    hasImportedVisitors: false,
+                    matchedCount: 0,
+                    pendingMatchCount: 0,
+                    status: '启用'
+                });
+
+                watch(() => batchForm.returnAt, (val) => {
+                    batchForm.availableEndAt = val || '';
+                });
+                const importSummary = reactive({
+                    status: '',
+                    message: '',
+                    total: 0,
+                    matched: 0,
+                    pending: 0,
+                    errors: []
+                });
+
+                const visitorImportRows = ref([
+                    { name: '王志明', documentNo: 'A123456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                    { name: '陈佩君', documentNo: 'C123456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                    { name: '林雅婷', documentNo: 'B223456789', memberStatus: '已匹配会员', issueStatus: '已发放', issueRemark: '已发放到会员账户' },
+                    { name: '吴佳颖', documentNo: '110101199202022345', memberStatus: '待匹配会员', issueStatus: '待发放', issueRemark: '证件认证匹配后自动发放' }
+                ]);
+
+                const visitorImportSummary = computed(() => ({
+                    matched: visitorImportRows.value.filter(item => item.memberStatus === '已匹配会员').length,
+                    pending: visitorImportRows.value.filter(item => item.issueStatus === '待发放').length
+                }));
+
+                const stationTypeOptions = ref([
+                    { label: '普通营运据点', value: '普通营运据点', normalEntryVisible: true },
+                    { label: '旅行社团体专用', value: '旅行社团体专用', normalEntryVisible: false },
+                    { label: '企业活动合作据点', value: '企业活动合作据点', normalEntryVisible: true },
+                    { label: '机场取还车点', value: '机场取还车点', normalEntryVisible: true },
+                    { label: '码头取还车点', value: '码头取还车点', normalEntryVisible: true }
+                ]);
+                const batchStats = computed(() => batches.value.reduce((acc, item) => {
+                    acc.total += 1;
+                    if (item.status === '启用') acc.enabled += 1;
+                    if (item.status === '停用') acc.disabled += 1;
+                    if (item.status === '待导入名单') acc.pendingImport += 1;
+                    return acc;
+                }, { total: 0, enabled: 0, disabled: 0, pendingImport: 0 }));
+
+                const stationOptions = ref([
+                    { label: '金城民生停车场', value: '金城民生停车场', stationType: '旅行社团体专用' },
+                    { label: '金湖机场停车场', value: '金湖机场停车场', stationType: '旅行社团体专用' },
+                    { label: '山外车站停车场', value: '山外车站停车场', stationType: '普通营运据点' },
+                    { label: '台北信义企业停车场', value: '台北信义企业停车场', stationType: '企业活动合作据点' },
+                    { label: '水头码头取还点', value: '水头码头取还点', stationType: '码头取还车点' }
+                ]);
+
+                const availableStationOptions = computed(() => {
+                    const selectedTypes = Array.isArray(batchForm.stationTypes) ? batchForm.stationTypes : [];
+                    if (!selectedTypes.length) return stationOptions.value;
+                    return stationOptions.value.filter(item => selectedTypes.includes(item.stationType));
+                });
+
+                const filterStationOptions = computed(() => {
+                    const selectedTypes = Array.isArray(filters.stationTypes) ? filters.stationTypes : [];
+                    if (!selectedTypes.length) return stationOptions.value;
+                    return stationOptions.value.filter(item => selectedTypes.includes(item.stationType));
+                });
+
+                const advancedFilterCount = computed(() => {
+                    let count = 0;
+                    if (Array.isArray(filters.stationTypes) && filters.stationTypes.length) count += 1;
+                    if (filters.station) count += 1;
+                    if (Array.isArray(filters.pickupRange) && filters.pickupRange.length === 2) count += 1;
+                    return count;
+                });
+
+                const stationVehicleCountMap = {
+                    '金城民生停车场': 10,
+                    '金湖机场停车场': 6,
+                    '山外车站停车场': 12,
+                    '台北信义企业停车场': 18,
+                    '水头码头取还点': 8
+                };
+                const capacityDemoMode = ref('SAFE');
+                const capacityDemoScenarios = {
+                    SAFE: { relatedBatchCount: 1, relatedVoucherCount: 3, relatedMaxOccupancy: 3 },
+                    RISK: { relatedBatchCount: 1, relatedVoucherCount: 15, relatedMaxOccupancy: 10 }
+                };
+
+                const toTimestamp = (value) => {
+                    if (!value) return null;
+                    if (value instanceof Date) return value.getTime();
+                    const normalized = String(value).replace(' ', 'T');
+                    const time = new Date(normalized).getTime();
+                    return Number.isNaN(time) ? null : time;
+                };
+
+                const getBatchStations = (batch) => {
+                    if (Array.isArray(batch?.stations) && batch.stations.length) return batch.stations;
+                    return batch?.station ? [batch.station] : [];
+                };
+
+                const capacityHint = computed(() => {
+                    const currentDemand = 12;
+                    const availableVehicleCount = 16;
+                    const scenario = capacityDemoScenarios[capacityDemoMode.value];
+                    const remainingVehicleCount = Math.max(availableVehicleCount - scenario.relatedMaxOccupancy, 0);
+                    const hasRisk = currentDemand > remainingVehicleCount;
+                    return {
+                        visible: true,
+                        hasRisk,
+                        currentDemand,
+                        availableVehicleCount,
+                        relatedBatchCount: scenario.relatedBatchCount,
+                        relatedVoucherCount: scenario.relatedVoucherCount,
+                        relatedMaxOccupancy: scenario.relatedMaxOccupancy,
+                        remainingVehicleCount,
+                        tag: hasRisk ? '存在库存风险' : '未发现库存风险'
+                    };
+                });
+
+                const filteredBatches = computed(() => {
+                    return batches.value.filter(item => {
+                        const keywordMatch = !filters.keyword ||
+                            item.name.includes(filters.keyword) ||
+                            item.batchNo.includes(filters.keyword);
+                        const enterpriseMatch = !filters.enterprise || item.enterprise === filters.enterprise;
+                        const statusMatch = !filters.status || item.status === filters.status;
+                        const issueModeMatch = !filters.issueMode || item.issueMode === filters.issueMode;
+                        const stationTypeMatch = !filters.stationTypes.length || filters.stationTypes.some(type => (item.stationTypes || []).includes(type));
+                        const stationMatch = !filters.station || getBatchStations(item).includes(filters.station);
+                        const pickupRangeMatch = !Array.isArray(filters.pickupRange) || filters.pickupRange.length !== 2 || (() => {
+                            const itemPickupTs = toTimestamp(item.pickupAt);
+                            const startTs = toTimestamp(filters.pickupRange[0]);
+                            const endTs = toTimestamp(filters.pickupRange[1]);
+                            if (!itemPickupTs || !startTs || !endTs) return true;
+                            return itemPickupTs >= startTs && itemPickupTs <= endTs;
+                        })();
+                        return keywordMatch && enterpriseMatch && statusMatch && issueModeMatch && stationTypeMatch && stationMatch && pickupRangeMatch;
+                    });
+                });
+
+                const handleFilterStationTypeChange = () => {
+                    const availableValues = filterStationOptions.value.map(item => item.value);
+                    if (filters.station && !availableValues.includes(filters.station)) {
+                        filters.station = '';
+                    }
+                };
+
+                const resetFilters = () => {
+                    filters.keyword = '';
+                    filters.enterprise = '';
+                    filters.status = '';
+                    filters.issueMode = '';
+                    filters.stationTypes = [];
+                    filters.station = '';
+                    filters.pickupRange = [];
+                    moreFiltersVisible.value = false;
+                    activeBatchCard.value = '';
+                };
+                const toggleBatchCard = (key) => {
+                    const nextKey = activeBatchCard.value === key ? '' : key;
+                    activeBatchCard.value = nextKey;
+                    filters.status = nextKey && nextKey !== 'ALL' ? nextKey : '';
+                };
+                const syncBatchCard = (status) => {
+                    activeBatchCard.value = status || '';
+                };
+
+                const getIssueModeLabel = (mode) => {
+                    return mode === 'QUANTITY' ? '数量生成' : '名单发放';
+                };
+
+                const formatIssueSummary = (batch) => {
+                    if (batch?.issueMode === 'QUANTITY') {
+                        return `已领取 ${batch.issuedCount} / 未领取 ${batch.pendingIssueCount}`;
+                    }
+                    return `已发放 ${batch.issuedCount} / 待发放 ${batch.pendingIssueCount}`;
+                };
+
+                const formatIssueUsageSummary = (batch) => {
+                    const issueLabel = batch?.issueMode === 'QUANTITY' ? '已领取' : '已发放';
+                    return `${issueLabel} ${batch.issuedCount}，已使用 ${batch.usedCount}`;
+                };
+
+                const formatStationTypeRange = (batch) => {
+                    const values = Array.isArray(batch?.stationTypes) ? batch.stationTypes : [];
+                    if (!values.length || values.length === stationTypeOptions.value.length) return '全部据点类型';
+                    return values.join('、');
+                };
+
+                const formatStationRange = (batch) => {
+                    const values = getBatchStations(batch);
+                    if (!values.length || values.length === stationOptions.value.length) return '全部适用据点';
+                    return values.join('、');
+                };
+
+                const formatStationRangeSummary = (batch) => {
+                    const typeValues = Array.isArray(batch?.stationTypes) ? batch.stationTypes : [];
+                    const stationValues = getBatchStations(batch);
+                    const typeCount = (!typeValues.length || typeValues.length === stationTypeOptions.value.length) ? stationTypeOptions.value.length : typeValues.length;
+                    const stationCount = (!stationValues.length || stationValues.length === stationOptions.value.length) ? stationOptions.value.length : stationValues.length;
+                    return `${typeCount} 类据点 / ${stationCount} 个据点`;
+                };
+
+                const formatStationRangeTooltip = (batch) => {
+                    return `据点类型：${formatStationTypeRange(batch)}；适用据点：${formatStationRange(batch)}`;
+                };
+
+                const getStationTypeEntryText = (option) => {
+                    return option?.normalEntryVisible === false ? '不开放一般预约' : '一般预约可用';
+                };
+
+                const getStationTypeEntryTagType = (option) => {
+                    return option?.normalEntryVisible === false ? 'warning' : 'success';
+                };
+
+                const handleStationTypeChange = () => {
+                    const availableValues = availableStationOptions.value.map(item => item.value);
+                    batchForm.stations = batchForm.stations.filter(station => availableValues.includes(station));
+                };
+
+                const openDetail = (row) => {
+                    currentBatch.value = row;
+                    detailVisible.value = true;
+                };
+
+                const openDetailPage = (row) => {
+                    window.location.href = `channel_ticket_batch_detail.html?id=${row.id}`;
+                };
+
+                const openBatchDialog = (row) => {
+                    editingBatch.value = row || null;
+                    Object.assign(batchForm, row ? {
+                        name: row.name,
+                        enterprise: row.enterprise,
+                        serviceMode: row.serviceMode || '同站租还',
+                        timeRuleType: row.timeRuleType || 'FIXED_PERIOD',
+                        issueMode: row.issueMode || 'LIST',
+                        stationTypes: Array.isArray(row.stationTypes) ? [...row.stationTypes] : stationTypeOptions.value.map(item => item.value),
+                        stations: getBatchStations(row),
+                        pickupAt: row.pickupAt,
+                        returnAt: row.returnAt,
+                        availableStartAt: row.availableStartAt,
+                        availableEndAt: row.availableEndAt,
+                        totalCount: row.totalCount,
+                        hasImportedVisitors: (row.issueMode || 'LIST') === 'LIST',
+                        matchedCount: row.issuedCount,
+                        pendingMatchCount: row.pendingIssueCount,
+                        status: row.status
+                    } : {
+                        name: '',
+                        enterprise: '',
+                        serviceMode: '同站租还',
+                        timeRuleType: 'FIXED_PERIOD',
+                        issueMode: 'LIST',
+                        stationTypes: [],
+                        stations: [],
+                        pickupAt: '',
+                        returnAt: '',
+                        availableStartAt: '',
+                        availableEndAt: '',
+                        totalCount: 0,
+                        hasImportedVisitors: false,
+                        matchedCount: 0,
+                        pendingMatchCount: 0,
+                        status: '启用'
+                    });
+                    batchDialogVisible.value = true;
+                };
+
+                const saveBatchMock = () => {
+                    if (!batchForm.stationTypes.length || !batchForm.stations.length) {
+                        ElementPlus.ElMessage.warning('请选择适用据点类型和适用据点');
+                        return;
+                    }
+                    if (batchForm.issueMode === 'QUANTITY' && !Number(batchForm.totalCount)) {
+                        ElementPlus.ElMessage.warning('请填写租車券数量');
+                        return;
+                    }
+                    if (batchForm.issueMode === 'LIST' && !batchForm.hasImportedVisitors) {
+                        batchForm.status = '待导入名单';
+                        if (!editingBatch.value) {
+                            const now = new Date();
+                            const pad = (value) => String(value).padStart(2, '0');
+                            batchForm.availableStartAt = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+                        }
+                        batchForm.availableEndAt = batchForm.returnAt;
+                        batchDialogVisible.value = false;
+                        ElementPlus.ElMessage.success('原型示意：批次已保存为待导入名单，后续可在详情页导入 / 追加名单');
+                        return;
+                    }
+                    if (!editingBatch.value) {
+                        const now = new Date();
+                        const pad = (value) => String(value).padStart(2, '0');
+                        batchForm.availableStartAt = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+                    }
+                    batchForm.availableEndAt = batchForm.returnAt;
+                    batchDialogVisible.value = false;
+                    ElementPlus.ElMessage.success('原型示意：批次资料已保存');
+                };
+
+                const openOrder = (row) => {
+                    ElementPlus.ElMessage.info(`打开订单详情：${row.orderNo}`);
+                };
+
+                const exportCodesMock = () => {
+                    ElementPlus.ElMessage.success('原型示意：已导出 Excel，包含租車券列表和订单完整数据两个 Sheet');
+                };
+
+                const buildAddedTicketCode = (batch) => {
+                    const nextNo = (batch.codes?.length || 0) + 1;
+                    return `ADD-${String(batch.id).padStart(2, '0')}-${String(nextNo).padStart(3, '0')}`;
+                };
+
+                const openAddTicketDialog = () => {
+                    addTicketForm.visitorName = '';
+                    addTicketForm.documentNo = '';
+                    addTicketForm.count = 1;
+                    addTicketForm.reason = '';
+                    addTicketDialogVisible.value = true;
+                };
+
+                const saveAddTicketMock = () => {
+                    const batch = currentBatch.value;
+                    if (!batch) return;
+                    if (!addTicketForm.reason.trim()) {
+                        ElementPlus.ElMessage.warning('请填写新增原因');
+                        return;
+                    }
+                    if (batch.issueMode === 'LIST') {
+                        if (!addTicketForm.visitorName.trim() || !addTicketForm.documentNo.trim()) {
+                            ElementPlus.ElMessage.warning('请填写用券人姓名和证件号码');
+                            return;
+                        }
+                        const normalizedDocumentNo = addTicketForm.documentNo.trim().toUpperCase();
+                        const duplicated = batch.codes.some(item =>
+                            item.documentNo && item.documentNo !== '-' && item.documentNo.trim().toUpperCase() === normalizedDocumentNo
+                        );
+                        if (duplicated) {
+                            ElementPlus.ElMessage.warning('该证件号码已存在于当前批次，不允许重复新增');
+                            return;
+                        }
+                        const issueStatus = /^[A-F]/.test(normalizedDocumentNo) ? '已发放' : '待发放';
+                        const memberText = issueStatus === '已发放'
+                            ? `${addTicketForm.visitorName} ${normalizedDocumentNo}`
+                            : '-';
+                        batch.codes.push({
+                            code: buildAddedTicketCode(batch),
+                            visitorName: addTicketForm.visitorName,
+                            documentNo: normalizedDocumentNo,
+                            issueStatus,
+                            status: '未使用',
+                            member: memberText,
+                            orderNo: '',
+                            orderStatus: '',
+                            usedAt: '-'
+                        });
+                        batch.visitors.push({
+                            name: addTicketForm.visitorName,
+                            documentNo: normalizedDocumentNo,
+                            memberStatus: issueStatus === '已发放' ? '已匹配会员' : '待匹配会员',
+                            issueStatus,
+                            issueRemark: issueStatus === '已发放' ? '已发放到会员账户' : '证件认证匹配后自动发放'
+                        });
+                        batch.totalCount += 1;
+                        batch.unusedCount += 1;
+                        if (issueStatus === '已发放') batch.issuedCount += 1;
+                        else batch.pendingIssueCount += 1;
+                    } else {
+                        const count = Number(addTicketForm.count) || 0;
+                        if (count <= 0) {
+                            ElementPlus.ElMessage.warning('请填写新增数量');
+                            return;
+                        }
+                        for (let i = 0; i < count; i += 1) {
+                            batch.codes.push({
+                                code: buildAddedTicketCode(batch),
+                                visitorName: '-',
+                                documentNo: '-',
+                                issueStatus: '未领取',
+                                status: '未使用',
+                                member: '-',
+                                orderNo: '',
+                                orderStatus: '',
+                                usedAt: '-'
+                            });
+                        }
+                        batch.totalCount += count;
+                        batch.unusedCount += count;
+                        batch.pendingIssueCount += count;
+                    }
+                    addTicketDialogVisible.value = false;
+                    ElementPlus.ElMessage.success('原型示意：已新增租車券');
+                };
+
+                const openImportDialog = () => {
+                    importPreviewReady.value = false;
+                    importSummary.status = '';
+                    importSummary.message = '';
+                    importSummary.total = 0;
+                    importSummary.matched = 0;
+                    importSummary.pending = 0;
+                    importSummary.errors = [];
+                    importDialogVisible.value = true;
+                };
+
+                const downloadTemplateMock = () => {
+                    ElementPlus.ElMessage.info('原型示意：下载用券人名单模板');
+                };
+
+                const previewImportMock = (hasError) => {
+                    if (hasError) {
+                        importSummary.status = 'error';
+                        importSummary.message = '名单中存在证件号码格式错误、重复或必填字段缺失，无法确认导入。请修正后重新选择文件。';
+                        importSummary.total = 0;
+                        importSummary.matched = 0;
+                        importSummary.pending = 0;
+                        importSummary.errors = [
+                            { rowNo: 4, documentNo: 'A12345678', reason: '证件号码格式错误' },
+                            { rowNo: 6, documentNo: 'A123456789', reason: '与当前批次已有证件号码重复' },
+                            { rowNo: 8, documentNo: '', reason: '缺少证件号码' }
+                        ];
+                        importPreviewReady.value = true;
+                        ElementPlus.ElMessage.error('导入异常：请修正格式、重复或缺失字段');
+                        return;
+                    }
+                    importSummary.status = 'success';
+                    importSummary.message = '名单校验通过，可以确认导入；同一批次证件号码均不重复。后续详情页只允许追加导入，不覆盖原名单。';
+                    importSummary.total = visitorImportRows.value.length;
+                    importSummary.matched = visitorImportSummary.value.matched;
+                    importSummary.pending = visitorImportSummary.value.pending;
+                    importSummary.errors = [];
+                    importPreviewReady.value = true;
+                    ElementPlus.ElMessage.success('导入成功');
+                };
+
+                const confirmImportVisitors = () => {
+                    if (importSummary.status !== 'success') {
+                        ElementPlus.ElMessage.warning('导入异常未处理，不能确认汇入');
+                        return;
+                    }
+                    batchForm.totalCount = importSummary.total;
+                    batchForm.hasImportedVisitors = true;
+                    batchForm.matchedCount = importSummary.matched;
+                    batchForm.pendingMatchCount = importSummary.pending;
+                    importDialogVisible.value = false;
+                    ElementPlus.ElMessage.success('原型示意：已导入用券人名单并完成会员匹配');
+                };
+
+                const getIssueStatusType = (status) => {
+                    if (status === '已发放') return 'success';
+                    if (status === '发放失败') return 'danger';
+                    if (status === '未领取') return 'info';
+                    return 'warning';
+                };
+
+                const getTicketStatusType = (status) => {
+                    if (status === '已使用') return 'success';
+                    if (status === '已过期') return 'info';
+                    return 'warning';
+                };
+
+                const getOrderStatusType = (status) => {
+                    if (status === '已完成') return 'success';
+                    if (status === '已取消') return 'info';
+                    if (status === '用车中') return 'warning';
+                    return 'info';
+                };
+
+                return {
+                    filters, filterToolbar, filterLayoutTier,
+                    moreFiltersVisible,
+                    activeBatchCard,
+                    batchStats,
+                    advancedFilterCount,
+                    batches,
+                    filteredBatches,
+                    detailVisible,
+                    batchDialogVisible,
+                    addTicketDialogVisible,
+                    importDialogVisible,
+                    importPreviewReady,
+                    currentBatch,
+                    editingBatch,
+                    addTicketForm,
+                    batchForm,
+                    importSummary,
+                    visitorImportRows,
+                    visitorImportSummary,
+                    stationTypeOptions,
+                    availableStationOptions,
+                    filterStationOptions,
+                    capacityHint,
+                    capacityDemoMode,
+                    getIssueModeLabel,
+                    formatIssueSummary,
+                    formatIssueUsageSummary,
+                    formatStationTypeRange,
+                    formatStationRange,
+                    formatStationRangeSummary,
+                    formatStationRangeTooltip,
+                    getStationTypeEntryText,
+                    getStationTypeEntryTagType,
+                    handleStationTypeChange,
+                    handleFilterStationTypeChange,
+                    resetFilters,
+                    toggleBatchCard,
+                    syncBatchCard,
+                    openDetail,
+                    openDetailPage,
+                    openBatchDialog,
+                    saveBatchMock,
+                    openOrder,
+                    exportCodesMock,
+                    openAddTicketDialog,
+                    saveAddTicketMock,
+                    openImportDialog,
+                    downloadTemplateMock,
+                    previewImportMock,
+                    confirmImportVisitors,
+                    getIssueStatusType,
+                    getTicketStatusType,
+                    getOrderStatusType
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

@@ -20,6 +20,13 @@ function jsonResponse(payload, { status = 200 } = {}) {
   });
 }
 
+function textResponse(payload, { status = 200 } = {}) {
+  return new Response(payload, {
+    status,
+    headers: { 'Content-Type': 'text/markdown' },
+  });
+}
+
 describe('platform contracts', () => {
   it('normalizes the two existing error payload formats', () => {
     expect(createApiError({ message: '项目读取失败' }, { status: 404 })).toMatchObject({
@@ -153,6 +160,37 @@ describe('platform client', () => {
     await expect(client.loadPrdBindings('demo')).resolves.toEqual({ schemaVersion: 1, bindings: [] });
   });
 
+  it('loads static PRD JSON artifacts and falls back to legacy markdown files', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse({ content: '# 规则' }));
+    const client = createPlatformClient({
+      development: false,
+      baseUrl: '/prototype',
+      fetchImpl,
+    });
+
+    await expect(client.loadDocument('demo', '业务/规则.md')).resolves.toBe('# 规则');
+    expect(fetchImpl).toHaveBeenCalledWith(
+      '/prototype/projects/demo/docs/content/%E4%B8%9A%E5%8A%A1/%E8%A7%84%E5%88%99.json',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+
+    const legacyFetch = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ message: '不存在' }, { status: 404 }))
+      .mockResolvedValueOnce(textResponse('# 旧格式'));
+    const legacyClient = createPlatformClient({
+      development: false,
+      baseUrl: '/prototype',
+      fetchImpl: legacyFetch,
+    });
+
+    await expect(legacyClient.loadDocument('demo', '业务/规则.md')).resolves.toBe('# 旧格式');
+    expect(legacyFetch).toHaveBeenLastCalledWith(
+      '/prototype/projects/demo/docs/content/%E4%B8%9A%E5%8A%A1/%E8%A7%84%E5%88%99.md',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
   it('loads page-level PRD links from the generated production project package', async () => {
     const fetchImpl = vi
       .fn()
@@ -199,7 +237,7 @@ describe('platform client', () => {
       result: { backupId: '1' },
     });
     expect(fetchImpl).toHaveBeenCalledWith(
-      '/__page-transfer/route/order',
+      '/__project-routes/route/order',
       expect.objectContaining({ method: 'POST' }),
     );
   });

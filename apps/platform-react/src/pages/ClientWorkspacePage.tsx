@@ -32,6 +32,7 @@ import {
   getPagePrdPath,
   groupClientPages,
 } from '@/features/projects/project-model';
+import { DEFAULT_PROJECT_THEME } from '@/features/projects/project-config-model';
 import {
   Avatar,
   Alert,
@@ -59,6 +60,7 @@ import {
 import { AppSidebar } from '@/ui/platform/AppSidebar';
 import { AnimatedPillNav } from '@/ui/platform/AnimatedPillNav';
 import { ProjectIcon } from '@/ui/platform/ProjectIcon';
+import { PlatformBrand } from '@/ui/platform/PlatformBrand';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
 const { Header, Content } = Layout;
@@ -66,6 +68,18 @@ const TOPNAV_CONTENT_OFFSET = 72;
 
 function routeForPage(projectId: string, clientId: string, page: HtmlPrototypePage) {
   return `/p/${projectId}/${clientId}/${page.path}`;
+}
+
+function usePageBindings<T extends { pagePath: string }>(
+  bindings: T[] | undefined,
+  activePagePath: string,
+  resolvedRoutePath: string,
+) {
+  return useMemo(() => {
+    if (!activePagePath) return [] as T[];
+    const pagePaths = new Set([activePagePath, resolvedRoutePath]);
+    return (bindings ?? []).filter((binding) => pagePaths.has(binding.pagePath));
+  }, [activePagePath, bindings, resolvedRoutePath]);
 }
 
 export function ClientWorkspacePage() {
@@ -126,22 +140,25 @@ export function ClientWorkspacePage() {
   // 这些派生值和回调必须在加载态/空页面态之前创建，避免条件 Hook，
   // 同时保证公共壳状态变化时不会给 iframe 生成新的回调引用。
   const activePage = selectedPage ?? defaultPage;
-  const activePagePath = activePage?.path ?? '';
   const resolvedPrdPath = activePage ? getPagePrdPath(prdLinksQuery.data, clientId, activePage) || '' : '';
   const resolvedRoutePath = activePage ? `/p/${projectId}/${clientId}/${activePage.path}` : '';
-  const pageBindings = activePagePath
-    ? (prdBindingsQuery.data?.bindings ?? []).filter((binding) =>
-        [activePagePath, resolvedRoutePath].includes(binding.pagePath),
-      )
-    : [];
-  const prdDocuments = [
-    ...(resolvedPrdPath ? [{ path: resolvedPrdPath }] : []),
-    ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
-  ].filter(
-    (item, index, items) =>
-      item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
+  const pageBindings = usePageBindings(
+    prdBindingsQuery.data?.bindings,
+    activePage?.path ?? '',
+    resolvedRoutePath,
   );
-  const projectAccent = project?.theme?.primary || '#1677ff';
+  const prdDocuments = useMemo(
+    () =>
+      [
+        ...(resolvedPrdPath ? [{ path: resolvedPrdPath }] : []),
+        ...pageBindings.map((binding) => ({ path: binding.prd.document, title: binding.prd.label })),
+      ].filter(
+        (item, index, items) =>
+          item.path && items.findIndex((candidate) => candidate.path === item.path) === index,
+      ),
+    [pageBindings, resolvedPrdPath],
+  );
+  const projectAccent = project?.theme?.primary || DEFAULT_PROJECT_THEME.primary;
   const changePrdMode = useCallback(
     (nextMode: PrdPanelMode) => {
       setPrdMode(nextMode);
@@ -170,7 +187,7 @@ export function ClientWorkspacePage() {
   );
   const clientTheme = useMemo(
     () => ({
-      primary: project?.theme?.primary || '#1677ff',
+      primary: project?.theme?.primary || DEFAULT_PROJECT_THEME.primary,
       primaryHover: project?.theme?.primaryHover,
       primaryActive: project?.theme?.primaryActive,
       pageBackground: project?.theme?.pageBackground,
@@ -191,7 +208,7 @@ export function ClientWorkspacePage() {
       components: {
         Menu: {
           itemSelectedBg: projectAccent,
-          itemSelectedColor: '#fff',
+          itemSelectedColor: 'var(--ant-color-text-light-solid)',
         },
       },
     }),
@@ -214,19 +231,13 @@ export function ClientWorkspacePage() {
   }
   if (!selectedPage) {
     const runtimeNotice =
-      runtimeStatus.state === 'legacy-vue'
+      runtimeStatus.state === 'index-missing'
         ? {
-            type: 'info' as const,
-            message: '该客户端未启用 React 页面',
-            description: '项目包中登记的旧 Vue 页面不属于当前平台运行范围，也不会被自动修改。',
+            type: 'error' as const,
+            message: 'HTML 页面运行索引缺失',
+            description: `项目登记了 ${runtimeStatus.managedHtmlPageCount} 个托管 HTML 页面，但当前扫描结果没有可运行页面。请重新扫描项目包并检查页面文件。`,
           }
-        : runtimeStatus.state === 'index-missing'
-          ? {
-              type: 'error' as const,
-              message: 'HTML 页面运行索引缺失',
-              description: `项目登记了 ${runtimeStatus.managedHtmlPageCount} 个托管 HTML 页面，但当前扫描结果没有可运行页面。请重新扫描项目包并检查页面文件。`,
-            }
-          : null;
+        : null;
     return (
       <main className="client-empty">
         {runtimeNotice ? (
@@ -426,29 +437,40 @@ function ClientWorkspace({
     () => createMenuItems(groups, layoutType, navigatePage, collapsed),
     [collapsed, groups, layoutType, navigatePage],
   );
-  const accountItems: MenuProps['items'] = [
-    { key: 'home', icon: <HomeOutlined />, label: '回到首页', onClick: () => onNavigate('/') },
-    ...(developerMode
-      ? [
-          {
-            key: 'ai-context',
-            icon: <DatabaseOutlined />,
-            label: '当前页面上下文',
-            onClick: () =>
-              onNavigate(
-                `/tools/ai-context?project=${encodeURIComponent(projectId)}&client=${encodeURIComponent(clientId)}&page=${encodeURIComponent(selectedPage.path)}`,
-              ),
-          },
-        ]
-      : []),
-    { key: 'exit', icon: <LogoutOutlined />, label: '退出当前客户端', onClick: () => onNavigate('/') },
-  ];
-  const clientOptions = project.clients.map((item) => ({ label: item.name, value: item.id }));
+  const accountItems = useMemo<MenuProps['items']>(
+    () => [
+      { key: 'home', icon: <HomeOutlined />, label: '回到首页', onClick: () => onNavigate('/') },
+      ...(developerMode
+        ? [
+            {
+              key: 'ai-context',
+              icon: <DatabaseOutlined />,
+              label: '当前页面上下文',
+              onClick: () =>
+                onNavigate(
+                  `/tools/ai-context?project=${encodeURIComponent(projectId)}&client=${encodeURIComponent(clientId)}&page=${encodeURIComponent(selectedPage.path)}`,
+                ),
+            },
+          ]
+        : []),
+      { key: 'exit', icon: <LogoutOutlined />, label: '退出当前客户端', onClick: () => onNavigate('/') },
+    ],
+    [clientId, developerMode, onNavigate, projectId, selectedPage.path],
+  );
+  const clientOptions = useMemo(
+    () => project.clients.map((item) => ({ label: item.name, value: item.id })),
+    [project.clients],
+  );
   const bare = layoutType === 'none' || layoutType === 'bare';
-  const workspaceStyle = {
-    '--project-accent': project.theme?.primary || '#1677ff',
-    '--project-page-bg': 'var(--ant-color-bg-layout)',
-  } as CSSProperties;
+  const projectAccent = project.theme?.primary || DEFAULT_PROJECT_THEME.primary;
+  const workspaceStyle = useMemo(
+    () =>
+      ({
+        '--project-accent': projectAccent,
+        '--project-page-bg': 'var(--ant-color-bg-layout)',
+      }) as CSSProperties,
+    [projectAccent],
+  );
   const pageWorkspace = (
     <div className={`client-page-workspace ${prdOpen ? `has-prd prd-${prdMode}` : ''}`}>
       <Content className="client-content">
@@ -530,10 +552,10 @@ function ClientWorkspace({
         <AppSidebar
           collapsed={collapsed}
           onToggleCollapsed={toggleCollapsed}
-          brandMark={<AppstoreOutlined />}
+          brandMark={<PlatformBrand variant="mark" alt="" />}
           brandTitle={project.name}
           onBrandClick={() => onNavigate('/')}
-          routeKey={selectedPage.path}
+          routeKey={`${clientId}:${selectedPage.path}`}
           selector={
             <Select
               aria-label="客户端"
@@ -630,7 +652,7 @@ function ClientBrand({ projectName }: { projectName: string }) {
   return (
     <a className="client-brand" href={import.meta.env.BASE_URL}>
       <span className="client-brand__mark" aria-hidden="true">
-        <AppstoreOutlined />
+        <PlatformBrand variant="mark" alt="" />
       </span>
       <span className="client-brand__copy">
         <strong>{projectName}</strong>

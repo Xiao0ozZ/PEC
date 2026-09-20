@@ -1,0 +1,347 @@
+/* ==========================================================================
+   車隊使用率 — 模組版面
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → motion.css → module-*.css
+
+   卡片質感一律來自 ds.css 的 .ds-panel；本檔只寫這七個模組的內部排列。
+   全檔零字面色值。
+   ========================================================================== */
+
+/* ==========================================================================
+   M02-1 使用率總覽（W）
+   四格等寬，與運行狀態的帶狀同一種讀法 —— 兩張看板的頂部結構一致，
+   使用者不必在每張看板重新學版面。
+   ========================================================================== */
+
+.util-kpi { justify-content: center; }
+
+.util-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.util-kpi-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border-left: 1px solid var(--ln-hair);
+}
+
+.util-kpi-cell:first-child { border-left: 0; padding-left: 0; }
+
+.util-kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.util-kpi-val { display: flex; align-items: baseline; gap: 2px; }
+
+.util-kpi-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--lv, var(--ink-1));
+}
+
+.util-kpi-val > em {
+    font-style: normal;
+    font-size: var(--fs-note);
+    font-weight: 600;
+    color: var(--ink-3);
+}
+
+.util-kpi-foot { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+@media (max-width: 1100px) {
+    .util-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .util-kpi-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+/* ==========================================================================
+   M02-2 使用率環圖（S）
+   ========================================================================== */
+
+.util-donut-body { position: relative; flex: 1 1 auto; min-height: 150px; }
+
+/* 環心讀數用 DOM 疊放而不是 ECharts label：字體與色彩跟隨 token，
+   換主題不必重算 canvas 內的文字樣式。 */
+.util-donut-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1px;
+    pointer-events: none;
+}
+
+.util-donut-center > span { font-size: var(--fs-micro); color: var(--ink-3); }
+
+.util-donut-center > strong {
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-l);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.03em;
+    color: var(--ink-1);
+}
+
+.util-donut-center > strong > em {
+    font-style: normal;
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+.util-donut-target { color: var(--ink-3); }
+
+/* ==========================================================================
+   M02-3 站所使用率分布（V 地圖）
+   圖填滿面板，圖例與註記壓在角落，避免把地圖壓扁。
+   ========================================================================== */
+
+.util-map-body { position: relative; flex: 1 1 auto; min-height: 0; }
+
+.util-map-legend {
+    position: absolute;
+    left: 0;
+    top: 0;
+    list-style: none;
+    margin: 0;
+    padding: var(--sp-2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-radius: var(--fx-r-inner);
+    background: color-mix(in srgb, var(--sf-inset) 80%, transparent);
+    border: 1px solid var(--ln-hair);
+    pointer-events: none;
+}
+
+.util-map-legend > li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-micro);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.util-map-legend > li > i { width: 7px; height: 7px; border-radius: 999px; flex: none; }
+
+.util-map-note {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   M02-4 使用率區間分布（S）
+   ========================================================================== */
+
+.util-bands-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-2);
+    flex: 1 1 auto;
+}
+
+.util-bands-list > li {
+    display: grid;
+    grid-template-columns: 7px minmax(0, auto) minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+}
+
+.util-band-dot { width: 7px; height: 7px; border-radius: 999px; flex: none; }
+
+.util-band-name { font-size: var(--fs-note); color: var(--ink-2); white-space: nowrap; }
+
+.util-band-count {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+}
+
+.util-band-count > em { font-style: normal; font-size: var(--fs-micro); font-weight: 500; color: var(--ink-3); margin-left: 1px; }
+
+.util-band-pct {
+    min-width: 46px;
+    text-align: right;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   M02-5／M02-6 使用率排名（S）
+   ========================================================================== */
+
+.util-rank-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.util-rank-list > li + li { border-top: 1px solid var(--ln-hair); }
+
+/* 條色跟著該站所的使用率色檔走，與地圖同一套讀法 */
+.util-rank-list > li.is-band-st-normal { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); }
+.util-rank-list > li.is-band-st-info { --lv: var(--st-info); --lv-soft: var(--st-info-soft); }
+.util-rank-list > li.is-band-st-notice { --lv: var(--st-notice); --lv-soft: var(--st-notice-soft); }
+.util-rank-list > li.is-band-st-warn { --lv: var(--st-warn); --lv-soft: var(--st-warn-soft); }
+.util-rank-list > li.is-band-st-critical { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); }
+
+.util-rank-list button {
+    display: grid;
+    grid-template-columns: 20px minmax(0, auto) minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    border-radius: var(--fx-r-inner);
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.util-rank-list button:hover { background: var(--sf-hover); }
+.util-rank-list button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+/* 輪播高亮：焦點掠過的那一列，位置不動只有標記在走 */
+.util-rank-list > li.is-spot button {
+    background: var(--lv-soft);
+    box-shadow: inset 2px 0 0 var(--lv);
+}
+
+.util-rank-no {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--sf-inset);
+    color: var(--ink-3);
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-micro);
+    font-weight: 700;
+}
+
+/* 前三名給獎牌色，與參考圖一致 */
+.util-rank-no.is-medal { background: var(--lv); color: var(--ink-on-brand); }
+
+.util-rank-name {
+    font-size: var(--fs-body);
+    color: var(--ink-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.util-rank-rate {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.util-rank-rate > em { font-style: normal; font-size: var(--fs-micro); font-weight: 500; color: var(--ink-3); }
+
+.util-rank-delta {
+    min-width: 54px;
+    text-align: right;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-micro);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.util-rank-delta.is-up { color: var(--st-normal); }
+.util-rank-delta.is-down { color: var(--st-critical); }
+
+/* ==========================================================================
+   M02-7 站所使用率明細（L）
+   ========================================================================== */
+
+.util-table-wrap { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+/* 表格預設右對齊數字；文字欄單獨左對齊 */
+.ds-table th.is-text, .ds-table td.is-text { text-align: left; }
+
+.util-cell-rate {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-width: 108px;
+}
+
+.util-cell-rate > .ds-bar { flex: 1 1 auto; min-width: 46px; }
+
+.util-cell-rate > em {
+    font-style: normal;
+    font-family: var(--fx-font-num);
+    font-weight: 700;
+    color: var(--ink-1);
+}
+
+.util-table .is-up { color: var(--st-normal); }
+.util-table .is-down { color: var(--st-critical); }
+
+.util-spark { width: 76px; height: 20px; display: block; }
+.util-spark.is-up { color: var(--st-normal); }
+.util-spark.is-down { color: var(--st-critical); }
+
+.util-table-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    cursor: pointer;
+}
+
+.util-table-link:hover { text-decoration: underline; }
+
+.util-table-note {
+    flex: none;
+    margin: var(--sp-2) 0 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    text-align: center;
+}

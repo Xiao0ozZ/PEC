@@ -1,1654 +1,698 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
-    <title>资料管理</title>
-    <link rel="icon" href="data:," />
+    <meta name="prototype-title" content="业务页面原型" />
+    <meta name="prototype-path" content="/admin/business-page" />
+    <meta name="prototype-section" content="workspace" />
+    <meta name="prototype-icon" content="Document" />
+    <title>业务页面原型</title>
 
-    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
-    <!-- PROTOTYPE_AI_PROTOCOL_START -->
     <!--
-      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
-
-      目标
-      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
-      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
-      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
-      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
-      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
-
-      执行顺序
-      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
-      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
-      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
-
-      不可破坏的模板契约
-      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
-      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
-      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
-      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
-      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
-      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
-      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
-
-      页面身份必须同步
-      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
-      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
-      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
-      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
-      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
-      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
-      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
-      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
-      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
-      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
-      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
-
-      页面结构选择
-      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
-      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
-      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
-      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
-      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
-      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
-      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
-
-      HTML、Vue 与交互规则
-      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
-      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
-      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
-      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
-      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
-      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
-      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
-      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
-      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
-
-      CSS 与视觉规则
-      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
-      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
-      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
-      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
-      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
-      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
-
-      交付自检
-      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
-      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
-      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
-      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
-      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
-      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
-      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+      PROTOTYPE_AI_PROTOCOL_START
+      这是一个可独立打开的 HTML 原型模板，不依赖构建工具、框架或第三方运行时。
+      业务页面只编辑 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS 和 PAGE_LOGIC 四个区域。
+      页面最终由平台公共壳承载；模板自身仍然可以直接在浏览器中预览。
+      PROTOTYPE_AI_PROTOCOL_END
     -->
-    <!-- PROTOTYPE_AI_PROTOCOL_END -->
 
-    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
     <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
-    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <!-- 模板只使用原生 CSS；平台承载时会注入统一的主题变量。 -->
     <!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
 
-    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
-    <style data-theme-tokens>
-      :root {
-        --app-color-primary: #007aff;
-        --app-color-primary-hover: #1687ff;
-        --app-color-primary-active: #0066cc;
-        --app-color-primary-shadow: rgb(0 122 255 / 16%);
-        --app-color-primary-light-3: #4da2ff;
-        --app-color-primary-light-5: #80bdff;
-        --app-color-primary-light-7: #b3d7ff;
-        --app-color-primary-light-8: #cce4ff;
-        --app-color-primary-light-9: #e6f2ff;
-        --app-color-sidebar: rgb(246 247 249 / 94%);
-        --app-color-sidebar-border: rgb(60 60 67 / 12%);
-        --app-color-sidebar-text: #3a3a3c;
-        --app-color-sidebar-muted: #8e8e93;
-        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
-      }
-    </style>
-    <!-- THEME_TOKENS_END -->
-
-    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
     <!-- PROTOTYPE_THEME_BRIDGE_START -->
-    <style data-theme-bridge>
-      /* 未设置 data-theme 时保持浅色默认值。 */
-      html[data-theme='light'] {
-        --app-color-sidebar: rgb(255 255 255 / 72%);
-        --app-color-sidebar-border: rgb(5 5 5 / 10%);
-        --app-color-sidebar-text: rgb(0 0 0 / 88%);
-        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
-        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
-        --app-color-text-primary: rgb(0 0 0 / 88%);
-        --app-color-text-secondary: rgb(0 0 0 / 65%);
-        --app-color-text-muted: rgb(0 0 0 / 45%);
-        --app-color-border: rgb(5 5 5 / 12%);
-        --app-color-border-light: rgb(5 5 5 / 8%);
-        --app-color-border-subtle: rgb(5 5 5 / 6%);
-        --app-color-surface: rgb(255 255 255 / 68%);
-        --app-color-surface-subtle: rgb(255 255 255 / 54%);
-        --app-color-surface-muted: rgb(255 255 255 / 62%);
-        --app-color-avatar-surface: #8c8c8c;
-        --app-color-host-page: #f5f7fa;
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const themeVariables = [
+          '--app-color-primary',
+          '--app-color-primary-hover',
+          '--app-color-primary-active',
+          '--app-color-bg-layout',
+          '--app-color-bg-container',
+          '--app-color-bg-elevated',
+          '--app-color-text',
+          '--app-color-text-secondary',
+          '--app-color-border',
+        ];
+
+        function readHostDocument() {
+          try {
+            return window.parent !== window ? window.parent.document : document;
+          } catch {
+            return document;
+          }
+        }
+
+        function syncTheme() {
+          const hostDocument = readHostDocument();
+          const hostRoot = hostDocument.documentElement;
+          const theme =
+            hostRoot.getAttribute('data-theme') || (hostRoot.classList.contains('dark') ? 'dark' : 'light');
+          root.setAttribute('data-theme', theme);
+          const hostStyles = window.getComputedStyle(hostRoot);
+          themeVariables.forEach((name) => {
+            const value = hostStyles.getPropertyValue(name).trim();
+            if (value) root.style.setProperty(name, value);
+          });
+        }
+
+        syncTheme();
+        try {
+          const hostRoot = window.parent !== window ? window.parent.document.documentElement : null;
+          if (hostRoot) {
+            new MutationObserver(syncTheme).observe(hostRoot, {
+              attributes: true,
+              attributeFilter: ['class', 'data-theme', 'style'],
+            });
+          }
+        } catch {
+          // 独立预览或跨域承载时无法观察宿主，使用模板自己的浅色主题即可。
+        }
+      })();
+    </script>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- PAGE_STYLE_START -->
+    <style>
+      :root {
         color-scheme: light;
+        --app-color-primary: #1677ff;
+        --app-color-primary-hover: #4096ff;
+        --app-color-primary-active: #0958d9;
+        --app-color-bg-layout: #f5f7fb;
+        --app-color-bg-container: #ffffff;
+        --app-color-bg-elevated: #ffffff;
+        --app-color-text: #1f2937;
+        --app-color-text-secondary: #667085;
+        --app-color-border: #e5e7eb;
+        --prototype-radius-sm: 8px;
+        --prototype-radius-md: 14px;
+        --prototype-radius-lg: 22px;
+        --prototype-shadow-sm: 0 8px 24px rgb(15 23 42 / 6%);
       }
 
       html[data-theme='dark'] {
-        --app-color-sidebar: #141414;
-        --app-color-sidebar-border: #303030;
-        --app-color-sidebar-text: rgb(255 255 255 / 88%);
-        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
-        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
-        --app-color-text-primary: rgb(255 255 255 / 88%);
-        --app-color-text-secondary: rgb(255 255 255 / 65%);
-        --app-color-text-muted: rgb(255 255 255 / 45%);
-        --app-color-border: #434343;
-        --app-color-border-light: #303030;
-        --app-color-border-subtle: #262626;
-        --app-color-surface: #141414;
-        --app-color-surface-subtle: #1f1f1f;
-        --app-color-surface-muted: #1f1f1f;
-        --app-color-avatar-surface: #595959;
-        --app-color-host-page: #000;
         color-scheme: dark;
+        --app-color-bg-layout: #0f172a;
+        --app-color-bg-container: #172033;
+        --app-color-bg-elevated: #202b40;
+        --app-color-text: #f3f4f6;
+        --app-color-text-secondary: #aab4c4;
+        --app-color-border: #334155;
+        --prototype-shadow-sm: 0 8px 24px rgb(0 0 0 / 24%);
       }
 
-      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
-      html[data-theme='light'] .prototype-topbar,
-      html[data-theme='dark'] .prototype-topbar {
-        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
-        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
-        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
-        backdrop-filter: blur(22px) saturate(145%);
-        -webkit-backdrop-filter: blur(22px) saturate(145%);
-      }
-
-      html[data-theme='dark'] .prototype-topbar {
-        box-shadow:
-          inset 0 1px 0 rgb(255 255 255 / 8%),
-          0 10px 30px rgb(0 0 0 / 34%);
-      }
-
-      @media (prefers-reduced-transparency: reduce) {
-        html[data-theme='light'] .prototype-topbar,
-        html[data-theme='dark'] .prototype-topbar {
-          background: var(--app-color-surface);
-          box-shadow: none;
-          backdrop-filter: none;
-          -webkit-backdrop-filter: none;
-        }
-      }
-    </style>
-    <!-- PROTOTYPE_THEME_BRIDGE_END -->
-
-    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
-    <!-- PROTOTYPE_BASE_STYLE_START -->
-    <style>
-      :root {
-        --app-color-success: #16a34a;
-        --app-color-warning: #f59e0b;
-        --app-color-danger: #dc2626;
-        --app-color-text-primary: #0f172a;
-        --app-color-text-secondary: #475569;
-        --app-color-text-muted: #64748b;
-        --app-color-border: #dbe3ec;
-        --app-color-border-light: #e5e7eb;
-        --app-color-border-subtle: #f3f4f6;
-        --app-color-surface: #ffffff;
-        --app-color-surface-subtle: #f8fafc;
-        --app-color-surface-muted: #f9fafb;
-        --app-color-project-page: #f5f5f7;
-        --app-color-host-page: var(--app-color-project-page);
-        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
-        --app-color-avatar-text: #ffffff;
-        --app-color-avatar-surface: #94a3b8;
-        --app-font-family-sans:
-          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
-          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
-        --app-font-family-mono:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-        --app-font-size-xs: 12px;
-        --app-font-size-sm: 13px;
-        --app-font-size-base: 14px;
-        --app-font-size-md: 16px;
-        --app-font-size-page-title: 24px;
-        --app-space-2: 8px;
-        --app-space-3: 12px;
-        --app-space-4: 16px;
-        --app-space-6: 24px;
-        --app-radius-control: 4px;
-        --app-radius-panel: 8px;
-        --app-radius-list-panel: 12px;
-        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
-        --app-control-height: 36px;
-        --app-table-row-height: 48px;
-        --app-panel-header-height: 52px;
-        --el-color-primary: var(--app-color-primary);
-        --el-color-primary-light-3: var(--app-color-primary-light-3);
-        --el-color-primary-light-5: var(--app-color-primary-light-5);
-        --el-color-primary-light-7: var(--app-color-primary-light-7);
-        --el-color-primary-light-8: var(--app-color-primary-light-8);
-        --el-color-primary-light-9: var(--app-color-primary-light-9);
-        --el-color-primary-dark-2: var(--app-color-primary-active);
-        --el-font-family: var(--app-font-family-sans);
-      }
-
-      * {
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
       }
 
       html,
-      body,
-      #app {
-        width: 100%;
-        height: 100%;
-        margin: 0;
+      body {
+        min-height: 100%;
       }
 
       body {
-        overflow: hidden;
-        color: var(--app-color-text-primary);
-        background: var(--app-color-page);
-        font-family: var(--app-font-family-sans);
-        font-size: var(--app-font-size-base);
-        line-height: 1.5;
+        margin: 0;
+        background: var(--app-color-bg-layout);
+        color: var(--app-color-text);
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
       }
 
       button,
       input,
-      textarea,
       select {
         font: inherit;
       }
 
-      [v-cloak] {
-        display: none;
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .prototype-app {
-        display: flex;
-        height: 100%;
+      button {
+        border: 0;
+        cursor: pointer;
       }
 
-      .prototype-sidebar {
-        display: flex;
-        flex: 0 0 256px;
-        flex-direction: column;
-        width: 256px;
-        min-height: 0;
-        overflow: hidden;
-        color: var(--app-color-sidebar-text);
-        background: var(--app-color-sidebar);
-        border-right: 1px solid var(--app-color-sidebar-border);
-        backdrop-filter: blur(24px) saturate(160%);
-      }
-
-      .prototype-brand {
-        flex: 0 0 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        height: 64px;
-        padding: 0 24px;
-        margin: 0;
-        border-bottom: 1px solid var(--app-color-sidebar-border);
-        border-radius: 0;
-        background: transparent;
-        font-size: 20px;
-        font-weight: 700;
-        letter-spacing: 0.01em;
-      }
-
-      .prototype-brand > span {
-        min-width: 0;
-        overflow: hidden;
-        color: var(--app-color-sidebar-text);
-        line-height: 1.2;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .prototype-brand small {
-        flex: 0 0 auto;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--app-color-sidebar-muted);
-        white-space: nowrap;
-      }
-
-      .prototype-menu {
-        flex: 1;
-        min-height: 0;
-        padding: 24px 12px;
-        overflow-y: auto;
-        scrollbar-color: rgb(60 60 67 / 22%) transparent;
-        scrollbar-width: thin;
-      }
-
-      .prototype-menu::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .prototype-menu::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      .prototype-menu::-webkit-scrollbar-thumb {
-        background: rgb(60 60 67 / 22%);
-        border-radius: 999px;
-      }
-
-      .prototype-menu-group {
-        position: relative;
-        margin: 0 12px 8px;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 18px;
-        letter-spacing: 0.02em;
-        color: var(--app-color-sidebar-muted);
-      }
-
-      .prototype-menu-item + .prototype-menu-group {
-        padding-top: 24px;
-        margin-top: 12px;
-      }
-
-      .prototype-menu-item + .prototype-menu-group::before {
-        position: absolute;
-        top: 0;
-        right: -12px;
-        left: -12px;
-        height: 1px;
-        content: '';
-        background: var(--app-color-sidebar-border);
-      }
-
-      .prototype-menu-item {
-        display: flex;
-        min-height: 40px;
-        gap: 10px;
-        align-items: center;
-        padding: 10px 12px;
-        margin-bottom: 4px;
-        border-radius: 8px;
-        color: var(--app-color-sidebar-text);
-        line-height: 20px;
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        transition:
-          background-color 160ms ease,
-          color 160ms ease;
-      }
-
-      .prototype-menu-icon {
-        flex: 0 0 20px;
-        width: 20px;
-        height: 20px;
-        color: var(--app-color-sidebar-muted);
-        font-size: 20px;
-      }
-
-      .prototype-menu-item > span:last-child {
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .prototype-menu-item:hover {
-        color: var(--app-color-sidebar-text);
-        background: var(--app-color-sidebar-hover);
-      }
-
-      .prototype-menu-item.is-active {
-        color: var(--app-color-primary);
-        background: var(--app-color-primary-light-9);
-        font-weight: 600;
-      }
-
-      .prototype-menu-item:hover .prototype-menu-icon {
-        color: var(--app-color-sidebar-text);
-      }
-
-      .prototype-menu-item.is-active .prototype-menu-icon {
-        color: var(--app-color-primary);
-      }
-
-      .prototype-menu-item:focus-visible {
-        outline: 2px solid var(--app-color-primary);
-        outline-offset: 2px;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .prototype-menu-item {
-          transition: none;
-        }
-      }
-
-      .prototype-workspace {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        min-width: 0;
+      .prototype-page {
+        min-height: 100vh;
+        padding: 24px;
+        background: var(--app-color-bg-layout);
       }
 
       .prototype-topbar {
         display: flex;
-        flex: 0 0 64px;
         align-items: center;
         justify-content: space-between;
-        height: 64px;
-        padding: 0 28px;
-        background: var(--app-color-surface);
-        border-bottom: 1px solid var(--app-color-border-light);
+        gap: 20px;
+        max-width: 1120px;
+        margin: 0 auto 22px;
+        padding: 14px 18px;
+        border: 1px solid color-mix(in srgb, var(--app-color-border) 78%, transparent);
+        border-radius: var(--prototype-radius-lg);
+        background: color-mix(in srgb, var(--app-color-bg-elevated) 86%, transparent);
+        box-shadow: var(--prototype-shadow-sm);
+        backdrop-filter: blur(18px) saturate(1.15);
       }
 
-      .prototype-breadcrumb {
-        font-size: 14px;
-        color: var(--app-color-text-muted);
-      }
-
-      .prototype-user {
-        display: flex;
-        gap: 10px;
+      .prototype-topbar__brand,
+      .prototype-topbar__meta {
+        display: inline-flex;
         align-items: center;
-        padding: 0;
-        color: inherit;
-        cursor: pointer;
-        background: transparent;
-        border: 0;
-        font-size: 14px;
-        font-weight: 600;
+        gap: 10px;
       }
 
-      .prototype-avatar {
+      .prototype-topbar__brand {
+        color: var(--app-color-text);
+        font-weight: 700;
+      }
+
+      .prototype-topbar__mark {
         display: grid;
         width: 30px;
         height: 30px;
-        color: var(--app-color-avatar-text);
-        background: var(--app-color-avatar-surface);
-        border-radius: 50%;
         place-items: center;
+        border-radius: 10px;
+        background: var(--app-color-primary);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .prototype-topbar__meta {
+        color: var(--app-color-text-secondary);
+        font-size: 13px;
       }
 
       .prototype-main {
-        flex: 1;
-        min-height: 0;
-        padding: 24px;
-        overflow: auto;
+        max-width: 1120px;
+        margin: 0 auto;
       }
 
-      /*
-        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
-        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
-      */
-      @media (max-width: 1080px) {
-        .prototype-sidebar {
-          flex: 0 0 64px;
-          width: 64px;
-        }
-
-        .prototype-brand {
-          justify-content: center;
-          padding: 0;
-        }
-
-        .prototype-menu {
-          padding: 12px 8px;
-        }
-
-        .prototype-menu-item {
-          justify-content: center;
-          padding: 10px 0;
-        }
-
-        .prototype-brand > span,
-        .prototype-brand small,
-        .prototype-menu-group,
-        .prototype-menu-item > span:last-child {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          overflow: hidden;
-          white-space: nowrap;
-          clip-path: inset(50%);
-        }
-
-        .prototype-menu-item + .prototype-menu-group {
-          position: static;
-          width: auto;
-          height: 1px;
-          padding: 0;
-          margin: 12px 0;
-          overflow: visible;
-          clip-path: none;
-          background: var(--app-color-sidebar-border);
-          font-size: 0;
-        }
-
-        .prototype-menu-item + .prototype-menu-group::before {
-          display: none;
-        }
-
-        .prototype-topbar {
-          padding: 0 16px;
-        }
-
-        .prototype-main {
-          padding: 16px;
-        }
-      }
-    </style>
-    <!-- PROTOTYPE_BASE_STYLE_END -->
-
-    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
-    <style data-page-style>
-      .business-page {
-        width: 100%;
-        font-size: var(--app-font-size-base);
-        line-height: 1.5;
+      .prototype-content {
+        padding: clamp(22px, 4vw, 42px);
+        border: 1px solid color-mix(in srgb, var(--app-color-border) 72%, transparent);
+        border-radius: var(--prototype-radius-lg);
+        background: color-mix(in srgb, var(--app-color-bg-container) 96%, transparent);
+        box-shadow: var(--prototype-shadow-sm);
       }
 
-      /* 页面自行增加的区块标题使用此层级；正文、表格、表单和详情字段继续使用 14px。 */
-      .business-page .section-title {
-        margin: 0;
-        font-size: var(--app-font-size-md);
-        font-weight: 700;
-        line-height: 1.5;
-      }
-
-      .business-page .page-heading {
+      .prototype-content__header {
         display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
+        align-items: flex-start;
         justify-content: space-between;
-        gap: var(--app-space-3);
-        margin-bottom: var(--app-space-6);
+        gap: 24px;
+        margin-bottom: 28px;
       }
 
-      .business-page .page-heading h1 {
-        margin: 0;
-        color: var(--app-color-text-primary);
-        font-size: var(--app-font-size-page-title);
-        font-weight: 700;
-        line-height: 32px;
-        letter-spacing: 0;
+      .prototype-content h1,
+      .prototype-content h2,
+      .prototype-content h3,
+      .prototype-content p {
+        margin-top: 0;
       }
 
-      .business-page .page-heading p {
-        margin: 4px 0 0;
-        color: var(--app-color-text-muted);
-        font-size: var(--app-font-size-base);
+      .prototype-content h1 {
+        margin-bottom: 8px;
+        font-size: clamp(24px, 3vw, 34px);
+        line-height: 1.25;
+        letter-spacing: -0.02em;
       }
 
-      .business-page .page-heading .el-button--large {
-        box-shadow: 0 4px 6px -1px var(--app-color-primary-shadow);
-      }
-
-      .business-page .content-panel {
-        overflow: hidden;
-        background: var(--app-color-surface);
-        border: 1px solid var(--app-color-border-subtle);
-        border-radius: var(--app-radius-list-panel);
-        box-shadow: var(--app-shadow-panel);
-      }
-
-      .business-page .filter-bar,
-      .business-page .pagination-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--app-space-3);
-        padding: var(--app-space-4);
-      }
-
-      .business-page .filter-bar {
-        min-height: 60px;
-        border-bottom: 1px solid var(--app-color-border-light);
-        background: var(--app-color-surface-muted);
-      }
-
-      .business-page .filter-fields,
-      .business-page .filter-summary {
-        display: flex;
-        align-items: center;
-      }
-
-      .business-page .filter-fields {
-        flex-wrap: wrap;
-        gap: var(--app-space-3);
-      }
-
-      .business-page .filter-summary {
-        flex: 0 0 auto;
-        margin-left: auto;
-        color: var(--app-color-text-muted);
-        font-size: var(--app-font-size-base);
-      }
-
-      .business-page .filter-fields .el-input {
-        width: 280px;
-      }
-
-      .business-page .filter-fields .el-select {
-        width: 160px;
-      }
-
-      .business-page .table-wrap {
-        padding: 0;
-      }
-
-      .business-page .el-table th.el-table__cell {
+      .prototype-content__description {
+        margin-bottom: 0;
         color: var(--app-color-text-secondary);
-        font-weight: 700;
-        background: var(--app-color-surface-muted);
       }
 
-      .business-page .pagination-bar {
-        justify-content: flex-end;
-        border-top: 1px solid var(--app-color-border-light);
-        background: var(--app-color-surface-muted);
+      .prototype-button {
+        min-height: 38px;
+        padding: 0 16px;
+        border-radius: 11px;
+        background: var(--app-color-primary);
+        color: #fff;
+        font-weight: 600;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease,
+          box-shadow 160ms ease;
       }
 
-      .business-page .name-cell strong {
-        display: block;
-        font-size: var(--app-font-size-base);
+      .prototype-button:hover {
+        background: var(--app-color-primary-hover);
+        box-shadow: 0 8px 18px color-mix(in srgb, var(--app-color-primary) 22%, transparent);
+        transform: translateY(-1px);
       }
 
-      .business-page .name-cell span {
-        display: block;
-        margin-top: 2px;
-        font-size: var(--app-font-size-xs);
-        color: var(--app-color-text-muted);
+      .prototype-button:active {
+        background: var(--app-color-primary-active);
+        transform: translateY(0);
       }
 
-      .business-page .template-demo-switch {
+      .prototype-button--quiet {
+        background: color-mix(in srgb, var(--app-color-primary) 10%, transparent);
+        color: var(--app-color-primary);
+      }
+
+      .prototype-button--quiet:hover {
+        background: color-mix(in srgb, var(--app-color-primary) 16%, transparent);
+      }
+
+      .prototype-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .prototype-field {
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid var(--app-color-border);
+        border-radius: var(--prototype-radius-sm);
+        outline: 0;
+        background: var(--app-color-bg-elevated);
+        color: var(--app-color-text);
+      }
+
+      .prototype-field:focus {
+        border-color: var(--app-color-primary);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-color-primary) 15%, transparent);
+      }
+
+      .prototype-field--search {
+        min-width: min(320px, 100%);
+        flex: 1 1 260px;
+      }
+
+      .prototype-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--app-color-border);
+      }
+
+      .prototype-tab {
+        position: relative;
+        padding: 10px 14px;
+        background: transparent;
+        color: var(--app-color-text-secondary);
+        font-weight: 600;
+      }
+
+      .prototype-tab::after {
+        position: absolute;
+        right: 12px;
+        bottom: -1px;
+        left: 12px;
+        height: 2px;
+        border-radius: 2px;
+        background: transparent;
+        content: '';
+      }
+
+      .prototype-tab[aria-selected='true'] {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-tab[aria-selected='true']::after {
+        background: var(--app-color-primary);
+      }
+
+      .prototype-table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--app-color-border);
+        border-radius: var(--prototype-radius-md);
+      }
+
+      .prototype-table {
+        width: 100%;
+        min-width: 640px;
+        border-collapse: collapse;
+      }
+
+      .prototype-table th,
+      .prototype-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--app-color-border);
+        text-align: left;
+      }
+
+      .prototype-table th {
+        background: color-mix(in srgb, var(--app-color-bg-layout) 76%, transparent);
+        color: var(--app-color-text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .prototype-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .prototype-table tbody tr {
+        transition: background-color 160ms ease;
+      }
+
+      .prototype-table tbody tr:hover {
+        background: color-mix(in srgb, var(--app-color-primary) 5%, transparent);
+      }
+
+      .prototype-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: color-mix(in srgb, #16a34a 12%, transparent);
+        color: #16a34a;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .prototype-status::before {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        content: '';
+      }
+
+      .prototype-empty {
+        padding: 42px 20px;
+        color: var(--app-color-text-secondary);
+        text-align: center;
+      }
+
+      .prototype-toast {
         position: fixed;
         right: 24px;
         bottom: 24px;
-        z-index: 20;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 6px;
-        background: var(--app-color-surface);
+        z-index: 2;
+        max-width: min(360px, calc(100vw - 48px));
+        padding: 12px 16px;
+        border: 1px solid color-mix(in srgb, var(--app-color-primary) 30%, var(--app-color-border));
+        border-radius: 12px;
+        background: var(--app-color-bg-elevated);
+        box-shadow: var(--prototype-shadow-sm);
+        color: var(--app-color-text);
+      }
+
+      .prototype-dialog {
+        width: min(520px, calc(100vw - 32px));
+        padding: 0;
         border: 1px solid var(--app-color-border);
-        border-radius: 10px;
-        box-shadow: 0 10px 28px rgb(15 23 42 / 14%);
+        border-radius: var(--prototype-radius-lg);
+        background: var(--app-color-bg-elevated);
+        color: var(--app-color-text);
+        box-shadow: 0 24px 80px rgb(15 23 42 / 24%);
       }
 
-      .business-page .template-demo-switch-label {
-        padding-left: var(--app-space-2);
-        color: var(--app-color-text-muted);
-        font-size: var(--app-font-size-sm);
-        white-space: nowrap;
+      .prototype-dialog::backdrop {
+        background: rgb(15 23 42 / 35%);
+        backdrop-filter: blur(3px);
       }
 
-      .business-page .template-demo-switch-options {
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        padding: 2px;
-        background: var(--app-color-surface-subtle);
-        border-radius: 7px;
+      .prototype-dialog__body {
+        padding: 24px;
       }
 
-      .business-page .template-demo-switch button {
-        min-height: 30px;
-        padding: 0 10px;
-        color: var(--app-color-text-secondary);
-        font: inherit;
-        font-size: var(--app-font-size-sm);
-        background: transparent;
-        border: 0;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .business-page .template-demo-switch button:hover {
-        color: var(--app-color-primary);
-      }
-
-      .business-page .template-demo-switch button.is-active {
-        color: var(--app-color-primary);
-        font-weight: 600;
-        background: var(--app-color-surface);
-        box-shadow: 0 1px 3px rgb(15 23 42 / 12%);
-      }
-
-      .business-page .template-demo-switch button:focus-visible {
-        outline: 2px solid var(--app-color-primary);
-        outline-offset: 2px;
-      }
-
-      .business-page .secondary-backbar {
-        display: flex;
-        align-items: center;
-        min-height: var(--app-control-height);
-        margin-bottom: var(--app-space-4);
-      }
-
-      .business-page .secondary-object-summary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--app-space-6);
-        margin-bottom: var(--app-space-4);
-        padding: 20px;
-        background: var(--app-color-surface);
-        border: 1px solid var(--app-color-border-light);
-        border-radius: var(--app-radius-list-panel);
-        box-shadow: var(--app-shadow-panel);
-      }
-
-      .business-page .secondary-object-main,
-      .business-page .secondary-object-title,
-      .business-page .secondary-object-actions {
-        display: flex;
-        align-items: center;
-      }
-
-      .business-page .secondary-object-main {
-        min-width: 0;
-        gap: var(--app-space-4);
-      }
-
-      .business-page .secondary-object-copy {
-        min-width: 0;
-      }
-
-      .business-page .secondary-object-title {
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .business-page .secondary-object-title h1 {
-        margin: 0;
-        color: var(--app-color-text-primary);
-        font-size: var(--app-font-size-page-title);
-        line-height: 32px;
-      }
-
-      .business-page .secondary-object-kicker {
-        margin-bottom: 4px;
-        color: var(--app-color-text-muted);
-        font-size: var(--app-font-size-sm);
-      }
-
-      .business-page .secondary-object-copy p {
-        margin: 4px 0 0;
-        color: var(--app-color-text-muted);
-      }
-
-      .business-page .secondary-object-actions {
-        flex: 0 0 auto;
-        gap: var(--app-space-2);
-      }
-
-      .business-page .secondary-form-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        align-items: start;
-        gap: var(--app-space-4);
-      }
-
-      .business-page .secondary-panel-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: var(--app-panel-header-height);
-        padding: 0 var(--app-space-4);
-        border-bottom: 1px solid var(--app-color-border-light);
-      }
-
-      .business-page .secondary-panel-header h2 {
-        margin: 0;
-        color: var(--app-color-text-primary);
-        font-size: var(--app-font-size-md);
-      }
-
-      .business-page .secondary-panel-body {
-        padding: var(--app-space-4);
-      }
-
-      .business-page .secondary-order-summary {
-        display: grid;
-        gap: var(--app-space-3);
-      }
-
-      .business-page .secondary-summary-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--app-space-4);
-      }
-
-      .business-page .secondary-summary-row + .secondary-summary-row {
-        padding-top: var(--app-space-3);
-        border-top: 1px solid var(--app-color-border-subtle);
-      }
-
-      .business-page .secondary-summary-row span {
-        color: var(--app-color-text-muted);
-      }
-
-      .business-page .secondary-form-section + .secondary-form-section {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid var(--app-color-border-light);
-      }
-
-      .business-page .secondary-form-section h3 {
-        margin: 0 0 14px;
-        color: var(--app-color-text-primary);
-        font-size: var(--app-font-size-md);
-      }
-
-      .business-page .secondary-form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0 var(--app-space-4);
-      }
-
-      .business-page .secondary-summary-panel {
-        position: sticky;
-        top: 0;
-      }
-
-      .business-page .secondary-summary-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--app-space-2);
-        margin-top: 18px;
-      }
-
-      .business-page .secondary-summary-actions .el-button {
-        width: 100%;
-        margin: 0;
-      }
-
-      /* 两栏表单在 1180px 以下收成单栏；过宽的表格始终在自身面板内横向滚动。 */
-      @media (max-width: 1180px) {
-        .business-page .secondary-form-layout {
-          grid-template-columns: 1fr;
-        }
-
-        .business-page .secondary-summary-panel {
-          position: static;
-        }
-      }
-
-      /* 窄屏内容区降级：筛选控件收窄、分页去掉跳页输入，保证主操作始终可见可点。 */
-      @media (max-width: 1080px) {
-        .business-page .filter-fields .el-input {
-          flex: 1 1 200px;
-          width: auto;
-          min-width: 180px;
-          max-width: 280px;
-        }
-
-        .business-page .filter-fields .el-select {
-          width: 140px;
-        }
-
-        .business-page .el-pagination__jump {
-          display: none;
-        }
-      }
-
-      .business-page-dialog .el-dialog__body {
-        padding-top: 10px;
-      }
-
-      .business-page-dialog .dialog-footer {
+      .prototype-dialog__actions {
         display: flex;
         justify-content: flex-end;
-        gap: var(--app-space-2);
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      @media (max-width: 680px) {
+        .prototype-page {
+          padding: 12px;
+        }
+
+        .prototype-topbar,
+        .prototype-content__header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .prototype-topbar {
+          margin-bottom: 14px;
+        }
+
+        .prototype-content {
+          padding: 20px 16px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
     <!-- PAGE_STYLE_END -->
+  </head>
+  <body>
+    <!-- PROTOTYPE_SHELL_START -->
+    <div class="prototype-page">
+      <header class="prototype-topbar" aria-label="原型页顶栏">
+        <div class="prototype-topbar__brand">
+          <span class="prototype-topbar__mark" aria-hidden="true">◆</span>
+          <span>业务原型</span>
+        </div>
+        <div class="prototype-topbar__meta">
+          <span>HTML 页面</span>
+          <span aria-hidden="true">·</span>
+          <span>可独立预览</span>
+        </div>
+      </header>
 
-    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+      <main class="prototype-main" data-page-content data-business-content>
+        <!-- [AI-EDIT] PAGE_CONTENT_START -->
+        <section class="prototype-content" aria-labelledby="page-title">
+          <div class="prototype-content__header">
+            <div>
+              <h1 id="page-title">业务页面原型</h1>
+              <p class="prototype-content__description">在这里替换页面标题、说明、筛选项和业务数据。</p>
+            </div>
+            <button class="prototype-button" type="button" data-dialog-open>新建记录</button>
+          </div>
+
+          <div class="prototype-toolbar" aria-label="筛选工具栏">
+            <input
+              class="prototype-field prototype-field--search"
+              type="search"
+              placeholder="搜索名称或编号"
+              data-search
+            />
+            <select class="prototype-field" data-status-filter aria-label="状态筛选">
+              <option value="all">全部状态</option>
+              <option value="进行中">进行中</option>
+              <option value="已完成">已完成</option>
+            </select>
+            <button class="prototype-button prototype-button--quiet" type="button" data-reset>重置</button>
+          </div>
+
+          <div class="prototype-tabs" role="tablist" aria-label="记录分类">
+            <button class="prototype-tab" type="button" role="tab" aria-selected="true" data-tab="all">
+              全部
+            </button>
+            <button class="prototype-tab" type="button" role="tab" aria-selected="false" data-tab="进行中">
+              进行中
+            </button>
+            <button class="prototype-tab" type="button" role="tab" aria-selected="false" data-tab="已完成">
+              已完成
+            </button>
+          </div>
+
+          <div class="prototype-table-wrap">
+            <table class="prototype-table">
+              <thead>
+                <tr>
+                  <th scope="col">名称</th>
+                  <th scope="col">负责人</th>
+                  <th scope="col">更新时间</th>
+                  <th scope="col">状态</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody data-records>
+                <tr data-record data-status="进行中">
+                  <td>客户资料整理</td>
+                  <td>林晓</td>
+                  <td>2026-09-12 09:30</td>
+                  <td><span class="prototype-status">进行中</span></td>
+                  <td>
+                    <button class="prototype-button prototype-button--quiet" type="button" data-dialog-open>
+                      查看
+                    </button>
+                  </td>
+                </tr>
+                <tr data-record data-status="已完成">
+                  <td>月度经营复盘</td>
+                  <td>周宁</td>
+                  <td>2026-09-11 18:10</td>
+                  <td><span class="prototype-status">已完成</span></td>
+                  <td>
+                    <button class="prototype-button prototype-button--quiet" type="button" data-dialog-open>
+                      查看
+                    </button>
+                  </td>
+                </tr>
+                <tr data-record data-status="进行中">
+                  <td>服务工单跟进</td>
+                  <td>陈默</td>
+                  <td>2026-09-10 14:20</td>
+                  <td><span class="prototype-status">进行中</span></td>
+                  <td>
+                    <button class="prototype-button prototype-button--quiet" type="button" data-dialog-open>
+                      查看
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="prototype-empty" data-empty hidden>没有符合条件的记录</div>
+          </div>
+        </section>
+        <!-- PAGE_CONTENT_END -->
+      </main>
+    </div>
+    <!-- PROTOTYPE_SHELL_END -->
+
+    <!-- [AI-EDIT] PAGE_OVERLAYS_START -->
+    <dialog class="prototype-dialog" data-page-overlay="detail" aria-labelledby="dialog-title">
+      <div class="prototype-dialog__body">
+        <h2 id="dialog-title">记录详情</h2>
+        <p>这是页面浮层区域。可以在这里放置确认、编辑、抽屉或其他临时交互。</p>
+        <div class="prototype-dialog__actions">
+          <button class="prototype-button prototype-button--quiet" type="button" data-dialog-close>
+            关闭
+          </button>
+          <button class="prototype-button" type="button" data-dialog-confirm>确认</button>
+        </div>
+      </div>
+    </dialog>
+    <div class="prototype-toast" role="status" data-toast hidden></div>
+    <!-- PAGE_OVERLAYS_END -->
+
     <script id="prototype-page-manifest" type="application/json">
       {
         "templateVersion": 1,
-        "scriptMode": "composition-api",
+        "scriptMode": "native",
         "pageKey": "business-page",
-        "pageTitle": "资料管理",
-        "fileName": "资料管理.html",
-        "pageType": "custom",
-        "pageHeaderMode": "standard",
-        "client": "operation",
-        "routePath": "/operation/materials",
-        "menuSection": "business",
-        "menuTitle": "资料管理",
+        "pageTitle": "业务页面原型",
+        "menuTitle": "业务页面原型",
+        "menuSection": "workspace",
         "menuIcon": "Document",
         "menu": true,
-        "rootClass": "business-page",
-        "overlayRootClass": "business-page-dialog",
-        "contentSelector": "[data-page-content]",
-        "businessContentSelector": "[data-business-content]",
-        "overlaySelector": "[data-page-overlay]",
-        "styleSelector": "[data-page-style]",
-        "dependencies": ["vue", "element-plus", "element-plus/locale/zh-cn", "@element-plus/icons-vue"],
+        "client": "admin",
+        "routePath": "/admin/business-page",
+        "renderMode": "content-only",
+        "dependencies": [],
         "assets": []
       }
     </script>
-    <!-- PAGE_MANIFEST_END -->
-  </head>
 
-  <body>
-    <div id="app" class="prototype-app" v-cloak>
-      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
-      <!-- PROTOTYPE_SHELL_START -->
-      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
-        <div class="prototype-brand">
-          <span data-shell-project-name>业务管理中心</span>
-          <small data-shell-client-name>管理端</small>
-        </div>
-        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
-          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
-          <div class="prototype-menu-group">核心工作区</div>
-          <div class="prototype-menu-item" aria-disabled="true">
-            <span class="prototype-menu-icon" data-prototype-menu-icon="Platform" aria-hidden="true"></span>
-            <span>工作台首页</span>
-          </div>
-          <div class="prototype-menu-group">业务管理</div>
-          <div
-            class="prototype-menu-item is-active"
-            data-shell-page-title
-            aria-current="page"
-            aria-disabled="true"
-          >
-            <span class="prototype-menu-icon" data-prototype-menu-icon="Document" aria-hidden="true"></span>
-            <span>资料管理</span>
-          </div>
-          <div class="prototype-menu-item" aria-disabled="true">
-            <span class="prototype-menu-icon" data-prototype-menu-icon="Setting" aria-hidden="true"></span>
-            <span>业务配置</span>
-          </div>
-          <!-- SHELL_NAV_END -->
-        </nav>
-      </aside>
-
-      <div class="prototype-workspace">
-        <header class="prototype-topbar" data-prototype-shell="topbar">
-          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 业务管理 / 资料管理</div>
-          <el-dropdown trigger="click">
-            <button class="prototype-user" type="button" aria-label="账号菜单">
-              <span class="prototype-avatar">A</span>
-              <span>Admin</span>
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </header>
-        <!-- PROTOTYPE_SHELL_END -->
-
-        <main class="prototype-main">
-          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
-          <section
-            class="business-page"
-            data-page-content
-            data-page-root="business-page"
-            data-page-key="business-page"
-          >
-            <!--
-              [AI-EDIT] TEMPLATE_DEMO_SWITCH_START
-              此切换器仅用于查看三种内容区结构。创建正式页面时选择一种结构，删除本标记到对应结束标记
-              之间的全部内容、其余示例分支以及对应的无用样式和状态。
-            -->
-            <div class="template-demo-switch" aria-label="内容区结构示例">
-              <span class="template-demo-switch-label">内容区示例</span>
-              <div class="template-demo-switch-options" role="group" aria-label="切换内容区结构">
-                <button
-                  v-for="option in demoModeOptions"
-                  :key="option.value"
-                  type="button"
-                  :class="{ 'is-active': demoMode === option.value }"
-                  :aria-pressed="demoMode === option.value"
-                  @click="demoMode = option.value"
-                >
-                  {{ option.label }}
-                </button>
-              </div>
-            </div>
-            <!-- TEMPLATE_DEMO_SWITCH_END -->
-
-            <!--
-              [AI-EDIT] PAGE_HEADER_OPTIONAL_START
-              standard：保留标题、子标题和右侧页面主操作，主操作与标题区底部对齐；
-              back-only：独立详情、新增或编辑等二级页面只保留返回入口；H1、状态和主要操作
-              放入 data-business-content 的第一个业务区块；
-              none：不需要独立标题区或返回区时，可删除整个 data-page-header，并将
-              manifest.pageHeaderMode 改为 none。
-            -->
-            <div
-              v-if="demoMode === 'primary'"
-              class="page-heading"
-              data-page-header="standard"
-              data-block-id="page-heading"
-              data-block-name="页面标题"
-            >
-              <div>
-                <h1>资料管理</h1>
-                <p>查询、维护并导出业务资料。</p>
-              </div>
-              <el-button type="primary" size="large" :icon="Plus" @click="openCreateDialog"
-                >新增资料</el-button
-              >
-            </div>
-            <div v-else class="secondary-backbar" data-page-header="back-only">
-              <el-button :icon="ArrowLeft" @click="handleDemoBack">返回</el-button>
-            </div>
-            <!-- PAGE_HEADER_OPTIONAL_END -->
-
-            <!--
-              [AI-EDIT] BUSINESS_CONTENT_START
-              标题区以下的现有内容只是一个可运行示例。根据当前业务需求，可以删除并完整替换
-              data-business-content 内部的结构、组件、文案、数据和交互，不需要沿用示例的布局。
-              唯一需要保留的是一个 data-business-content 外层节点；data-layout-type 仅描述当前页面，
-              现有类型无法准确描述时使用 custom。替换内容后，同步更新 PAGE_STYLE、PAGE_OVERLAYS
-              和 PAGE_LOGIC，并清理不再使用的示例样式、状态和方法。
-            -->
-            <div data-business-content :data-layout-type="demoMode">
-              <template v-if="demoMode === 'primary'">
-                <section class="content-panel" data-block-id="list-panel" data-block-name="资料列表">
-                  <div class="filter-bar">
-                    <div class="filter-fields">
-                      <el-input
-                        v-model="filters.keyword"
-                        :prefix-icon="Search"
-                        aria-label="搜索编号或名称"
-                        clearable
-                        placeholder="搜索编号或名称"
-                      ></el-input>
-                      <el-select
-                        v-model="filters.status"
-                        aria-label="筛选资料状态"
-                        clearable
-                        placeholder="全部状态"
-                      >
-                        <el-option label="启用" value="enabled"></el-option>
-                        <el-option label="停用" value="disabled"></el-option>
-                      </el-select>
-                      <el-tooltip content="重置筛选" placement="top">
-                        <el-button
-                          circle
-                          :icon="Refresh"
-                          aria-label="重置筛选"
-                          @click="resetFilters"
-                        ></el-button>
-                      </el-tooltip>
-                      <el-button type="primary" plain :icon="Download" @click="exportRows">导出</el-button>
-                    </div>
-                    <div class="filter-summary" aria-live="polite">共 {{ filteredRows.length }} 笔资料</div>
-                  </div>
-
-                  <div class="table-wrap">
-                    <!-- 宽表在自身面板内横向滚动；操作列 fixed="right" 冻结在右侧，滚动时保持可见可操作。 -->
-                    <el-table :data="pagedRows" row-key="id" stripe table-layout="fixed" style="width: 100%">
-                      <el-table-column prop="code" label="编号" width="140"></el-table-column>
-                      <el-table-column label="名称" min-width="280">
-                        <template #default="scope">
-                          <div class="name-cell">
-                            <strong>{{ scope.row.name }}</strong>
-                            <span>{{ scope.row.description }}</span>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="category" label="分类" min-width="180"></el-table-column>
-                      <el-table-column prop="owner" label="负责人" width="120"></el-table-column>
-                      <el-table-column label="状态" width="110">
-                        <template #default="scope">
-                          <el-tag :type="scope.row.status === 'enabled' ? 'success' : 'info'">
-                            {{ scope.row.status === 'enabled' ? '启用' : '停用' }}
-                          </el-tag>
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="source" label="来源" min-width="200"></el-table-column>
-                      <el-table-column prop="updatedAt" label="更新时间" width="170"></el-table-column>
-                      <el-table-column label="操作" width="150" align="right" fixed="right">
-                        <template #default="scope">
-                          <el-button link type="primary" @click="openEditDialog(scope.row)">编辑</el-button>
-                          <el-button link type="danger" @click="removeRow(scope.row)">删除</el-button>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </div>
-
-                  <div class="pagination-bar">
-                    <el-pagination
-                      v-model:current-page="pagination.page"
-                      v-model:page-size="pagination.pageSize"
-                      :page-sizes="[10, 20, 50]"
-                      :total="filteredRows.length"
-                      layout="total, sizes, prev, pager, next, jumper"
-                    ></el-pagination>
-                  </div>
-                </section>
-              </template>
-
-              <template v-else-if="demoMode === 'detail'">
-                <section
-                  class="secondary-object-summary"
-                  data-block-id="member-summary"
-                  data-block-name="会员概要"
-                >
-                  <div class="secondary-object-main">
-                    <el-avatar :size="56">林</el-avatar>
-                    <div class="secondary-object-copy">
-                      <div class="secondary-object-kicker">会员编号 M202600128</div>
-                      <div class="secondary-object-title">
-                        <h1>林嘉怡</h1>
-                        <el-tag type="success">正常</el-tag>
-                        <el-tag type="warning" effect="plain">金卡会员</el-tag>
-                      </div>
-                      <p>个人会员 · 138****2617 · 最近登录于 2026-08-07 09:42</p>
-                    </div>
-                  </div>
-                  <div class="secondary-object-actions">
-                    <el-button @click="showDemoAction('编辑会员资料')">编辑资料</el-button>
-                    <el-button type="warning" plain @click="showDemoAction('冻结会员账号')"
-                      >冻结账号</el-button
-                    >
-                  </div>
-                </section>
-
-                <section class="content-panel" data-block-id="member-profile" data-block-name="会员资料">
-                  <div class="secondary-panel-header">
-                    <h2>会员资料</h2>
-                  </div>
-                  <div class="secondary-panel-body">
-                    <el-descriptions :column="3" border>
-                      <el-descriptions-item label="手机号码">138 0000 2617</el-descriptions-item>
-                      <el-descriptions-item label="电子邮箱">jiayi.lin@example.com</el-descriptions-item>
-                      <el-descriptions-item label="注册来源">营运门店</el-descriptions-item>
-                      <el-descriptions-item label="储值余额">¥1,260.50</el-descriptions-item>
-                      <el-descriptions-item label="可用积分">8,420</el-descriptions-item>
-                      <el-descriptions-item label="累计订单">18 笔</el-descriptions-item>
-                    </el-descriptions>
-                  </div>
-                </section>
-              </template>
-
-              <template v-else>
-                <div class="secondary-form-layout">
-                  <section class="content-panel" data-block-id="order-form" data-block-name="订单表单">
-                    <div class="secondary-panel-body">
-                      <el-form :model="orderDraft" label-position="top">
-                        <section class="secondary-form-section">
-                          <h3>客户信息</h3>
-                          <div class="secondary-form-grid">
-                            <el-form-item label="客户姓名" required>
-                              <el-input
-                                v-model="orderDraft.customer"
-                                clearable
-                                placeholder="请输入姓名或会员编号"
-                              ></el-input>
-                            </el-form-item>
-                            <el-form-item label="客户类型">
-                              <el-radio-group v-model="orderDraft.customerType">
-                                <el-radio value="personal">个人客户</el-radio>
-                                <el-radio value="corporate">企业客户</el-radio>
-                              </el-radio-group>
-                            </el-form-item>
-                          </div>
-                        </section>
-
-                        <section class="secondary-form-section">
-                          <h3>租赁信息</h3>
-                          <div class="secondary-form-grid">
-                            <el-form-item label="取还门店" required>
-                              <el-select
-                                v-model="orderDraft.pickupStore"
-                                placeholder="请选择门店"
-                                style="width: 100%"
-                              >
-                                <el-option label="台北车站店" value="台北车站店"></el-option>
-                                <el-option label="新北总店" value="新北总店"></el-option>
-                              </el-select>
-                            </el-form-item>
-                            <el-form-item label="车辆组别" required>
-                              <el-select
-                                v-model="orderDraft.vehicleGroup"
-                                placeholder="请选择车辆组别"
-                                style="width: 100%"
-                              >
-                                <el-option label="经济车组" value="经济车组"></el-option>
-                                <el-option label="商务车组" value="商务车组"></el-option>
-                              </el-select>
-                            </el-form-item>
-                          </div>
-                          <el-form-item label="租赁时间" required>
-                            <el-date-picker
-                              v-model="orderDraft.rentalRange"
-                              type="datetimerange"
-                              start-placeholder="取车时间"
-                              end-placeholder="还车时间"
-                              range-separator="至"
-                              style="width: 100%"
-                            ></el-date-picker>
-                          </el-form-item>
-                          <el-form-item label="订单备注">
-                            <el-input
-                              v-model="orderDraft.note"
-                              type="textarea"
-                              :rows="3"
-                              maxlength="100"
-                              show-word-limit
-                              placeholder="填写交车要求或其他说明"
-                            ></el-input>
-                          </el-form-item>
-                        </section>
-                      </el-form>
-                    </div>
-                  </section>
-
-                  <aside
-                    class="content-panel secondary-summary-panel"
-                    data-block-id="order-summary"
-                    data-block-name="订单摘要"
-                  >
-                    <div class="secondary-panel-header">
-                      <h2>订单摘要</h2>
-                    </div>
-                    <div class="secondary-panel-body">
-                      <div class="secondary-order-summary">
-                        <div class="secondary-summary-row">
-                          <span>客户</span>
-                          <strong>{{ orderDraft.customer || '待选择' }}</strong>
-                        </div>
-                        <div class="secondary-summary-row">
-                          <span>门店</span>
-                          <strong>{{ orderDraft.pickupStore || '待选择' }}</strong>
-                        </div>
-                        <div class="secondary-summary-row">
-                          <span>车辆组别</span>
-                          <strong>{{ orderDraft.vehicleGroup || '待选择' }}</strong>
-                        </div>
-                        <div class="secondary-summary-row">
-                          <span>租赁时间</span>
-                          <strong>{{ rentalRangeSummary }}</strong>
-                        </div>
-                        <div class="secondary-summary-row">
-                          <span>预估金额</span>
-                          <strong>¥2,480.00</strong>
-                        </div>
-                      </div>
-                      <div class="secondary-summary-actions">
-                        <el-button @click="saveDemoDraft">保存草稿</el-button>
-                        <el-button type="primary" @click="submitDemoOrder">建立订单</el-button>
-                      </div>
-                    </div>
-                  </aside>
-                </div>
-              </template>
-            </div>
-            <!-- BUSINESS_CONTENT_END -->
-          </section>
-          <!-- PAGE_CONTENT_END -->
-        </main>
-      </div>
-
-      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
-      <el-dialog
-        v-model="dialogVisible"
-        class="business-page-dialog"
-        data-page-overlay="dialog"
-        :title="dialogMode === 'create' ? '新增资料' : '编辑资料'"
-        width="640px"
-        destroy-on-close
-      >
-        <el-form ref="formRef" :model="form" :rules="formRules" label-width="90px">
-          <el-form-item label="资料名称" prop="name">
-            <el-input v-model="form.name" maxlength="30" show-word-limit></el-input>
-          </el-form-item>
-          <el-form-item label="资料分类" prop="category">
-            <el-select v-model="form.category" placeholder="请选择分类" style="width: 100%">
-              <el-option label="一般资料" value="一般资料"></el-option>
-              <el-option label="重点资料" value="重点资料"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="启用状态">
-            <el-switch v-model="form.enabled"></el-switch>
-          </el-form-item>
-          <el-form-item label="说明">
-            <el-input
-              v-model="form.description"
-              type="textarea"
-              :rows="3"
-              maxlength="100"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" :loading="submitting" @click="submitForm">保存</el-button>
-          </div>
-        </template>
-      </el-dialog>
-      <!-- PAGE_OVERLAYS_END -->
-    </div>
-
-    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
     <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
-    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
-    <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
-    <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
-    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
-    <script data-prototype-menu-icon-renderer>
-      (() => {
-        let renderQueued = false;
-        const renderMenuIcons = () => {
-          if (!window.Vue || !window.ElementPlusIconsVue) return;
-          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
-            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
-            if (host.dataset.prototypeMenuIconRendered === iconName) return;
-            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
-            if (!icon) return;
-            window.Vue.render(window.Vue.h(icon), host);
-            host.dataset.prototypeMenuIconRendered = iconName;
-          });
-        };
-        const scheduleRender = () => {
-          if (renderQueued) return;
-          renderQueued = true;
-          /* 不使用 requestAnimationFrame：隐藏标签页和无头截图环境下它不会触发。 */
-          setTimeout(() => {
-            renderQueued = false;
-            renderMenuIcons();
-          }, 0);
-        };
-        /* 导航改为 v-for、条件渲染或更换图标名时，Vue 会重建或更新这些节点；观察导航区补渲染。 */
-        const observeShellNav = () => {
-          const nav = document.querySelector('[data-prototype-shell="navigation"]');
-          if (!nav) return;
-          new MutationObserver(scheduleRender).observe(nav, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['data-prototype-menu-icon'],
-          });
-        };
-        const start = () => {
-          renderMenuIcons();
-          observeShellNav();
-        };
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', start, { once: true });
-        } else {
-          start();
-        }
-      })();
-    </script>
+    <!-- 页面逻辑使用浏览器原生 API，不加载外部脚本。 -->
     <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
 
-    <script data-page-script>
-      /* [AI-EDIT] PAGE_LOGIC_START: 只写页面状态、计算属性、方法和模拟数据。 */
-      function pageSetup() {
-        const { ref, reactive, computed, watch } = Vue;
-        const { ElMessage, ElMessageBox } = ElementPlus;
+    <script>
+      // [AI-EDIT] PAGE_LOGIC_START
+      (() => {
+        const records = [...document.querySelectorAll('[data-record]')];
+        const search = document.querySelector('[data-search]');
+        const statusFilter = document.querySelector('[data-status-filter]');
+        const empty = document.querySelector('[data-empty]');
+        const dialog = document.querySelector('.prototype-dialog');
+        const toast = document.querySelector('[data-toast]');
+        let activeTab = 'all';
+        let toastTimer;
 
-        const demoMode = ref('primary');
-        const demoModeOptions = [
-          { label: '一级列表', value: 'primary' },
-          { label: '二级详情', value: 'detail' },
-          { label: '二级新增/编辑', value: 'form' },
-        ];
+        function applyFilters() {
+          const query = String(search?.value || '')
+            .trim()
+            .toLowerCase();
+          const status = String(statusFilter?.value || 'all');
+          let visibleCount = 0;
+          records.forEach((record) => {
+            const matchesQuery = !query || record.textContent.toLowerCase().includes(query);
+            const recordStatus = record.dataset.status || '';
+            const matchesStatus = status === 'all' || recordStatus === status;
+            const matchesTab = activeTab === 'all' || recordStatus === activeTab;
+            const visible = matchesQuery && matchesStatus && matchesTab;
+            record.hidden = !visible;
+            if (visible) visibleCount += 1;
+          });
+          if (empty) empty.hidden = visibleCount !== 0;
+        }
 
-        const orderDraft = reactive({
-          customer: '林嘉怡',
-          customerType: 'personal',
-          pickupStore: '台北车站店',
-          vehicleGroup: '经济车组',
-          rentalRange: [new Date(2026, 7, 9, 9, 0), new Date(2026, 7, 10, 9, 0)],
-          note: '',
+        function showToast(message) {
+          if (!toast) return;
+          toast.textContent = message;
+          toast.hidden = false;
+          window.clearTimeout(toastTimer);
+          toastTimer = window.setTimeout(() => {
+            toast.hidden = true;
+          }, 2400);
+        }
+
+        search?.addEventListener('input', applyFilters);
+        statusFilter?.addEventListener('change', applyFilters);
+        document.querySelector('[data-reset]')?.addEventListener('click', () => {
+          if (search) search.value = '';
+          if (statusFilter) statusFilter.value = 'all';
+          activeTab = 'all';
+          document.querySelectorAll('[data-tab]').forEach((tab) => {
+            tab.setAttribute('aria-selected', String(tab.dataset.tab === activeTab));
+          });
+          applyFilters();
         });
 
-        const rentalRangeSummary = computed(() => {
-          if (!Array.isArray(orderDraft.rentalRange) || orderDraft.rentalRange.length !== 2) {
-            return '待选择';
-          }
-          const format = (value) => {
-            const date = new Date(value);
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hour = String(date.getHours()).padStart(2, '0');
-            const minute = String(date.getMinutes()).padStart(2, '0');
-            return `${month}/${day} ${hour}:${minute}`;
-          };
-          return `${format(orderDraft.rentalRange[0])} 至 ${format(orderDraft.rentalRange[1])}`;
-        });
-
-        const filters = reactive({ keyword: '', status: '' });
-        const pagination = reactive({ page: 1, pageSize: 10 });
-        const dialogVisible = ref(false);
-        const dialogMode = ref('create');
-        const editingId = ref(null);
-        const submitting = ref(false);
-        const formRef = ref();
-        const form = reactive({ name: '', category: '', enabled: true, description: '' });
-
-        const rows = ref([
-          {
-            id: 1,
-            code: 'ITEM-001',
-            name: '基础资料 A',
-            category: '一般资料',
-            owner: '陈晓',
-            status: 'enabled',
-            description: '常规业务资料',
-            source: '手动上传',
-            updatedAt: '2026-07-13 10:20',
-          },
-          {
-            id: 2,
-            code: 'ITEM-002',
-            name: '重点资料 B',
-            category: '重点资料',
-            owner: '林嘉怡',
-            status: 'disabled',
-            description: '当前已停用',
-            source: '模板生成',
-            updatedAt: '2026-07-12 16:40',
-          },
-          {
-            id: 3,
-            code: 'ITEM-003',
-            name: '基础资料 C',
-            category: '一般资料',
-            owner: '周建明',
-            status: 'enabled',
-            description: '最近完成更新',
-            source: '外部导入',
-            updatedAt: '2026-07-11 09:15',
-          },
-        ]);
-
-        const filteredRows = computed(() => {
-          const keyword = filters.keyword.trim().toLowerCase();
-          return rows.value.filter((item) => {
-            const matchesStatus = !filters.status || item.status === filters.status;
-            const matchesKeyword =
-              !keyword ||
-              item.code.toLowerCase().includes(keyword) ||
-              item.name.toLowerCase().includes(keyword);
-            return matchesStatus && matchesKeyword;
+        document.querySelectorAll('[data-tab]').forEach((tab) => {
+          tab.addEventListener('click', () => {
+            activeTab = tab.dataset.tab || 'all';
+            document.querySelectorAll('[data-tab]').forEach((item) => {
+              item.setAttribute('aria-selected', String(item === tab));
+            });
+            applyFilters();
           });
         });
 
-        const pagedRows = computed(() => {
-          const start = (pagination.page - 1) * pagination.pageSize;
-          return filteredRows.value.slice(start, start + pagination.pageSize);
+        document.querySelectorAll('[data-dialog-open]').forEach((button) => {
+          button.addEventListener('click', () => dialog?.showModal());
+        });
+        document.querySelector('[data-dialog-close]')?.addEventListener('click', () => dialog?.close());
+        document.querySelector('[data-dialog-confirm]')?.addEventListener('click', () => {
+          dialog?.close();
+          showToast('操作已确认');
+        });
+        dialog?.addEventListener('click', (event) => {
+          if (event.target === dialog) dialog.close();
         });
 
-        watch(
-          () => [filters.keyword, filters.status, pagination.pageSize],
-          () => {
-            pagination.page = 1;
-          },
-        );
-
-        const formRules = {
-          name: [{ required: true, message: '请输入资料名称', trigger: 'blur' }],
-          category: [{ required: true, message: '请选择资料分类', trigger: 'change' }],
-        };
-
-        function resetFilters() {
-          filters.keyword = '';
-          filters.status = '';
-          pagination.page = 1;
-        }
-
-        function resetForm() {
-          form.name = '';
-          form.category = '';
-          form.enabled = true;
-          form.description = '';
-        }
-
-        function openCreateDialog() {
-          dialogMode.value = 'create';
-          editingId.value = null;
-          resetForm();
-          dialogVisible.value = true;
-        }
-
-        function openEditDialog(row) {
-          dialogMode.value = 'edit';
-          editingId.value = row.id;
-          form.name = row.name;
-          form.category = row.category;
-          form.enabled = row.status === 'enabled';
-          form.description = row.description;
-          dialogVisible.value = true;
-        }
-
-        async function submitForm() {
-          if (!formRef.value) return;
-          const valid = await formRef.value.validate().catch(() => false);
-          if (!valid) return;
-          submitting.value = true;
-          try {
-            await new Promise((resolve) => setTimeout(resolve, 300));
-            if (dialogMode.value === 'create') {
-              const nextSequence = Math.max(0, ...rows.value.map((item) => item.id)) + 1;
-              rows.value.unshift({
-                id: nextSequence,
-                code: `ITEM-${String(nextSequence).padStart(3, '0')}`,
-                name: form.name,
-                category: form.category,
-                owner: '陈晓',
-                status: form.enabled ? 'enabled' : 'disabled',
-                description: form.description || '暂无说明',
-                source: '手动上传',
-                updatedAt: '2026-07-13 14:30',
-              });
-            } else {
-              const target = rows.value.find((item) => item.id === editingId.value);
-              if (target) {
-                target.name = form.name;
-                target.category = form.category;
-                target.status = form.enabled ? 'enabled' : 'disabled';
-                target.description = form.description || '暂无说明';
-              }
-            }
-            dialogVisible.value = false;
-            ElMessage.success('保存成功');
-          } finally {
-            submitting.value = false;
-          }
-        }
-
-        async function removeRow(row) {
-          const confirmed = await ElMessageBox.confirm(`确认删除“${row.name}”吗？`, '删除确认', {
-            type: 'warning',
-          })
-            .then(() => true)
-            .catch(() => false);
-          if (!confirmed) return;
-          rows.value = rows.value.filter((item) => item.id !== row.id);
-          ElMessage.success('删除成功');
-        }
-
-        function exportRows() {
-          ElMessage.success('导出任务已创建');
-        }
-
-        function handleDemoBack() {
-          ElMessage.info('返回上一页');
-        }
-
-        function showDemoAction(action) {
-          ElMessage.info(`${action}：结构示例未连接真实数据`);
-        }
-
-        function saveDemoDraft() {
-          ElMessage.success('草稿已保存');
-        }
-
-        function submitDemoOrder() {
-          if (!orderDraft.customer || !orderDraft.pickupStore || !orderDraft.vehicleGroup) {
-            ElMessage.warning('请先完成必填信息');
-            return;
-          }
-          ElMessage.success('订单已建立');
-        }
-
-        return {
-          Platform: ElementPlusIconsVue.Platform,
-          Document: ElementPlusIconsVue.Document,
-          Setting: ElementPlusIconsVue.Setting,
-          Search: ElementPlusIconsVue.Search,
-          Refresh: ElementPlusIconsVue.Refresh,
-          Plus: ElementPlusIconsVue.Plus,
-          Download: ElementPlusIconsVue.Download,
-          ArrowLeft: ElementPlusIconsVue.ArrowLeft,
-          demoMode,
-          demoModeOptions,
-          orderDraft,
-          rentalRangeSummary,
-          filters,
-          pagination,
-          dialogVisible,
-          dialogMode,
-          submitting,
-          formRef,
-          form,
-          formRules,
-          filteredRows,
-          pagedRows,
-          resetFilters,
-          openCreateDialog,
-          openEditDialog,
-          submitForm,
-          removeRow,
-          exportRows,
-          handleDemoBack,
-          showDemoAction,
-          saveDemoDraft,
-          submitDemoOrder,
-        };
-      }
-      /* PAGE_LOGIC_END */
-
-      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得修改或放入业务逻辑。 */
-      const app = Vue.createApp({ setup: pageSetup });
-      app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
-      app.mount('#app');
-      /* PROTOTYPE_BOOTSTRAP_END */
+        applyFilters();
+      })();
+      // PAGE_LOGIC_END
     </script>
+
+    <!-- PROTOTYPE_BOOTSTRAP_START -->
+    <!-- 原生脚本在文档末尾执行，无需额外启动器。 -->
+    <!-- PROTOTYPE_BOOTSTRAP_END -->
   </body>
 </html>

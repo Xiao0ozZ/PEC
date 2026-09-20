@@ -39,29 +39,18 @@ describe('React project model', () => {
     ).toEqual([{ id: 'dashboard', title: '看板', pages: [pages[0]] }]);
   });
 
-  it('distinguishes runnable, mixed, legacy-only and empty clients', () => {
+  it('distinguishes runnable, stale-index and empty clients', () => {
     const projectWithRuntime = {
       ...project,
       pageRuntime: {
         clients: {
-          ready: { htmlTemplate: 2, vueSfc: 0 },
-          mixed: { htmlTemplate: 1, vueSfc: 3 },
-          legacy: { htmlTemplate: 0, vueSfc: 4 },
-          stale: { htmlTemplate: 2, vueSfc: 0 },
+          ready: { htmlTemplate: 2 },
+          stale: { htmlTemplate: 2 },
         },
       },
     } as ProjectManifest;
 
     expect(getClientRuntimeStatus(projectWithRuntime, 'ready', pages).state).toBe('ready');
-    expect(getClientRuntimeStatus(projectWithRuntime, 'mixed', pages)).toMatchObject({
-      state: 'partial',
-      runnablePageCount: 2,
-      legacyVuePageCount: 3,
-    });
-    expect(getClientRuntimeStatus(projectWithRuntime, 'legacy', [])).toMatchObject({
-      state: 'legacy-vue',
-      legacyVuePageCount: 4,
-    });
     expect(getClientRuntimeStatus(projectWithRuntime, 'stale', []).state).toBe('index-missing');
     expect(getClientRuntimeStatus(projectWithRuntime, 'empty', []).state).toBe('empty');
   });

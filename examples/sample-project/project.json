@@ -22,7 +22,7 @@
       "shortName": "管理",
       "description": "查看示例业务概览。",
       "icon": "Management",
-      "defaultPage": "overview",
+      "defaultPage": "release-board",
       "entry": { "mode": "direct" },
       "layout": { "type": "sidebar" }
     }
@@ -59,5 +59,5 @@
     }
   },
   "mobile": { "enabled": false },
-  "features": { "pageTransfer": true, "designSystem": true }
+  "features": { "designSystem": true }
 }

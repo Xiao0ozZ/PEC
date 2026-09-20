@@ -1,0 +1,1801 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>会员详情</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.member-detail .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .member-detail .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .member-detail .detail-card {
+            transition: all 0.3s ease;
+        }
+
+        .member-detail .detail-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Metrics Card */
+        .member-detail .metric-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f3f4f6;
+            padding: 20px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-detail .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .member-detail .metric-card:nth-child(1)::before {
+            background: linear-gradient(90deg, var(--app-color-primary), #60a5fa);
+        }
+
+        .member-detail .metric-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .member-detail .metric-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .member-detail .metric-card:nth-child(4)::before {
+            background: linear-gradient(90deg, var(--app-color-primary), var(--app-color-primary-light-5));
+        }
+
+        .member-detail .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Tabs Styling */
+        .member-detail .custom-tabs .el-tabs__header {
+            margin-bottom: 0 !important;
+            padding: 0 20px;
+            border-bottom: 1px solid #f3f4f6 !important;
+            background: white;
+        }
+
+        .member-detail .custom-tabs .el-tabs__nav-wrap::after {
+            height: 1px;
+            background-color: transparent !important;
+        }
+
+        .member-detail .custom-tabs .el-tabs__item {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            padding: 0 18px !important;
+            height: 48px;
+            line-height: 48px;
+        }
+
+        .member-detail .custom-tabs .el-tabs__item.is-active {
+            color: var(--app-color-primary);
+            font-weight: 600;
+        }
+
+        .member-detail .custom-tabs .el-tabs__active-bar {
+            background-color: var(--app-color-primary);
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            bottom: 0;
+        }
+
+        .member-detail .custom-tabs .el-tabs__content {
+            background: white;
+            border: none;
+            padding: 24px;
+            min-height: 500px;
+            margin-top: 0;
+        }
+
+        /* Description List for Basic Info tab */
+        .member-detail .info-desc-list dt {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .member-detail .info-desc-list dd {
+            color: #1f2937;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "member-detail",
+  "pageTitle": "会员详情",
+  "fileName": "member_detail.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/member-detail",
+  "menuSection": "customers",
+  "menuTitle": "会员详情",
+  "menuIcon": "Postcard",
+  "menu": true,
+  "rootClass": "member-detail",
+  "overlayRootClass": "member-detail-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">客户中心</div>
+<a class="prototype-menu-item is-active" href="./member_detail.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Postcard" aria-hidden="true"></span><span>会员详情</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 会员详情</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-member-detail member-detail" data-page-content data-page-root="member-detail" data-page-key="member-detail">
+  <div data-business-content data-layout-type="legacy">
+<!-- Back Button -->
+                <div class="mb-4">
+                    <el-button @click="goBack" :icon="ArrowLeft" plain>返回</el-button>
+                </div>
+                <!-- 顶部操作栏已移除，按钮整合至信息卡 -->
+
+                <!-- 顶部信息卡 -->
+                <div 
+                    class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 detail-card relative overflow-hidden">
+                    <!-- 右上角操作按钮 -->
+                    <div class="absolute top-5 right-6 z-20 flex gap-2">
+                        <el-button type="primary" @click="handleEdit"
+                            class="shadow-md shadow-[color:var(--app-color-primary-shadow)]">
+                            <el-icon class="mr-1">
+                                <Edit></Edit>
+                            </el-icon>编辑资料
+                        </el-button>
+                        <el-button type="danger" plain @click="handleFreeze" v-if="member.status !== 'frozen'">
+                            <el-icon class="mr-1">
+                                <Lock></Lock>
+                            </el-icon>冻结
+                        </el-button>
+                        <el-button type="success" plain @click="handleUnfreeze" v-else>
+                            <el-icon class="mr-1">
+                                <Unlock></Unlock>
+                            </el-icon>解冻
+                        </el-button>
+                    </div>
+                    <!-- 信息主体 -->
+                    <div class="flex items-start gap-6">
+                        <el-avatar :size="80" class="text-2xl font-bold border-4 border-white shadow-lg flex-shrink-0"
+                            :class="member.accountType === 'corporate' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'">
+                            {{ member.name?.charAt(0) }}
+                        </el-avatar>
+                        <div class="flex-1 space-y-3 min-w-0">
+                            <!-- 姓名与状态 -->
+                            <div class="flex items-center gap-3">
+                                <h1 class="text-2xl font-bold text-gray-900">{{ member.name }}</h1>
+                                <el-tag :type="member.accountType === 'corporate' ? 'warning' : 'info'" effect="dark"
+                                    class="rounded-full px-3" size="small">
+                                    {{ member.accountType === 'corporate' ? '企业会员' : '个人会员' }}
+                                </el-tag>
+                                <el-tag :type="statusType" effect="light" class="rounded-full px-3" size="small">
+                                    {{ statusText }}
+                                </el-tag>
+                            </div>
+                            <!-- 核心联系信息 -->
+                            <div class="flex items-center gap-6 text-sm text-gray-600 flex-wrap">
+                                <span class="flex items-center gap-1.5">
+                                    <el-icon class="text-gray-400">
+                                        <Iphone></Iphone>
+                                    </el-icon>
+                                    {{ member.phone }}
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <el-icon class="text-gray-400">
+                                        <Message></Message>
+                                    </el-icon>
+                                    {{ member.email }}
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <el-icon class="text-gray-400">
+                                        <User></User>
+                                    </el-icon>
+                                    <span class="text-gray-400">ID:</span>
+                                    <span class="font-mono">{{ member.id }}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据指标卡片组 -->
+                <div class="grid grid-cols-4 gap-4 mt-4">
+                    <div class="metric-card">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                                <el-icon class="text-blue-500" :size="20">
+                                    <Document></Document>
+                                </el-icon>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400 mb-0.5">累计订单</div>
+                                <div class="text-xl font-bold text-gray-900">{{ memberStats.totalOrders }}</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                            本月 <span class="text-blue-500 font-medium">+{{ memberStats.monthOrders }}</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                                <el-icon class="text-green-500" :size="20">
+                                    <Wallet></Wallet>
+                                </el-icon>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400 mb-0.5">累计消费</div>
+                                <div class="text-xl font-bold text-gray-900">¥{{ memberStats.totalSpent.toLocaleString()
+                                    }}</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                            本月 <span class="text-green-500 font-medium">+¥{{ memberStats.monthSpent.toLocaleString()
+                                }}</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+                                <el-icon class="text-amber-500" :size="20">
+                                    <Coin></Coin>
+                                </el-icon>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400 mb-0.5">当前积分</div>
+                                <div class="text-xl font-bold text-gray-900">{{
+                                    memberStats.currentPoints.toLocaleString() }}</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                            本月 <span class="text-amber-500 font-medium">+{{ memberStats.monthPoints }}</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-[color:var(--app-color-primary-light-9)] flex items-center justify-center">
+                                <el-icon class="text-[color:var(--app-color-primary)]" :size="20">
+                                    <Medal></Medal>
+                                </el-icon>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400 mb-0.5">会员方案</div>
+                                <div class="text-lg font-bold text-gray-900">{{ member.membership?.planName }}</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                            到期 <span class="text-[color:var(--app-color-primary)] font-medium">{{ member.membership?.expireDate || '永久'
+                                }}</span>
+                            <el-tag v-if="member.membership?.autoRenew" type="success" size="small"
+                                class="ml-1">自动续费</el-tag>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 底部 Tab 面板 -->
+                <div 
+                    class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 min-h-[500px] flex flex-col overflow-hidden">
+                    <el-tabs v-model="activeTab" class="custom-tabs flex-1" tab-position="top"
+                        @tab-change="handleTabChange">
+
+                        <!-- 0. 基本资料 -->
+                        <el-tab-pane name="profile">
+                            <template #label>
+                                <span>基本资料</span>
+                            </template>
+                            <div class="py-6 space-y-8">
+                                <!-- 1. 基础身份信息 -->
+                                <div>
+                                    <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                        <el-icon class="mr-2 text-gray-400">
+                                            <User></User>
+                                        </el-icon> 基础身份信息
+                                    </h3>
+                                    <div 
+                                        class="bg-gray-50 rounded-lg p-5 border border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 info-desc-list">
+                                        <div>
+                                            <dt>姓名</dt>
+                                            <dd>{{ member.surname }}{{ member.firstName }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>性别</dt>
+                                            <dd>{{ member.gender === 'male' ? '男' : '女' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>出生日期</dt>
+                                            <dd class="font-mono">{{ member.dob }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>身份证号</dt>
+                                            <dd class="font-mono">{{ member.idNumber }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>手机号</dt>
+                                            <dd class="font-mono">{{ member.phone }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>电子邮箱</dt>
+                                            <dd class="font-mono">{{ member.email }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>登录账号</dt>
+                                            <dd class="font-mono">{{ member.account }}</dd>
+                                        </div>
+                                        <div v-if="member.corporate">
+                                            <dt>归属企业</dt>
+                                            <dd class="text-blue-600">{{ member.corporate?.companyName }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>注册时间</dt>
+                                            <dd class="font-mono">{{ member.createTime }}</dd>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 2. 地址与联络人 -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                            <el-icon class="mr-2 text-gray-400">
+                                                <Location></Location>
+                                            </el-icon> 地址信息
+                                        </h3>
+                                        <div 
+                                            class="bg-gray-50 rounded-lg p-5 border border-gray-100 space-y-4 info-desc-list">
+                                            <div>
+                                                <dt>户籍地址</dt>
+                                                <dd>{{ member.householdAddress }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>通讯地址</dt>
+                                                <dd>{{ member.mailingAddress }}</dd>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                            <el-icon class="mr-2 text-gray-400">
+                                                <PhoneFilled></PhoneFilled>
+                                            </el-icon> 紧急联络人
+                                        </h3>
+                                        <div 
+                                            class="bg-gray-50 rounded-lg p-5 border border-gray-100 space-y-4 info-desc-list">
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <dt>姓名</dt>
+                                                    <dd>{{ member.emergencyContact.name }}</dd>
+                                                </div>
+                                                <div>
+                                                    <dt>关系</dt>
+                                                    <dd>{{ member.emergencyContact.relationship }}</dd>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <dt>联系电话</dt>
+                                                <dd class="font-mono">{{ member.emergencyContact.phone }}</dd>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 3. 证件照片 -->
+                                <div>
+                                    <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                        <el-icon class="mr-2 text-gray-400">
+                                            <Picture></Picture>
+                                        </el-icon> 证件照片
+                                    </h3>
+                                    <div class="bg-gray-50 rounded-lg p-5 border border-gray-100">
+                                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                            <div v-for="(label, key) in photoLabels" :key="key"
+                                                class="text-center group">
+                                                <div 
+                                                    class="relative w-full aspect-[4/3] bg-white border border-gray-200 rounded-lg flex flex-col items-center justify-center overflow-hidden hover:shadow-md transition-all">
+                                                    <el-image v-if="member.photos[key]" :src="member.photos[key]"
+                                                        :preview-src-list="[member.photos[key]]" fit="cover"
+                                                        class="w-full h-full">
+                                                        <template #error>
+                                                            <div 
+                                                                class="flex flex-col items-center justify-center text-gray-400 h-full w-full bg-gray-100">
+                                                                <el-icon class="text-2xl mb-1">
+                                                                    <Picture></Picture>
+                                                                </el-icon>
+                                                                <span class="text-xs">加载失败</span>
+                                                            </div>
+                                                        </template>
+                                                    </el-image>
+                                                    <div v-else
+                                                        class="flex flex-col items-center justify-center text-gray-300 h-full w-full bg-gray-50">
+                                                        <el-icon class="text-2xl mb-1">
+                                                            <Picture></Picture>
+                                                        </el-icon>
+                                                        <span class="text-xs">未上传</span>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 text-xs font-medium text-gray-600">{{ label }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 4. 驾照与租车偏好 -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                            <el-icon class="mr-2 text-gray-400">
+                                                <Van></Van>
+                                            </el-icon> 驾驶执照
+                                        </h3>
+                                        <div 
+                                            class="bg-gray-50 rounded-lg p-5 border border-gray-100 grid grid-cols-2 gap-y-4 gap-x-6 info-desc-list">
+                                            <div>
+                                                <dt>驾照类型</dt>
+                                                <dd>{{ member.driverLicense.type }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>签发地</dt>
+                                                <dd>{{ member.driverLicense.issuePlace }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>驾照号码</dt>
+                                                <dd class="font-mono">{{ member.driverLicense.number }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>有效日期</dt>
+                                                <dd class="font-mono">{{ member.driverLicense.expiryDate }}</dd>
+                                            </div>
+                                            <div class="col-span-2">
+                                                <dt>可用载具类型</dt>
+                                                <dd class="flex flex-wrap gap-1">
+                                                    <el-tag v-for="type in member.availableVehicleTypes" :key="type"
+                                                        :type="getVehicleTypeTagType(type)" size="small" effect="plain">
+                                                        {{ getVehicleTypeLabel(type) }}
+                                                    </el-tag>
+                                                </dd>
+                                                <div class="text-xs text-gray-400 mt-1">微电车默认不要求驾照。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center">
+                                            <el-icon class="mr-2 text-gray-400">
+                                                <Timer></Timer>
+                                            </el-icon> 租车统计与偏好
+                                        </h3>
+                                        <div 
+                                            class="bg-gray-50 rounded-lg p-5 border border-gray-100 grid grid-cols-2 gap-y-4 gap-x-6 info-desc-list">
+                                            <div>
+                                                <dt>上次租借时间</dt>
+                                                <dd class="font-mono">{{ member.lastRentalTime }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>累计未租借时长</dt>
+                                                <dd>{{ member.nonRentalDuration }}</dd>
+                                            </div>
+                                            <div 
+                                                class="col-span-2 flex items-center justify-between pt-2 border-t border-gray-200 mt-2">
+                                                <span class="text-sm text-gray-600">接收优惠活动讯息</span>
+                                                <el-switch v-model="member.receivePromotions" active-text="接收"
+                                                    inactive-text="拒收" inline-prompt ></el-switch>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 5. 信用卡管理 -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-base font-bold text-gray-900 flex items-center">
+                                            <el-icon class="mr-2 text-gray-400">
+                                                <CreditCard></CreditCard>
+                                            </el-icon> 绑定信用卡
+                                        </h3>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div v-for="card in member.creditCards" :key="card.id"
+                                            class="border border-gray-200 rounded-xl p-4 bg-white hover:shadow-md transition-shadow relative group">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <span class="font-bold text-gray-800">{{ card.bank }}</span>
+                                                <el-tag size="small" effect="plain" class="uppercase">{{ card.type
+                                                    }}</el-tag>
+                                            </div>
+                                            <div class="text-lg font-mono text-gray-600 mb-2 tracking-wider">{{
+                                                card.number }}</div>
+                                            <div class="text-xs text-gray-400 flex justify-between">
+                                                <span>有效期</span>
+                                                <span class="font-mono">{{ card.expiry }}</span>
+                                            </div>
+                                            <el-button 
+                                                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                type="danger" text @click="handleDeleteCard(card.id)">
+                                                <el-icon>
+                                                    <Delete></Delete>
+                                                </el-icon>
+                                            </el-button>
+                                        </div>
+                                        <div 
+                                            class="border border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center text-gray-400 hover:text-blue-500 hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-all h-[120px]">
+                                            <el-icon class="text-2xl mb-1">
+                                                <Plus></Plus>
+                                            </el-icon>
+                                            <span class="text-sm">新增信用卡</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+
+                        <el-tab-pane name="orders">
+                            <template #label>
+                                <span>订单记录 <el-badge :value="paginatedOrders.length" type="primary"
+                                        class="ml-1" ></el-badge></span>
+                            </template>
+                            <div class="py-4">
+                                <div class="flex justify-between mb-4">
+                                    <el-select v-model="orderFilter.type" placeholder="所有订单类型" style="width: 180px">
+                                        <el-option label="所有类型" value=""></el-option>
+                                        <el-option label="同站租还" value="same_station"></el-option>
+                                        <el-option label="甲租乙还" value="diff_station"></el-option>
+                                        <el-option label="门市租车" value="store"></el-option>
+                                        <el-option label="24h自助租车" value="kiosk"></el-option>
+                                    </el-select>
+                                    <el-button :icon="Download">导出订单</el-button>
+                                </div>
+                                <el-table :data="paginatedOrders" stripe style="width: 100%">
+                                    <el-table-column prop="id" label="订单号" width="140">
+                                        <template #default="{ row }">
+                                            <span class="font-mono text-blue-600 cursor-pointer hover:underline">{{
+                                                row.id
+                                                }}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="type" label="类型" width="120">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" :type="getOrderTypeTag(row.type)">{{ row.typeText
+                                                }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="vehicle" label="车辆信息" min-width="180"></el-table-column>
+                                    <el-table-column prop="pickup" label="取车门店" width="140"
+                                        show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="returnLocation" label="还车门店" width="140"
+                                        show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="duration" label="租期" width="120"></el-table-column>
+                                    <el-table-column prop="amount" label="金额" width="120">
+                                        <template #default="{ row }">
+                                            <span class="font-bold">¥{{ row.amount }}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="status" label="状态" width="100">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" :type="getOrderStatusTag(row.status)">{{ row.statusText
+                                                }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="操作" width="80">
+                                        <template #default>
+                                            <el-button link type="primary" size="small">详情</el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <div class="mt-4 flex justify-end">
+                                    <el-pagination background layout="prev, pager, next" :total="100"></el-pagination>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 2. 扣款交易记录 -->
+                        <el-tab-pane name="transactions">
+                            <template #label>
+                                <span>交易记录 <el-badge :value="transactions.length" type="primary" class="ml-1" ></el-badge></span>
+                            </template>
+                            <div class="py-4">
+                                <div class="flex justify-between mb-4">
+                                    <el-select v-model="transactionFilter.type" placeholder="所有交易类型"
+                                        style="width: 180px">
+                                        <el-option label="所有类型" value=""></el-option>
+                                        <el-option label="租金支付" value="rent"></el-option>
+                                        <el-option label="押金冻结" value="deposit"></el-option>
+                                        <el-option label="违章扣款" value="fee"></el-option>
+                                        <el-option label="退款" value="refund"></el-option>
+                                    </el-select>
+                                </div>
+                                <el-table :data="transactions" stripe style="width: 100%">
+                                    <el-table-column prop="id" label="流水号" width="180">
+                                        <template #default="{ row }">
+                                            <span class="font-mono">{{ row.id }}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="time" label="交易时间" width="180"></el-table-column>
+                                    <el-table-column prop="type" label="类型" width="120">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" :type="getTransactionTypeTag(row.type)">{{ row.typeText
+                                                }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="amount" label="金额" width="120">
+                                        <template #default="{ row }">
+                                            <span :class="row.amount > 0 ? 'text-red-600' : 'text-green-600'"
+                                                class="font-bold">
+                                                {{ row.amount > 0 ? '-' : '+' }}¥{{ Math.abs(row.amount) }}
+                                            </span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="method" label="支付方式" width="120"></el-table-column>
+                                    <el-table-column prop="orderId" label="关联订单" width="140"></el-table-column>
+                                    <el-table-column prop="status" label="状态"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 3. 积分点数记录 -->
+                        <el-tab-pane name="points">
+                            <template #label>
+                                <span>积分记录 <el-badge :value="points.length" type="primary" class="ml-1" ></el-badge></span>
+                            </template>
+                            <div class="py-4">
+                                <div 
+                                    class="flex items-center justify-between mb-4 bg-orange-50 p-3 rounded-lg border border-orange-100">
+                                    <span class="text-orange-800 font-bold flex items-center">
+                                        <el-icon class="mr-2">
+                                            <Coin></Coin>
+                                        </el-icon> 当前可用积分：2,450
+                                    </span>
+                                    <el-button size="small" type="primary" plain>手动调整积分</el-button>
+                                </div>
+                                <el-table :data="points" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="变动时间" width="180"></el-table-column>
+                                    <el-table-column prop="type" label="类型" width="100">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" :type="row.change > 0 ? 'success' : 'warning'">{{
+                                                row.typeText }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="change" label="变动值" width="120">
+                                        <template #default="{ row }">
+                                            <span class="font-bold"
+                                                :class="row.change > 0 ? 'text-green-600' : 'text-orange-600'">
+                                                {{ row.change > 0 ? '+' : '' }}{{ row.change }}
+                                            </span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="balance" label="变动后余额" width="120"></el-table-column>
+                                    <el-table-column prop="reason" label="来源/原因"></el-table-column>
+                                    <el-table-column prop="orderId" label="关联订单" width="140"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 4. 邀请记录 -->
+                        <el-tab-pane name="invites">
+                            <template #label>
+                                <span>邀请记录 <el-badge :value="invites.length" type="primary" class="ml-1" ></el-badge></span>
+                            </template>
+                            <div class="py-4">
+                                <div class="grid grid-cols-3 gap-4 mb-6">
+                                    <div class="bg-gray-50 p-3 rounded text-center">
+                                        <div class="text-xs text-gray-500">已邀请人数</div>
+                                        <div class="text-xl font-bold text-gray-800">12</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded text-center">
+                                        <div class="text-xs text-gray-500">成功注册</div>
+                                        <div class="text-xl font-bold text-green-600">8</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded text-center">
+                                        <div class="text-xs text-gray-500">累计获得奖励</div>
+                                        <div class="text-xl font-bold text-orange-600">800 积分</div>
+                                    </div>
+                                </div>
+                                <el-table :data="invites" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="邀请时间" width="180"></el-table-column>
+                                    <el-table-column prop="invitee" label="被邀请人" width="120"></el-table-column>
+                                    <el-table-column prop="phone" label="手机号" width="140"></el-table-column>
+                                    <el-table-column prop="status" label="注册状态" width="120">
+                                        <template #default="{ row }">
+                                            <el-tag size="small"
+                                                :type="row.status === 'registered' ? 'success' : 'info'">
+                                                {{ row.status === 'registered' ? '已注册' : '未注册' }}
+                                            </el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="reward" label="奖励"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 5. 联络客服记录 -->
+                        <el-tab-pane name="service">
+                            <template #label>
+                                <span>客服记录 <el-badge :value="serviceLogs.length" type="primary" class="ml-1" ></el-badge></span>
+                            </template>
+                            <div class="py-4">
+                                <div class="flex justify-end mb-4">
+                                    <el-button type="primary" size="small">新建客服工单</el-button>
+                                </div>
+                                <el-table :data="serviceLogs" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="联络时间" width="180"></el-table-column>
+                                    <el-table-column prop="channel" label="渠道" width="100">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" effect="plain">{{ row.channel }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="ticketId" label="工单号" width="140"></el-table-column>
+                                    <el-table-column prop="subject" label="主题/摘要" min-width="200"></el-table-column>
+                                    <el-table-column prop="status" label="状态" width="100">
+                                        <template #default="{ row }">
+                                            <el-tag size="small"
+                                                :type="row.status === 'closed' ? 'success' : 'warning'">
+                                                {{ row.status === 'closed' ? '已关闭' : '处理中' }}
+                                            </el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="operator" label="处理人" width="120"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 6. 方案变更记录 -->
+                        <el-tab-pane label="方案变更" name="plan_history">
+                            <div class="py-4">
+                                <el-table :data="planHistory" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="变更时间" width="180"></el-table-column>
+                                    <el-table-column prop="oldPlan" label="原方案" width="140"></el-table-column>
+                                    <el-table-column prop="newPlan" label="新方案" width="140"></el-table-column>
+                                    <el-table-column prop="type" label="变更类型" width="120">
+                                        <template #default="{ row }">
+                                            <el-tag size="small" :type="row.type === 'upgrade' ? 'success' : 'info'">{{
+                                                row.typeText }}</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="reason" label="变更原因"></el-table-column>
+                                    <el-table-column prop="operator" label="操作人" width="120"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 7. 登录日志 -->
+                        <el-tab-pane label="登录日志" name="login_logs">
+                            <div class="py-4">
+                                <el-table :data="loginLogs" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="登录时间" width="180"></el-table-column>
+                                    <el-table-column prop="method" label="登录方式" width="120"></el-table-column>
+                                    <el-table-column prop="ip" label="IP地址" width="140"></el-table-column>
+                                    <el-table-column prop="device" label="设备信息"></el-table-column>
+                                    <el-table-column prop="status" label="状态" width="100">
+                                        <template #default="{ row }">
+                                            <el-tag size="small"
+                                                :type="row.status === 'success' ? 'success' : 'danger'">
+                                                {{ row.status === 'success' ? '成功' : '失败' }}
+                                            </el-tag>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                        <!-- 8. 账号日志 -->
+                        <el-tab-pane label="账号日志" name="account_logs">
+                            <div class="py-4">
+                                <el-table :data="accountLogs" stripe style="width: 100%">
+                                    <el-table-column prop="time" label="操作时间" width="180"></el-table-column>
+                                    <el-table-column prop="action" label="操作类型" width="140"></el-table-column>
+                                    <el-table-column prop="detail" label="详情"></el-table-column>
+                                    <el-table-column prop="ip" label="IP地址" width="140"></el-table-column>
+                                    <el-table-column prop="operator" label="操作人" width="120"></el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+
+                    </el-tabs>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="member-detail-overlay">
+<!-- 当前页面没有独立覆盖层。 -->
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+const activeTab = ref('profile');
+                const orderFilter = reactive({ type: '' });
+                const transactionFilter = reactive({ type: '' });
+
+                // Mock Member Data
+                // Mock Member Data
+                const member = reactive({
+                    id: 'U1001',
+                    account: '13800138000',
+                    surname: '王',
+                    firstName: '小明',
+                    get name() { return this.surname + this.firstName; },
+                    gender: 'male',
+                    dob: '1990-05-20',
+                    phone: '13800138000',
+                    email: 'wang@example.com',
+                    idNumber: 'A123456789',
+                    accountType: 'personal',
+                    status: 'active',
+                    createTime: '2025-01-15',
+                    lastLoginTime: '2026-02-09 14:30:00',
+                    corporate: null,
+                    membership: {
+                        planId: 'MP002',
+                        planName: '银牌会员',
+                        expireDate: '2026-01-15',
+                        autoRenew: true
+                    },
+                    // Extended Basic Info
+                    householdAddress: '台北市大安区信义路三段100号',
+                    mailingAddress: '同户籍地址',
+                    emergencyContact: {
+                        name: '王大明',
+                        relationship: '父亲',
+                        phone: '0912-345-678'
+                    },
+                    driverLicense: {
+                        type: '小型车',
+                        issuePlace: '台北市',
+                        number: 'A123456789',
+                        expiryDate: '2030-05-20'
+                    },
+                    availableVehicleTypes: ['car', 'microElectric'],
+                    // Rental Stats & Preferences
+                    lastRentalTime: '2026-01-20 14:00',
+                    nonRentalDuration: '20天',
+                    receivePromotions: true,
+                    // Credit Cards
+                    creditCards: [
+                        { id: 'cc1', bank: '中国信托', number: '**** **** **** 1234', expiry: '12/28', type: 'visa' },
+                        { id: 'cc2', bank: '玉山银行', number: '**** **** **** 5678', expiry: '06/29', type: 'mastercard' }
+                    ],
+                    // Photos (Mock URLs)
+                    photos: {
+                        idCardFront: 'https://via.placeholder.com/400x300?text=ID+Front',
+                        idCardBack: 'https://via.placeholder.com/400x300?text=ID+Back',
+                        licenseFront: 'https://via.placeholder.com/400x300?text=License+Front',
+                        licenseBack: 'https://via.placeholder.com/400x300?text=License+Back',
+                        selfie: 'https://via.placeholder.com/400x300?text=Selfie'
+                    }
+                });
+
+                const photoLabels = {
+                    idCardFront: '身份证正面',
+                    idCardBack: '身份证反面',
+                    licenseFront: '驾照正面',
+                    licenseBack: '驾照反面',
+                    selfie: '自拍照'
+                };
+
+                // Computed: Member Statistics
+                const memberStats = computed(() => ({
+                    totalOrders: 15,
+                    monthOrders: 3,
+                    totalSpent: 28500,
+                    monthSpent: 5200,
+                    currentPoints: 2450,
+                    monthPoints: 350
+                }));
+
+                // Helper Functions
+                const getMembershipColor = (planId) => {
+                    const colors = { 'MP001': 'info', 'MP002': 'primary', 'MP003': 'warning', 'MP004': 'danger' };
+                    return colors[planId] || 'info';
+                };
+
+                const statusText = computed(() => {
+                    const map = { active: '正常', frozen: '已冻结', deleted: '已注销' };
+                    return map[member.status] || '未知';
+                });
+
+                const statusType = computed(() => {
+                    const map = { active: 'success', frozen: 'danger', deleted: 'info' };
+                    return map[member.status] || 'info';
+                });
+
+                const getVehicleTypeLabel = (type) => {
+                    const map = {
+                        car: '汽车',
+                        motorcycle: '摩托车',
+                        microElectric: '微电车'
+                    };
+                    return map[type] || '-';
+                };
+
+                const getVehicleTypeTagType = (type) => {
+                    const map = {
+                        car: 'success',
+                        motorcycle: 'warning',
+                        microElectric: 'info'
+                    };
+                    return map[type] || 'info';
+                };
+
+                // Mock List Data Generators
+                const generateOrders = () => {
+                    return Array(10).fill(0).map((_, i) => ({
+                        id: 'ORD' + (20260201 + i),
+                        type: ['same_station', 'diff_station', 'store', 'kiosk'][i % 4],
+                        typeText: ['同站租还', '甲租乙还', '门市租车', '24h自助'][i % 4],
+                        vehicle: 'Toyota Altis (ABC-123' + i + ')',
+                        pickup: '台北总店',
+                        returnLocation: i % 4 === 1 ? '桃园机场店' : '台北总店',
+                        duration: (i + 1) + '天',
+                        amount: 1200 + i * 500,
+                        status: ['completed', 'active', 'cancelled'][i % 3],
+                        statusText: ['已完成', '进行中', '已取消'][i % 3]
+                    }));
+                };
+
+                const generateTransactions = () => Array(5).fill(0).map((_, i) => ({
+                    id: 'TRX' + (8000 + i),
+                    time: '2026-02-0' + (i + 1) + ' 10:00',
+                    type: ['rent', 'deposit', 'fee', 'refund'][i % 4],
+                    typeText: ['租金支付', '押金冻结', '违章扣款', '退款'][i % 4],
+                    amount: [1200, 3000, 200, -500][i % 4],
+                    method: '信用卡 (********1234)',
+                    orderId: 'ORD2026020' + i,
+                    status: '成功'
+                }));
+
+                const generatePoints = () => Array(5).fill(0).map((_, i) => ({
+                    time: '2026-02-0' + (i + 1) + ' 10:00',
+                    type: i % 2 === 0 ? 'earn' : 'redeem',
+                    typeText: i % 2 === 0 ? '获取' : '消费',
+                    change: i % 2 === 0 ? 100 : -50,
+                    balance: 2450 - (i * 10),
+                    reason: i % 2 === 0 ? '租车奖励' : '兑换优惠券',
+                    orderId: 'ORD2026020' + i
+                }));
+
+                // Data Refs
+                const paginatedOrders = ref(generateOrders());
+                const transactions = ref(generateTransactions());
+                const points = ref(generatePoints());
+                const invites = ref([
+                    { time: '2026-01-20', invitee: '李小华', phone: '139****1234', status: 'registered', reward: '100 积分' },
+                    { time: '2026-01-22', invitee: '张大伟', phone: '135****5678', status: 'pending', reward: '-' }
+                ]);
+                const serviceLogs = ref([
+                    { time: '2026-02-01', channel: '电话', ticketId: 'TKT001', subject: '询问租车流程', status: 'closed', operator: '客服A' },
+                    { time: '2026-02-05', channel: '在线', ticketId: 'TKT005', subject: '修改订单时间', status: 'processing', operator: '客服B' }
+                ]);
+                const planHistory = ref([
+                    { time: '2026-01-15', oldPlan: '普通会员', newPlan: '银牌会员', type: 'upgrade', typeText: '升级', reason: '自动升级', operator: '系统' }
+                ]);
+                const loginLogs = ref([
+                    { time: '2026-02-09 14:30', method: 'App', ip: '192.168.1.1', device: 'iPhone 13', status: 'success' },
+                    { time: '2026-02-08 10:20', method: 'Web', ip: '192.168.1.1', device: 'Chrome / Mac', status: 'success' }
+                ]);
+                const accountLogs = ref([
+                    { time: '2026-01-15', action: '修改密码', detail: '用户自行修改密码', ip: '192.168.1.1', operator: '用户' }
+                ]);
+
+                // Tags helpers
+                const getOrderTypeTag = (type) => {
+                    const map = { same_station: '', diff_station: 'warning', store: 'info', kiosk: 'success' };
+                    return map[type] || '';
+                };
+                const getOrderStatusTag = (status) => {
+                    const map = { completed: 'success', active: 'primary', cancelled: 'info' };
+                    return map[status] || '';
+                };
+                const getTransactionTypeTag = (type) => {
+                    const map = { rent: 'primary', deposit: 'warning', fee: 'danger', refund: 'success' };
+                    return map[type] || 'info';
+                };
+
+                // Actions
+                const goBack = () => {
+                    window.location.href = 'members.html';
+                };
+
+                const handleEdit = () => {
+                    ElMessage.success('跳转到编辑模式');
+                };
+
+                const handleFreeze = () => {
+                    ElMessageBox.confirm('确定要冻结该账号吗？', '提示', { type: 'warning' })
+                        .then(() => {
+                            member.status = 'frozen';
+                            ElMessage.success('账号已冻结');
+                        });
+                };
+
+                const handleUnfreeze = () => {
+                    member.status = 'active';
+                    ElMessage.success('账号已解冻');
+                };
+
+                const handleTabChange = (val) => {
+                    console.log('Tab changed to:', val);
+                    // Here you would fetch data for the new tab
+                };
+
+                const handleDeleteCard = (cardId) => {
+                    ElMessageBox.confirm('确定要解绑这张信用卡吗？', '提示', { type: 'warning' })
+                        .then(() => {
+                            const index = member.creditCards.findIndex(c => c.id === cardId);
+                            if (index !== -1) {
+                                member.creditCards.splice(index, 1);
+                                ElMessage.success('信用卡已解绑');
+                            }
+                        });
+                };
+
+                // URL Params Check
+                const urlParams = new URLSearchParams(window.location.search);
+                const memberId = urlParams.get('id');
+                if (memberId) {
+                    member.id = memberId;
+                    // In real app, fetch member details by ID here
+                }
+
+                return {
+                    activeTab, member, memberStats, photoLabels, orderFilter, transactionFilter,
+                    paginatedOrders, transactions, points, invites, serviceLogs, planHistory, loginLogs, accountLogs,
+                    getMembershipColor, statusText, statusType, getVehicleTypeLabel, getVehicleTypeTagType,
+                    getOrderTypeTag, getOrderStatusTag, getTransactionTypeTag,
+                    goBack, handleEdit, handleFreeze, handleUnfreeze, handleTabChange, handleDeleteCard,
+                    Download: ElementPlusIconsVue.Download,
+                    UserFilled: ElementPlusIconsVue.UserFilled,
+                    User: ElementPlusIconsVue.User,
+                    Iphone: ElementPlusIconsVue.Iphone,
+                    Message: ElementPlusIconsVue.Message,
+                    Postcard: ElementPlusIconsVue.Postcard,
+                    Timer: ElementPlusIconsVue.Timer,
+                    Location: ElementPlusIconsVue.Location,
+                    OfficeBuilding: ElementPlusIconsVue.OfficeBuilding,
+                    ArrowLeft: ElementPlusIconsVue.ArrowLeft,
+                    Lock: ElementPlusIconsVue.Lock,
+                    Unlock: ElementPlusIconsVue.Unlock,
+                    Edit: ElementPlusIconsVue.Edit,
+                    Coin: ElementPlusIconsVue.Coin,
+                    Document: ElementPlusIconsVue.Document,
+                    Wallet: ElementPlusIconsVue.Wallet,
+                    Medal: ElementPlusIconsVue.Medal,
+                    CreditCard: ElementPlusIconsVue.CreditCard,
+                    Delete: ElementPlusIconsVue.Delete,
+                    Picture: ElementPlusIconsVue.Picture
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+app.config.globalProperties.Math = Math;
+
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component);
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

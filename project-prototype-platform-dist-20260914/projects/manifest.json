@@ -1,0 +1,426 @@
+{
+  "generatedAt": "2026-09-14T02:32:18.706Z",
+  "projects": [
+    {
+      "schemaVersion": 1,
+      "id": "dashboard",
+      "name": "瞰车大Dashboard",
+      "shortName": "瞰车大Dashboard",
+      "description": "",
+      "version": "0.1.0",
+      "defaultLocale": "zh-CN",
+      "homepage": {
+        "visible": true
+      },
+      "branding": {},
+      "theme": {
+        "primary": "#f3da25",
+        "primaryHover": "#dbc421",
+        "primaryActive": "#b6a41c",
+        "pageBackground": "#f5f7fb"
+      },
+      "clients": [
+        {
+          "id": "client-2",
+          "name": "Dashboard",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "defaultPage": "",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "bare"
+          },
+          "login": {
+            "account": "",
+            "tenantCode": ""
+          }
+        }
+      ],
+      "entries": [
+        {
+          "id": "client-2",
+          "kind": "client",
+          "clientId": "client-2",
+          "name": "Dashboard",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "order": 20
+        }
+      ],
+      "docs": {
+        "enabled": true,
+        "root": "D:\\工作文件\\瞰车大Dashboard\\04_原型和PRD\\PRD"
+      },
+      "prototype": {
+        "enabled": true,
+        "root": "prototype",
+        "client": "",
+        "section": "",
+        "clients": {
+          "client-2": {
+            "enabled": true,
+            "root": "D:\\工作文件\\瞰车大Dashboard\\04_原型和PRD\\原型",
+            "section": "",
+            "shellMode": "auto"
+          }
+        }
+      },
+      "mobile": {
+        "enabled": false,
+        "entry": "mobile/app.html"
+      },
+      "features": {
+        "designSystem": true,
+        "legacyI18n": false
+      },
+      "compatibility": {
+        "legacyRoutes": false
+      },
+      "folder": "dashboard",
+      "mounted": false,
+      "pageRuntime": {
+        "clients": {
+          "client-2": {
+            "htmlTemplate": 0
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "demo",
+      "name": "demo测试",
+      "shortName": "测试项目",
+      "description": "巴拉巴拉",
+      "version": "0.1.0",
+      "defaultLocale": "zh-CN",
+      "homepage": {
+        "visible": true
+      },
+      "branding": {
+        "logo": "assets/auth/brand-logo.jpg",
+        "favicon": "assets/auth/brand-logo.jpg"
+      },
+      "theme": {
+        "primary": "#ba00c3",
+        "primaryHover": "#a700b0",
+        "primaryActive": "#8c0092",
+        "pageBackground": "#ededed"
+      },
+      "clients": [
+        {
+          "id": "admin",
+          "name": "管理端",
+          "description": "项目管理后台。",
+          "icon": "Management",
+          "defaultPage": "",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "topnav"
+          },
+          "login": {
+            "account": "admin",
+            "tenantCode": "demo"
+          }
+        },
+        {
+          "id": "client-2",
+          "name": "客户端 2",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "defaultPage": "",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "topnav"
+          },
+          "login": {
+            "account": "",
+            "tenantCode": ""
+          }
+        },
+        {
+          "id": "client-3",
+          "name": "客户端 3",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "defaultPage": "",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "topnav"
+          },
+          "login": {
+            "account": "admin",
+            "tenantCode": ""
+          }
+        }
+      ],
+      "entries": [
+        {
+          "id": "admin",
+          "kind": "client",
+          "clientId": "admin",
+          "name": "管理端",
+          "description": "项目管理后台。",
+          "icon": "Management",
+          "order": 10
+        },
+        {
+          "id": "client-2",
+          "kind": "client",
+          "clientId": "client-2",
+          "name": "客户端 2",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "order": 10
+        },
+        {
+          "id": "client-3",
+          "kind": "client",
+          "clientId": "client-3",
+          "name": "客户端 3",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "order": 10
+        },
+        {
+          "id": "docs",
+          "kind": "docs",
+          "name": "产品文档",
+          "description": "阅读项目 PRD 与产品说明。",
+          "icon": "Document",
+          "order": 20
+        }
+      ],
+      "docs": {
+        "enabled": true,
+        "root": "docs"
+      },
+      "prototype": {
+        "enabled": true,
+        "root": "C:\\Users\\Penn\\Downloads",
+        "client": "admin",
+        "section": "",
+        "clients": {
+          "admin": {
+            "enabled": true,
+            "root": "C:\\Users\\Penn\\Downloads\\新建文件夹 (2)",
+            "section": "",
+            "shellMode": "auto"
+          },
+          "client-2": {
+            "enabled": false,
+            "root": "C:\\Users\\Penn\\Downloads\\新建文件夹 (2)",
+            "section": "",
+            "shellMode": "auto"
+          },
+          "client-3": {
+            "enabled": true,
+            "root": "D:/工作文件/RIMORental/02_原型和PRD/原型/营运端",
+            "section": "",
+            "shellMode": "auto"
+          }
+        }
+      },
+      "mobile": {
+        "enabled": false,
+        "entry": "mobile/app.html"
+      },
+      "features": {
+        "designSystem": true,
+        "legacyI18n": false
+      },
+      "compatibility": {
+        "legacyRoutes": false
+      },
+      "folder": "demo",
+      "mounted": false,
+      "pageRuntime": {
+        "clients": {
+          "admin": {
+            "htmlTemplate": 0
+          },
+          "client-2": {
+            "htmlTemplate": 0
+          },
+          "client-3": {
+            "htmlTemplate": 0
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "rimo-rental",
+      "name": "RIMO Rental",
+      "shortName": "RIMO",
+      "description": "RIMO 租赁平台业务原型、产品文档与演示页面。",
+      "version": "1.0.0",
+      "defaultLocale": "zh-CN",
+      "homepage": {
+        "visible": true
+      },
+      "branding": {},
+      "theme": {
+        "primary": "#1677ff",
+        "primaryHover": "#146be6",
+        "primaryActive": "#1159bf",
+        "pageBackground": "#f5f7fb"
+      },
+      "clients": [
+        {
+          "id": "operation",
+          "name": "营运端",
+          "description": "读取外部模板化副本中的营运端 HTML 页面。",
+          "icon": "Van",
+          "defaultPage": "workbench",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "sidebar"
+          },
+          "login": {
+            "account": "admin",
+            "tenantCode": "demo"
+          }
+        },
+        {
+          "id": "enterprise",
+          "name": "企业端",
+          "description": "读取外部模板化副本中的企业端 HTML 页面。",
+          "icon": "OfficeBuilding",
+          "defaultPage": "dashboard",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "topnav"
+          },
+          "login": {
+            "account": "enterprise_admin",
+            "tenantCode": "demo"
+          }
+        },
+        {
+          "id": "client-3",
+          "name": "移动端",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "defaultPage": "",
+          "entry": {
+            "mode": "direct"
+          },
+          "layout": {
+            "type": "topnav"
+          },
+          "login": {
+            "account": "",
+            "tenantCode": ""
+          }
+        }
+      ],
+      "entries": [
+        {
+          "id": "operation",
+          "kind": "client",
+          "clientId": "operation",
+          "name": "营运端",
+          "description": "读取外部模板化副本中的营运端 HTML 页面。",
+          "icon": "Van",
+          "order": 10
+        },
+        {
+          "id": "enterprise",
+          "kind": "client",
+          "clientId": "enterprise",
+          "name": "企业端",
+          "description": "读取外部模板化副本中的企业端 HTML 页面。",
+          "icon": "OfficeBuilding",
+          "order": 20
+        },
+        {
+          "id": "client-3",
+          "kind": "client",
+          "clientId": "client-3",
+          "name": "移动端",
+          "description": "项目客户端入口。",
+          "icon": "Management",
+          "order": 30
+        },
+        {
+          "id": "docs",
+          "kind": "docs",
+          "name": "产品文档",
+          "description": "阅读本项目 PRD、流程图与产品说明。",
+          "icon": "Document",
+          "order": 40
+        }
+      ],
+      "docs": {
+        "enabled": true,
+        "root": "D:/工作文件/RIMORental/02_原型和PRD/PRD"
+      },
+      "prototype": {
+        "enabled": true,
+        "root": "prototype",
+        "client": "",
+        "section": "",
+        "clients": {
+          "operation": {
+            "enabled": true,
+            "root": "D:/工作文件/RIMORental/02_原型和PRD/原型/营运端",
+            "section": "",
+            "shellMode": "auto"
+          },
+          "enterprise": {
+            "enabled": true,
+            "root": "D:/工作文件/RIMORental/02_原型和PRD/原型/企业端",
+            "section": "",
+            "shellMode": "auto"
+          },
+          "client-3": {
+            "enabled": true,
+            "root": "D:\\工作文件\\RIMORental\\02_原型和PRD\\原型\\移动端",
+            "section": "",
+            "shellMode": "auto"
+          }
+        }
+      },
+      "mobile": {
+        "enabled": false,
+        "entry": "D:\\工作文件\\RIMORental\\02_原型和PRD\\原型\\移动端\\channel_ticket_app_compatible.html"
+      },
+      "features": {
+        "designSystem": false,
+        "legacyI18n": false
+      },
+      "compatibility": {
+        "legacyRoutes": false
+      },
+      "folder": "rimo-rental",
+      "mounted": false,
+      "pageRuntime": {
+        "clients": {
+          "operation": {
+            "htmlTemplate": 0
+          },
+          "enterprise": {
+            "htmlTemplate": 0
+          },
+          "client-3": {
+            "htmlTemplate": 0
+          }
+        }
+      }
+    }
+  ],
+  "invalidProjects": []
+}

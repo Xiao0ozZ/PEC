@@ -9,7 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 
 import { platformApi } from '@/data/platform-api';
-import { Button, Empty, Flex, Input, List, Segmented, Select, Tag, Tooltip, Typography } from '@/ui/ant';
+import { Button, Empty, Flex, Input, Segmented, Select, Tag, Tooltip, Typography } from '@/ui/ant';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -450,15 +450,14 @@ export function PrdReviewPanel({
           <aside ref={outlineRef} className="prd-review-panel__outline" aria-label="PRD 本文目录">
             <Flex className="prd-review-panel__outline-header" align="center" justify="space-between">
               <Text strong>本文目录</Text>
-              <Tag bordered={false}>{headings.length}</Tag>
+              <Tag variant="filled">{headings.length}</Tag>
             </Flex>
-            <List
-              size="small"
-              dataSource={headings}
-              renderItem={(heading) => (
-                <List.Item
+            <ul className="prd-review-panel__outline-list">
+              {headings.map((heading) => (
+                <li
                   className={heading.id === activeHeading ? 'is-active' : ''}
                   data-heading-id={heading.id}
+                  key={heading.id}
                   style={{ paddingLeft: (heading.level - 1) * 8 }}
                 >
                   <Button
@@ -470,9 +469,9 @@ export function PrdReviewPanel({
                   >
                     {heading.text}
                   </Button>
-                </List.Item>
-              )}
-            />
+                </li>
+              ))}
+            </ul>
           </aside>
         ) : null}
       </div>

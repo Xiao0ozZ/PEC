@@ -1,0 +1,1485 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>新增同站租还订单</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+    <style data-page-style>
+        /* Removed Google Fonts import to match other pages */
+
+
+        .new-order-same-station .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .new-order-same-station .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .new-order-same-station .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .new-order-same-station .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .new-order-same-station .sticky-summary {
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Aggressively reduce card header height by removing default padding */
+        .new-order-same-station .el-card__header {
+            padding: 0 !important;
+            min-height: 0 !important;
+            border-bottom: none !important;
+            /* Move border to inner div */
+        }
+
+        .el-select-dropdown__item.customer-option {
+            height: 54px !important;
+            line-height: normal !important;
+            padding: 5px 12px !important;
+        }
+
+        .customer-option-content {
+            width: 100%;
+            line-height: 1.35;
+        }
+
+        .legacy-new-order .new-order-layout {
+            grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr) !important;
+        }
+
+        .legacy-new-order .new-order-main-column,
+        .legacy-new-order .new-order-summary-column {
+            grid-column: auto !important;
+            min-width: 0;
+        }
+
+        @media (max-width: 1280px) {
+            .prototype-main {
+                padding: 20px;
+            }
+
+            .legacy-new-order .new-order-layout {
+                grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr) !important;
+                gap: 16px;
+            }
+
+            .legacy-new-order .new-order-vehicle-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .legacy-new-order .sticky-summary {
+                position: static;
+                top: auto;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .legacy-new-order .new-order-layout {
+                display: block !important;
+            }
+
+            .legacy-new-order .new-order-summary-column {
+                margin-top: 16px;
+            }
+
+            .legacy-new-order .new-order-intro-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .prototype-main {
+                padding: 16px;
+            }
+
+            .legacy-new-order .new-order-vehicle-grid,
+            .legacy-new-order .new-order-layout .grid.grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+    <!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+    <script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "new-order-same-station",
+  "pageTitle": "新增同站租还订单",
+  "fileName": "new_order_same_station.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/new-order-same-station",
+  "menuSection": "orders",
+  "menuTitle": "新增同站租还订单",
+  "menuIcon": "CirclePlus",
+  "menu": true,
+  "rootClass": "new-order-same-station",
+  "overlayRootClass": "new-order-same-station-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+    <!-- PAGE_MANIFEST_END -->
+
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+<body>
+    <div id="app" class="prototype-app" v-cloak>
+        <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+        <!-- PROTOTYPE_SHELL_START -->
+        <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+            <div class="prototype-brand">
+                <span data-shell-project-name>RIMO Rental</span>
+                <small data-shell-client-name>营运端</small>
+            </div>
+            <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+                <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">订单中心</div>
+                <a class="prototype-menu-item is-active" href="./new_order.html" aria-current="page"
+                    data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="CirclePlus"
+                        aria-hidden="true"></span><span>新建订单</span></a>
+                <!-- SHELL_NAV_END -->
+            </nav>
+        </aside>
+
+        <div class="prototype-workspace">
+            <header class="prototype-topbar" data-prototype-shell="topbar">
+                <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 新增同站租还订单</div>
+                <el-dropdown trigger="click">
+                    <button class="prototype-user" type="button" aria-label="账号菜单">
+                        <span class="prototype-avatar">A</span>
+                        <span>Admin</span>
+                    </button>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </header>
+            <!-- PROTOTYPE_SHELL_END -->
+
+            <main class="prototype-main">
+                <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+                <section class="legacy-page legacy-new-order new-order-same-station" data-page-content
+                    data-page-root="new-order-same-station" data-page-key="new-order-same-station">
+                    <div data-business-content data-layout-type="legacy">
+                        <div class="w-full mx-auto">
+                            <div class="mb-4 flex items-center justify-between">
+                                <el-button @click="goBack" :icon="ArrowLeft" plain>返回</el-button>
+                                <el-tag effect="plain" type="info">同站租还</el-tag>
+                            </div>
+                            <div class="grid grid-cols-12 gap-5 items-start new-order-layout">
+                                <div class="col-span-9 space-y-4 new-order-main-column">
+                                    <div class="grid grid-cols-2 gap-4 new-order-intro-grid">
+
+                                        <el-card shadow="never"
+                                            class="!border-gray-200 !rounded-lg h-full flex flex-col"
+                                            body-class="!p-4 flex-1">
+                                            <template #header>
+                                                <div
+                                                    class="font-bold text-gray-800 flex items-center gap-2 text-base px-4 h-[45px] border-b border-gray-100 bg-gray-50/50">
+                                                    <el-icon class="text-[color:var(--app-color-primary)]">
+                                                        <User></User>
+                                                    </el-icon> 客户信息
+                                                </div>
+                                            </template>
+                                            <div class="block">
+                                                <el-form label-position="top" size="default">
+                                                    <el-select v-model="selectedCustomerId"
+                                                        placeholder="搜索客户（姓名/证件号/手机号/邮箱）" filterable clearable
+                                                        :filter-method="filterCustomer" class="w-full mb-3"
+                                                        @change="handleCustomerSelect">
+                                                        <el-option v-for="c in filteredCustomers" :key="c.id"
+                                                            class="customer-option"
+                                                            :label="c.name + ' (' + c.phone + ')'" :value="c.id">
+                                                            <div class="customer-option-content flex flex-col gap-0.5">
+                                                                <div
+                                                                    class="flex items-center justify-between gap-4 text-sm leading-5">
+                                                                    <span class="font-medium text-slate-800">{{ c.name
+                                                                        }}</span>
+                                                                    <span class="text-xs text-gray-500">{{ c.phone
+                                                                        }}</span>
+                                                                </div>
+                                                                <div
+                                                                    class="flex items-center justify-between gap-4 text-xs leading-4 text-gray-400">
+                                                                    <span>{{ c.idNumber }}</span>
+                                                                    <span>{{ c.email }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </el-option>
+                                                    </el-select>
+
+                                                    <div v-if="currentCustomer" class="space-y-3">
+                                                        <div
+                                                            class="flex justify-between items-center bg-gray-50 p-2.5 rounded border border-gray-100">
+                                                            <div>
+                                                                <div class="font-bold text-gray-900 text-sm">{{
+                                                                    currentCustomer.name }}</div>
+                                                                <div class="text-xs text-gray-500">{{
+                                                                    currentCustomer.phone }}</div>
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <el-tag size="small" :type="currentCustomer.levelType"
+                                                                    effect="plain">{{ currentCustomer.levelName
+                                                                    }}</el-tag>
+                                                            </div>
+                                                        </div>
+
+                                                        <div
+                                                            class="bg-gray-100 p-1 rounded-lg grid grid-cols-2 gap-1 border border-gray-200">
+                                                            <div @click="reservationType = 'personal'"
+                                                                class="cursor-pointer text-center py-1.5 text-xs font-bold rounded-md transition-all duration-200"
+                                                                :class="reservationType === 'personal' ? 'bg-white text-[color:var(--app-color-primary)] shadow-sm ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-700'">
+                                                                个人预订
+                                                            </div>
+                                                            <div @click="currentCustomer.enterprise && (reservationType = 'enterprise')"
+                                                                class="cursor-pointer text-center py-1.5 text-xs font-bold rounded-md transition-all duration-200 relative select-none"
+                                                                :class="[
+                                                            reservationType === 'enterprise' ? 'bg-white text-[color:var(--app-color-primary)] shadow-sm ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-700',
+                                                            !currentCustomer.enterprise ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                                                        ]">
+                                                                企业预订
+                                                            </div>
+                                                        </div>
+
+                                                        <div v-if="reservationType === 'enterprise' && currentCustomer.enterprise"
+                                                            class="text-xs text-[color:var(--app-color-primary)] bg-[color:var(--app-color-primary-light-9)] p-2 rounded text-center flex items-center justify-center gap-1 border border-[color:var(--app-color-primary-light-8)]">
+                                                            <el-icon>
+                                                                <OfficeBuilding></OfficeBuilding>
+                                                            </el-icon> {{ currentCustomer.enterprise.name }}
+                                                        </div>
+                                                    </div>
+                                                    <div v-else
+                                                        class="text-xs text-gray-400 text-center py-4 border border-dashed rounded bg-gray-50">
+                                                        请先选择客户
+                                                    </div>
+                                                </el-form>
+                                            </div>
+                                        </el-card>
+
+
+                                        <el-card shadow="never"
+                                            class="!border-gray-200 !rounded-lg h-full flex flex-col"
+                                            body-class="!p-0 flex-1">
+                                            <template #header>
+                                                <div
+                                                    class="font-bold text-gray-800 flex items-center gap-2 text-base px-4 h-[45px] border-b border-gray-100 bg-gray-50/50">
+                                                    <el-icon class="text-[color:var(--app-color-primary)]">
+                                                        <Calendar></Calendar>
+                                                    </el-icon> 用车信息
+                                                </div>
+                                            </template>
+                                            <div class="p-4 space-y-3">
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 mb-1"><span
+                                                                class="text-red-500">*</span> 取车据点</div>
+                                                        <el-select v-model="rentalData.pickupLocation" class="w-full"
+                                                            size="default" @change="syncReturnLocation">
+                                                            <el-option v-for="station in stations" :key="station.value"
+                                                                :label="station.label"
+                                                                :value="station.value"></el-option>
+                                                        </el-select>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 mb-1"><span
+                                                                class="text-red-500">*</span> 取车时间</div>
+                                                        <el-date-picker v-model="rentalData.pickupTime" type="datetime"
+                                                            placeholder="选择时间" class="w-full" style="width: 100%"
+                                                            size="default"></el-date-picker>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 mb-1"><span
+                                                                class="text-red-500">*</span> 还车据点</div>
+                                                        <el-select v-model="rentalData.returnLocation" class="w-full"
+                                                            size="default" disabled>
+                                                            <el-option v-for="station in stations" :key="station.value"
+                                                                :label="station.label"
+                                                                :value="station.value"></el-option>
+                                                        </el-select>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 mb-1"><span
+                                                                class="text-red-500">*</span> 还车时间</div>
+                                                        <el-date-picker v-model="rentalData.returnTime" type="datetime"
+                                                            placeholder="选择时间" class="w-full" style="width: 100%"
+                                                            size="default"></el-date-picker>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="text-xs bg-[color:var(--app-color-primary-light-9)] text-[color:var(--app-color-primary-hover)] px-3 py-2 rounded border border-[color:var(--app-color-primary-light-8)]">
+                                                    预计租期：<span class="font-bold">{{ rentalDurationLabel
+                                                        }}</span>，取还车据点保持一致。
+                                                </div>
+
+                                            </div>
+                                        </el-card>
+
+                                    </div>
+
+                                    <el-card shadow="never" class="!border-gray-200 !rounded-lg" body-class="!p-0">
+                                        <template #header>
+                                            <div
+                                                class="font-bold text-gray-800 flex items-center gap-2 text-base px-4 h-[45px] border-b border-gray-100 bg-gray-50/50">
+                                                <el-icon class="text-[color:var(--app-color-primary)]">
+                                                    <Van></Van>
+                                                </el-icon> 选择车款和车辆
+                                            </div>
+                                        </template>
+                                        <div class="p-4">
+                                            <div class="grid grid-cols-4 gap-3 new-order-vehicle-grid">
+                                                <div v-for="vehicle in vehicleModels" :key="vehicle.id"
+                                                    @click="selectVehicleModel(vehicle)"
+                                                    class="cursor-pointer border rounded-lg p-3 relative hover:shadow-md transition-all duration-200 group bg-white"
+                                                    :class="[
+                                                selectedVehicleModelId === vehicle.id ? 'border-[color:var(--app-color-primary)] bg-[color:var(--app-color-primary-light-9)]' : 'border-gray-200 hover:border-[color:var(--app-color-primary-light-7)]',
+                                                vehicle.available <= 0 ? 'opacity-50 cursor-not-allowed bg-gray-50 hover:shadow-none hover:border-gray-200' : ''
+                                            ]">
+                                                    <div class="flex justify-between items-start mb-1">
+                                                        <div class="font-bold text-gray-800 text-sm truncate pr-2">{{
+                                                            vehicle.name }}</div>
+                                                        <el-tag size="small"
+                                                            :type="vehicle.available > 0 ? 'success' : 'danger'"
+                                                            effect="light" class="!px-1 !h-5 !text-[10px]">
+                                                            {{ vehicle.available > 0 ? '剩' + vehicle.available : '无库存'
+                                                            }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 truncate mb-2"
+                                                        :title="vehicle.desc">{{ vehicle.desc }}</div>
+                                                    <div class="flex items-end justify-between">
+                                                        <div class="text-[color:var(--app-color-primary)] font-bold">{{ vehicle.price }}<span
+                                                                class="text-xs font-normal text-gray-400">/天</span>
+                                                        </div>
+                                                        <div class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center transition-colors"
+                                                            :class="{'bg-[color:var(--app-color-primary)] border-[color:var(--app-color-primary)]': selectedVehicleModelId === vehicle.id}">
+                                                            <el-icon v-if="selectedVehicleModelId === vehicle.id"
+                                                                class="text-white text-xs scale-75">
+                                                                <Check></Check>
+                                                            </el-icon>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-3 new-order-vehicle-fields">
+                                                <div>
+                                                    <div class="text-xs text-gray-500 mb-1"><span
+                                                            class="text-red-500">*</span> 预定车款</div>
+                                                    <el-input
+                                                        :model-value="selectedVehicleModel ? selectedVehicleModel.name : ''"
+                                                        placeholder="请从上方选择车款" disabled></el-input>
+                                                </div>
+                                                <div>
+                                                    <div class="text-xs text-gray-500 mb-1"><span
+                                                            class="text-red-500">*</span> 车辆</div>
+                                                    <el-select v-model="selectedPlateNo" placeholder="选择车辆（车牌号）"
+                                                        class="w-full" :disabled="!selectedVehicleModel">
+                                                        <el-option v-for="plate in availablePlates" :key="plate"
+                                                            :label="plate" :value="plate"></el-option>
+                                                    </el-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </el-card>
+
+
+                                    <el-card shadow="never" class="!border-gray-200 !rounded-lg" body-class="!p-0">
+                                        <template #header>
+                                            <div
+                                                class="font-bold text-gray-800 flex items-center gap-2 text-base px-4 h-[45px] border-b border-gray-100 bg-gray-50/50">
+                                                <el-icon class="text-[color:var(--app-color-primary)]">
+                                                    <Goods></Goods>
+                                                </el-icon> 额外服务
+                                            </div>
+                                        </template>
+                                        <div class="p-0">
+                                            <div class="grid grid-cols-2 divide-x divide-gray-100">
+                                                <div class="col-span-2 p-3 flex items-center justify-between hover:bg-gray-50 transition-colors border-b border-gray-100"
+                                                    :class="{'bg-[color:var(--app-color-primary-light-9)]': insuranceEnabled}">
+                                                    <div class="flex items-center gap-3">
+                                                        <el-checkbox v-model="insuranceEnabled" size="default">
+                                                            <span class="text-sm text-gray-700 font-medium">保险方案</span>
+                                                        </el-checkbox>
+                                                        <span class="text-xs text-gray-400">启用后选择保险方案</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-3 min-w-[360px] justify-end">
+                                                        <el-select v-model="selectedInsuranceId" placeholder="选择保险方案"
+                                                            size="default" class="!w-56" :disabled="!insuranceEnabled">
+                                                            <el-option v-for="plan in insurancePlans" :key="plan.id"
+                                                                :label="plan.name" :value="plan.id"></el-option>
+                                                        </el-select>
+                                                        <div class="text-gray-900 font-bold text-sm w-20 text-right">{{
+                                                            insuranceEnabled ? insuranceFee : 0 }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </el-card>
+
+                                </div>
+                                <div class="col-span-3 new-order-summary-column">
+                                    <div class="sticky-summary space-y-4">
+
+                                        <el-card shadow="hover" class="!border-[color:var(--app-color-primary-light-8)] !rounded-lg"
+                                            body-class="!p-0">
+                                            <template #header>
+                                                <div
+                                                    class="font-bold text-gray-800 flex items-center gap-2 text-base px-4 h-[45px] border-b border-[color:var(--app-color-primary-light-9)] bg-[color:var(--app-color-primary-light-9)]">
+                                                    <el-icon class="text-[color:var(--app-color-primary)]">
+                                                        <Ticket></Ticket>
+                                                    </el-icon> 优惠与折扣
+                                                </div>
+                                            </template>
+                                            <div class="p-4 space-y-4">
+                                                <div class="space-y-1">
+                                                    <div class="text-xs font-bold text-gray-600">行销优惠方案</div>
+                                                    <el-select v-model="selectedMarketingPlanId" size="default"
+                                                        class="w-full" :disabled="!currentCustomer">
+                                                        <el-option label="不使用方案" value="none"></el-option>
+                                                        <el-option v-for="plan in availableMarketingPlans"
+                                                            :key="plan.id" :label="plan.name"
+                                                            :value="plan.id"></el-option>
+                                                    </el-select>
+                                                    <div class="text-[11px] text-gray-400 leading-4">{{ currentCustomer
+                                                        ? '当前展示客户可用方案' : '选择客户后展示可用方案' }}</div>
+                                                </div>
+
+                                                <div class="space-y-2">
+                                                    <div class="text-xs font-bold text-gray-600">折扣码</div>
+                                                    <div class="flex items-center gap-2">
+                                                        <el-select v-model="selectedDiscountCodeId"
+                                                            placeholder="选择可用折扣码" size="default" class="flex-1"
+                                                            :disabled="!currentCustomer">
+                                                            <el-option v-for="code in availableDiscountCodes"
+                                                                :key="code.id" :label="code.name" :value="code.id">
+                                                                <div class="flex flex-col gap-0.5 py-1">
+                                                                    <div
+                                                                        class="flex justify-between items-center text-sm">
+                                                                        <span class="font-medium">{{ code.name }}</span>
+                                                                        <span class="text-gray-400 text-xs">{{ code.code
+                                                                            }}</span>
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex justify-between text-[11px] text-gray-500">
+                                                                        <span>{{ code.discountType }}</span>
+                                                                        <span class="text-green-600">预计优惠 {{
+                                                                            code.estimatedAmount }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </el-option>
+                                                        </el-select>
+                                                        <el-button @click="openRedeemDialog('discount')" size="default"
+                                                            plain class="shrink-0 !px-4"
+                                                            :disabled="!currentCustomer">兑换</el-button>
+                                                    </div>
+                                                    <div v-if="selectedDiscountCode" class="text-[11px] text-green-600">
+                                                        {{ selectedDiscountCode.discountType }}，预计优惠 {{
+                                                        selectedDiscountCode.estimatedAmount }}</div>
+                                                </div>
+                                                <div class="space-y-1">
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="text-xs text-gray-600 font-bold">Z游金 <span
+                                                                class="font-normal text-gray-400">(余{{ currentCustomer ?
+                                                                currentCustomer.zBalance : 0 }})</span></div>
+                                                    </div>
+                                                    <div class="flex items-center gap-2">
+                                                        <el-input-number v-model="zPointsUsed" :min="0"
+                                                            :max="currentCustomer ? currentCustomer.zBalance : 0"
+                                                            :step="100" size="default" class="!w-full"
+                                                            :disabled="!currentCustomer"
+                                                            controls-position="right"></el-input-number>
+                                                        <el-button @click="openRedeemDialog('zpoints')" size="default"
+                                                            plain class="!px-4"
+                                                            :disabled="!currentCustomer">兑换</el-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </el-card>
+
+
+                                        <el-card shadow="hover" class="!border-[color:var(--app-color-primary-light-8)] !bg-slate-50/50 !rounded-lg"
+                                            body-class="!p-0">
+                                            <template #header>
+                                                <div
+                                                    class="font-bold text-gray-900 text-base px-4 h-[45px] flex items-center border-b border-[color:var(--app-color-primary-light-8)]">
+                                                    费用明细</div>
+                                            </template>
+                                            <div class="p-4">
+                                                <div class="space-y-2 text-sm">
+                                                    <div class="flex justify-between text-gray-600"><span>预计租金 ({{
+                                                            rentalBillingLabel }})</span><span class="font-medium">{{
+                                                            baseRentalTotal }}</span></div>
+                                                    <div v-if="insuranceFee > 0"
+                                                        class="flex justify-between text-gray-600"><span>{{
+                                                            selectedInsurance ? selectedInsurance.name : '保险方案'
+                                                            }}</span><span class="font-medium">{{ insuranceFee }}</span>
+                                                    </div>
+                                                    <div v-if="marketingDiscountAmount > 0 || discountCodeAmount > 0 || zPointsAmount > 0 || parkingBenefitAmount > 0"
+                                                        class="border-t border-dashed border-gray-200 my-2 pt-2 space-y-1">
+                                                        <div v-if="marketingDiscountAmount > 0"
+                                                            class="flex justify-between text-green-600 text-xs">
+                                                            <span>行销优惠方案</span><span>- {{ marketingDiscountAmount
+                                                                }}</span>
+                                                        </div>
+
+                                                        <div v-if="discountCodeAmount > 0"
+                                                            class="flex justify-between text-green-600 text-xs">
+                                                            <span>折扣码</span><span>- {{ discountCodeAmount }}</span>
+                                                        </div>
+                                                        <div v-if="zPointsAmount > 0"
+                                                            class="flex justify-between text-orange-500 text-xs">
+                                                            <span>Z游金</span><span>- {{ zPointsAmount }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-t border-gray-200 mt-4 pt-3">
+                                                    <div class="flex justify-between items-baseline"><span
+                                                            class="text-gray-600 text-sm">预估总金额</span><span
+                                                            class="text-2xl font-bold text-[color:var(--app-color-primary)]">{{ finalTotal
+                                                            }}</span></div>
+                                                    <div
+                                                        class="mt-2 flex items-center justify-between text-xs bg-blue-50 text-blue-700 px-2 py-1.5 rounded border border-blue-100">
+                                                        <span>预授权金额</span><span class="font-bold">{{ preAuthAmount
+                                                            }}</span>
+                                                    </div>
+                                                </div>
+                                                <el-button type="primary" size="large"
+                                                    class="w-full mt-4 !rounded-lg !h-10 !text-base !font-bold shadow-lg shadow-[color:var(--app-color-primary-shadow)]"
+                                                    @click="submitOrder">创建订单</el-button>
+                                            </div>
+                                        </el-card>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- PAGE_CONTENT_END -->
+            </main>
+        </div>
+
+        <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+        <div data-page-overlay="overlay" data-block-id="order-overlays" data-block-name="订单覆盖层"
+            class="new-order-same-station-overlay">
+            <el-dialog v-model="redeemDialogVisible" :title="redeemDialogType === 'discount' ? '兑换折扣码' : '兑换 Z 游金'"
+                width="440px" class="new-order-same-station-overlay" :close-on-click-modal="false">
+                <div class="space-y-3">
+                    <div class="text-sm text-gray-600">{{ redeemDialogType === 'discount' ? '请输入客户可用的折扣码，兑换成功后会自动套用。' :
+                        '请输入 Z 游金兑换码，兑换成功后会带入本次抵扣。' }}</div>
+                    <el-input v-model="redeemDialogInput" placeholder="输入兑换码" clearable
+                        @keyup.enter="confirmRedeem"></el-input>
+                </div>
+                <template #footer>
+                    <div class="flex justify-end gap-2">
+                        <el-button @click="redeemDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="confirmRedeem">确认兑换</el-button>
+                    </div>
+                </template>
+            </el-dialog>
+            <el-dialog v-model="successVisible" title="订单创建成功" width="500px" center :close-on-click-modal="false"
+                class="new-order-same-station-overlay">
+                <div class="text-center py-4">
+                    <div
+                        class="mx-auto w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3">
+                        <el-icon class="text-3xl">
+                            <CircleCheck></CircleCheck>
+                        </el-icon>
+                    </div>
+                    <div class="font-bold text-gray-900 text-lg">{{ createdOrderNo }}</div>
+                    <div class="text-xs text-gray-500 mt-1">订单资料已依当前页面内容建立。</div>
+                </div>
+                <template #footer>
+                    <div class="flex gap-3">
+                        <el-button class="flex-1" @click="successVisible = false">继续编辑</el-button>
+                        <el-button type="primary" class="flex-1" @click="goBack">返回订单列表</el-button>
+                    </div>
+                </template>
+            </el-dialog>
+        </div>
+        <!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script data-prototype-menu-icon-renderer>
+        (() => {
+            const renderMenuIcons = () => {
+                if (!window.Vue || !window.ElementPlusIconsVue) return;
+                document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+                    if (host.dataset.prototypeMenuIconReady === 'true') return;
+                    const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+                    const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+                    if (!icon) return;
+                    window.Vue.render(window.Vue.h(icon), host);
+                    host.dataset.prototypeMenuIconReady = 'true';
+                });
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+                    once: true,
+                });
+            } else {
+                requestAnimationFrame(renderMenuIcons);
+            }
+        })();
+    </script>
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+        /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+        function pageSetup() {
+            const { ref, reactive, computed, watch } = Vue;
+            const { ElMessage } = ElementPlus;
+            const isSameStation = true;
+
+            const reservationType = ref('personal');
+            const customers = ref([
+                { id: 1, name: '王小明', idNumber: 'A123456789', phone: '0912-345-678', email: 'xiaoming@example.com', levelType: 'warning', levelName: '金牌会员', zBalance: 3500, enterprise: { id: 'ent_001', name: '谷歌信息技术有限公司' } },
+                { id: 2, name: '李大壮', idNumber: 'B223456789', phone: '0988-111-222', email: 'dazhuang@example.com', levelType: 'info', levelName: '普通会员', zBalance: 200 },
+                { id: 3, name: '张晓华', idNumber: 'C323456789', phone: '0933-444-555', email: 'xiaohua@example.com', levelType: 'danger', levelName: '黑钻会员', zBalance: 12000, enterprise: { id: 'ent_002', name: '微软中国' } }
+            ]);
+            const customerSearchQuery = ref('');
+            const filterCustomer = (query) => {
+                customerSearchQuery.value = (query || '').trim().toLowerCase();
+            };
+            const filteredCustomers = computed(() => {
+                const query = customerSearchQuery.value;
+                if (!query) return customers.value;
+                return customers.value.filter(customer => [customer.name, customer.idNumber, customer.phone, customer.email]
+                    .some(value => String(value || '').toLowerCase().includes(query)));
+            });
+            const selectedCustomerId = ref(null);
+            const currentCustomer = computed(() => customers.value.find(item => item.id === selectedCustomerId.value));
+
+            const stations = ref([
+                { value: 'taipei_main', label: '台北总站' },
+                { value: 'taipei_station', label: '台北车站据点' },
+                { value: 'banqiao', label: '板桥据点' },
+                { value: 'taoyuan', label: '桃园据点' }
+            ]);
+
+            const defaultPickupTime = () => {
+                const value = new Date();
+                value.setDate(value.getDate() + 1);
+                value.setHours(9, 0, 0, 0);
+                return value;
+            };
+            const defaultReturnTime = () => {
+                const value = defaultPickupTime();
+                value.setDate(value.getDate() + 1);
+                return value;
+            };
+            const rentalData = reactive({
+                pickupLocation: 'taipei_main',
+                returnLocation: 'taipei_main',
+                pickupTime: isSameStation ? defaultPickupTime() : null,
+                returnTime: isSameStation ? defaultReturnTime() : null
+            });
+
+            const vehicleModels = ref([
+                { id: 'yaris', name: 'Toyota Yaris', desc: '小型掀背｜省油灵活', price: 1200, available: 5, deposit: 5000, plates: ['RBC-1201', 'RBC-1208', 'RBC-1215'] },
+                { id: 'altis', name: 'Toyota Altis', desc: '舒适轿车｜适合日常与商务', price: 1600, available: 3, deposit: 6000, plates: ['RDA-3302', 'RDA-3310'] },
+                { id: 'rav4', name: 'Toyota RAV4', desc: '中型 SUV｜空间充足', price: 2300, available: 2, deposit: 8000, plates: ['RAV-5208', 'RAV-5216'] },
+                { id: 'model3', name: 'Tesla Model 3', desc: '纯电轿车｜科技座舱', price: 2800, available: 1, deposit: 10000, plates: ['EVC-7788'] }
+            ]);
+            const selectedVehicleModelId = ref(null);
+            const selectedVehicleModel = computed(() => vehicleModels.value.find(item => item.id === selectedVehicleModelId.value));
+            const selectedPlateNo = ref('');
+            const availablePlates = computed(() => selectedVehicleModel.value ? selectedVehicleModel.value.plates : []);
+
+            const insurancePlans = ref([
+                { id: 'basic', name: '基础安心方案', dailyPrice: 150 },
+                { id: 'standard', name: '安心保障方案', dailyPrice: 250 },
+                { id: 'premium', name: '全方位保障方案', dailyPrice: 400 }
+            ]);
+            const insuranceEnabled = ref(false);
+            const selectedInsuranceId = ref('basic');
+            const selectedInsurance = computed(() => insurancePlans.value.find(item => item.id === selectedInsuranceId.value));
+
+            const marketingPlans = ref([
+                { id: 'personal_weekday', name: '个人会员平日优惠', rate: 0.9, scope: 'personal' },
+                { id: 'personal_gold', name: '金牌会员专享折扣', rate: 0.85, scope: 'personal', levels: ['金牌会员', '黑钻会员'] },
+                { id: 'enterprise_staff', name: '企业员工用车方案', rate: 0.82, scope: 'enterprise' }
+            ]);
+            const selectedMarketingPlanId = ref('none');
+            const availableMarketingPlans = computed(() => {
+                if (!currentCustomer.value) return [];
+                const scope = reservationType.value === 'enterprise' ? 'enterprise' : 'personal';
+                return marketingPlans.value.filter(plan => plan.scope === scope && (!plan.levels || plan.levels.includes(currentCustomer.value.levelName)));
+            });
+            const selectedMarketingPlan = computed(() => availableMarketingPlans.value.find(item => item.id === selectedMarketingPlanId.value));
+
+            const parkingBenefits = ref([
+                { id: 'parking_100', name: '停车费折抵 100', amount: 100 },
+                { id: 'parking_200', name: '停车费折抵 200', amount: 200 }
+            ]);
+            const selectedParkingBenefitId = ref('none');
+            const selectedParkingBenefit = computed(() => parkingBenefits.value.find(item => item.id === selectedParkingBenefitId.value));
+
+            const discountCodes = ref([
+                { id: 'discount_spring_100', code: 'SPRING100', name: '春季出行优惠', discountType: '固定金额折抵', estimatedAmount: 100, amount: 100 },
+                { id: 'discount_weekday_10', code: 'WEEKDAY10', name: '平日租金优惠', discountType: '租金 10% 折抵', estimatedAmount: 120, amount: 120 }
+            ]);
+            const selectedDiscountCodeId = ref(null);
+            const availableDiscountCodes = computed(() => currentCustomer.value ? discountCodes.value : []);
+            const selectedDiscountCode = computed(() => availableDiscountCodes.value.find(item => item.id === selectedDiscountCodeId.value));
+            const redeemDialogVisible = ref(false);
+            const redeemDialogType = ref('discount');
+            const redeemDialogInput = ref('');
+            const zPointsUsed = ref(0);
+            const successVisible = ref(false);
+            const createdOrderNo = ref('');
+
+            const rentalDurationHours = computed(() => {
+                if (!isSameStation || !rentalData.pickupTime || !rentalData.returnTime) return 24;
+                const diff = new Date(rentalData.returnTime).getTime() - new Date(rentalData.pickupTime).getTime();
+                return Math.max(0, diff / 3600000);
+            });
+            const rentalDays = computed(() => Math.max(1, Math.ceil(rentalDurationHours.value / 24)));
+            const rentalDurationLabel = computed(() => {
+                if (!isSameStation) return '按实际使用计费';
+                if (rentalDurationHours.value <= 0) return '0小时';
+                const days = Math.floor(rentalDurationHours.value / 24);
+                const hours = Math.round(rentalDurationHours.value % 24);
+                return `${days > 0 ? days + '天' : ''}${hours > 0 ? hours + '小时' : ''}` || '1天';
+            });
+            const rentalBillingLabel = computed(() => isSameStation ? `${rentalDays.value}天` : '基础费用');
+            const baseRentalTotal = computed(() => selectedVehicleModel.value ? selectedVehicleModel.value.price * (isSameStation ? rentalDays.value : 1) : 0);
+            const insuranceFee = computed(() => insuranceEnabled.value && selectedInsurance.value ? selectedInsurance.value.dailyPrice * (isSameStation ? rentalDays.value : 1) : 0);
+            const marketingDiscountAmount = computed(() => selectedMarketingPlan.value ? Math.round(baseRentalTotal.value * (1 - selectedMarketingPlan.value.rate)) : 0);
+            const parkingBenefitAmount = computed(() => !isSameStation && selectedParkingBenefit.value ? selectedParkingBenefit.value.amount : 0);
+            const discountCodeAmount = computed(() => selectedDiscountCode.value ? selectedDiscountCode.value.amount : 0);
+            const zPointsAmount = computed(() => Math.floor(zPointsUsed.value / 10));
+            const finalTotal = computed(() => Math.max(0, baseRentalTotal.value + insuranceFee.value - marketingDiscountAmount.value - parkingBenefitAmount.value - discountCodeAmount.value - zPointsAmount.value));
+            const preAuthAmount = computed(() => selectedVehicleModel.value ? selectedVehicleModel.value.deposit : 0);
+
+            const handleCustomerSelect = () => {
+                customerSearchQuery.value = '';
+                reservationType.value = 'personal';
+                selectedMarketingPlanId.value = 'none';
+                selectedDiscountCodeId.value = null;
+                zPointsUsed.value = 0;
+            };
+            const syncReturnLocation = () => {
+                if (isSameStation) rentalData.returnLocation = rentalData.pickupLocation;
+            };
+            const selectVehicleModel = (vehicle) => {
+                if (vehicle.available <= 0) return;
+                selectedVehicleModelId.value = vehicle.id;
+                selectedPlateNo.value = '';
+            };
+            const openRedeemDialog = (type) => {
+                if (!currentCustomer.value) return ElMessage.warning('请先选择客户');
+                redeemDialogType.value = type;
+                redeemDialogInput.value = '';
+                redeemDialogVisible.value = true;
+            };
+            const confirmRedeem = () => {
+                const code = redeemDialogInput.value.trim().toUpperCase();
+                if (!code) return ElMessage.warning('请输入兑换码');
+                if (redeemDialogType.value === 'discount') {
+                    const matched = availableDiscountCodes.value.find(item => item.code === code);
+                    if (!matched) return ElMessage.warning('兑换码无效或当前客户不可用');
+                    selectedDiscountCodeId.value = matched.id;
+                    ElMessage.success('折扣码已套用');
+                } else {
+                    const zPointsByCode = { Z500: 500, Z1000: 1000, Z3000: 3000 };
+                    const points = zPointsByCode[code];
+                    if (!points) return ElMessage.warning('Z 游金兑换码无效');
+                    zPointsUsed.value = Math.min(currentCustomer.value.zBalance, points);
+                    ElMessage.success(`已兑换 ${zPointsUsed.value} Z 游金`);
+                }
+                redeemDialogVisible.value = false;
+            };
+            const submitOrder = () => {
+                if (!currentCustomer.value) return ElMessage.warning('请选择客户');
+                if (!rentalData.pickupLocation) return ElMessage.warning('请选择取车据点');
+                if (isSameStation && (!rentalData.pickupTime || !rentalData.returnTime)) return ElMessage.warning('请选择取还车时间');
+                if (isSameStation && rentalDurationHours.value <= 0) return ElMessage.warning('还车时间必须晚于取车时间');
+                if (!selectedVehicleModel.value) return ElMessage.warning('请选择预定车款');
+                if (!selectedPlateNo.value) return ElMessage.warning('请选择车辆');
+                if (insuranceEnabled.value && !selectedInsurance.value) return ElMessage.warning('请选择保险方案');
+                createdOrderNo.value = `${isSameStation ? 'SSR' : 'OWR'}-${Date.now().toString().slice(-8)}`;
+                successVisible.value = true;
+            };
+            const goBack = () => ElMessage.info('返回订单列表');
+
+            watch(reservationType, () => {
+                selectedMarketingPlanId.value = 'none';
+                if (reservationType.value === 'enterprise' && !currentCustomer.value?.enterprise) reservationType.value = 'personal';
+            });
+
+            return {
+                reservationType, customers, filteredCustomers, selectedCustomerId, currentCustomer, filterCustomer,
+                stations, rentalData, vehicleModels, selectedVehicleModelId, selectedVehicleModel, selectedPlateNo, availablePlates,
+                insurancePlans, insuranceEnabled, selectedInsuranceId, selectedInsurance, insuranceFee,
+                selectedMarketingPlanId, availableMarketingPlans,
+                parkingBenefits, selectedParkingBenefitId,
+                availableDiscountCodes, selectedDiscountCodeId, selectedDiscountCode, zPointsUsed, zPointsAmount,
+                redeemDialogVisible, redeemDialogType, redeemDialogInput,
+                rentalDurationLabel, rentalBillingLabel, baseRentalTotal, marketingDiscountAmount, parkingBenefitAmount, discountCodeAmount,
+                finalTotal, preAuthAmount, successVisible, createdOrderNo,
+                handleCustomerSelect, syncReturnLocation, selectVehicleModel, openRedeemDialog, confirmRedeem, submitOrder, goBack,
+                ArrowLeft: ElementPlusIconsVue.ArrowLeft
+            };
+        }
+        /* PAGE_LOGIC_END */
+
+        /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+        const app = Vue.createApp({ setup: pageSetup });
+        function registerLegacyComponents(app) {
+            if (typeof ElementPlusIconsVue !== 'undefined') {
+                for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                    app.component(key, component);
+                }
+            }
+        }
+        registerLegacyComponents(app);
+        app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+        if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+        }
+        app.mount('#app');
+        /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+</body>
+
+</html>

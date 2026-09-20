@@ -35,6 +35,8 @@ export interface AppSidebarProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
   brandMark: ReactNode;
+  /** 展开态可使用完整正式品牌标志；未提供时回退到图形 + 文字。 */
+  brandLogo?: ReactNode;
   brandTitle: string;
   brandSubtitle?: string;
   onBrandClick?: () => void;
@@ -61,6 +63,7 @@ export function AppSidebar({
   collapsed,
   onToggleCollapsed,
   brandMark,
+  brandLogo,
   brandTitle,
   brandSubtitle,
   onBrandClick,
@@ -71,19 +74,6 @@ export function AppSidebar({
   routeKey,
 }: AppSidebarProps) {
   const isDesktop = useMinWidth(DESKTOP_QUERY);
-  const [drawerState, setDrawerState] = useState({ open: false, routeKey });
-  const drawerOpen = drawerState.open;
-
-  /**
-   * 路由变化即关抽屉：窄屏点完菜单还压着一层浮层，等于点了没反应。
-   *
-   * 在渲染期直接归位，而不是放进 effect：effect 里同步 setState 会多触发一次
-   * 级联渲染，而这里本来就是「输入（routeKey）变了就修正派生状态」。
-   */
-  if (drawerState.routeKey !== routeKey) {
-    setDrawerState({ open: false, routeKey });
-  }
-
   function renderShell(inDrawer: boolean) {
     const isCollapsed = collapsed && !inDrawer;
 
@@ -91,12 +81,18 @@ export function AppSidebar({
       <div className={`app-sider-shell${isCollapsed ? ' app-sider-shell--collapsed' : ''}`}>
         <div className="app-sider__brand">
           <button type="button" className="app-sider__brand-button" onClick={onBrandClick}>
-            <span className="app-sider__brand-mark">{brandMark}</span>
-            {isCollapsed ? null : (
-              <span className="app-sider__brand-copy">
-                <b>{brandTitle}</b>
-                {brandSubtitle ? <small>{brandSubtitle}</small> : null}
-              </span>
+            {!isCollapsed && brandLogo ? (
+              <span className="app-sider__brand-logo">{brandLogo}</span>
+            ) : (
+              <>
+                <span className="app-sider__brand-mark">{brandMark}</span>
+                {isCollapsed ? null : (
+                  <span className="app-sider__brand-copy">
+                    <b>{brandTitle}</b>
+                    {brandSubtitle ? <small>{brandSubtitle}</small> : null}
+                  </span>
+                )}
+              </>
             )}
           </button>
           {inDrawer ? null : (
@@ -123,28 +119,7 @@ export function AppSidebar({
   }
 
   if (!isDesktop) {
-    return (
-      <>
-        <Button
-          type="text"
-          className="app-sider-drawer-trigger"
-          aria-label="打开导航"
-          icon={<MenuOutlined />}
-          onClick={() => setDrawerState({ open: true, routeKey })}
-        />
-        <Drawer
-          className="app-sider-drawer"
-          placement="left"
-          size={DRAWER_WIDTH}
-          open={drawerOpen}
-          closable={false}
-          styles={{ body: { padding: 0 } }}
-          onClose={() => setDrawerState({ open: false, routeKey })}
-        >
-          {renderShell(true)}
-        </Drawer>
-      </>
-    );
+    return <MobileAppSidebar key={routeKey}>{renderShell(true)}</MobileAppSidebar>;
   }
 
   return (
@@ -157,5 +132,32 @@ export function AppSidebar({
     >
       {renderShell(false)}
     </Sider>
+  );
+}
+
+function MobileAppSidebar({ children }: { children: ReactNode }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  return (
+    <>
+      <Button
+        type="text"
+        className="app-sider-drawer-trigger"
+        aria-label="打开导航"
+        icon={<MenuOutlined />}
+        onClick={() => setDrawerOpen(true)}
+      />
+      <Drawer
+        className="app-sider-drawer"
+        placement="left"
+        size={DRAWER_WIDTH}
+        open={drawerOpen}
+        closable={false}
+        styles={{ body: { padding: 0 } }}
+        onClose={() => setDrawerOpen(false)}
+      >
+        {children}
+      </Drawer>
+    </>
   );
 }

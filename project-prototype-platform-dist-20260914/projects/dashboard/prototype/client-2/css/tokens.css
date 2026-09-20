@@ -1,0 +1,494 @@
+/* ==========================================================================
+   戰情 Dashboard 設計系統 — Token 層
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → module-*.css
+   外殼、看板、圖表基元與各模組樣式都只引用本檔的 token，不出現字面色值。
+
+   三層結構：
+     L0 刻度   與主題無關的字級、間距、圖表尺規、動效節奏
+     L1 語義   與主題無關的「名字」，值由主題提供；並在此處統一派生柔和態
+     L2 主題   三套換膚：標準淺色 / 品牌黑黃（預設）/ 深藍科技
+
+   唯一鐵則：模組樣式只能引用 L0/L1 的變數，不得出現任何字面色值。
+   這是五套主題能純 token 換膚的前提；舊原型把 #2f80ff 寫了 32 次，所以換不動。
+
+   色彩職責分工（不可互換）：
+     --st-*   狀態（正常→嚴重），保留語義，必須搭配圖示與文字，永不當作序列色
+     --cat-*  類別（誰是誰），固定槽位順序，永不循環、永不按數值大小上色
+     --seq-*  量值（多少），單一色相由淺到深
+     --brand  品牌與操作，僅用於按鈕、焦點、啟用態；永不作為資料色
+   ========================================================================== */
+
+/* ===== L0 刻度 ========================================================== */
+:root {
+    /* 字級。
+       繁中筆畫密度高，同樣像素下比拉丁字母難辨識；大屏又常在兩三公尺外看。
+       客戶回饋「圖例看不清」後整體再上移一檔，並把下限拉到 12px ——
+       11px 以下的繁中在投影或高解析螢幕上會糊成一團。 */
+    --fs-micro: 12px;   /* 單位、角標。這是全域下限，不要再往下開 */
+    --fs-note: 13px;    /* 輔助說明 */
+    --fs-body: 14px;    /* 正文、列表 */
+    --fs-lead: 16px;    /* 小節標題 */
+    --fs-title: 19px;   /* 模組標題 */
+    --fs-num-s: 22px;
+    --fs-num-m: 32px;
+    --fs-num-l: 44px;   /* 主指標 */
+
+    /* 圖表內文字。
+       ECharts 畫在 canvas 上，讀不到 CSS 變數 —— 傳 var(--fs-note) 給它只會
+       被當成無效值。因此這四個 token 由 tokens.js 讀成數字再傳進 option，
+       字級才有單一事實來源；先前散落在各模組的 10 / 11 / 12 就是靠這層收攏。 */
+    --fs-chart-axis: 12px;    /* 座標軸刻度 */
+    --fs-chart-name: 13px;    /* 類目軸上的對象名 */
+    --fs-chart-label: 13px;   /* 資料標籤：條端數值、點上讀數 */
+    --fs-chart-tip: 13px;     /* tooltip 正文 */
+
+    /* 間距。4px 基線，取代舊原型的 0.42/0.48/0.58rem 三位小數散值。 */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-8: 32px;
+
+    /* 圖表尺規。細記號、資料端圓角、堆疊段之間留表面間隙而不是描邊。 */
+    --mk-bar-h: 10px;      /* 條的厚度 */
+    --mk-bar-h-sm: 6px;
+    --mk-end-r: 4px;       /* 資料端圓角 */
+    --mk-gap: 2px;         /* 堆疊段/相鄰條之間的表面間隙 */
+    --mk-line-w: 2px;
+    --mk-dot: 8px;
+    --mk-hit: 24px;        /* 最小點擊命中尺寸 */
+
+    /* 資料條上緣高光的混色目標。高光在物理上就是白光，與主題無關，
+       因此放在刻度層而不是主題層；強度由各主題的 --fx-data-sheen 控制。 */
+    --fx-sheen-tint: #ffffff;
+
+    /* 動效節奏。等級越高週期越短 —— 用節奏而非只用顏色編碼緊迫感。 */
+    --mo-fast: .18s;
+    --mo-base: .3s;
+    --mo-slow: .52s;
+    --mo-ping-notice: 2.4s;
+    --mo-ping-warn: 1.8s;
+    --mo-ping-critical: 1.3s;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ===== L1 語義派生 ======================================================
+   宣告在 body 與 .card 兩層，而不是 :root。
+
+   為什麼不能放 :root：--sf-card 由主題宣告在 body 上，:root（html）取不到，
+   color-mix 一旦引用未定義的屬性就整條失效，派生出來的柔和態全是空值 ——
+   .is-critical 於是退回中性灰底，客戶要求的「淺紅底 + Ping」根本沒生效。
+
+   為什麼要多一層 .card：展示模式把 --sf-card 重指到頁底時，同一元素上的
+   派生值會跟著用頁底重新混色，狀態底色才不會浮出一圈與周圍不同的方塊。
+
+   10% 底 / 22% 邊 / 100% 字 是舊原型全檔最一致的語義模式，此處升格為正式規則。
+   ====================================================================== */
+body[class*="theme-"],
+body[class*="theme-"] .card {
+    --st-normal-soft: color-mix(in srgb, var(--st-normal) 10%, var(--sf-card));
+    --st-normal-line: color-mix(in srgb, var(--st-normal) 22%, transparent);
+    --st-notice-soft: color-mix(in srgb, var(--st-notice) 10%, var(--sf-card));
+    --st-notice-line: color-mix(in srgb, var(--st-notice) 22%, transparent);
+    --st-warn-soft: color-mix(in srgb, var(--st-warn) 12%, var(--sf-card));
+    --st-warn-line: color-mix(in srgb, var(--st-warn) 26%, transparent);
+    --st-critical-soft: color-mix(in srgb, var(--st-critical) 13%, var(--sf-card));
+    --st-critical-line: color-mix(in srgb, var(--st-critical) 30%, transparent);
+    --st-offline-soft: color-mix(in srgb, var(--st-offline) 10%, var(--sf-card));
+    --st-offline-line: color-mix(in srgb, var(--st-offline) 22%, transparent);
+    --st-info-soft: color-mix(in srgb, var(--st-info) 10%, var(--sf-card));
+    --st-info-line: color-mix(in srgb, var(--st-info) 22%, transparent);
+
+    /* 「無資料 / 零值」與「正常」必須是不同的視覺，不能用綠色假裝健康。 */
+    --st-void: var(--ink-3);
+    --st-void-soft: color-mix(in srgb, var(--ink-3) 8%, var(--sf-card));
+    --st-void-line: color-mix(in srgb, var(--ink-3) 16%, transparent);
+
+    /* 量值色階：單一色相由表面過渡到 --seq-hue，隨主題自動明暗適配。
+       用法 background: var(--seq-fill); 並在元素上給 --heat: 0~100。 */
+    --seq-fill: color-mix(in srgb, var(--seq-hue) calc(var(--heat, 0) * 1%), var(--sf-inset));
+
+    --brand-soft: color-mix(in srgb, var(--brand) 12%, var(--sf-card));
+    --brand-line: color-mix(in srgb, var(--brand) 32%, transparent);
+}
+
+/* ===== L2 主題 =========================================================
+   每套主題必須賦滿以下 token。差異不只顏色 —— 圓角、邊框、陰影、紋理、
+   字體都在 token 內，因為客戶那五個方向本身就包含特效差異。
+   ====================================================================== */
+
+/* --- 1. 品牌黑黃（預設）-------------------------------------------------
+   依據：模組表「圖」工作表內的既有系統截圖 —— 查詢按鈕、啟用頁籤、選中列
+   均為黃色，表頭黑底白字。Dashboard 與既有系統同源，嵌入後不割裂。
+   關鍵約束：品牌黃與「提醒」黃色相接近，因此品牌黃只用於操作與焦點，
+   絕不作為資料色；所有狀態記號一律搭配圖示與文字。
+   類名保留 theme-kancheda：它就是這套系統的品牌主題。
+   ------------------------------------------------------------------------ */
+body.theme-kancheda {
+    --sf-page: #0F1114;
+    --sf-chrome: #05070A;
+    --sf-card: #191C20;
+    --sf-inset: #22262B;
+    --sf-hover: #2A2F35;
+    --ink-1: #F2F4F7;
+    --ink-2: #A8B0BA;
+    --ink-3: #737C86;
+    --ln-hair: rgba(255, 255, 255, .07);
+    --ln-card: rgba(255, 255, 255, .10);
+    --brand: #FFCC00;
+    --ink-on-brand: #14161A;
+
+    --st-info: #7BB0F7;
+    --st-normal: #3ED598;
+    --st-notice: #F2C14E;
+    --st-warn: #FF9142;
+    --st-critical: #FF7070;
+    --st-offline: #B39DFF;
+
+    --cat-1: #cd4c0f; --cat-2: #4894f5; --cat-3: #18ae79; --cat-4: #a66f01;
+    --cat-5: #d66b94; --cat-6: #249521; --cat-7: #8982f5; --cat-8: #d63c3d;
+    --seq-hue: #4894f5;
+
+    --fx-r-card: 16px;
+    --fx-r-panel: 12px;
+    --fx-r-inner: 8px;
+    --fx-bw: 1px;
+    --fx-shadow: 0 12px 28px rgba(0, 0, 0, .34);
+    --fx-glow: 0 0 0 transparent;
+    --fx-texture: none;
+    --fx-texture-size: auto;
+    --fx-data-glow: 0 0 0 transparent;
+    --fx-data-sheen: 0%;
+
+    /* 面板：每張圖表一張卡 */
+    --fx-panel-bg: var(--sf-card);
+    --fx-panel-ring: 0 0 0 transparent;
+    --fx-panel-top: none;
+    --fx-panel-top-opacity: 0;
+    --fx-corner: transparent;
+    --fx-corner-size: 0px;
+    /* 深色底上給軌道一道極淡凹槽，資料條才看得出嵌在面板裡 */
+    --fx-track-inset: inset 0 1px 2px rgba(0, 0, 0, .22);
+    --fx-title-bar: var(--brand);
+    --fx-font-ui: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-num: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-mono: 'Inter', 'Noto Sans TC', ui-monospace, Consolas, monospace;
+    --fx-panel-pad: 16px;
+}
+
+/* --- 2. 標準淺色 --------------------------------------------------------
+   還原舊原型 style.css 的淺色語彙：#3370FF 主色、#F2F3F5 頁底、白色卡片、
+   12px 圓角、無陰影靠 1px 實線分層。類名沿用 theme-light，因此 style.css
+   內既有的 body.theme-light 規則同時生效，舊模組不需要改。
+
+   兩處刻意不照抄舊值：
+     1. 狀態色。舊原型的 #ffc14b / #ff7b7b 是為深底調的粉彩，落在白底上對比
+        不足。改用同色相的深階，白底上文字與記號都達到可讀對比。
+     2. 字體。三套主題共用同一字族，換主題只換顏色與層次，不重排文字。
+   ------------------------------------------------------------------------ */
+body.theme-light {
+    --sf-page: #F2F3F5;
+    --sf-chrome: #FFFFFF;
+    --sf-card: #FFFFFF;
+    --sf-inset: #F7F8FA;
+    --sf-hover: #EFF0F3;
+    --ink-1: #1F2329;
+    --ink-2: #646A73;
+    --ink-3: #8F959E;
+    --ln-hair: rgba(31, 35, 41, .06);
+    --ln-card: rgba(31, 35, 41, .09);
+    --brand: #3370FF;
+    --ink-on-brand: #FFFFFF;
+
+    --st-info: #2C6DB5;
+    --st-normal: #0F7A55;
+    --st-notice: #8A6100;
+    --st-warn: #B94A05;
+    --st-critical: #C0272D;
+    --st-offline: #5B3FBF;
+
+    --cat-1: #2a78d6; --cat-2: #eb6834; --cat-3: #1baf7a; --cat-4: #eda100;
+    --cat-5: #e87ba4; --cat-6: #008300; --cat-7: #4a3aa7; --cat-8: #e34948;
+    --seq-hue: #3370FF;
+
+    --fx-r-card: 12px;
+    --fx-r-panel: 10px;
+    --fx-r-inner: 6px;
+    --fx-bw: 1px;
+    --fx-shadow: none;
+    --fx-glow: 0 0 0 transparent;
+    --fx-texture: none;
+    --fx-texture-size: auto;
+    --fx-data-glow: 0 0 0 transparent;
+    --fx-data-sheen: 0%;
+
+    /* 面板：純白卡片，靠 1px 細線分層，不用陰影 */
+    --fx-panel-bg: var(--sf-card);
+    --fx-panel-ring: 0 0 0 transparent;
+    --fx-panel-top: none;
+    --fx-panel-top-opacity: 0;
+    --fx-corner: transparent;
+    --fx-corner-size: 0px;
+    /* 淺色主題整體扁平：資料條的軌道不做凹槽，與參考圖的白底長條一致 */
+    --fx-track-inset: none;
+    --fx-title-bar: var(--brand);
+    --fx-font-ui: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-num: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-mono: 'Inter', 'Noto Sans TC', ui-monospace, Consolas, monospace;
+    --fx-panel-pad: 18px;
+}
+
+/* --- 3. 深藍科技 --------------------------------------------------------
+   依據客戶提供的深色科技風參考圖：近黑藏藍頁底、半透明玻璃面板、1px 發光
+   描邊、青色作主色與啟用態、洋紅與紫作強調、點陣網格底紋。
+
+   兩個取捨：
+     1. 青 #22D3EE 是品牌與操作色，因此類別色刻意避開青色相，否則資料色會
+        和按鈕、啟用頁籤混在一起，看不出哪個可點。
+     2. 參考圖的洋紅用在「充電中」這類類別上，所以洋紅進 --cat-1 而不進狀態
+        標尺 —— 狀態標尺已有紅色代表嚴重，兩個紅系會互相打架。
+   ------------------------------------------------------------------------ */
+body.theme-tech {
+    --sf-page: #060C1A;
+    --sf-chrome: #040913;
+    --sf-card: #0C1729;
+    --sf-inset: #122036;
+    --sf-hover: #18293F;
+    --ink-1: #E9F1FC;
+    --ink-2: #93A9C6;
+    --ink-3: #61789A;
+    /* 邊線壓到極淡：參考圖的面板是用 1px 幾乎看不見的線分隔，
+       不是發光描邊。原本 .34 的飽和藍邊讓每張卡都在喊。 */
+    --ln-hair: rgba(125, 170, 225, .09);
+    --ln-card: rgba(125, 170, 225, .16);
+    --brand: #38C6F4;
+    --ink-on-brand: #04121C;
+
+    --st-info: #3D9DFF;
+    --st-normal: #2BD9A8;
+    --st-notice: #FFD34D;
+    --st-warn: #FF9A3C;
+    --st-critical: #FF4D5E;
+    --st-offline: #A97BFF;
+
+    /* 類別色即參考圖環圖的六色序列：紅、橙、黃、青綠、藍、紫。
+       固定槽位順序，不循環、不按數值大小上色。 */
+    --cat-1: #FF4D5E; --cat-2: #FF9A3C; --cat-3: #FFD34D; --cat-4: #2BD9A8;
+    --cat-5: #3D9DFF; --cat-6: #A97BFF; --cat-7: #5AC8D8; --cat-8: #6B819E;
+    --seq-hue: #38C6F4;
+
+    --fx-r-card: 8px;
+    --fx-r-panel: 8px;
+    --fx-r-inner: 6px;
+    --fx-bw: 1px;
+    /* 無投影、無外光暈：層次靠底色差（頁底 #060C1A vs 卡片 #0C1729）建立，
+       不靠陰影堆疊。 */
+    --fx-shadow: none;
+    --fx-glow: 0 0 0 transparent;
+    /* 底紋只留一層極淡網格。原本頂部那片 22% 的藍色徑向光把整屏染成藍霧，
+       是「不清爽」的主因。 */
+    --fx-texture:
+        linear-gradient(0deg, rgba(125, 170, 225, .022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125, 170, 225, .022) 1px, transparent 1px);
+    --fx-texture-size: 40px 40px, 40px 40px;
+    /* 資料記號不發光。參考圖的環圖與長條都是實色平塗；只有地圖標記發光，
+       那由地圖模組自己處理。 */
+    --fx-data-glow: 0 0 0 transparent;
+    --fx-data-sheen: 0%;
+
+    /* 面板：實色平塗 + 1px 細邊。沒有玻璃漸層、沒有內側冷光、沒有四角括號。
+       科技感來自配色、地圖與乾淨的資料色，不是來自面板特效。 */
+    --fx-panel-bg: var(--sf-card);
+    --fx-panel-ring: 0 0 0 transparent;
+    --fx-panel-top: none;
+    --fx-panel-top-opacity: 0;
+    --fx-corner: transparent;
+    --fx-corner-size: 0px;
+    /* 深色底上給軌道一道極淡凹槽，資料條才看得出嵌在面板裡 */
+    --fx-track-inset: inset 0 1px 2px rgba(0, 0, 0, .22);
+    --fx-title-bar: var(--brand);
+    --fx-font-ui: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-num: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --fx-font-mono: 'Inter', 'Noto Sans TC', ui-monospace, Consolas, monospace;
+    --fx-panel-pad: 12px;
+
+    /* 舊外殼控制元件同步到同一套配色，避免內容區與外殼割裂。 */
+    --primary-color: #38C6F4;
+    --primary-hover: #5AD4FA;
+    --accent-success: #2BD9A8;
+    --bg-main: #060C1A;
+    --bg-surface: #0C1729;
+    --bg-surface-soft: #122036;
+    --bg-surface-glass: rgba(12, 23, 41, .96);
+    --text-primary: #E9F1FC;
+    --text-secondary: #93A9C6;
+    --text-muted: #61789A;
+    --border-color: rgba(125, 170, 225, .16);
+    --control-bg: #122036;
+    --control-bg-hover: #18293F;
+    --control-border: rgba(125, 170, 225, .18);
+    --control-text: #E9F1FC;
+    --control-muted: #93A9C6;
+    --control-active-bg: rgba(56, 198, 244, .12);
+    --control-active-border: rgba(56, 198, 244, .38);
+    --primary-soft-bg: rgba(56, 198, 244, .06);
+    --primary-soft-bg-hover: rgba(56, 198, 244, .11);
+    --primary-soft-border: rgba(56, 198, 244, .26);
+    --primary-strong-border: rgba(56, 198, 244, .42);
+    --primary-focus-ring: rgba(56, 198, 244, .34);
+}
+
+/* ===== 外殼主題適配 =====================================================
+   舊原型的 .sidebar / .topbar 把 #ffffff 寫死，body.theme-dark 從未覆蓋它們，
+   所以切深色時左側與頂部仍是白的。此處以疊加規則讓外殼讀 token —— 不改
+   style.css，也不動框架結構與尺寸，只是讓既有外殼具備主題感知能力。
+
+   刻意不覆寫任何尺寸（內距、外距、高度）：外殼的版面度量一律沿用 style.css
+   的原值，包含全螢幕 focus-mode 的整套細節處理。
+   ====================================================================== */
+body[class*="theme-"] {
+    font-family: var(--fx-font-ui);
+    background-color: var(--sf-page);
+    color: var(--ink-1);
+    font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1, "cv04" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+}
+
+body[class*="theme-"] .sidebar,
+body[class*="theme-"] .topbar {
+    background-color: var(--sf-chrome);
+    color: var(--ink-1);
+}
+
+body[class*="theme-"] .sidebar {
+    border-right: var(--fx-bw) solid var(--ln-card);
+}
+
+body[class*="theme-"] .topbar {
+    border-bottom: var(--fx-bw) solid var(--ln-card);
+}
+
+body[class*="theme-"] .app-name {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: var(--ink-1);
+    color: var(--ink-1);
+}
+
+body[class*="theme-"] .nav-link,
+body[class*="theme-"] .sidebar-system-note,
+body[class*="theme-"] .topbar-system-note,
+body[class*="theme-"] .user-role {
+    color: var(--ink-2);
+}
+
+body[class*="theme-"] .nav-item.active .nav-link {
+    background: var(--brand-soft);
+    color: var(--brand);
+}
+
+body[class*="theme-"] .avatar {
+    background: var(--brand);
+    color: var(--ink-on-brand);
+    border-color: var(--ln-card);
+}
+
+body[class*="theme-"] .main-content {
+    background-color: var(--sf-page);
+    background-image: var(--fx-texture);
+    background-size: var(--fx-texture-size);
+    background-attachment: local;
+}
+
+body[class*="theme-"] .page-title {
+    color: var(--ink-1);
+}
+
+/* 深藍科技主題的外觀校準：貼近戰情參考圖的細框、低圓角與高密度控制列。 */
+body.theme-tech .main-content {
+    padding: 12px 14px 16px;
+}
+
+/* 看板列不做成面板：不加邊框、不加底色。標題與操作直接落在頁底上，
+   一屏內就少一層方框，這是「克制」的關鍵一步。 */
+body.theme-tech .dashboard-header {
+    min-height: 48px;
+    margin-bottom: 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+body.theme-tech .page-title {
+    font-size: var(--fs-title);
+    letter-spacing: .02em;
+}
+
+body.theme-tech .customer-brand-logo { height: 32px; }
+body.theme-tech .dashboard-title-wrapper { height: 34px; }
+
+/* 控制列只收圓角，不加內發光 —— 按鈕不需要自己會亮。 */
+body.theme-tech .header-inline-btn,
+body.theme-tech .quick-dash-pill,
+body.theme-tech .dashboard-status-chip {
+    border-radius: 5px;
+}
+
+body.theme-tech .header-inline-btn:hover {
+    border-color: var(--primary-strong-border);
+}
+
+/* 面板邊框交回 --ln-card（極淡）。這裡原本寫 .34 的飽和藍，把 token 蓋掉了，
+   結果每張卡都描著一圈亮藍邊。 */
+
+body.theme-tech .ds-panel-head {
+    min-height: 22px;
+    margin-bottom: 8px;
+}
+
+/* 只調字距，字級交回 --fs-lead —— 先前寫死 15px，字級上調後反而比
+   token 小，面板標題會比正文還細。 */
+body.theme-tech .ds-panel-head h4 {
+    letter-spacing: .02em;
+}
+
+/* 標題前的 accent 條保持實心細條，不發光 */
+body.theme-tech .ds-panel-head h4::before {
+    width: 2px;
+    height: 14px;
+    border-radius: 1px;
+}
+
+body.theme-tech * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(125, 170, 225, .26) transparent;
+}
+
+/* 主題色票：讓下拉選單裡的圓點直接反映該主題的實際底色與品牌色 */
+.theme-swatch-light { background: linear-gradient(135deg, #FFFFFF 50%, #3370FF 50%); box-shadow: inset 0 0 0 1px rgba(31, 35, 41, .12); }
+.theme-swatch-tech { background: linear-gradient(135deg, #060C1A 50%, #38C6F4 50%); }
+
+/* Vue 掛載前隱藏，避免 {{ }} 插值閃現 */
+[v-cloak] { display: none; }
+
+/* ===== 減少動態效果 =====================================================
+   系統偏好開啟時，關掉所有循環告警動效（Ping / 呼吸 / 掃描），
+   但保留顏色、圖示與文字 —— 狀態資訊不能只靠動畫傳達。
+   ====================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+    body[class*="theme-"] *,
+    body[class*="theme-"] *::before,
+    body[class*="theme-"] *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

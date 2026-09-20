@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { useProjectManifest } from '@/data/use-platform-data';
+import { DEFAULT_PROJECT_THEME } from '@/features/projects/project-config-model';
 import { findProject } from '@/features/projects/project-model';
 import { platformApi } from '@/data/platform-api';
 import { Button, Result, Spin, Typography } from '@/ui/ant';
@@ -30,7 +31,7 @@ export function ProjectMobilePage() {
     return (
       <main
         className="mobile-preview-page"
-        style={{ '--project-accent': project.theme?.primary || '#1677ff' } as CSSProperties}
+        style={{ '--project-accent': project.theme?.primary || DEFAULT_PROJECT_THEME.primary } as CSSProperties}
       >
         <header className="mobile-preview-header">
           <div>
@@ -52,8 +53,8 @@ export function ProjectMobilePage() {
           onLoad={(event) => {
             try {
               const root = event.currentTarget.contentDocument?.documentElement;
-              root?.style.setProperty('--brand', project.theme?.primary || '#1677ff');
-              root?.style.setProperty('--app-color-primary', project.theme?.primary || '#1677ff');
+              root?.style.setProperty('--brand', project.theme?.primary || DEFAULT_PROJECT_THEME.primary);
+              root?.style.setProperty('--app-color-primary', project.theme?.primary || DEFAULT_PROJECT_THEME.primary);
             } catch {
               // 同源项目资源会同步主题，未来跨域时保持原页面样式。
             }

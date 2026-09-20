@@ -1,0 +1,322 @@
+/* ==========================================================================
+   車隊運行狀態 — 模組版面
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → module-*.css
+
+   卡片質感一律來自 ds.css 的 .ds-panel；本檔只寫這七個模組的內部排列。
+   全檔零字面色值。
+   ========================================================================== */
+
+/* --- 三態語義映射 --------------------------------------------------------
+   行進＝正常、怠速＝提醒、熄火＝嚴重。客戶在 V7 第 4 頁與參考圖裡都是這個
+   讀法：對車隊而言熄火就是閒置資產，不是中性狀態。
+
+   映射只在這三行；模組內其餘規則一律引用 --lv，因此要改成「熄火用灰色」
+   只需要動下面一行。
+   ------------------------------------------------------------------------ */
+.ops-state-run { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); --lv-line: var(--st-normal-line); }
+.ops-state-idle { --lv: var(--st-notice); --lv-soft: var(--st-notice-soft); --lv-line: var(--st-notice-line); }
+.ops-state-off { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); --lv-line: var(--st-critical-line); }
+
+.ops-seg > i { --seg: var(--lv); }
+.ops-seg.is-slim { height: var(--mk-bar-h-sm); }
+
+/* 圓點：清單與圖例共用 */
+.ops-dot {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 999px;
+    background: var(--lv, var(--seq-hue));
+}
+
+/* ==========================================================================
+   M01-1 運行狀態總覽（W）
+   一格一個讀數，四格等寬。主數格用左側細線與其餘三格分開。
+   ========================================================================== */
+
+.ops-kpi { justify-content: center; gap: var(--sp-2); }
+
+.ops-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.ops-kpi-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border-left: 1px solid var(--ln-hair);
+}
+
+.ops-kpi-cell:first-child { border-left: 0; padding-left: 0; }
+
+.ops-kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.ops-kpi-label > svg, .ops-kpi-label > i { width: 13px; height: 13px; color: var(--lv, var(--ink-3)); }
+
+.ops-kpi-val { display: flex; align-items: baseline; gap: var(--sp-1); }
+
+.ops-kpi-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--lv, var(--ink-1));
+}
+
+.ops-kpi-cell.is-lead .ops-kpi-val > strong { color: var(--ink-1); }
+
+.ops-kpi-val > em { font-style: normal; font-size: var(--fs-micro); color: var(--ink-3); }
+
+.ops-kpi-foot { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+@media (max-width: 1100px) {
+    .ops-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ops-kpi-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+/* ==========================================================================
+   M01-2 運行狀態分布（環圖）
+   ========================================================================== */
+
+.ops-donut-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    /* stretch 而非 center：圖表欄必須取得確定高度，height:100% 才有基準。
+       用 center 會讓格線項目按內容定高，百分比高度退化成 auto，
+       圖表高度就反過來由 canvas 決定並撐破面板。圖例改自己居中。 */
+    align-items: stretch;
+    gap: var(--sp-2);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.ops-donut-chart { position: relative; min-width: 0; min-height: 128px; }
+
+/* 環心讀數用 DOM 疊放而不是 ECharts label：字體與色彩因此跟隨 token，
+   換主題不必重算 canvas 內的文字樣式。 */
+.ops-donut-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    pointer-events: none;
+}
+
+.ops-donut-center > span { font-size: var(--fs-micro); color: var(--ink-3); }
+
+.ops-donut-center > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink-1);
+}
+
+.ops-donut-center > em { font-style: normal; font-size: var(--fs-micro); color: var(--ink-3); }
+
+.ops-donut-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-1);
+}
+
+.ops-donut-list > li {
+    display: grid;
+    grid-template-columns: 7px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: 22px;
+}
+
+.ops-donut-name { font-size: var(--fs-body); color: var(--ink-2); white-space: nowrap; }
+
+.ops-donut-list > li > b {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+}
+
+.ops-donut-pct {
+    min-width: 52px;
+    text-align: right;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-note);
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   M01-4 全台車輛分布（地圖）
+   圖填滿面板，圖例與註記壓在角落 —— 參考圖也是這個關係：圖例不佔一整行，
+   避免把地圖壓扁。
+   ========================================================================== */
+
+.ops-map-body { position: relative; flex: 1 1 auto; min-height: 0; }
+
+.ops-map-legend {
+    position: absolute;
+    left: 0;
+    top: 0;
+    list-style: none;
+    margin: 0;
+    padding: var(--sp-2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-radius: var(--fx-r-inner);
+    background: color-mix(in srgb, var(--sf-inset) 80%, transparent);
+    border: 1px solid var(--ln-hair);
+    pointer-events: none;
+}
+
+.ops-map-legend > li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-micro);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.ops-map-legend > li > i { width: 7px; height: 7px; border-radius: 999px; flex: none; }
+
+.ops-map-note {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   M01-5 需關注車輛
+   ========================================================================== */
+
+.ops-att-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.ops-att-list > li + li { border-top: 1px solid var(--ln-hair); }
+
+.ops-att-list button {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    border-radius: var(--fx-r-inner);
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.ops-att-list button:hover { background: var(--sf-hover); }
+.ops-att-list button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+/* 輪播高亮：焦點掠過的那一列。用左緣一道狀態色標記 + 淡底，
+   位置不動，只有標記在走 —— 清單自己「巡一遍」的效果。 */
+.ops-att-list button.is-spot {
+    background: var(--lv-soft);
+    box-shadow: inset 2px 0 0 var(--lv);
+}
+
+.ops-att-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.ops-att-plate {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    white-space: nowrap;
+}
+
+.ops-att-meta {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ops-att-dur {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-note);
+    color: var(--lv);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.ops-att-dur > svg, .ops-att-dur > i { width: 12px; height: 12px; }
+
+/* ==========================================================================
+   M01-6 行進率趨勢
+   ========================================================================== */
+
+.ops-trend .ds-panel-sub { display: flex; align-items: center; gap: var(--sp-1); }
+
+.ops-trend .is-up { color: var(--st-normal); font-weight: 600; }
+.ops-trend .is-down { color: var(--st-critical); font-weight: 600; }
+
+/* ==========================================================================
+   M01-7 運行明細（表）
+   ========================================================================== */
+
+.ops-table-wrap { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+.ops-table .ds-flag.is-band-st-normal { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); --lv-line: var(--st-normal-line); }
+.ops-table .ds-flag.is-band-st-info { --lv: var(--st-info); --lv-soft: var(--st-info-soft); --lv-line: var(--st-info-line); }
+.ops-table .ds-flag.is-band-st-notice { --lv: var(--st-notice); --lv-soft: var(--st-notice-soft); --lv-line: var(--st-notice-line); }
+.ops-table .ds-flag.is-band-st-warn { --lv: var(--st-warn); --lv-soft: var(--st-warn-soft); --lv-line: var(--st-warn-line); }
+.ops-table .ds-flag.is-band-st-critical { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); --lv-line: var(--st-critical-line); }
+
+.ops-table .ops-seg { min-width: 92px; }
+
+.ops-table-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    cursor: pointer;
+}
+
+.ops-table-link:hover { text-decoration: underline; }

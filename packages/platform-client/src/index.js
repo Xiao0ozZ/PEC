@@ -104,6 +104,15 @@ export function createPlatformClient({
       : `${normalizedBaseUrl}projects/${encodedProjectId}/docs/content/${encodedPath}`;
   }
 
+  function documentContentUrl(projectId, documentPath) {
+    const encodedProjectId = encodeURIComponent(projectId);
+    const contentPath = /\.md$/iu.test(String(documentPath || ''))
+      ? String(documentPath).replace(/\.md$/iu, '.json')
+      : `${String(documentPath || '')}.json`;
+    const encodedPath = encodeFilePath(contentPath);
+    return `${normalizedBaseUrl}projects/${encodedProjectId}/docs/content/${encodedPath}`;
+  }
+
   return Object.freeze({
     development,
     apiMode,
@@ -333,10 +342,27 @@ export function createPlatformClient({
       });
     },
 
-    loadDocument(projectId, documentPath) {
-      return requestText(documentAssetUrl(projectId, documentPath), {
-        fallbackMessage: 'PRD 文档读取失败。',
-      });
+    async loadDocument(projectId, documentPath) {
+      const fallbackMessage = 'PRD 文档读取失败。';
+      if (useLocalApi) {
+        return requestText(documentAssetUrl(projectId, documentPath), { fallbackMessage });
+      }
+
+      try {
+        return await requestJson(documentContentUrl(projectId, documentPath), {
+          fallbackMessage,
+          normalize: (payload) => {
+            if (typeof payload === 'string') return payload;
+            if (payload && typeof payload.content === 'string') return payload.content;
+            throw new PlatformApiError('PRD 文档格式无效。', {
+              code: PLATFORM_ERROR_CODES.INVALID_RESPONSE,
+            });
+          },
+        });
+      } catch (error) {
+        if (!(error instanceof PlatformApiError) || ![403, 404].includes(error.status)) throw error;
+        return requestText(documentAssetUrl(projectId, documentPath), { fallbackMessage });
+      }
     },
 
     async loadPlatformSettings() {
@@ -367,42 +393,9 @@ export function createPlatformClient({
       });
     },
 
-    async inspectHtml(html) {
-      requireDevelopment('静态部署不支持检查待导入页面。');
-      return requestJson('/__page-transfer/inspect', {
-        method: 'POST',
-        headers: JSON_HEADERS,
-        body: JSON.stringify({ html }),
-        fallbackMessage: 'HTML 检查失败。',
-        normalize: (payload) => assertSuccessPayload(payload, 'HTML 检查失败。'),
-      });
-    },
-
-    async importPage(html, target) {
-      requireDevelopment('静态部署不支持导入页面。');
-      return requestJson('/__page-transfer/import', {
-        method: 'POST',
-        headers: JSON_HEADERS,
-        body: JSON.stringify({ html, target }),
-        fallbackMessage: '页面导入失败。',
-        normalize: (payload) => assertSuccessPayload(payload, '页面导入失败。'),
-      });
-    },
-
-    async exportPages({ projectId, selectedPaths = [], packageName }) {
-      requireDevelopment('静态部署不支持导出页面。');
-      return requestJson('/__page-transfer/export', {
-        method: 'POST',
-        headers: JSON_HEADERS,
-        body: JSON.stringify({ projectId, selectedPaths, packageName }),
-        fallbackMessage: '页面导出失败。',
-        normalize: (payload) => assertSuccessPayload(payload, '页面导出失败。'),
-      });
-    },
-
     async listRoutes(projectId) {
       requireDevelopment('静态部署不支持路由管理。');
-      return requestJson(`/__page-transfer/routes?projectId=${encodeURIComponent(projectId)}`, {
+      return requestJson(`/__project-routes?projectId=${encodeURIComponent(projectId)}`, {
         fallbackMessage: '路由读取失败。',
         normalize: normalizeRouteList,
       });
@@ -411,13 +404,13 @@ export function createPlatformClient({
     async mutateRoute(action, target) {
       requireDevelopment('静态部署不支持路由管理。');
       const endpoints = {
-        create: '/__page-transfer/route/create',
-        update: '/__page-transfer/route/update',
-        delete: '/__page-transfer/route/delete',
-        restore: '/__page-transfer/route/restore',
-        order: '/__page-transfer/route/order',
-        'section-update': '/__page-transfer/section/update',
-        'section-restore': '/__page-transfer/section/restore',
+        create: '/__project-routes/route/create',
+        update: '/__project-routes/route/update',
+        delete: '/__project-routes/route/delete',
+        restore: '/__project-routes/route/restore',
+        order: '/__project-routes/route/order',
+        'section-update': '/__project-routes/section/update',
+        'section-restore': '/__project-routes/section/restore',
       };
       const endpoint = endpoints[action];
       if (!endpoint) throw new TypeError(`未知路由操作：${action}`);

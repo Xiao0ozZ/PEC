@@ -1,0 +1,1812 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>动态调价策略</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.pricing .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .pricing .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .pricing .pricing-card {
+            transition: all 0.2s;
+        }
+
+        .pricing .pricing-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header {
+            padding: 0 24px;
+            margin: 0;
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__nav-wrap::after {
+            height: 1px;
+            background-color: #eef2f7;
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__item {
+            padding: 0 18px;
+            height: 44px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__item:first-child {
+            padding-left: 0;
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__item.is-active,
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__item:hover {
+            color: var(--app-color-primary);
+        }
+
+        .pricing .rimo-page-tabs>.el-tabs__header .el-tabs__active-bar {
+            background-color: var(--app-color-primary);
+            height: 3px;
+            border-radius: 999px;
+        }
+
+        .pricing .prototype-permission-switcher {
+            position: fixed;
+            right: 24px;
+            bottom: 20px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: calc(100vw - 48px);
+            padding: 8px 10px 8px 14px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #dbe3ea;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(8px);
+        }
+
+        .pricing .prototype-permission-switcher__label {
+            color: #64748b;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .pricing .prototype-permission-switcher .el-radio-button__inner {
+            min-width: 72px;
+        }
+
+        @media (max-width: 860px) {
+            .pricing .prototype-permission-switcher {
+                right: 12px;
+                bottom: 12px;
+                max-width: calc(100vw - 24px);
+                overflow-x: auto;
+            }
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "pricing",
+  "pageTitle": "动态调价策略",
+  "fileName": "pricing.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/pricing",
+  "menuSection": "pricing",
+  "menuTitle": "动态调价策略",
+  "menuIcon": "Money",
+  "menu": true,
+  "rootClass": "pricing",
+  "overlayRootClass": "pricing-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">定价与服务</div>
+<a class="prototype-menu-item is-active" href="./pricing.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Money" aria-hidden="true"></span><span>动态调价策略</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 动态调价策略</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-pricing pricing" data-page-content data-page-root="pricing" data-page-key="pricing">
+  <div data-business-content data-layout-type="legacy">
+                  <div class="prototype-permission-switcher" aria-label="动态调价策略权限演示">
+                      <span class="prototype-permission-switcher__label">权限演示</span>
+                      <el-radio-group v-model="permissionDemoMode" size="small" @change="switchTenant">
+                          <el-radio-button v-for="option in permissionDemoOptions" :key="option.value"
+                              :label="option.value">{{ option.label }}</el-radio-button>
+                      </el-radio-group>
+                  </div>
+                  <!-- Page Header -->
+                  <div class="flex justify-between items-end mb-6">
+                      <div>
+                          <h1 class="text-2xl font-bold text-gray-800 tracking-tight">动态调价策略</h1>
+                          <p class="text-gray-500 text-sm mt-1">设定各车组的标准租金，管理门市与分时业务的差异化定价策略。</p>
+                      </div>
+                  </div>
+
+                  <!-- Tabs Container -->
+                  <el-tabs v-model="activeTab"
+                      class="rimo-page-tabs bg-white rounded-xl shadow-sm border border-gray-100 min-h-[500px]">
+
+                      <!-- TAB 1: 门市租赁 -->
+                      <el-tab-pane v-if="hasStoreBusinessPermission" name="STORE">
+                          <template #label>
+                              <span class="flex items-center gap-2">
+                                  <el-icon>
+                                      <Shop />
+                                  </el-icon>
+                                  <span>门市租赁</span>
+                              </span>
+                          </template>
+                          <div class="p-6">
+                              <!-- Pricing Table Card -->
+                              <div class="bg-white rounded-xl border p-6 pricing-card">
+                                  <div class="flex items-center justify-between mb-5 border-b border-gray-100 pb-4">
+                                      <div class="flex items-center gap-4">
+                                          <div>
+                                              <h3 class="font-bold text-gray-800 text-lg">门市标准价</h3>
+                                          </div>
+                                          <el-tag v-if="isLocked" type="info" size="small" effect="plain"><el-icon
+                                                  class="mr-1">
+                                                  <Lock />
+                                              </el-icon>已锁定</el-tag>
+                                      </div>
+
+                                      <div class="flex items-center gap-4">
+                                          <!-- Lock Controls -->
+                                          <div v-if="isLocked">
+                                              <el-button type="primary" plain @click="unlockPricing">
+                                                  <el-icon class="mr-1">
+                                                      <Lock />
+                                                  </el-icon> 解锁编辑
+                                              </el-button>
+                                          </div>
+                                          <div v-else class="flex items-center gap-2">
+                                              <el-button @click="cancelEdit">取消</el-button>
+                                              <el-button type="primary" @click="savePricing">
+                                                  <el-icon class="mr-1">
+                                                      <Check />
+                                                  </el-icon> 保存
+                                              </el-button>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="mb-5 rounded-lg border border-[color:var(--app-color-primary-light-8)] bg-[color:var(--app-color-primary-light-9)] px-4 py-3 text-sm text-[color:var(--app-color-primary-hover)] flex items-center justify-between gap-4">
+                                      <div>
+                                          当前标准价版本：<span class="font-mono font-bold cursor-pointer underline decoration-dotted"
+                                              @click="openPriceVersion(storePriceVersions[0])">PRICE-STORE-20260418-001</span>。新订单按当前版本写入订单计费快照，历史订单继续按下单时版本结算。
+                                      </div>
+                                      <el-button size="small" type="primary" link @click="openPriceVersion()">历史版本</el-button>
+                                  </div>
+
+                                  <!-- Store Pricing Table (Classic Style) -->
+                                  <el-table :data="vehicleGroups" stripe style="width: 100%">
+                                      <el-table-column label="车组名称" min-width="200">
+                                          <template #default="scope">
+                                              <div>
+                                                  <div class="font-bold text-gray-800">{{ scope.row.name }}</div>
+                                                  <div class="text-xs text-gray-500 mt-1">{{ scope.row.models }}</div>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+
+                                      <el-table-column label="价格版本" width="180" align="center">
+                                          <template #default="scope">
+                                              <el-tag size="small" type="primary" effect="plain" class="cursor-pointer"
+                                                  @click="openPriceVersion(storePriceVersions[0])">PRICE-STORE-20260418-001</el-tag>
+                                          </template>
+                                      </el-table-column>
+
+                                      <el-table-column label="标准日租金 (元/天)" align="center">
+                                          <template #default="scope">
+                                              <div v-if="isLocked" class="font-bold text-gray-700 font-mono">
+                                                  ¥{{ scope.row.dailyPrice }}
+                                              </div>
+                                              <div v-else class="flex items-center justify-center gap-2">
+                                                  <el-input-number v-model="scope.row.dailyPrice" :min="0" :step="10"
+                                                      size="default" style="width: 140px"
+                                                      @change="handlePriceChange(scope.row)"></el-input-number>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+
+                                      <el-table-column label="上次更新" width="180" align="center">
+                                          <template #default="scope">
+                                              <span class="text-gray-500 text-sm">{{ scope.row.lastUpdated }}</span>
+                                          </template>
+                                      </el-table-column>
+                                  </el-table>
+                              </div>
+
+                              <!-- Scheduled Plans -->
+                              <div class="mt-8">
+                                  <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+                                      <h4 class="font-bold text-gray-800 text-sm mb-3">调价说明：</h4>
+                                      <div class="flex items-start gap-3">
+                                          <el-icon class="text-blue-500 text-lg mt-0.5">
+                                              <InfoFilled />
+                                          </el-icon>
+                                          <div class="text-sm text-gray-600 space-y-2">
+                                              <p><span class="font-bold text-gray-800">新订单执行：</span>
+                                                  调价计划生效后，所有新创建的订单将立即按照新设定的价格执行。</p>
+                                              <p><span
+                                                      class="font-bold text-gray-800">已预约订单：</span>在此之前已预约及用车中未结算的订单，<span
+                                                      class="text-orange-600 font-medium">不受调价影响</span>，继续按原预约时的锁定价格结算。
+                                              </p>
+                                              <p><span class="font-bold text-gray-800">版本追溯：</span>
+                                                  手动保存或调价计划执行后生成新的标准价版本，订单详情可查看下单时命中的版本。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="flex justify-between items-center mb-2">
+                                      <h3 class="font-bold text-gray-800 flex items-center gap-2 text-lg">
+                                          <el-icon class="text-blue-600">
+                                              <Clock />
+                                          </el-icon> 定时调价计划 <el-tag type="info" size="small" effect="plain">自动化</el-tag>
+                                      </h3>
+                                      <el-button type="primary" plain @click="openScheduleDialog">
+                                          <el-icon class="mr-1">
+                                              <Plus />
+                                          </el-icon> 新增计划
+                                      </el-button>
+                                  </div>
+
+                                  <p class="text-xs text-gray-400 pl-1 mb-4 flex items-center gap-1">
+                                      <el-icon>
+                                          <WarningFilled />
+                                      </el-icon> 提示：定时调价用于统一调整车组标准价，仅影响生效时间后的新建订单。
+                                  </p>
+                                  <div v-if="scheduledList.length === 0"
+                                      class="text-center py-8 text-gray-400 border border-dashed rounded-lg bg-gray-50">
+                                      暂无定时调价计划
+                                  </div>
+                                  <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div v-for="(item, index) in scheduledList" :key="index"
+                                          class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm relative overflow-hidden group hover:border-blue-300 transition-colors">
+                                          <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
+                                          <div class="flex items-center justify-between pl-2">
+                                              <div class="flex items-center gap-4">
+                                                  <div
+                                                      class="flex flex-col items-center justify-center bg-blue-50 text-blue-600 rounded-lg w-14 h-14">
+                                                      <el-icon class="text-xl mb-1">
+                                                          <Calendar />
+                                                      </el-icon>
+                                                      <span class="text-xs font-bold">计划</span>
+                                                  </div>
+                                                  <div>
+                                                      <div class="flex items-center gap-2 mb-1">
+                                                          <span class="text-gray-900 font-bold text-lg">{{
+                                                              item.effectiveTime }}</span>
+                                                          <el-tag size="small" effect="dark"
+                                                              :type="getStatusType(item.status)">{{ item.status
+                                                              }}</el-tag>
+                                                      </div>
+                                                      <p class="text-gray-500 text-sm">{{ item.summary }}</p>
+                                                  </div>
+                                              </div>
+                                              <div class="flex items-center gap-2">
+                                                  <el-button type="primary" link size="small"
+                                                      @click="viewSchedule(item)">查看详情</el-button>
+                                                  <el-button v-if="item.status === '待执行'" type="danger" plain size="small"
+                                                      @click="cancelSchedule(index)">取消计划</el-button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </el-tab-pane>
+
+                      <!-- TAB 2: 分时租车 -->
+                      <el-tab-pane v-if="hasSharingBusinessPermission" name="SHARING">
+                          <template #label>
+                              <span class="flex items-center gap-2">
+                                  <el-icon>
+                                      <Clock />
+                                  </el-icon>
+                                  <span>分时租赁</span>
+                              </span>
+                          </template>
+                          <div class="p-6">
+                              <div class="bg-white rounded-xl border p-6 pricing-card">
+                                  <div class="flex items-center justify-between mb-5 border-b border-gray-100 pb-4">
+                                      <div class="flex items-center gap-4">
+                                          <div>
+                                              <h3 class="font-bold text-gray-800 text-lg">分时标准价</h3>
+                                          </div>
+                                          <el-tag v-if="isSharingLocked" type="info" size="small" effect="plain"><el-icon
+                                                  class="mr-1">
+                                                  <Lock />
+                                              </el-icon>已锁定</el-tag>
+                                      </div>
+
+                                      <div class="flex items-center gap-4">
+                                          <!-- Lock Controls -->
+                                          <div v-if="isSharingLocked">
+                                              <el-button type="primary" plain @click="isSharingLocked = false">
+                                                  <el-icon class="mr-1">
+                                                      <Lock />
+                                                  </el-icon> 解锁编辑
+                                              </el-button>
+                                          </div>
+                                          <div v-else class="flex items-center gap-2">
+                                              <el-button @click="cancelSharingEdit">取消</el-button>
+                                              <el-button type="primary" @click="saveChanges">
+                                                  <el-icon class="mr-1">
+                                                      size="small" style="width: 70px" :controls="false"
+                                                      placeholder="%"></el-input-number>
+                                                      <span class="text-xs text-gray-400">%</span>
+                                                      <el-button size="small" type="primary" plain
+                                                          @click="applySharingBatch">
+                                                          <el-icon class="mr-1">
+                                                              <ArrowUp />
+                                                          </el-icon> 应用
+                                                      </el-button>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <!-- Sharing Pricing Table (4 Columns) -->
+                                  <el-table :data="sharingGroups" stripe style="width: 100%">
+                                      <el-table-column label="车组信息" min-width="180" fixed>
+                                          <template #default="scope">
+                                              <div class="py-2">
+                                                  <div class="font-bold text-gray-800">{{ scope.row.name }}</div>
+                                                  <div class="text-xs text-gray-400 mt-0.5">{{ scope.row.models }}
+                                                  </div>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+
+                                      <el-table-column label="同站租还 (元)" align="center"
+                                          v-if="hasPermission('SHARING_ROUND')">
+                                          <el-table-column label="时租金" width="130" align="center">
+                                              <template #default="scope">
+                                                  <el-input-number v-model="scope.row.sameStationHourly" :min="0"
+                                                      :step="1" :disabled="isSharingLocked" size="small"
+                                                      style="width: 100px"
+                                                      @change="markSharingModified"></el-input-number>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column label="日封顶" width="130" align="center">
+                                              <template #default="scope">
+                                                  <el-input-number v-model="scope.row.sameStationDaily" :min="0"
+                                                      :step="10" :disabled="isSharingLocked" size="small"
+                                                      style="width: 100px"
+                                                      @change="markSharingModified"></el-input-number>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column label="上次更新" width="120" align="center">
+                                              <template #default="scope">
+                                                  <span class="text-gray-400 text-xs">{{
+                                                      scope.row.lastUpdatedSameStation
+                                                      }}</span>
+                                              </template>
+                                          </el-table-column>
+                                      </el-table-column>
+
+                                      <el-table-column label="甲租乙还 (异地) (元)" align="center"
+                                          v-if="hasPermission('SHARING_ONEWAY')">
+                                          <el-table-column label="时租金" width="130" align="center">
+                                              <template #default="scope">
+                                                  <el-input-number v-model="scope.row.oneWayHourly" :min="0" :step="1"
+                                                      :disabled="isSharingLocked" size="small" style="width: 100px"
+                                                      @change="markSharingModified"></el-input-number>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column label="日封顶" width="130" align="center">
+                                              <template #default="scope">
+                                                  <el-input-number v-model="scope.row.oneWayDaily" :min="0" :step="10"
+                                                      :disabled="isSharingLocked" size="small" style="width: 100px"
+                                                      @change="markSharingModified"></el-input-number>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column label="上次更新" width="120" align="center">
+                                              <template #default="scope">
+                                                  <span class="text-gray-400 text-xs">{{ scope.row.lastUpdatedOneWay
+                                                      }}</span>
+                                              </template>
+                                          </el-table-column>
+                                      </el-table-column>
+
+
+                                  </el-table>
+                              </div>
+
+                              <!-- Sharing Schedule -->
+                              <div class="mt-8">
+                                  <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+                                      <h4 class="font-bold text-gray-800 text-sm mb-3">调价说明：</h4>
+                                      <div class="flex items-start gap-3">
+                                          <el-icon class="text-blue-500 text-lg mt-0.5">
+                                              <InfoFilled />
+                                          </el-icon>
+                                          <div class="text-sm text-gray-600 space-y-2">
+                                              <p><span class="font-bold text-gray-800">新订单执行：</span>
+                                                  调价计划生效后，所有新创建的订单将立即按照新设定的价格执行。</p>
+                                              <p><span
+                                                      class="font-bold text-gray-800">已预约订单：</span>在此之前已预约及用车中未结算的订单，<span
+                                                      class="text-orange-600 font-medium">不受调价影响</span>，继续按原预约时的锁定价格结算。
+                                              </p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="flex justify-between items-center mb-2">
+                                      <h3 class="font-bold text-gray-800 flex items-center gap-2 text-lg">
+                                          <el-icon class="text-blue-600">
+                                              <Clock />
+                                          </el-icon> 定时调价计划 <el-tag type="info" size="small" effect="plain">自动化</el-tag>
+                                      </h3>
+                                      <el-button type="primary" plain @click="openSharingScheduleDialog">
+                                          <el-icon class="mr-1">
+                                              <Clock />
+                                          </el-icon> 新增计划
+                                      </el-button>
+                                  </div>
+
+                                  <p class="text-xs text-gray-400 pl-1 mb-4 flex items-center gap-1">
+                                      <el-icon>
+                                          <WarningFilled />
+                                      </el-icon> 提示：定时调价用于统一调整车组标准价，仅影响生效时间后的新建订单。
+                                  </p>
+
+                                  <div v-if="sharingScheduledList.length === 0"
+                                      class="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-300">
+                                      <el-icon class="text-gray-300 text-4xl mb-3">
+                                          <Calendar />
+                                      </el-icon>
+                                      <p class="text-gray-400 font-medium">暂无分时调价计划</p>
+                                  </div>
+                                  <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div v-for="(item, idx) in sharingScheduledList" :key="idx"
+                                          class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm relative overflow-hidden group hover:border-green-300 transition-colors">
+                                          <div class="absolute top-0 left-0 w-1.5 h-full bg-green-500"></div>
+                                          <div class="flex items-center justify-between pl-2">
+                                              <div class="flex items-center gap-4">
+                                                  <div
+                                                      class="flex flex-col items-center justify-center bg-green-50 text-green-600 rounded-lg w-14 h-14">
+                                                      <el-icon class="text-xl mb-1">
+                                                          <Clock />
+                                                      </el-icon>
+                                                      <span class="text-xs font-bold">计划</span>
+                                                  </div>
+                                                  <div>
+                                                      <div class="flex items-center gap-2 mb-1">
+                                                          <span class="text-gray-900 font-bold text-lg">{{
+                                                              item.effectiveTime }}</span>
+                                                          <el-tag size="small" effect="dark"
+                                                              :type="getStatusType(item.status)">{{ item.status
+                                                              }}</el-tag>
+                                                          <el-tag size="small" type="warning" effect="plain"
+                                                              v-if="item.type === 'SAME_STATION'">同站调价</el-tag>
+                                                          <el-tag size="small" type="danger" effect="plain"
+                                                              v-if="item.type === 'ONE_WAY'">异地调价</el-tag>
+                                                      </div>
+                                                      <p class="text-gray-500 text-sm">{{ item.summary }}</p>
+                                                  </div>
+                                              </div>
+                                              <div class="flex items-center gap-2">
+                                                  <el-button type="primary" link size="small"
+                                                      @click="viewSharingSchedule(item)">查看详情</el-button>
+                                                  <el-button v-if="item.status === '待执行'" type="danger" plain size="small"
+                                                      @click="cancelSharingSchedule(idx)">取消计划</el-button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </el-tab-pane>
+                  </el-tabs>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="pricing-overlay">
+  <el-dialog v-model="scheduleDialogVisible" title="新增门市调价计划" width="700px" destroy-on-close>
+                  <div class="bg-orange-50 p-3 rounded-lg border border-orange-100 flex items-start gap-2 mb-4">
+                      <el-icon class="text-orange-500 mt-0.5">
+                          <WarningFilled />
+                      </el-icon>
+                      <div class="text-xs text-orange-800 leading-relaxed">
+                          到达设定的<b>生效时间</b>时，系统将自动更新价格。请确保时间准确。
+                      </div>
+                  </div>
+                  <el-form label-position="top">
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <el-form-item label="生效时间" required>
+                                  <el-date-picker v-model="scheduleForm.effectiveTime" type="datetime"
+                                      placeholder="请选择生效时间" format="YYYY-MM-DD HH:mm" value-format="YYYY-MM-DD HH:mm:ss"
+                                      :disabled-date="disabledDate" style="width: 100%"></el-date-picker>
+                              </el-form-item>
+                          </el-col>
+                          <el-col :span="12">
+                              <el-form-item label="计划摘要" required>
+                                  <el-input v-model="scheduleForm.summary" placeholder="例如：五一假期涨价"></el-input>
+                              </el-form-item>
+                          </el-col>
+                      </el-row>
+                  </el-form>
+                  <div class="mt-2">
+                      <div class="flex items-center justify-between mb-2">
+                          <span class="font-bold text-gray-700 text-sm">价格配置预览</span>
+                          <el-button size="small" type="primary" link @click="batchSetNewPrice">
+                              <el-icon class="mr-1">
+                                  <ArrowUp />
+                              </el-icon> 批量上调 10%
+                          </el-button>
+                      </div>
+                      <el-table :data="scheduleForm.prices" height="300" border size="small" stripe>
+                          <el-table-column prop="name" label="车组名称" min-width="160"></el-table-column>
+                          <el-table-column label="当前价格" width="100" align="right">
+                              <template #default="scope"><span class="text-gray-500">{{ scope.row.currentPrice
+                                      }}</span></template>
+                          </el-table-column>
+                          <el-table-column label="生效后新价格" width="160" align="center">
+                              <template #default="scope">
+                                  <div class="flex items-center justify-center gap-2">
+                                      <el-input-number v-model="scope.row.newPrice" :min="0" :step="10" size="small"
+                                          style="width: 100px" controls-position="right"></el-input-number>
+                                      <el-icon v-if="scope.row.newPrice !== scope.row.currentPrice"
+                                          class="text-orange-500">
+                                          <EditPen />
+                                      </el-icon>
+                                  </div>
+                              </template>
+                          </el-table-column>
+                      </el-table>
+                  </div>
+                  <template #footer>
+                      <span class="dialog-footer">
+                          <el-button @click="scheduleDialogVisible = false">取消</el-button>
+                          <el-button type="primary" @click="confirmSchedule"
+                              :disabled="!scheduleForm.effectiveTime">确认创建</el-button>
+                      </span>
+                  </template>
+              </el-dialog>
+  <el-dialog v-model="viewDialogVisible" title="门市调价计划详情" width="600px">
+                  <div v-if="currentViewPlan" class="space-y-4">
+                      <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 grid grid-cols-2 gap-4">
+                          <div>
+                              <div class="text-xs text-gray-400 mb-1">计划状态</div><el-tag
+                                  :type="getStatusType(currentViewPlan.status)">{{ currentViewPlan.status }}</el-tag>
+                          </div>
+                          <div>
+                              <div class="text-xs text-gray-400 mb-1">生效时间</div>
+                              <div class="font-bold text-gray-800">{{ currentViewPlan.effectiveTime }}</div>
+                          </div>
+                          <div class="col-span-2">
+                              <div class="text-xs text-gray-400 mb-1">计划摘要</div>
+                              <div class="text-sm text-gray-600">{{ currentViewPlan.summary }}</div>
+                          </div>
+                      </div>
+                      <div>
+                          <div class="font-bold text-gray-700 text-sm mb-2">价格调整明细</div>
+                          <el-table :data="currentViewPlan.changes" height="300" border size="small" stripe>
+                              <el-table-column prop="name" label="车组名称" min-width="160"></el-table-column>
+                              <el-table-column label="原价格" width="100" align="right"><template #default="scope">{{
+                                      scope.row.currentPrice }}</template></el-table-column>
+                              <el-table-column label="新价格" width="120" align="center"><template #default="scope"><span
+                                          class="font-bold text-orange-600">{{ scope.row.newPrice
+                                          }}</span></template></el-table-column>
+                              <el-table-column label="变动" width="100" align="center"><template #default="scope"><span
+                                          :class="getDiffClass(scope.row)">{{ getDiffText(scope.row)
+                                          }}</span></template></el-table-column>
+                          </el-table>
+                      </div>
+                  </div>
+              </el-dialog>
+  <el-dialog v-model="priceVersionDialogVisible" title="门市标准价历史版本" width="860px" destroy-on-close>
+                  <div class="grid grid-cols-3 gap-4" v-if="selectedPriceVersion">
+                      <div class="col-span-1 border border-gray-100 rounded-lg overflow-hidden">
+                          <div class="px-3 py-2 bg-gray-50 text-xs font-bold text-gray-500">版本列表</div>
+                          <div class="divide-y divide-gray-100 max-h-[420px] overflow-y-auto">
+                              <button v-for="version in storePriceVersions" :key="version.version"
+                                  class="w-full text-left px-3 py-3 hover:bg-[color:var(--app-color-primary-light-9)] transition-colors"
+                                  :class="selectedPriceVersion.version === version.version ? 'bg-[color:var(--app-color-primary-light-9)]' : 'bg-white'"
+                                  @click="selectedPriceVersion = version">
+                                  <div class="font-mono text-xs text-[color:var(--app-color-primary)] font-bold">{{ version.version }}</div>
+                                  <div class="text-sm text-gray-800 mt-1">{{ version.title }}</div>
+                                  <div class="text-xs text-gray-400 mt-1">{{ version.savedAt }} · {{ version.source }}</div>
+                              </button>
+                          </div>
+                      </div>
+                      <div class="col-span-2 space-y-4">
+                          <div class="rounded-lg border border-[color:var(--app-color-primary-light-8)] bg-[color:var(--app-color-primary-light-9)] px-4 py-3">
+                              <div class="font-mono font-bold text-gray-900">{{ selectedPriceVersion.version }}</div>
+                              <div class="text-sm text-gray-700 mt-1">{{ selectedPriceVersion.title }}</div>
+                              <div class="text-xs text-gray-500 mt-1">保存人：{{ selectedPriceVersion.savedBy }} · {{ selectedPriceVersion.savedAt }}</div>
+                          </div>
+                          <el-table :data="selectedPriceVersion.values" border size="small">
+                              <el-table-column label="车组名称" min-width="170">
+                                  <template #default="scope">
+                                      <div class="font-bold text-gray-800">{{ scope.row.group }}</div>
+                                      <div class="text-xs text-gray-500 mt-1">{{ scope.row.models }}</div>
+                                  </template>
+                              </el-table-column>
+                              <el-table-column prop="dailyPrice" label="标准日租金 (元/天)" width="150" align="center"></el-table-column>
+                              <el-table-column prop="mileage" label="里程规则" min-width="220"></el-table-column>
+                              <el-table-column prop="lastUpdated" label="上次更新" width="110" align="center"></el-table-column>
+                          </el-table>
+                      </div>
+                  </div>
+                  <template #footer>
+                      <el-button @click="priceVersionDialogVisible = false">关闭</el-button>
+                  </template>
+              </el-dialog>
+  <el-dialog v-model="sharingScheduleDialogVisible"
+                  :title="'新增分时调价计划 - ' + (sharingScheduleForm.type === 'SAME_STATION' ? '同站租还' : '异地租还')" width="700px">
+                  <el-form label-position="top">
+                      <el-form-item label="调价类型">
+                          <el-radio-group v-model="sharingScheduleForm.type" @change="resetSharingSchedulePrices">
+                              <el-radio-button label="SAME_STATION">同站租还</el-radio-button>
+                              <el-radio-button label="ONE_WAY">异地租还 (甲租乙还)</el-radio-button>
+                          </el-radio-group>
+                      </el-form-item>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <el-form-item label="生效时间" required>
+                                  <el-date-picker v-model="sharingScheduleForm.effectiveTime" type="datetime"
+                                      placeholder="选择时间" value-format="YYYY-MM-DD HH:mm:ss" :disabled-date="disabledDate"
+                                      class="w-full"></el-date-picker>
+                              </el-form-item>
+                          </el-col>
+                          <el-col :span="12">
+                              <el-form-item label="计划摘要" required>
+                                  <el-input v-model="sharingScheduleForm.summary" placeholder="例如：节日价格调整"></el-input>
+                              </el-form-item>
+                          </el-col>
+                      </el-row>
+                  </el-form>
+
+                  <div class="mt-2">
+                      <div class="flex items-center justify-between mb-2">
+                          <span class="font-bold text-gray-700 text-sm">价格配置预览</span>
+                          <el-button size="small" type="primary" link @click="batchSetSharingNewPrice">
+                              <el-icon class="mr-1">
+                                  <ArrowUp />
+                              </el-icon> 批量上调 10%
+                          </el-button>
+                      </div>
+
+                      <el-table :data="sharingScheduleForm.items" size="small" border height="300" stripe>
+                          <el-table-column prop="name" label="车组" min-width="140" fixed></el-table-column>
+
+                          <!-- Dynamic Columns based on Type -->
+                          <template v-if="sharingScheduleForm.type === 'SAME_STATION'">
+                              <el-table-column label="现有价格 (时/日)" align="center" width="140">
+                                  <template #default="{row}">
+                                      <span class="text-gray-400">{{ row.sameStationHourly }} / {{ row.sameStationDaily
+                                          }}</span>
+                                  </template>
+                              </el-table-column>
+                              <el-table-column label="新价格 (时/日)" align="center" width="220">
+                                  <template #default="{row}">
+                                      <div class="flex gap-2 justify-center">
+                                          <el-input-number v-model="row.newSameStationHourly" size="small"
+                                              :controls="false" class="!w-[70px]" placeholder="时"></el-input-number>
+                                          <el-input-number v-model="row.newSameStationDaily" size="small"
+                                              :controls="false" class="!w-[70px]" placeholder="日"></el-input-number>
+                                          <el-icon
+                                              v-if="row.newSameStationHourly !== row.sameStationHourly || row.newSameStationDaily !== row.sameStationDaily"
+                                              class="text-orange-500 mt-1">
+                                              <EditPen />
+                                          </el-icon>
+                                      </div>
+                                  </template>
+                              </el-table-column>
+                          </template>
+
+                          <template v-else>
+                              <el-table-column label="现有价格 (时/日)" align="center" width="140">
+                                  <template #default="{row}">
+                                      <span class="text-gray-400">{{ row.oneWayHourly }} / {{ row.oneWayDaily }}</span>
+                                  </template>
+                              </el-table-column>
+                              <el-table-column label="新价格 (时/日)" align="center" width="220">
+                                  <template #default="{row}">
+                                      <div class="flex gap-2 justify-center">
+                                          <el-input-number v-model="row.newOneWayHourly" size="small" :controls="false"
+                                              class="!w-[70px]" placeholder="时"></el-input-number>
+                                          <el-input-number v-model="row.newOneWayDaily" size="small" :controls="false"
+                                              class="!w-[70px]" placeholder="日"></el-input-number>
+                                          <el-icon
+                                              v-if="row.newOneWayHourly !== row.oneWayHourly || row.newOneWayDaily !== row.oneWayDaily"
+                                              class="text-orange-500 mt-1">
+                                              <EditPen />
+                                          </el-icon>
+                                      </div>
+                                  </template>
+                              </el-table-column>
+                          </template>
+                      </el-table>
+                  </div>
+                  <template #footer>
+                      <el-button @click="sharingScheduleDialogVisible = false">取消</el-button>
+                      <el-button type="primary" @click="confirmSharingSchedule"
+                          :disabled="!sharingScheduleForm.effectiveTime">创建计划</el-button>
+                  </template>
+              </el-dialog>
+  <el-dialog v-model="sharingViewDialogVisible" title="分时调价计划详情" width="600px">
+                  <div v-if="currentSharingViewPlan" class="space-y-4">
+                      <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-4">
+                          <div class="flex justify-between items-start">
+                              <div>
+                                  <div class="font-bold text-lg text-gray-800">{{ currentSharingViewPlan.effectiveTime }}
+                                  </div>
+                                  <div class="text-sm text-gray-500 mt-1">{{ currentSharingViewPlan.summary }}</div>
+                              </div>
+                              <div class="flex flex-col items-end gap-2">
+                                  <el-tag :type="getStatusType(currentSharingViewPlan.status)">{{
+                                      currentSharingViewPlan.status }}</el-tag>
+                                  <el-tag size="small" type="warning" effect="plain"
+                                      v-if="currentSharingViewPlan.type === 'SAME_STATION'">同站</el-tag>
+                                  <el-tag size="small" type="danger" effect="plain" v-else>异地</el-tag>
+                              </div>
+                          </div>
+                          <div class="mt-3 pt-3 border-t border-gray-100">
+                              <div class="text-xs text-gray-400 mb-1">计划摘要</div>
+                              <div class="text-sm text-gray-600">{{ currentSharingViewPlan.summary }}</div>
+                          </div>
+                      </div>
+                  </div>
+                  <el-table :data="currentSharingViewPlan.changes" border size="small" stripe height="300">
+                      <el-table-column prop="name" label="车组" min-width="140"></el-table-column>
+                      <template v-if="currentSharingViewPlan.type === 'SAME_STATION'">
+                          <el-table-column label="原价 (时/日)" align="center"><template #default="{row}">{{
+                                  row.sameStationHourly }}/{{ row.sameStationDaily }}</template></el-table-column>
+                          <el-table-column label="新价 (时/日)" align="center"><template #default="{row}"><span
+                                      class="font-bold text-orange-600">{{ row.newSameStationHourly }}/{{
+                                      row.newSameStationDaily }}</span></template></el-table-column>
+                      </template>
+                      <template v-else>
+                          <el-table-column label="原价 (时/日)" align="center"><template #default="{row}">{{
+                                  row.oneWayHourly }}/{{ row.oneWayDaily }}</template></el-table-column>
+                          <el-table-column label="新价 (时/日)" align="center"><template #default="{row}"><span
+                                      class="font-bold text-orange-600">{{ row.newOneWayHourly }}/{{
+                                      row.newOneWayDaily }}</span></template></el-table-column>
+                      </template>
+                  </el-table>
+          </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+// Shared State
+                const activeTab = ref('STORE');
+                const isModified = ref(false);
+
+                // --- Permissions Simulation ---
+                const permissionDemoMode = ref('FULL');
+                const permissionDemoOptions = [
+                    { label: '全部授权', value: 'FULL' },
+                    { label: '仅门市租赁', value: 'STORE_ONLY' },
+                    { label: '仅分时租赁', value: 'SHARING_BOTH' },
+                    { label: '分时仅同站', value: 'SHARING_SAME' },
+                    { label: '分时仅甲乙', value: 'SHARING_ONEWAY' }
+                ];
+                const currentTenant = ref({
+                    name: 'Full License (演示租户)',
+                    permissions: ['STORE', 'SHARING', 'SHARING_ROUND', 'SHARING_ONEWAY']
+                });
+                const currentTenantName = computed(() => currentTenant.value.name);
+
+                const hasPermission = (perm) => {
+                    return currentTenant.value.permissions.includes(perm);
+                };
+                const hasStoreBusinessPermission = computed(() => hasPermission('STORE'));
+                const hasSharingBusinessPermission = computed(() => hasPermission('SHARING'));
+
+                const switchTenant = (mode) => {
+                    permissionDemoMode.value = mode;
+                    const tenantMap = {
+                        FULL: { name: '全部授权', permissions: ['STORE', 'SHARING', 'SHARING_ROUND', 'SHARING_ONEWAY'] },
+                        STORE_ONLY: { name: '仅门市租赁', permissions: ['STORE'] },
+                        SHARING_BOTH: { name: '仅分时租赁', permissions: ['SHARING', 'SHARING_ROUND', 'SHARING_ONEWAY'] },
+                        SHARING_SAME: { name: '分时仅同站租还', permissions: ['SHARING', 'SHARING_ROUND'] },
+                        SHARING_ONEWAY: { name: '分时仅甲租乙还', permissions: ['SHARING', 'SHARING_ONEWAY'] }
+                    };
+                    currentTenant.value = tenantMap[mode] || tenantMap.FULL;
+                    if (!hasPermission(activeTab.value)) {
+                        activeTab.value = hasPermission('STORE') ? 'STORE' : 'SHARING';
+                    }
+                };
+
+                // --- Store Pricing State ---
+                const vehicleGroups = reactive([
+                    { id: 1, name: '经济型轿车', models: 'Toyota Corolla, Honda Civic 等', dailyPrice: 280, originalPrice: 280, lastUpdated: '2025-10-01' },
+                    { id: 2, name: 'SUV组', models: 'Toyota RAV4, Honda CR-V 等', dailyPrice: 450, originalPrice: 450, lastUpdated: '2025-09-28' },
+                    { id: 3, name: '商务车组', models: 'Buick GL8, Honda Odyssey 等', dailyPrice: 800, originalPrice: 800, lastUpdated: '2025-10-05' },
+                    { id: 4, name: '豪华车组', models: 'BMW 5 Series, Mercedes E-Class 等', dailyPrice: 1200, originalPrice: 1200, lastUpdated: '2025-09-15' },
+                    { id: 5, name: '新能源组', models: 'Tesla Model 3, BYD Han 等', dailyPrice: 350, originalPrice: 350, lastUpdated: '2025-10-10' }
+                ]);
+                const isLocked = ref(true);
+                const batchAdjustment = ref(0);
+                const scheduledList = reactive([
+                    { effectiveTime: '2026-05-01 00:00:00', status: '已执行', summary: '五一假期旺季价格调整', changes: [] },
+                    { effectiveTime: '2026-10-01 00:00:00', status: '待执行', summary: '国庆假期旺季价格调整', changes: [] }
+                ]);
+                const storePriceVersions = reactive([
+                    {
+                        version: 'PRICE-STORE-20260418-001',
+                        title: '当前门市标准价',
+                        source: '手动保存',
+                        savedBy: '总部运营',
+                        savedAt: '2026-04-18 10:20',
+                        values: [
+                            { group: '经济型轿车', models: 'Toyota Corolla, Honda Civic 等', dailyPrice: '¥280', mileage: '200km/天，超程 ¥2.0/km，不封顶', lastUpdated: '2026-04-18' },
+                            { group: 'SUV组', models: 'Toyota RAV4, Honda CR-V 等', dailyPrice: '¥450', mileage: '200km/天，超程 ¥2.0/km，不封顶', lastUpdated: '2026-04-18' },
+                            { group: '商务车组', models: 'Buick GL8, Honda Odyssey 等', dailyPrice: '¥800', mileage: '250km/天，超程 ¥3.0/km，不封顶', lastUpdated: '2026-04-18' },
+                            { group: '豪华车组', models: 'BMW 5 Series, Mercedes E-Class 等', dailyPrice: '¥1,200', mileage: '200km/天，超程 ¥4.0/km，不封顶', lastUpdated: '2026-04-18' },
+                            { group: '新能源组', models: 'Tesla Model 3, BYD Han 等', dailyPrice: '¥350', mileage: '200km/天，超程 ¥1.5/km，封顶 ¥300/天', lastUpdated: '2026-04-18' }
+                        ]
+                    },
+                    {
+                        version: 'PRICE-STORE-20260401-002',
+                        title: '清明档标准价',
+                        source: '定时调价计划',
+                        savedBy: '系统执行',
+                        savedAt: '2026-04-01 00:00',
+                        values: [
+                            { group: '经济型轿车', models: 'Toyota Corolla, Honda Civic 等', dailyPrice: '¥260', mileage: '200km/天，超程 ¥2.0/km，不封顶', lastUpdated: '2026-04-01' },
+                            { group: 'SUV组', models: 'Toyota RAV4, Honda CR-V 等', dailyPrice: '¥430', mileage: '200km/天，超程 ¥2.0/km，不封顶', lastUpdated: '2026-04-01' },
+                            { group: '商务车组', models: 'Buick GL8, Honda Odyssey 等', dailyPrice: '¥780', mileage: '250km/天，超程 ¥3.0/km，不封顶', lastUpdated: '2026-04-01' },
+                            { group: '豪华车组', models: 'BMW 5 Series, Mercedes E-Class 等', dailyPrice: '¥1,150', mileage: '200km/天，超程 ¥4.0/km，不封顶', lastUpdated: '2026-04-01' },
+                            { group: '新能源组', models: 'Tesla Model 3, BYD Han 等', dailyPrice: '¥330', mileage: '200km/天，超程 ¥1.5/km，封顶 ¥300/天', lastUpdated: '2026-04-01' }
+                        ]
+                    }
+                ]);
+                const priceVersionDialogVisible = ref(false);
+                const selectedPriceVersion = ref(null);
+                const openPriceVersion = (version) => {
+                    selectedPriceVersion.value = version || storePriceVersions[0];
+                    priceVersionDialogVisible.value = true;
+                };
+
+                // --- Sharing Pricing State ---
+                const sharingGroups = reactive([
+                    { id: 101, name: '经济型分时', models: 'BYD Dolphin, Leapmotor T03', sameStationHourly: 15, sameStationDaily: 120, oneWayHourly: 25, oneWayDaily: 180, lastUpdatedSameStation: '2025-10-01', lastUpdatedOneWay: '2025-09-20' },
+                    { id: 102, name: '舒适型分时', models: 'Tesla Model 3, Xpeng P7', sameStationHourly: 25, sameStationDaily: 200, oneWayHourly: 40, oneWayDaily: 300, lastUpdatedSameStation: '2025-10-05', lastUpdatedOneWay: '2025-10-02' },
+                ]);
+                const isSharingLocked = ref(true);
+                const sharingBatchMsg = ref(0);
+                const sharingScheduledList = reactive([
+                    { effectiveTime: '2026-05-01 00:00:00', status: '已执行', summary: '劳动节前上调', changes: [], type: 'SAME_STATION' }
+                ]);
+                let sharingSnapshot = JSON.stringify(sharingGroups);
+
+
+                // --- Common Functions ---
+                const saveAllChanges = () => {
+                    const loading = ElMessage.loading({ message: '正在保存所有更改...', duration: 0 });
+                    setTimeout(() => {
+                        loading.close();
+                        // Save Store
+                        if (!isLocked.value) {
+                            vehicleGroups.forEach(g => { g.originalPrice = g.dailyPrice; });
+                            isLocked.value = true;
+                        }
+                        // Save Sharing
+                        if (!isSharingLocked.value) {
+                            sharingSnapshot = JSON.stringify(sharingGroups);
+                            isSharingLocked.value = true;
+                        }
+                        isModified.value = false;
+                        ElMessage.success('定价设置已更新成功');
+                    }, 800);
+                };
+
+                const getStatusType = (status) => {
+                    const map = { '待执行': 'primary', '已执行': 'success', '已取消': 'info', '执行失败': 'danger' };
+                    return map[status] || 'info';
+                };
+
+                const disabledDate = (time) => time.getTime() < Date.now() - 86400000;
+
+                // --- Store Functions ---
+                const handlePriceChange = (row) => { isModified.value = true; };
+                const unlockPricing = () => { isLocked.value = false; ElMessage.info('已解锁，请谨慎修改价格'); };
+                const savePricing = () => { saveAllChanges(); }; // Alias
+                const cancelEdit = () => {
+                    vehicleGroups.forEach(g => { g.dailyPrice = g.originalPrice; });
+                    isLocked.value = true;
+                    isModified.value = false;
+                    ElMessage.info('已取消编辑');
+                };
+                const applyBatchAdjustment = () => {
+                    const rate = 1 + (batchAdjustment.value / 100);
+                    vehicleGroups.forEach(g => { g.dailyPrice = Math.ceil(g.dailyPrice * rate / 10) * 10; });
+                    isModified.value = true;
+                    ElMessage.success(`已批量调整价格 (${batchAdjustment.value > 0 ? '+' : ''}${batchAdjustment.value}%)`);
+                };
+
+                // Store Schedule
+                const scheduleDialogVisible = ref(false);
+                const viewDialogVisible = ref(false);
+                const currentViewPlan = ref(null);
+                const scheduleForm = reactive({ effectiveTime: '', summary: '', prices: [] });
+
+                const openScheduleDialog = () => {
+                    scheduleForm.effectiveTime = '';
+                    scheduleForm.summary = ''; // Reset summary
+                    scheduleForm.prices = vehicleGroups.map(g => ({
+                        id: g.id, name: g.name, currentPrice: g.dailyPrice, newPrice: g.dailyPrice
+                    }));
+                    scheduleDialogVisible.value = true;
+                };
+                const batchSetNewPrice = () => {
+                    scheduleForm.prices.forEach(p => p.newPrice = Math.ceil(p.currentPrice * 1.1 / 10) * 10);
+                };
+                const confirmSchedule = () => {
+                    const hasChange = scheduleForm.prices.some(p => p.newPrice !== p.currentPrice);
+                    if (!hasChange) { ElMessage.warning('价格未发生变化'); return; }
+                    if (!scheduleForm.summary) { ElMessage.warning('请输入计划摘要'); return; }
+
+                    scheduledList.unshift({
+                        effectiveTime: scheduleForm.effectiveTime,
+                        status: '待执行',
+                        summary: scheduleForm.summary,
+                        changes: JSON.parse(JSON.stringify(scheduleForm.prices))
+                    });
+                    scheduleDialogVisible.value = false;
+                    ElMessage.success('计划创建成功');
+                };
+                const viewSchedule = (item) => { currentViewPlan.value = item; viewDialogVisible.value = true; };
+                const cancelSchedule = (idx) => { scheduledList[idx].status = '已取消'; ElMessage.info('计划已取消'); };
+                const getDiffClass = (row) => row.newPrice > row.currentPrice ? 'text-red-500' : (row.newPrice < row.currentPrice ? 'text-green-500' : 'text-gray-300');
+                const getDiffText = (row) => {
+                    const diff = row.newPrice - row.currentPrice;
+                    return diff > 0 ? `+${diff}` : (diff < 0 ? `${diff}` : '-');
+                };
+
+                // --- Sharing Functions ---
+                const markSharingModified = () => { isModified.value = true; };
+                const cancelSharingEdit = () => {
+                    const originals = JSON.parse(sharingSnapshot);
+                    sharingGroups.splice(0, sharingGroups.length, ...originals);
+                    isSharingLocked.value = true;
+                    isModified.value = false;
+                    ElMessage.info('已取消分时定价编辑');
+                };
+                const applySharingBatch = () => {
+                    ElMessageBox.confirm(
+                        `确定要将所有分时车组价格上调 ${sharingBatchMsg.value}% 吗？`, '批量调整',
+                        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+                    ).then(() => {
+                        const rate = 1 + (sharingBatchMsg.value / 100);
+                        sharingGroups.forEach(g => {
+                            g.sameStationHourly = Math.ceil(g.sameStationHourly * rate);
+                            g.sameStationDaily = Math.ceil(g.sameStationDaily * rate);
+                            g.oneWayHourly = Math.ceil(g.oneWayHourly * rate);
+                            g.oneWayDaily = Math.ceil(g.oneWayDaily * rate);
+                        });
+                        markSharingModified();
+                        ElMessage.success('分时价格已按百分比批量上调');
+                    });
+                };
+                const entryHasChanges = (row) => {
+                    // Simplified check against snapshot would be better, but for UI feedback:
+                    return isModified.value;
+                };
+
+                // Sharing Schedule
+                const sharingScheduleDialogVisible = ref(false);
+                const sharingViewDialogVisible = ref(false);
+                const currentSharingViewPlan = ref(null);
+                const sharingScheduleForm = reactive({ effectiveTime: '', summary: '', type: 'SAME_STATION', items: [] });
+
+                const openSharingScheduleDialog = () => {
+                    sharingScheduleForm.effectiveTime = '';
+                    sharingScheduleForm.summary = '';
+                    sharingScheduleForm.type = 'SAME_STATION';
+                    initSharingScheduleItems();
+                    sharingScheduleDialogVisible.value = true;
+                };
+                const initSharingScheduleItems = () => {
+                    sharingScheduleForm.items = sharingGroups.map(g => ({
+                        id: g.id, name: g.name,
+                        sameStationHourly: g.sameStationHourly, sameStationDaily: g.sameStationDaily,
+                        newSameStationHourly: g.sameStationHourly, newSameStationDaily: g.sameStationDaily,
+                        oneWayHourly: g.oneWayHourly, oneWayDaily: g.oneWayDaily,
+                        newOneWayHourly: g.oneWayHourly, newOneWayDaily: g.oneWayDaily
+                    }));
+                };
+                const resetSharingSchedulePrices = () => {
+                    sharingScheduleForm.items.forEach(item => {
+                        item.newSameStationHourly = item.sameStationHourly;
+                        item.newSameStationDaily = item.sameStationDaily;
+                        item.newOneWayHourly = item.oneWayHourly;
+                        item.newOneWayDaily = item.oneWayDaily;
+                    });
+                };
+                const batchSetSharingNewPrice = () => {
+                    const isSame = sharingScheduleForm.type === 'SAME_STATION';
+                    sharingScheduleForm.items.forEach(item => {
+                        if (isSame) {
+                            item.newSameStationHourly = Math.ceil(item.sameStationHourly * 1.1);
+                            item.newSameStationDaily = Math.ceil(item.sameStationDaily * 1.1);
+                        } else {
+                            item.newOneWayHourly = Math.ceil(item.oneWayHourly * 1.1);
+                            item.newOneWayDaily = Math.ceil(item.oneWayDaily * 1.1);
+                        }
+                    });
+                    ElMessage.success('批量预览上调 10%');
+                };
+                const confirmSharingSchedule = () => {
+                    if (!sharingScheduleForm.effectiveTime) { ElMessage.warning('请选择时间'); return; }
+                    if (!sharingScheduleForm.summary) { ElMessage.warning('请输入计划摘要'); return; }
+                    let hasChange = false;
+                    if (sharingScheduleForm.type === 'SAME_STATION') {
+                        hasChange = sharingScheduleForm.items.some(i => i.newSameStationHourly !== i.sameStationHourly || i.newSameStationDaily !== i.sameStationDaily);
+                    } else {
+                        hasChange = sharingScheduleForm.items.some(i => i.newOneWayHourly !== i.oneWayHourly || i.newOneWayDaily !== i.oneWayDaily);
+                    }
+                    if (!hasChange) { ElMessage.warning('价格未发生变化'); return; }
+
+                    sharingScheduledList.unshift({
+                        effectiveTime: sharingScheduleForm.effectiveTime,
+                        status: '待执行',
+                        summary: sharingScheduleForm.summary,
+                        changes: JSON.parse(JSON.stringify(sharingScheduleForm.items)),
+                        type: sharingScheduleForm.type
+                    });
+
+                    sharingScheduleDialogVisible.value = false;
+                    ElMessage.success('分时计划创建成功');
+                };
+                const viewSharingSchedule = (item) => { currentSharingViewPlan.value = item; sharingViewDialogVisible.value = true; };
+                const cancelSharingSchedule = (idx) => { sharingScheduledList[idx].status = '已取消'; ElMessage.info('已取消'); };
+                const sharingScheduleHasChange = (row) => {
+                    return row.newSameStationHourly !== row.sameStationHourly || row.newSameStationDaily !== row.sameStationDaily ||
+                        row.newOneWayHourly !== row.oneWayHourly || row.newOneWayDaily !== row.oneWayDaily;
+                };
+
+                return {
+                    activeTab, isModified, saveChanges: saveAllChanges, getStatusType, disabledDate,
+                    // Permissions
+                    currentTenantName, switchTenant, hasPermission,
+                    permissionDemoMode, permissionDemoOptions, hasStoreBusinessPermission, hasSharingBusinessPermission,
+                    // Store
+                    vehicleGroups, isLocked, handlePriceChange, unlockPricing, savePricing, cancelEdit,
+                    batchAdjustment, applyBatchAdjustment,
+                    storePriceVersions, priceVersionDialogVisible, selectedPriceVersion, openPriceVersion,
+                    scheduledList, scheduleDialogVisible, scheduleForm, openScheduleDialog, batchSetNewPrice, confirmSchedule,
+                    viewSchedule, cancelSchedule, viewDialogVisible, currentViewPlan, getDiffClass, getDiffText,
+                    // Sharing
+                    sharingGroups, isSharingLocked, markSharingModified, cancelSharingEdit,
+                    sharingBatchMsg, applySharingBatch, entryHasChanges,
+                    sharingScheduledList, sharingScheduleDialogVisible, sharingScheduleForm, openSharingScheduleDialog,
+                    resetSharingSchedulePrices, batchSetSharingNewPrice, confirmSharingSchedule,
+                    viewSharingSchedule, cancelSharingSchedule, sharingViewDialogVisible, currentSharingViewPlan, sharingScheduleHasChange
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

@@ -86,8 +86,7 @@
     "compatibility": {
       "type": "object",
       "properties": {
-        "legacyRoutes": { "type": "boolean" },
-        "legacyViewRoot": { "enum": ["src/views"] }
+        "legacyRoutes": { "type": "boolean" }
       },
       "additionalProperties": true
     }

@@ -16,9 +16,6 @@ const ConsolePage = lazy(() =>
 const ProjectRoutesPage = lazy(() =>
   import('@/pages/ProjectRoutesPage').then((module) => ({ default: module.ProjectRoutesPage })),
 );
-const PageTransferPage = lazy(() =>
-  import('@/pages/PageTransferPage').then((module) => ({ default: module.PageTransferPage })),
-);
 const AiContextPage = lazy(() =>
   import('@/pages/AiContextPage').then((module) => ({ default: module.AiContextPage })),
 );
@@ -82,6 +79,8 @@ export function AppRoutes() {
     >
       <Routes>
         <Route index element={<HomePage />} />
+        {/* 兼容静态服务器常见的 /index.html 入口，统一回到应用根路由。 */}
+        <Route path="index.html" element={<Navigate to="/" replace />} />
         {homeAliases.map((path) => (
           <Route key={path} path={path} element={<Navigate to="/" replace />} />
         ))}
@@ -97,7 +96,6 @@ export function AppRoutes() {
           <Route path="tools/console" element={<ConsolePage />} />
           <Route path="tools/projects" element={<ProjectPackagesPage />} />
           <Route path="tools/project-routes" element={<ProjectRoutesPage />} />
-          <Route path="tools/page-transfer" element={<PageTransferPage />} />
           <Route path="tools/ai-context" element={<AiContextPage />} />
           <Route path="tools/project-health" element={<ProjectHealthPage />} />
           <Route path="projects" element={<Navigate to="/tools/projects" replace />} />

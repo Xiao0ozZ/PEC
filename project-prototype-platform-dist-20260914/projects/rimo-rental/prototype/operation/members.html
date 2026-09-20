@@ -1,0 +1,2448 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>个人会员管理</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/theme-chalk/dark/css-vars.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-avatar-surface: #94a3b8;
+        --app-color-host-page: #f5f5f7;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏仅在深色主题下保留轻量半透明材质与投影；浅色使用基础样式的实色，无阴影。 */
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.members .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .members .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* Fix: 强制表头行高一致，防止 fixed 列导致表头错位 */
+        .members .el-table__header th.el-table__cell {
+            height: 44px;
+            line-height: 44px;
+            padding: 0 12px;
+        }
+
+        .members .member-registration-range.el-date-editor {
+            width: 320px !important;
+            flex: 0 0 320px;
+        }
+
+        .members .member-filter-toolbar,
+        .members .member-filter-controls {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .members .member-filter-toolbar {
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .members .member-filter-controls {
+            column-gap: 12px;
+            row-gap: 8px;
+        }
+
+        .members .member-filter-controls > * {
+            flex: none;
+        }
+
+        .members .member-filter-controls > .el-button + .el-button {
+            margin-left: 0 !important;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+    <!-- [AI-EDIT] DARK_SHIM: 深色主题映射层(试点)。全站推广时按最终映射表整体重新生成。 -->
+    <style data-dark-shim>
+      /* 深色映射层:仅 html[data-theme="dark"] 时接管 Tailwind 颜色类与派生色阶;浅色完全不受影响。 */
+      html[data-theme='dark'] {
+        --app-color-success: #34d399;
+        --app-color-warning: #fbbf24;
+        --app-color-danger: #f87171;
+        --app-color-primary-text: color-mix(in srgb, var(--app-color-primary) 55%, #ffffff);
+        --app-color-primary-light-3: color-mix(in srgb, var(--app-color-primary) 70%, #141414);
+        --app-color-primary-light-5: color-mix(in srgb, var(--app-color-primary) 50%, #141414);
+        --app-color-primary-light-7: color-mix(in srgb, var(--app-color-primary) 35%, #141414);
+        --app-color-primary-light-8: color-mix(in srgb, var(--app-color-primary) 25%, #141414);
+        --app-color-primary-light-9: color-mix(in srgb, var(--app-color-primary) 15%, #141414);
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: color-mix(in srgb, var(--app-color-primary) 70%, #ffffff);
+        --el-color-success: var(--app-color-success);
+        --el-color-success-light-3: color-mix(in srgb, var(--app-color-success) 70%, #141414);
+        --el-color-success-light-5: color-mix(in srgb, var(--app-color-success) 50%, #141414);
+        --el-color-success-light-7: color-mix(in srgb, var(--app-color-success) 35%, #141414);
+        --el-color-success-light-8: color-mix(in srgb, var(--app-color-success) 25%, #141414);
+        --el-color-success-light-9: color-mix(in srgb, var(--app-color-success) 15%, #141414);
+        --el-color-success-dark-2: color-mix(in srgb, var(--app-color-success) 70%, #ffffff);
+        --el-color-warning: var(--app-color-warning);
+        --el-color-warning-light-3: color-mix(in srgb, var(--app-color-warning) 70%, #141414);
+        --el-color-warning-light-5: color-mix(in srgb, var(--app-color-warning) 50%, #141414);
+        --el-color-warning-light-7: color-mix(in srgb, var(--app-color-warning) 35%, #141414);
+        --el-color-warning-light-8: color-mix(in srgb, var(--app-color-warning) 25%, #141414);
+        --el-color-warning-light-9: color-mix(in srgb, var(--app-color-warning) 15%, #141414);
+        --el-color-warning-dark-2: color-mix(in srgb, var(--app-color-warning) 70%, #ffffff);
+        --el-color-danger: var(--app-color-danger);
+        --el-color-danger-light-3: color-mix(in srgb, var(--app-color-danger) 70%, #141414);
+        --el-color-danger-light-5: color-mix(in srgb, var(--app-color-danger) 50%, #141414);
+        --el-color-danger-light-7: color-mix(in srgb, var(--app-color-danger) 35%, #141414);
+        --el-color-danger-light-8: color-mix(in srgb, var(--app-color-danger) 25%, #141414);
+        --el-color-danger-light-9: color-mix(in srgb, var(--app-color-danger) 15%, #141414);
+        --el-color-danger-dark-2: color-mix(in srgb, var(--app-color-danger) 70%, #ffffff);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active {
+        color: var(--app-color-primary-text);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary-text);
+      }
+
+      html[data-theme='dark'] .bg-blue-100 { background-color: color-mix(in srgb, var(--app-color-primary) 22%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-blue-50 { background-color: color-mix(in srgb, var(--app-color-primary) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-gray-50 { background-color: var(--app-color-surface-subtle); }
+      html[data-theme='dark'] .bg-red-50 { background-color: color-mix(in srgb, var(--app-color-danger) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-white { background-color: var(--app-color-surface); }
+      html[data-theme='dark'] .bg-white\/60 { background-color: var(--app-color-surface); }
+      html[data-theme='dark'] .border-blue-100 { border-color: color-mix(in srgb, var(--app-color-primary) 32%, transparent); }
+      html[data-theme='dark'] .border-blue-200 { border-color: color-mix(in srgb, var(--app-color-primary) 32%, transparent); }
+      html[data-theme='dark'] .border-gray-100 { border-color: var(--app-color-border-subtle); }
+      html[data-theme='dark'] .border-gray-200 { border-color: var(--app-color-border-light); }
+      html[data-theme='dark'] .border-red-100 { border-color: color-mix(in srgb, var(--app-color-danger) 32%, transparent); }
+      html[data-theme='dark'] .from-blue-50 { --tw-gradient-from: var(--app-color-primary) var(--tw-gradient-from-position); }
+      html[data-theme='dark'] .text-blue-600 { color: var(--app-color-primary); }
+      html[data-theme='dark'] .text-blue-800 { color: var(--app-color-primary); }
+      html[data-theme='dark'] .text-gray-400 { color: color-mix(in srgb, var(--app-color-text-muted) 80%, transparent); }
+      html[data-theme='dark'] .text-gray-500 { color: var(--app-color-text-muted); }
+      html[data-theme='dark'] .text-gray-600 { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .text-gray-700 { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .text-gray-800 { color: var(--app-color-text-primary); }
+      html[data-theme='dark'] .text-gray-900 { color: var(--app-color-text-primary); }
+      html[data-theme='dark'] .text-green-500 { color: var(--app-color-success); }
+      html[data-theme='dark'] .text-green-600 { color: var(--app-color-success); }
+      html[data-theme='dark'] .text-orange-500 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-red-500 { color: var(--app-color-danger); }
+      html[data-theme='dark'] .text-red-800 { color: var(--app-color-danger); }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "members",
+  "pageTitle": "个人会员管理",
+  "fileName": "members.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/members",
+  "menuSection": "customers",
+  "menuTitle": "个人会员管理",
+  "menuIcon": "User",
+  "menu": true,
+  "rootClass": "members",
+  "overlayRootClass": "members-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+    <!-- TEMPLATE-LOCK: 主题引导脚本（试点），首帧渲染前解析浅/深色主题。 -->
+    <script data-prototype-theme-bootstrap>
+      (function () {
+        var STORAGE_KEY = 'prototype-theme';
+        var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+        var readMode = function () {
+          try {
+            var v = localStorage.getItem(STORAGE_KEY);
+            return v === 'light' || v === 'dark' || v === 'auto' ? v : 'auto';
+          } catch (error) { return 'auto'; }
+        };
+        var apply = function () {
+          var mode = readMode();
+          var resolved = mode === 'auto' && media ? (media.matches ? 'dark' : 'light') : mode;
+          document.documentElement.dataset.theme = resolved;
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
+        };
+        if (media) {
+          var onSystemChange = function () { if (readMode() === 'auto') apply(); };
+          if (media.addEventListener) media.addEventListener('change', onSystemChange);
+          else if (media.addListener) media.addListener(onSystemChange);
+        }
+        window.ElementPrototypeTheme = {
+          get mode() { return readMode(); },
+          set: function (mode) {
+            if (mode !== 'light' && mode !== 'dark' && mode !== 'auto') return;
+            try { localStorage.setItem(STORAGE_KEY, mode); } catch (error) {}
+            apply();
+          },
+          apply: apply
+        };
+        apply();
+      })();
+    </script>
+    <!-- 试点专用:右下角主题切换面板(与模板演示切换器同款样式),全站推广时移除或转正式控件。 -->
+    <script data-prototype-theme-toggle>
+      (function () {
+        var boot = function () {
+          var api = window.ElementPrototypeTheme;
+          if (!api) return;
+          var MODES = [['auto', '跟随系统'], ['light', '浅色'], ['dark', '深色']];
+          var wrap = document.createElement('div');
+          wrap.className = 'prototype-theme-switch';
+          wrap.setAttribute('role', 'group');
+          wrap.setAttribute('aria-label', '切换主题');
+          var label = document.createElement('span');
+          label.textContent = '主题';
+          var group = document.createElement('div');
+          var buttons = {};
+          var baseBtn = 'min-height:30px;padding:0 10px;color:var(--app-color-text-secondary);font:inherit;font-size:13px;background:transparent;border:0;border-radius:5px;cursor:pointer';
+          MODES.forEach(function (m) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = m[1];
+            b.style.cssText = baseBtn;
+            b.addEventListener('click', function () {
+              api.set(m[0]);
+              sync();
+            });
+            group.appendChild(b);
+            buttons[m[0]] = b;
+          });
+          var sync = function () {
+            var mode = api.mode;
+            MODES.forEach(function (m) {
+              var b = buttons[m[0]];
+              var active = m[0] === mode;
+              b.className = active ? 'is-active' : '';
+              b.setAttribute('aria-pressed', active ? 'true' : 'false');
+              b.style.color = active ? 'var(--app-color-primary)' : 'var(--app-color-text-secondary)';
+              b.style.fontWeight = active ? '600' : '400';
+              b.style.background = active ? 'var(--app-color-surface)' : 'transparent';
+              b.style.boxShadow = active ? '0 1px 3px rgb(15 23 42 / 12%)' : 'none';
+            });
+          };
+          wrap.style.cssText = 'position:fixed !important;right:24px !important;bottom:24px !important;left:auto !important;top:auto !important;z-index:9999;display:flex;align-items:center;gap:10px;padding:6px;background:var(--app-color-surface);border:1px solid var(--app-color-border);border-radius:10px;box-shadow:0 10px 28px rgb(15 23 42 / 14%)';
+          label.style.cssText = 'padding-left:8px;color:var(--app-color-text-muted);font-size:13px;white-space:nowrap';
+          group.style.cssText = 'display:flex;align-items:center;gap:2px;padding:2px;background:var(--app-color-surface-subtle);border-radius:7px';
+          wrap.appendChild(label);
+          wrap.appendChild(group);
+          document.body.appendChild(wrap);
+          sync();
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+        else boot();
+      })();
+    </script>
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">客户中心</div>
+<a class="prototype-menu-item is-active" href="./members.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="User" aria-hidden="true"></span><span>个人会员管理</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 个人会员管理</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-members members" data-page-content data-page-root="members" data-page-key="members">
+  <div data-business-content data-layout-type="legacy">
+<!-- 顶部操作栏 -->
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">个人会员管理</h1>
+                        <p class="text-gray-500 text-sm mt-1">管理所有会员用户信息，支持筛选、导出及状态变更。</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <el-button type="primary" size="large" class="shadow-md shadow-[color:var(--app-color-primary-shadow)]"
+                            @click="openCreateDialog">
+                            <el-icon class="mr-1">
+                                <Plus></Plus>
+                            </el-icon> 新增会员
+                        </el-button>
+                    </div>
+                </div>
+
+                <!-- 会员概览 -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-xl p-4 border shadow-sm cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'total' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'total'"
+                        @click="applySummaryFilter('total')" @keydown.enter.prevent="applySummaryFilter('total')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">会员总数</div>
+                        <div class="text-2xl font-bold text-gray-800">{{ summaryStats.total }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'corporate' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'corporate'"
+                        @click="applySummaryFilter('corporate')" @keydown.enter.prevent="applySummaryFilter('corporate')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">企业身份会员</div>
+                        <div class="text-2xl font-bold text-blue-600">{{ summaryStats.corporate }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'suspended' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'suspended'"
+                        @click="applySummaryFilter('suspended')" @keydown.enter.prevent="applySummaryFilter('suspended')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">停权会员</div>
+                        <div class="text-2xl font-bold text-orange-500">{{ summaryStats.suspended }}</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border shadow-sm cursor-pointer hover:border-[color:var(--app-color-primary)] transition-colors"
+                        :class="activeSummaryCard === 'active' ? 'border-[color:var(--app-color-primary)] ring-1 ring-[color:var(--app-color-primary)]' : 'border-gray-100'"
+                        role="button" tabindex="0" :aria-pressed="activeSummaryCard === 'active'"
+                        @click="applySummaryFilter('active')" @keydown.enter.prevent="applySummaryFilter('active')">
+                        <div class="text-gray-500 text-xs font-medium mb-1">正常会员</div>
+                        <div class="text-2xl font-bold text-green-600">{{ summaryStats.active }}</div>
+                    </div>
+                </div>
+
+                <!-- 主内容区域 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <!-- 筛选栏 -->
+
+                    <div class="border-b border-gray-100 bg-gray-50">
+                        <div ref="filterToolbar" class="member-filter-toolbar p-4 flex justify-between items-center gap-4">
+                            <div class="member-filter-controls flex gap-3 items-center flex-1">
+                                <el-input v-model="filters.keyword" placeholder="搜索账号/姓名/手机号/Email/身份证" clearable
+                                    style="width: 280px" prefix-icon="Search"></el-input>
+                                <el-select v-if="filterLayoutTier >= 2" v-model="filters.corporateQualification" placeholder="企业资格" clearable style="width: 140px">
+                                    <el-option label="未加入企业" value="personal_only"></el-option>
+                                    <el-option label="已加入企业" value="corporate_qualified"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier >= 3" v-model="filters.planId" placeholder="会员方案" clearable style="width: 140px">
+                                    <el-option v-for="plan in membershipPlans" :key="plan.id" :label="plan.name"
+                                        :value="plan.id"></el-option>
+                                </el-select>
+                                <el-select v-model="filters.status" placeholder="账号状态" clearable style="width: 120px">
+                                    <el-option label="正常" value="active"></el-option>
+                                    <el-option label="停权" value="suspended"></el-option>
+                                    <el-option label="黑名单" value="blacklisted"></el-option>
+                                    <el-option label="封存" value="archived"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier >= 4" v-model="filters.reviewStatus" placeholder="审核状态" clearable style="width: 120px">
+                                    <el-option label="待审核" value="pending"></el-option>
+                                    <el-option label="已通过" value="approved"></el-option>
+                                    <el-option label="已驳回" value="rejected"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier >= 5" v-model="filters.registrationChannel" placeholder="注册渠道" clearable style="width: 130px">
+                                    <el-option label="官网" value="official_web"></el-option>
+                                    <el-option label="iOS APP" value="ios"></el-option>
+                                    <el-option label="Android APP" value="android"></el-option>
+                                </el-select>
+                                <el-select v-if="filterLayoutTier >= 6" v-model="filters.vehicleType" placeholder="可用载具类型" clearable style="width: 150px">
+                                    <el-option v-for="type in vehicleTypeOptions" :key="type.value" :label="type.label"
+                                        :value="type.value"></el-option>
+                                </el-select>
+                                <el-button type="primary" icon="Filter" plain
+                                    @click="showMoreFilters = !showMoreFilters">
+                                    {{ showMoreFilters ? '收起筛选' : '更多筛选' }}
+                                </el-button>
+                                <el-tooltip content="重置筛选" placement="top">
+                                    <el-button circle @click="resetFilters">
+                                        <el-icon>
+                                            <Refresh></Refresh>
+                                        </el-icon>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-button type="primary" plain icon="Download" @click="exportData">导出</el-button>
+                            </div>
+                            <div class="text-sm text-gray-500 whitespace-nowrap">共 {{ filteredMembers.length }} 位会员</div>
+                        </div>
+
+                        <div v-show="showMoreFilters" class="px-4 pb-4 flex gap-3 items-center flex-wrap">
+                            <el-select v-if="filterLayoutTier < 2" v-model="filters.corporateQualification" placeholder="企业资格" clearable style="width: 140px">
+                                <el-option label="未加入企业" value="personal_only"></el-option>
+                                <el-option label="已加入企业" value="corporate_qualified"></el-option>
+                            </el-select>
+                            <el-select v-if="filterLayoutTier < 3" v-model="filters.planId" placeholder="会员方案" clearable style="width: 140px">
+                                <el-option v-for="plan in membershipPlans" :key="plan.id" :label="plan.name"
+                                    :value="plan.id"></el-option>
+                            </el-select>
+                            <el-select v-if="filterLayoutTier < 4" v-model="filters.reviewStatus" placeholder="审核状态" clearable style="width: 120px">
+                                <el-option label="待审核" value="pending"></el-option>
+                                <el-option label="已通过" value="approved"></el-option>
+                                <el-option label="已驳回" value="rejected"></el-option>
+                            </el-select>
+                            <el-select v-if="filterLayoutTier < 5" v-model="filters.registrationChannel" placeholder="注册渠道" clearable style="width: 130px">
+                                <el-option label="官网" value="official_web"></el-option>
+                                <el-option label="iOS APP" value="ios"></el-option>
+                                <el-option label="Android APP" value="android"></el-option>
+                            </el-select>
+                            <el-select v-if="filterLayoutTier < 6" v-model="filters.vehicleType" placeholder="可用载具类型" clearable style="width: 150px">
+                                <el-option v-for="type in vehicleTypeOptions" :key="type.value" :label="type.label"
+                                    :value="type.value"></el-option>
+                            </el-select>
+                            <el-date-picker v-model="filters.registrationDateRange" type="daterange" range-separator="-"
+                                start-placeholder="注册起始" end-placeholder="注册结束"
+                                class="member-registration-range"></el-date-picker>
+                        </div>
+                    </div>
+
+                    <!-- 表格 -->
+                    <el-table :data="paginatedMembers" stripe style="width: 100%"
+                        :header-cell-style="{ backgroundColor: 'var(--app-color-surface-subtle)', color: 'var(--app-color-text-secondary)', fontWeight: 'bold' }">
+                        <el-table-column prop="id" label="用户ID" width="100">
+                            <template #default="{ row }">
+                                <span class="font-mono text-xs text-gray-500">{{ row.id }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="账号" min-width="150">
+                            <template #default="{ row }">
+                                <div class="flex items-center">
+                                    <el-avatar :size="32" class="mr-3 border bg-blue-100 text-blue-600 border-blue-200">
+                                        {{ row.name.charAt(0) }}
+                                    </el-avatar>
+                                    <div>
+                                        <div class="font-medium text-gray-900">{{ row.account }}</div>
+                                        <div class="mt-1 flex flex-wrap gap-1">
+                                            <el-tag type="info" size="small" effect="plain">个人</el-tag>
+                                            <el-tag v-if="row.corporate" type="warning" size="small" effect="plain">企业资格</el-tag>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="name" label="姓名" width="100"></el-table-column>
+                        <el-table-column label="联系方式" min-width="180">
+                            <template #default="{ row }">
+                                <div class="text-sm text-gray-900">{{ row.phone }}</div>
+                                <div class="text-xs text-gray-400">{{ row.email }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="身份证号" width="140">
+                            <template #default="{ row }">
+                                <span class="font-mono text-sm text-gray-600">{{ row.idNumber }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="会员方案" min-width="160">
+                            <template #default="{ row }">
+                                <div class="flex items-center">
+                                    <el-tag :type="getMembershipColor(row.membership.planId)" size="small" class="mr-2">
+                                        {{ row.membership.planName }}
+                                    </el-tag>
+                                    <el-icon v-if="row.membership.autoRenew" class="text-green-500" title="自动续费">
+                                        <RefreshRight></RefreshRight>
+                                    </el-icon>
+                                </div>
+                                <div class="text-xs text-gray-400 mt-1">
+                                    到期: {{ row.membership.expireDate || '永久' }}
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="企业资格" width="180">
+                            <template #default="{ row }">
+                                <div v-if="row.corporate">
+                                    <div class="text-sm text-gray-900">{{ row.corporate.companyName }}</div>
+                                    <div class="text-xs text-orange-500 mt-1">已加入企业</div>
+                                </div>
+                                <span v-else class="text-gray-400">未加入企业</span>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="状态" width="100">
+                            <template #default="{ row }">
+                                <el-tag v-if="row.reviewStatus === 'pending'" type="warning" size="small"
+                                    effect="dark">待审核</el-tag>
+                                <el-tag v-else-if="row.reviewStatus === 'rejected'" type="danger" size="small"
+                                    effect="dark">已拒绝</el-tag>
+                                <template v-else>
+                                    <el-tag v-if="row.status === 'active'" type="success" size="small"
+                                        effect="light">正常</el-tag>
+                                    <el-tag v-else-if="row.status === 'suspended'" type="warning" size="small"
+                                        effect="light">停权</el-tag>
+                                    <el-tag v-else-if="row.status === 'blacklisted'" type="danger" size="small"
+                                        effect="dark">黑名单</el-tag>
+                                    <el-tag v-else-if="row.status === 'archived'" type="info" size="small"
+                                        effect="plain">封存</el-tag>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="160" align="right" fixed="right">
+                            <template #default="{ row }">
+                                <div class="flex justify-end gap-2">
+                                    <el-button type="primary" link size="small"
+                                        @click="openDetailDialog(row)">详情</el-button>
+                                    <el-button v-if="row.status !== 'archived'" type="primary" link size="small"
+                                        @click="openEditDialog(row)">编辑</el-button>
+                                    <el-dropdown v-if="row.status !== 'archived'" trigger="click"
+                                        @command="(cmd) => handleCommand(cmd, row)">
+                                        <el-button type="info" link size="small">
+                                            更多<el-icon class="el-icon--right"><arrow-down></arrow-down></el-icon>
+                                        </el-button>
+                                        <template #dropdown>
+                                            <el-dropdown-menu>
+                                                <!-- Active Actions -->
+                                                <template v-if="row.status === 'active'">
+                                                    <el-dropdown-item command="suspend">停权</el-dropdown-item>
+                                                    <el-dropdown-item command="archive">封存</el-dropdown-item>
+                                                    <el-dropdown-item command="blacklist" divided><span 
+                                                            class="text-red-500">加入黑名单</span></el-dropdown-item>
+                                                </template>
+
+                                                <!-- Suspended Actions -->
+                                                <template v-if="row.status === 'suspended'">
+                                                    <el-dropdown-item command="activate">恢复正常</el-dropdown-item>
+                                                    <el-dropdown-item command="archive">封存</el-dropdown-item>
+                                                    <el-dropdown-item command="blacklist" divided><span 
+                                                            class="text-red-500">加入黑名单</span></el-dropdown-item>
+                                                </template>
+
+                                                <!-- Archived Actions -->
+                                                <template v-if="row.status === 'archived'">
+                                                    <el-dropdown-item command="activate">恢复正常</el-dropdown-item>
+                                                </template>
+
+                                                <!-- Blacklisted Actions -->
+                                                <template v-if="row.status === 'blacklisted'">
+                                                    <el-dropdown-item command="activate">移出黑名单</el-dropdown-item>
+                                                </template>
+
+                                                <el-dropdown-item command="managePlan" divided
+                                                    :disabled="row.status === 'archived'">
+                                                    <span class="text-blue-600">方案管理</span>
+                                                </el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </template>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <!-- 分页 -->
+                    <div class="p-4 border-t border-gray-100 flex justify-end bg-gray-50">
+                        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                            :page-sizes="[10, 20, 50, 100]" :total="filteredMembers.length" background
+                            layout="total, sizes, prev, pager, next, jumper" ></el-pagination>
+                    </div>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="members-overlay">
+<el-dialog v-model="dialogVisible" :title="isEdit ? '编辑会员' : '新增会员'" width="900px" top="3vh" destroy-on-close class="member-dialog members-overlay">
+            <el-form :model="memberForm" label-position="top" class="custom-scroll max-h-[70vh] overflow-y-auto px-2">
+
+                <!-- 基本资料 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-white">
+                            <UserFilled></UserFilled>
+                        </el-icon>
+                        基本资料
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="6">
+                                <el-form-item label="姓" required>
+                                    <el-input v-model="memberForm.surname" placeholder="张" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="名" required>
+                                    <el-input v-model="memberForm.firstName" placeholder="三" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="性别">
+                                    <el-select v-model="memberForm.gender" class="w-full">
+                                        <el-option label="男" value="male" ></el-option>
+                                        <el-option label="女" value="female" ></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="出生日期">
+                                    <el-date-picker v-model="memberForm.dob" type="date" placeholder="选择" class="w-full"
+                                        value-format="YYYY-MM-DD" ></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="手机号" required>
+                                    <el-input v-model="memberForm.phone" placeholder="0912-345-678"
+                                        prefix-icon="Phone" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="Email">
+                                    <el-input v-model="memberForm.email" placeholder="email@example.com"
+                                        prefix-icon="Message" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="身份证号" required>
+                                    <el-input v-model="memberForm.idNumber" placeholder="A123456789"
+                                        prefix-icon="Postcard" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+                <!-- 地址信息 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-white">
+                            <Location></Location>
+                        </el-icon>
+                        地址信息
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="12">
+                                <el-form-item label="户籍地址">
+                                    <el-input v-model="memberForm.householdAddress" placeholder="输入户籍地址"
+                                        prefix-icon="House" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="通讯地址">
+                                    <el-input v-model="memberForm.mailingAddress" placeholder="输入通讯地址"
+                                        prefix-icon="Position" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+                <!-- 紧急联络人 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-white">
+                            <PhoneFilled></PhoneFilled>
+                        </el-icon>
+                        紧急联络人
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="8">
+                                <el-form-item label="姓名">
+                                    <el-input v-model="memberForm.emergencyContact.name" placeholder="联络人姓名" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="关系">
+                                    <el-select v-model="memberForm.emergencyContact.relationship" placeholder="选择关系"
+                                        class="w-full" allow-create filterable>
+                                        <el-option label="配偶" value="配偶" ></el-option>
+                                        <el-option label="父母" value="父母" ></el-option>
+                                        <el-option label="子女" value="子女" ></el-option>
+                                        <el-option label="兄弟姐妹" value="兄弟姐妹" ></el-option>
+                                        <el-option label="朋友" value="朋友" ></el-option>
+                                        <el-option label="同事" value="同事" ></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="手机号">
+                                    <el-input v-model="memberForm.emergencyContact.phone" placeholder="联络人电话"
+                                        prefix-icon="Phone" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+                <!-- 驾驶执照 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <el-icon class="mr-2 text-white">
+                                <Van></Van>
+                            </el-icon>
+                            驾驶执照
+                        </div>
+                        <el-button size="small" plain type="primary" @click="openLicenseTypeDialog">
+                            <el-icon class="mr-1">
+                                <Setting></Setting>
+                            </el-icon>管理类型
+                        </el-button>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="6">
+                                <el-form-item label="驾照类型">
+                                    <el-select v-model="memberForm.driverLicense.type" placeholder="选择类型"
+                                        class="w-full">
+                                        <el-option v-for="type in licenseTypes" :key="type.id" :label="type.name"
+                                            :value="type.id" ></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="签发地">
+                                    <el-input v-model="memberForm.driverLicense.issuePlace" placeholder="例如: 台北市" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="驾照号码">
+                                    <el-input v-model="memberForm.driverLicense.number" placeholder="驾照号码" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="到期时间">
+                                    <el-date-picker v-model="memberForm.driverLicense.expiryDate" type="date"
+                                        placeholder="选择日期" class="w-full" value-format="YYYY-MM-DD" ></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="24">
+                                <el-form-item label="可用载具类型">
+                                    <el-checkbox-group v-model="memberForm.availableVehicleTypes">
+                                        <el-checkbox v-for="item in vehicleTypeOptions" :key="item.value"
+                                            :label="item.value">
+                                            {{ item.label }}
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                    <div class="text-xs text-gray-400 mt-1">预约时按所选车辆载具类型校验；微电车默认不要求驾照。</div>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+                <!-- 证件照片 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-white">
+                            <Picture></Picture>
+                        </el-icon>
+                        证件照片
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                            <div v-for="photo in photoFields" :key="photo.key" class="text-center group">
+                                <div 
+                                    class="relative w-full aspect-[4/3] bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-[color:var(--app-color-primary)] hover:bg-[color:var(--app-color-primary-light-9)] transition-all group-hover:scale-[1.02]">
+                                    <el-icon class="text-2xl text-gray-400 group-hover:text-[color:var(--app-color-primary)] mb-1">
+                                        <Plus></Plus>
+                                    </el-icon>
+                                    <span class="text-xs text-gray-400 group-hover:text-[color:var(--app-color-primary)]">上传</span>
+                                </div>
+                                <div class="mt-2 text-xs text-gray-500">{{ photo.label }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 会员方案 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-[color:var(--app-color-primary)]">
+                            <Medal></Medal>
+                        </el-icon>
+                        会员方案
+                    </div>
+                    <div 
+                        class="bg-gradient-to-br from-blue-50 to-[color:var(--app-color-primary-light-9)] p-4 rounded-xl border border-blue-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="12">
+                                <el-form-item label="选择方案">
+                                    <el-select v-model="memberForm.planId" placeholder="选择方案" class="w-full">
+                                        <el-option v-for="plan in membershipPlans" :key="plan.id" :label="plan.name"
+                                            :value="plan.id" ></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="自动续费">
+                                    <el-switch v-model="memberForm.autoRenew" active-text="开启" inactive-text="关闭"
+                                        style="--el-switch-on-color: var(--app-color-primary)" ></el-switch>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+                <!-- 账号信息 -->
+                <div class="mb-5">
+                    <div class="text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <el-icon class="mr-2 text-[color:var(--app-color-primary)]">
+                            <Key></Key>
+                        </el-icon>
+                        账号信息
+                        <span class="ml-2 text-xs text-gray-400 font-normal">（默认使用手机号作为登录账号）</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <el-row :gutter="16">
+                            <el-col :span="12">
+                                <el-form-item label="登录账号" required>
+                                    <el-input v-model="memberForm.account" placeholder="默认为手机号" :disabled="isEdit"
+                                        prefix-icon="User" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item v-if="!isEdit" label="登录密码" required>
+                                    <el-input v-model="memberForm.password" type="password" placeholder="设置登录密码"
+                                        show-password prefix-icon="Lock" ></el-input>
+                                </el-form-item>
+                                <el-form-item v-else label="登录密码">
+                                    <el-button link type="primary" disabled>如需修改请使用重置密码功能</el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+
+            </el-form>
+
+            <template #footer>
+                <div class="flex justify-end gap-3">
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="saveMember">
+                        <el-icon class="mr-1">
+                            <Check></Check>
+                        </el-icon>保存
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
+<el-dialog v-model="licenseTypeDialogVisible" title="管理驾照类型" width="420px" destroy-on-close class="members-overlay">
+            <div class="flex gap-2 mb-4">
+                <el-input v-model="newLicenseType" placeholder="输入新类型名称" @keyup.enter="addLicenseType" ></el-input>
+                <el-button type="primary" @click="addLicenseType">
+                    <el-icon class="mr-1">
+                        <Plus></Plus>
+                    </el-icon>添加
+                </el-button>
+            </div>
+            <div class="border rounded-lg overflow-hidden max-h-64 overflow-y-auto">
+                <el-table :data="licenseTypes" :show-header="false" size="small">
+                    <el-table-column prop="name">
+                        <template #default="{ row }">
+                            <div class="flex items-center">
+                                <el-icon class="mr-2 text-gray-400">
+                                    <Van></Van>
+                                </el-icon>
+                                {{ row.name }}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="60" align="right">
+                        <template #default="{ row, $index }">
+                            <el-button type="danger" link @click="deleteLicenseType($index)">
+                                <el-icon>
+                                    <Delete></Delete>
+                                </el-icon>
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <template #footer>
+                <el-button @click="licenseTypeDialogVisible = false">关闭</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="changePlanDialogVisible" title="变更会员方案" width="500px" append-to-body destroy-on-close class="members-overlay">
+            <el-form :model="changePlanForm" label-position="top">
+                <el-form-item label="目标方案">
+                    <el-select v-model="changePlanForm.planId" class="w-full" placeholder="请选择方案">
+                        <el-option 
+                            v-for="plan in membershipPlans.filter(p => p.id !== currentMember?.membership?.planId)"
+                            :key="plan.id" :label="plan.name" :value="plan.id">
+                            <span class="float-left">{{ plan.name }}</span>
+                            <span class="float-right text-gray-400 text-xs mt-1">Lv.{{ plan.tier || 1 }}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="缴费周期" v-if="selectedPlan?.type !== 'free'">
+                    <el-select v-model="changePlanForm.pricingCycle" class="w-full">
+                        <el-option label="月缴 (¥99)" value="monthly" ></el-option>
+                        <el-option label="季缴 (¥269)" value="quarterly" ></el-option>
+                        <el-option label="年缴 (¥899)" value="annual" ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="生效方式">
+                    <el-radio-group v-model="changePlanForm.effectiveType">
+                        <el-radio label="immediate">立即生效 (补差价/退款)</el-radio>
+                        <el-radio label="next_cycle">当前周期结束后生效</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-alert v-if="changePlanForm.effectiveType === 'immediate'" title="差价说明: 升级需补缴 ¥100" type="warning"
+                    :closable="false" show-icon class="mb-4" ></el-alert>
+                <el-form-item label="变更原因">
+                    <el-input v-model="changePlanForm.reason" type="textarea" placeholder="请输入变更原因" ></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <el-button @click="changePlanDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmChangePlan">确认变更</el-button>
+            </template>
+        </el-dialog>
+<el-dialog v-model="renewalDialogVisible" title="手动续约" width="450px" append-to-body destroy-on-close class="members-overlay">
+            <div class="bg-blue-50 p-3 rounded mb-4 text-sm text-blue-800">
+                当前到期日: <span class="font-bold">{{ currentMember?.membership?.expireDate }}</span>
+            </div>
+            <el-form :model="renewalForm" label-position="top">
+                <el-form-item label="续约周期">
+                    <el-select v-model="renewalForm.cycle" class="w-full">
+                        <el-option label="续费 1 个月 (¥99)" value="1_month" ></el-option>
+                        <el-option label="续费 3 个月 (¥269)" value="3_month" ></el-option>
+                        <el-option label="续费 1 年 (¥899)" value="1_year" ></el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="text-right text-sm text-gray-500 mb-4">
+                    续约后到期日: <span class="text-[color:var(--app-color-primary)] font-bold">2026-02-15</span>
+                </div>
+                <el-form-item label="支付方式">
+                    <el-radio-group v-model="renewalForm.paymentMethod">
+                        <el-radio label="cash">现金支付</el-radio>
+                        <el-radio label="transfer">线下转账</el-radio>
+                        <el-radio label="pos">POS机刷卡</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="renewalForm.note" placeholder="选填" ></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <el-button @click="renewalDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmRenewal">确认续约</el-button>
+            </template>
+        </el-dialog>
+<el-drawer v-model="planDrawerVisible" title="客户等级方案" size="500px" destroy-on-close class="members-overlay">
+            <template #header>
+                <div class="text-lg font-bold text-gray-800 flex items-center">
+                    <el-icon class="mr-2 text-[color:var(--app-color-primary)]">
+                        <Medal></Medal>
+                    </el-icon>
+                    客户等级方案 - {{ currentMember?.name }}
+                </div>
+            </template>
+
+            <div class="space-y-6" v-if="currentMember">
+                <!-- 当前方案卡片 -->
+                <div 
+                    class="bg-gradient-to-br from-blue-50 to-[color:var(--app-color-primary-light-9)] rounded-xl border border-blue-100 p-5 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-2 opacity-10">
+                        <el-icon :size="100">
+                            <Medal></Medal>
+                        </el-icon>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-sm text-blue-600 font-bold mb-1">当前方案</div>
+                                <h2 class="text-2xl font-bold text-gray-900">{{ currentMember.membership?.planName }}
+                                </h2>
+                            </div>
+                            <el-tag effect="dark" :type="getMembershipColor(currentMember.membership?.planId)">
+                                Lv.{{ getPlanTier(currentMember.membership?.planId) }}
+                            </el-tag>
+                        </div>
+
+                        <div class="bg-white/60 rounded-lg p-3 backdrop-blur-sm space-y-2 text-sm mb-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">缴费周期</span>
+                                <span class="font-medium text-gray-900">月缴 ¥99</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">到期日期</span>
+                                <span class="font-medium text-gray-900 font-mono">{{
+                                    currentMember.membership?.expireDate || '永久' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500">自动续费</span>
+                                <el-switch v-model="currentMember.membership.autoRenew" size="small" active-text="开启"
+                                    inactive-text="关闭" ></el-switch>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <el-button type="primary" class="flex-1 shadow-sm" icon="Refresh"
+                                @click="openChangePlanDialog">变更方案</el-button>
+                            <el-button type="success" class="flex-1 shadow-sm" icon="Money"
+                                @click="openRenewalDialog">手动续约</el-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 权益预览 -->
+                <div>
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <el-icon class="mr-1 text-gray-500">
+                            <Star></Star>
+                        </el-icon> 当前权益
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div v-for="benefit in getPlanBenefits(currentMember.membership?.planId)" :key="benefit"
+                            class="bg-gray-50 rounded px-3 py-2 text-xs text-gray-600 flex items-center">
+                            <el-icon class="mr-1 text-green-500">
+                                <Check></Check>
+                            </el-icon> {{ benefit }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快捷操作区 -->
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <el-icon class="mr-1 text-gray-500">
+                            <Warning></Warning>
+                        </el-icon> 危险操作
+                    </h3>
+                    <div class="bg-red-50 rounded-lg p-4 border border-red-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-bold text-red-800">解约方案</div>
+                            <div class="text-xs text-red-500 mt-1">退回到免费普通会员，立即失效</div>
+                        </div>
+                        <el-button type="danger" plain size="small" @click="handleTerminatePlan">解约</el-button>
+                    </div>
+                </div>
+
+                <!-- 变更记录 -->
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <el-icon class="mr-1 text-gray-500">
+                            <Clock></Clock>
+                        </el-icon> 变更记录
+                    </h3>
+                    <el-timeline>
+                        <el-timeline-item v-for="(activity, index) in planHistory" :key="index" :type="activity.type"
+                            :timestamp="activity.timestamp" size="small">
+                            {{ activity.content }} <span class="text-xs text-gray-400 ml-2">by {{ activity.operator
+                                }}</span>
+                        </el-timeline-item>
+                    </el-timeline>
+                </div>
+            </div>
+        </el-drawer>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed, watch, onMounted, onBeforeUnmount } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+// === Mock Data ===
+                const membershipPlans = ref([
+                    { id: 'MP001', name: '普通会员' },
+                    { id: 'MP002', name: '银牌会员' },
+                    { id: 'MP003', name: '金牌会员' },
+                    { id: 'MP004', name: '钻石会员' }
+                ]);
+
+                const corporateList = ref([
+                    { id: 'CORP001', name: 'Google Taiwan' },
+                    { id: 'CORP002', name: 'TSMC 台积电' },
+                    { id: 'CORP003', name: 'Microsoft Taiwan' },
+                    { id: 'CORP004', name: 'Apple Taiwan' }
+                ]);
+
+                const licenseTypes = ref([
+                    { id: 'LT01', name: '普通小型车' },
+                    { id: 'LT02', name: '普通重型机车' },
+                    { id: 'LT03', name: '大型重型机车' },
+                    { id: 'LT04', name: '大客车' }
+                ]);
+
+                const vehicleTypeOptions = ref([
+                    { value: 'car', label: '汽车' },
+                    { value: 'motorcycle', label: '摩托车' },
+                    { value: 'microElectric', label: '微电车' }
+                ]);
+
+                const inferAvailableVehicleTypes = (driverLicense = {}) => {
+                    const result = ['microElectric'];
+                    if (driverLicense.type === 'LT01' || driverLicense.type === 'LT04') result.unshift('car');
+                    if (driverLicense.type === 'LT02' || driverLicense.type === 'LT03') result.unshift('motorcycle');
+                    return [...new Set(result)];
+                };
+
+                // 步骤导航配置
+                const currentStep = ref(0);
+                const formSteps = ref([
+                    { title: '账号资料', icon: 'UserFilled' },
+                    { title: '地址联络', icon: 'Location' },
+                    { title: '驾照证件', icon: 'Van' },
+                    { title: '会员方案', icon: 'Medal' }
+                ]);
+
+                // 照片字段配置
+                const photoFields = ref([
+                    { key: 'idCardFront', label: '身份证正面' },
+                    { key: 'idCardBack', label: '身份证反面' },
+                    { key: 'licenseFront', label: '驾照正面' },
+                    { key: 'licenseBack', label: '驾照反面' },
+                    { key: 'selfie', label: '自拍照' }
+                ]);
+
+                const defaultMembers = [
+                    {
+                        id: 'U10001', accountType: 'personal',
+                        account: '0912345678', name: '张三', surname: '张', firstName: '三',
+                        gender: 'male', dob: '1990-01-01', phone: '0912-345-678', email: 'zhangsan@example.com', idNumber: 'A123456789',
+                        householdAddress: '台北市信义区信义路五段7号', mailingAddress: '台北市信义区信义路五段7号',
+                        emergencyContact: { name: '李四', relationship: '配偶', phone: '0987-654-321' },
+                        driverLicense: { type: 'LT01', issuePlace: '台北市', number: 'DL123456', expiryDate: '2030-01-01' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        membership: { planId: 'MP003', planName: '金牌会员', expireDate: '2025-06-30', autoRenew: true },
+                        corporate: null,
+                        status: 'active',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'official_web',
+                        createTime: '2024-01-15 10:30', lastLoginTime: '2024-05-06 14:20',
+                        orderHistory: [
+                            { orderId: 'ZT2405010001', createTime: '2024-05-01 10:00', vehicle: 'Toyota RAV4', amount: 1920, status: 'completed', statusText: '已完成' },
+                        ]
+                    },
+                    {
+                        id: 'U10002', accountType: 'personal',
+                        account: '0922333444', name: '李四', surname: '李', firstName: '四',
+                        gender: 'male', dob: '1992-02-02', phone: '0922-333-444', email: 'lisi@example.com', idNumber: 'B123456789',
+                        householdAddress: '', mailingAddress: '',
+                        emergencyContact: {}, driverLicense: {},
+                        availableVehicleTypes: ['microElectric'],
+                        membership: { planId: 'MP001', planName: '普通会员', expireDate: null, autoRenew: false },
+                        corporate: null,
+                        status: 'suspended',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'ios',
+                        createTime: '2024-02-15 10:30', lastLoginTime: '2024-03-01 14:20',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10003', accountType: 'personal',
+                        account: '0933444555', name: '王五', surname: '王', firstName: '五',
+                        gender: 'male', dob: '1988-08-08', phone: '0933-444-555', email: 'wangwu@example.com', idNumber: 'C123456789',
+                        householdAddress: '', mailingAddress: '',
+                        emergencyContact: {}, driverLicense: {},
+                        availableVehicleTypes: ['microElectric'],
+                        membership: { planId: 'MP001', planName: '普通会员', expireDate: null, autoRenew: false },
+                        corporate: null,
+                        status: 'blacklisted',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'android',
+                        createTime: '2023-11-15 10:30', lastLoginTime: '2023-12-01 14:20',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10004', accountType: 'personal',
+                        account: '0944555666', name: '赵六', surname: '赵', firstName: '六',
+                        gender: 'female', dob: '1995-05-05', phone: '0944-555-666', email: 'zhaoliu@example.com', idNumber: 'D123456789',
+                        householdAddress: '', mailingAddress: '',
+                        emergencyContact: {}, driverLicense: {},
+                        availableVehicleTypes: ['microElectric'],
+                        membership: { planId: 'MP001', planName: '普通会员', expireDate: null, autoRenew: false },
+                        corporate: null,
+                        status: 'archived',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'official_web',
+                        createTime: '2022-01-01 10:30', lastLoginTime: '2022-06-01 14:20',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10005', accountType: 'personal',
+                        account: '0911222333', name: '林志明', surname: '林', firstName: '志明',
+                        gender: 'male', dob: '1985-05-05', phone: '0911-222-333', email: 'chihming.lin@example.com', idNumber: 'G123456789',
+                        householdAddress: '台北市信义区', mailingAddress: '台北市信义区',
+                        emergencyContact: { name: '', relationship: '', phone: '' },
+                        driverLicense: { type: '', issuePlace: '', number: '', expiryDate: '' },
+                        availableVehicleTypes: ['microElectric'],
+                        membership: { planId: 'MP004', planName: '钻石会员', expireDate: '2030-12-31', autoRenew: true },
+                        corporate: { companyId: 'CORP001', companyName: 'Google Taiwan', taxId: '12345678' },
+                        status: 'active',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'official_web',
+                        createTime: '2023-01-01 09:00', lastLoginTime: '2024-05-10 09:00',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10006', accountType: 'personal',
+                        account: '0955666777', name: '陈怡君', surname: '陈', firstName: '怡君',
+                        gender: 'female', dob: '1990-10-10', phone: '0955-666-777', email: 'yijun.chen@example.com', idNumber: 'T123456789',
+                        householdAddress: '新竹科学园区', mailingAddress: '新竹科学园区',
+                        emergencyContact: { name: '', relationship: '', phone: '' },
+                        driverLicense: { type: '', issuePlace: '', number: '', expiryDate: '' },
+                        availableVehicleTypes: ['microElectric'],
+                        membership: { planId: 'MP003', planName: '金牌会员', expireDate: '2025-12-31', autoRenew: true },
+                        corporate: { companyId: 'CORP002', companyName: 'TSMC 台积电', taxId: '87654321' },
+                        status: 'active',
+                        reviewStatus: 'approved',
+                        registrationChannel: 'official_web',
+                        createTime: '2024-02-01 10:00', lastLoginTime: '2024-05-09 14:00',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10007', accountType: 'personal',
+                        account: '0988000111', name: '王小敏', surname: '王', firstName: '小敏',
+                        gender: 'female', dob: '2000-01-01', phone: '0988-000-111', email: 'xiaomin@example.com', idNumber: 'E123456789',
+                        householdAddress: '台中市', mailingAddress: '',
+                        emergencyContact: { name: '张伟', relationship: '朋友', phone: '0911-000-111' },
+                        driverLicense: { type: 'LT01', issuePlace: '台中市', number: 'DL888999', expiryDate: '2032-01-01' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        membership: { planId: 'MP001', planName: '普通会员', expireDate: null, autoRenew: false },
+                        corporate: null,
+                        status: 'active',
+                        reviewStatus: 'pending',
+                        registrationChannel: 'android',
+                        createTime: '2024-05-10 08:00', lastLoginTime: '',
+                        orderHistory: []
+                    },
+                    {
+                        id: 'U10008', accountType: 'personal',
+                        account: '0988000222', name: '陈志强', surname: '陈', firstName: '志强',
+                        gender: 'male', dob: '1995-05-05', phone: '0988-000-222', email: 'zhiqiang@example.com', idNumber: 'F123456789',
+                        householdAddress: '高雄市', mailingAddress: '',
+                        emergencyContact: {}, driverLicense: { type: 'LT01', issuePlace: '高雄市', number: 'DL777666', expiryDate: '2028-05-05' },
+                        availableVehicleTypes: ['car', 'microElectric'],
+                        membership: { planId: 'MP001', planName: '普通会员', expireDate: null, autoRenew: false },
+                        corporate: null,
+                        status: 'active',
+                        reviewStatus: 'pending',
+                        registrationChannel: 'ios',
+                        createTime: '2024-05-10 09:30', lastLoginTime: '',
+                        orderHistory: []
+                    }
+                ];
+
+                // Data Persistence Logic
+                // Data Persistence Logic (Restored to Simple Mode)
+                const storedMembersRaw = localStorage.getItem('rimo_members');
+                let initialMembers = storedMembersRaw ? JSON.parse(storedMembersRaw) : defaultMembers;
+
+                // Reset to default if data set is too large (from previous bulk generation)
+                if (initialMembers.length > 20) {
+                    console.log('Resetting mock data to defaults...');
+                    initialMembers = defaultMembers;
+                    localStorage.setItem('rimo_members', JSON.stringify(initialMembers));
+                }
+
+                const members = ref(initialMembers);
+
+                const summaryStats = computed(() => ({
+                    total: members.value.length,
+                    corporate: members.value.filter(member => !!member.corporate).length,
+                    suspended: members.value.filter(member => member.status === 'suspended').length,
+                    active: members.value.filter(member => member.status === 'active' && member.reviewStatus === 'approved').length
+                }));
+
+                // Initialize default logic for existing mock data if missing new fields
+                members.value.forEach(m => {
+                    m.accountType = 'personal';
+                    if (!m.reviewStatus) m.reviewStatus = 'approved';
+                    if (!m.registrationChannel) m.registrationChannel = 'official_web';
+                    if (!Object.prototype.hasOwnProperty.call(m, 'corporate')) m.corporate = null;
+                    if (!Array.isArray(m.availableVehicleTypes)) m.availableVehicleTypes = inferAvailableVehicleTypes(m.driverLicense);
+                    if (m.id === 'U10005') {
+                        m.name = '林志明';
+                        m.surname = '林';
+                        m.firstName = '志明';
+                        m.email = 'chihming.lin@example.com';
+                    }
+                    if (m.id === 'U10006') {
+                        m.name = '陈怡君';
+                        m.surname = '陈';
+                        m.firstName = '怡君';
+                        m.email = 'yijun.chen@example.com';
+                        if (m.corporate) m.corporate.companyName = 'TSMC 台积电';
+                    }
+                });
+
+                watch(members, (newVal) => {
+                    localStorage.setItem('rimo_members', JSON.stringify(newVal));
+                }, { deep: true });
+
+                // === Filters ===
+                const filters = reactive({
+                    keyword: '',
+                    corporateQualification: '',
+                    planId: '',
+                    status: '',
+                    reviewStatus: '',
+                    registrationChannel: '',
+                    vehicleType: '',
+                    registrationDateRange: []
+                });
+                const activeSummaryCard = ref('');
+                const showMoreFilters = ref(false);
+                const filterToolbar = ref(null);
+                const filterLayoutTier = ref(1);
+                let isApplyingSummaryFilter = false;
+                let filterResizeObserver = null;
+
+                const updateFilterLayout = () => {
+                    const width = filterToolbar.value?.clientWidth || 0;
+                    if (width >= 1570) filterLayoutTier.value = 6;
+                    else if (width >= 1405) filterLayoutTier.value = 5;
+                    else if (width >= 1260) filterLayoutTier.value = 4;
+                    else if (width >= 1130) filterLayoutTier.value = 3;
+                    else if (width >= 980) filterLayoutTier.value = 2;
+                    else filterLayoutTier.value = 1;
+                };
+
+                onMounted(() => {
+                    filterResizeObserver = new ResizeObserver(updateFilterLayout);
+                    if (filterToolbar.value) filterResizeObserver.observe(filterToolbar.value);
+                    updateFilterLayout();
+                });
+
+                onBeforeUnmount(() => {
+                    filterResizeObserver?.disconnect();
+                });
+
+                const parseDateTime = (value) => {
+                    if (!value) return null;
+                    if (value instanceof Date) return value;
+                    const parsed = new Date(String(value).replace(' ', 'T'));
+                    return Number.isNaN(parsed.getTime()) ? null : parsed;
+                };
+
+                const currentPage = ref(1);
+                const pageSize = ref(20);
+
+                watch(() => [
+                    filters.keyword,
+                    filters.corporateQualification,
+                    filters.planId,
+                    filters.status,
+                    filters.reviewStatus,
+                    filters.registrationChannel,
+                    filters.vehicleType,
+                    filters.registrationDateRange?.[0] ? new Date(filters.registrationDateRange[0]).getTime() : '',
+                    filters.registrationDateRange?.[1] ? new Date(filters.registrationDateRange[1]).getTime() : ''
+                ], () => {
+                    if (!isApplyingSummaryFilter) {
+                        activeSummaryCard.value = '';
+                    }
+                    currentPage.value = 1;
+                }, { flush: 'sync' });
+
+                const filteredMembers = computed(() => {
+                    return members.value.filter(m => {
+                        const matchKeyword = !filters.keyword ||
+                            m.account.toLowerCase().includes(filters.keyword.toLowerCase()) ||
+                            m.name.includes(filters.keyword) ||
+                            m.phone.includes(filters.keyword) ||
+                            m.email.toLowerCase().includes(filters.keyword.toLowerCase()) ||
+                            m.idNumber.includes(filters.keyword);
+                        const matchQualification = !filters.corporateQualification ||
+                            (filters.corporateQualification === 'personal_only' && !m.corporate) ||
+                            (filters.corporateQualification === 'corporate_qualified' && !!m.corporate);
+                        const matchPlan = !filters.planId || m.membership.planId === filters.planId;
+                        const displayStatus = m.reviewStatus === 'pending' || m.reviewStatus === 'rejected'
+                            ? m.reviewStatus
+                            : m.status;
+                        const matchStatus = !filters.status || displayStatus === filters.status;
+                        const matchReviewStatus = !filters.reviewStatus || m.reviewStatus === filters.reviewStatus;
+                        const matchRegistrationChannel = !filters.registrationChannel
+                            || m.registrationChannel === filters.registrationChannel;
+                        const matchVehicleType = !filters.vehicleType
+                            || m.availableVehicleTypes.includes(filters.vehicleType);
+                        const registrationTimestamp = parseDateTime(m.createTime)?.getTime();
+                        const registrationStart = filters.registrationDateRange?.[0]
+                            ? new Date(filters.registrationDateRange[0]).setHours(0, 0, 0, 0)
+                            : null;
+                        const registrationEnd = filters.registrationDateRange?.[1]
+                            ? new Date(filters.registrationDateRange[1]).setHours(23, 59, 59, 999)
+                            : null;
+                        const matchRegistrationDate = registrationStart === null || registrationEnd === null
+                            || (Number.isFinite(registrationTimestamp)
+                                && registrationTimestamp >= registrationStart
+                                && registrationTimestamp <= registrationEnd);
+
+                        return matchKeyword && matchQualification && matchPlan && matchStatus
+                            && matchReviewStatus && matchRegistrationChannel && matchVehicleType && matchRegistrationDate;
+                    });
+                });
+
+                const paginatedMembers = computed(() => {
+                    const start = (currentPage.value - 1) * pageSize.value;
+                    return filteredMembers.value.slice(start, start + pageSize.value);
+                });
+
+                const clearMemberFilters = () => {
+                    filters.keyword = '';
+                    filters.corporateQualification = '';
+                    filters.planId = '';
+                    filters.status = '';
+                    filters.reviewStatus = '';
+                    filters.registrationChannel = '';
+                    filters.vehicleType = '';
+                    filters.registrationDateRange = [];
+                };
+
+                const applySummaryFilter = (type) => {
+                    isApplyingSummaryFilter = true;
+
+                    if (activeSummaryCard.value === type) {
+                        clearMemberFilters();
+                        activeSummaryCard.value = '';
+                        currentPage.value = 1;
+                        isApplyingSummaryFilter = false;
+                        return;
+                    }
+
+                    clearMemberFilters();
+                    if (type === 'corporate') {
+                        filters.corporateQualification = 'corporate_qualified';
+                    }
+                    if (type === 'suspended') {
+                        filters.status = 'suspended';
+                    }
+                    if (type === 'active') {
+                        filters.status = 'active';
+                    }
+
+                    activeSummaryCard.value = type;
+                    currentPage.value = 1;
+                    isApplyingSummaryFilter = false;
+                };
+
+                const resetFilters = () => {
+                    isApplyingSummaryFilter = true;
+                    clearMemberFilters();
+                    activeSummaryCard.value = '';
+                    currentPage.value = 1;
+                    isApplyingSummaryFilter = false;
+                };
+
+                // === Helpers ===
+                const getMembershipColor = (planId) => {
+                    const colors = { 'MP001': 'info', 'MP002': '', 'MP003': 'warning', 'MP004': 'danger' };
+                    return colors[planId] || 'info';
+                };
+
+                // === Dialog State ===
+                const dialogVisible = ref(false);
+                const isEdit = ref(false);
+
+                // 驾照类型管理 Dialog
+                const licenseTypeDialogVisible = ref(false);
+                const newLicenseType = ref('');
+
+                const memberForm = reactive({
+                    id: '',
+                    account: '', password: '',
+                    surname: '', firstName: '', gender: 'male', dob: '',
+                    phone: '', email: '', idNumber: '',
+                    householdAddress: '', mailingAddress: '',
+                    emergencyContact: { name: '', relationship: '', phone: '' },
+                    driverLicense: { type: '', issuePlace: '', number: '', expiryDate: '' },
+                    availableVehicleTypes: ['microElectric'],
+                    planId: 'MP001', expireDate: '', autoRenew: false,
+                    companyId: '' // 保留字段，虽然不再从弹窗选择
+                });
+
+                // 自动将手机号同步到账号字段（仅新增时生效）
+                watch(() => memberForm.phone, (newPhone) => {
+                    if (!isEdit.value && newPhone) {
+                        memberForm.account = newPhone;
+                    }
+                });
+
+                const openCreateDialog = () => {
+                    isEdit.value = false;
+                    Object.assign(memberForm, {
+                        id: 'U' + Date.now(),
+                        account: '', password: '',
+                        surname: '', firstName: '', gender: 'male', dob: '',
+                        phone: '', email: '', idNumber: '',
+                        householdAddress: '', mailingAddress: '',
+                        emergencyContact: { name: '', relationship: '', phone: '' },
+                        driverLicense: { type: '', issuePlace: '', number: '', expiryDate: '' },
+                        availableVehicleTypes: ['microElectric'],
+                        planId: 'MP001', expireDate: '', autoRenew: false,
+                        companyId: ''
+                    });
+                    currentStep.value = 0;
+                    dialogVisible.value = true;
+                };
+
+                const openEditDialog = (member) => {
+                    isEdit.value = true;
+                    Object.assign(memberForm, {
+                        id: member.id,
+                        account: member.account,
+                        password: '', // 编辑时不回显密码
+                        surname: member.surname || member.name.charAt(0), // 简单回退策略
+                        firstName: member.firstName || member.name.slice(1),
+                        gender: member.gender || 'male',
+                        dob: member.dob || '',
+                        phone: member.phone,
+                        email: member.email,
+                        idNumber: member.idNumber,
+                        householdAddress: member.householdAddress || '',
+                        mailingAddress: member.mailingAddress || '',
+                        // Deep copy objects to avoid reference modification
+                        emergencyContact: { ...member.emergencyContact } || { name: '', relationship: '', phone: '' },
+                        driverLicense: { ...member.driverLicense } || { type: '', issuePlace: '', number: '', expiryDate: '' },
+                        availableVehicleTypes: Array.isArray(member.availableVehicleTypes) ? [...member.availableVehicleTypes] : inferAvailableVehicleTypes(member.driverLicense),
+
+                        planId: member.membership.planId,
+                        expireDate: member.membership.expireDate,
+                        autoRenew: member.membership.autoRenew,
+                        companyId: member.corporate?.companyId || ''
+                    });
+                    currentStep.value = 0;
+                    dialogVisible.value = true;
+                };
+
+                const openDetailDialog = (member) => {
+                    window.location.href = `member_detail.html?id=${member.id}`;
+                };
+
+                const saveMember = () => {
+                    if (!memberForm.account || !memberForm.surname || !memberForm.firstName || !memberForm.phone || !memberForm.idNumber) {
+                        ElMessage.warning('请填写必填项 (账号、姓名、手机、身份证)');
+                        return;
+                    }
+                    if (!isEdit.value && !memberForm.password) {
+                        ElMessage.warning('新增用户请设置密码');
+                        return;
+                    }
+
+                    const plan = membershipPlans.value.find(p => p.id === memberForm.planId);
+
+                    const fullName = memberForm.surname + memberForm.firstName;
+
+                    const memberData = {
+                        id: memberForm.id,
+                        accountType: 'personal', // 默认为个人
+                        account: memberForm.account,
+                        name: fullName,
+                        surname: memberForm.surname,
+                        firstName: memberForm.firstName,
+                        gender: memberForm.gender,
+                        dob: memberForm.dob,
+                        phone: memberForm.phone,
+                        email: memberForm.email,
+                        idNumber: memberForm.idNumber,
+                        householdAddress: memberForm.householdAddress,
+                        mailingAddress: memberForm.mailingAddress,
+                        emergencyContact: { ...memberForm.emergencyContact },
+                        driverLicense: { ...memberForm.driverLicense },
+                        availableVehicleTypes: [...memberForm.availableVehicleTypes],
+
+                        membership: {
+                            planId: memberForm.planId,
+                            planName: plan?.name || '普通会员',
+                            expireDate: memberForm.expireDate,
+                            autoRenew: memberForm.autoRenew
+                        },
+                        corporate: null, // 暂时不关联企业
+                        status: 'active',
+                        createTime: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                        lastLoginTime: '',
+                        orderHistory: []
+                    };
+
+                    if (isEdit.value) {
+                        const idx = members.value.findIndex(m => m.id === memberForm.id);
+                        if (idx !== -1) {
+                            // 保留原有状态字段
+                            memberData.status = members.value[idx].status;
+                            memberData.createTime = members.value[idx].createTime;
+                            memberData.lastLoginTime = members.value[idx].lastLoginTime;
+                            memberData.orderHistory = members.value[idx].orderHistory;
+                            memberData.corporate = members.value[idx].corporate; // 只是编辑保留企业关联
+                            memberData.accountType = 'personal';
+
+                            members.value[idx] = memberData;
+                        }
+                    } else {
+                        members.value.unshift(memberData);
+                    }
+
+                    dialogVisible.value = false;
+                    ElMessage.success('保存成功');
+                };
+
+                // === 驾照类型管理 ===
+                const openLicenseTypeDialog = () => {
+                    licenseTypeDialogVisible.value = true;
+                };
+
+                const addLicenseType = () => {
+                    if (!newLicenseType.value) return;
+                    licenseTypes.value.push({
+                        id: 'LT' + Date.now(),
+                        name: newLicenseType.value
+                    });
+                    newLicenseType.value = '';
+                };
+
+                const deleteLicenseType = (index) => {
+                    licenseTypes.value.splice(index, 1);
+                };
+
+
+
+                // --- Plan Management Logic ---
+                const planDrawerVisible = ref(false);
+                const changePlanDialogVisible = ref(false);
+                const renewalDialogVisible = ref(false);
+                const currentMember = ref(null);
+                const planHistory = ref([]);
+
+                const changePlanForm = reactive({
+                    planId: '',
+                    pricingCycle: 'monthly',
+                    effectiveType: 'immediate',
+                    reason: ''
+                });
+
+                const renewalForm = reactive({
+                    cycle: '1_month',
+                    paymentMethod: 'cash',
+                    note: ''
+                });
+
+                const selectedPlan = computed(() => {
+                    return membershipPlans.value.find(p => p.id === changePlanForm.planId);
+                });
+
+                const getPlanTier = (planId) => {
+                    // Mock tiers
+                    const map = { 'MP001': 1, 'MP002': 2, 'MP003': 3, 'MP004': 4 };
+                    return map[planId] || 1;
+                };
+
+                const getPlanBenefits = (planId) => {
+                    // Mock benefits
+                    const map = {
+                        'MP001': ['基础租车', '积分累积'],
+                        'MP002': ['积分1.5倍', '专属客服', '生日礼'],
+                        'MP003': ['积分2倍', '免费升级车型', 'VIP休息室'],
+                        'MP004': ['积分3倍', '优先预订', '机场接送', '管家服务']
+                    };
+                    return map[planId] || ['基础服务'];
+                };
+
+                const handleCommand = (command, row) => {
+                    if (command === 'managePlan') {
+                        currentMember.value = row;
+                        // Mock History
+                        planHistory.value = [
+                            { content: '自动续费成功 (月缴)', timestamp: '2026-01-15', type: 'success', operator: '系统' },
+                            { content: '升级为银牌会员', timestamp: '2025-12-15', type: 'primary', operator: '管理员' },
+                            { content: '注册成为普通会员', timestamp: '2025-11-01', operator: '用户' }
+                        ];
+                        planDrawerVisible.value = true;
+                    } else if (command === 'suspend') {
+                        ElMessageBox.confirm(`确定要停权会员 "${row.name}" 吗？停权后该用户将无法下单。`, '停权操作', { type: 'warning' })
+                            .then(() => {
+                                row.status = 'suspended';
+                                ElMessage.warning('账号已停权');
+                            });
+                    } else if (command === 'archive') {
+                        ElMessageBox.confirm(`确定要封存会员 "${row.name}" 吗？`, '封存操作', { type: 'info' })
+                            .then(() => {
+                                row.status = 'archived';
+                                ElMessage.info('账号已封存');
+                            });
+                    } else if (command === 'blacklist') {
+                        ElMessageBox.prompt('请输入加入黑名单的原因', '加入黑名单', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            inputPattern: /.+/,
+                            inputErrorMessage: '原因不能为空'
+                        }).then(({ value }) => {
+                            row.status = 'blacklisted';
+                            ElMessage.error(`账号已加入黑名单: ${value}`);
+                        });
+                    } else if (command === 'activate') {
+                        ElMessageBox.confirm(`确定要恢复会员 "${row.name}" 为正常状态吗？`, '恢复操作', { type: 'success' })
+                            .then(() => {
+                                row.status = 'active';
+                                ElMessage.success('账号已恢复正常');
+                            });
+                    }
+                };
+
+                const openChangePlanDialog = () => {
+                    changePlanForm.planId = '';
+                    changePlanForm.pricingCycle = 'monthly';
+                    changePlanForm.effectiveType = 'immediate';
+                    changePlanForm.reason = '';
+                    changePlanDialogVisible.value = true;
+                };
+
+                const confirmChangePlan = () => {
+                    if (!changePlanForm.planId) {
+                        ElMessage.warning('请选择目标方案');
+                        return;
+                    }
+                    const newPlan = membershipPlans.value.find(p => p.id === changePlanForm.planId);
+                    currentMember.value.membership.planId = newPlan.id;
+                    currentMember.value.membership.planName = newPlan.name;
+
+                    planHistory.value.unshift({
+                        content: `变更为 ${newPlan.name}`,
+                        timestamp: new Date().toISOString().split('T')[0],
+                        type: 'warning',
+                        operator: '管理员'
+                    });
+
+                    ElMessage.success('会员方案变更成功');
+                    changePlanDialogVisible.value = false;
+                };
+
+                const handleTerminatePlan = () => {
+                    ElMessageBox.confirm('确定要解约当前方案吗？解约后将降级为免费普通会员。', '警告', { type: 'error' })
+                        .then(() => {
+                            currentMember.value.membership.planId = 'MP001';
+                            currentMember.value.membership.planName = '普通会员';
+                            currentMember.value.membership.expireDate = null;
+                            currentMember.value.membership.autoRenew = false;
+
+                            planHistory.value.unshift({
+                                content: `解约当前方案，降级为普通会员`,
+                                timestamp: new Date().toISOString().split('T')[0],
+                                type: 'danger',
+                                operator: '管理员'
+                            });
+                            ElMessage.success('已解约，恢复为普通会员');
+                        });
+                };
+
+                const openRenewalDialog = () => {
+                    renewalForm.cycle = '1_month';
+                    renewalForm.note = '';
+                    renewalDialogVisible.value = true;
+                };
+
+                const confirmRenewal = () => {
+                    // Mock extending date
+                    currentMember.value.membership.expireDate = '2026-02-15'; // Mock updated date
+                    planHistory.value.unshift({
+                        content: `手动续约成功`,
+                        timestamp: new Date().toISOString().split('T')[0],
+                        type: 'success',
+                        operator: '管理员'
+                    });
+                    ElMessage.success('续约成功');
+                    renewalDialogVisible.value = false;
+                };
+
+                const exportData = () => {
+                    ElMessage.info('导出功能开发中');
+                };
+
+                return {
+                    members, membershipPlans, corporateList, licenseTypes, vehicleTypeOptions, formSteps, currentStep, photoFields,
+                    filters, currentPage, pageSize, activeSummaryCard, showMoreFilters, filterToolbar, filterLayoutTier,
+                    filteredMembers, paginatedMembers, summaryStats,
+                    resetFilters, applySummaryFilter,
+                    getMembershipColor,
+                    dialogVisible, isEdit, memberForm,
+
+                    licenseTypeDialogVisible, newLicenseType, openLicenseTypeDialog, addLicenseType, deleteLicenseType,
+                    planDrawerVisible, changePlanDialogVisible, renewalDialogVisible,
+                    currentMember, planHistory, changePlanForm, renewalForm, selectedPlan,
+                    getPlanTier, getPlanBenefits, openChangePlanDialog, confirmChangePlan,
+                    handleTerminatePlan, openRenewalDialog, confirmRenewal,
+                    openCreateDialog, openEditDialog, openDetailDialog, saveMember,
+                    handleCommand, exportData, Delete: ElementPlusIconsVue.Delete,
+                    Picture: ElementPlusIconsVue.Picture,
+                    Medal: ElementPlusIconsVue.Medal,
+                    Warning: ElementPlusIconsVue.Warning,
+                    Star: ElementPlusIconsVue.Star,
+                    Clock: ElementPlusIconsVue.Clock,
+                    Money: ElementPlusIconsVue.Money,
+                    Plus: ElementPlusIconsVue.Plus
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+if (typeof ElementPlusIconsVue !== 'undefined') {
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component);
+            }
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

@@ -9,7 +9,9 @@ import {
   getClientRuntimeStatus,
   getDefaultPage,
 } from '@/features/projects/project-model';
+import { DEFAULT_PROJECT_THEME } from '@/features/projects/project-config-model';
 import { Alert, Button, Card, ConfigProvider, Form, Input, Spin, Typography } from '@/ui/ant';
+import { PlatformBrand } from '@/ui/platform/PlatformBrand';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
 const { Text, Title } = Typography;
@@ -50,13 +52,15 @@ export function ClientLoginPage() {
     navigate(page ? `/p/${projectId}/${clientId}/${page.path}` : `/p/${projectId}/${clientId}`);
   };
 
-  const accent = project.theme?.primary || '#1677ff';
+  const accent = project.theme?.primary || DEFAULT_PROJECT_THEME.primary;
   return (
     <ConfigProvider theme={{ token: { colorPrimary: accent, colorInfo: accent } }}>
       <main className="client-login" style={{ '--project-accent': accent } as CSSProperties}>
         <header className="client-login__header">
           <Button className="client-login__brand" type="text" onClick={() => navigate('/')}>
-            <span>{(project.shortName || project.name).slice(0, 1).toUpperCase()}</span>
+            <span className="client-login__brand-mark" aria-hidden="true">
+              <PlatformBrand variant="mark" alt="" />
+            </span>
             <div>
               <strong>{project.name}</strong>
               <small>{client.name}</small>
@@ -69,14 +73,7 @@ export function ClientLoginPage() {
             <Text className="home-kicker">{project.shortName || project.name}</Text>
             <Title level={2}>{client.name}</Title>
             <Text type="secondary">{client.description || '登录后进入客户端'}</Text>
-            {runtimeStatus.state === 'legacy-vue' ? (
-              <Alert
-                showIcon
-                type="info"
-                title="该客户端没有可运行页面"
-                description="旧 Vue 页面未启用，React 入口不会执行模拟登录。"
-              />
-            ) : runtimeStatus.state === 'index-missing' || runtimeStatus.state === 'empty' ? (
+            {runtimeStatus.state === 'index-missing' || runtimeStatus.state === 'empty' ? (
               <Alert
                 showIcon
                 type={runtimeStatus.state === 'index-missing' ? 'error' : 'info'}

@@ -11,9 +11,8 @@ import {
 } from './filesystem.js';
 import {
   isHtmlPrototypeContentSource,
-  isSupportedPlatformExportFormat,
-  readPlatformExportManifest,
-} from './html-export-format.js';
+  readPrototypeManifest,
+} from './html-prototype-format.js';
 import { listProjectLocations, resolveProjectPrototypeSources } from './project-mounts.js';
 import { orderClientRouteData } from './route-order.js';
 
@@ -103,8 +102,7 @@ function createRoutePath(relativePath, explicitPath = '') {
   return routePath || `page-${shortHash(relativePath)}`;
 }
 
-function routePathFromPlatformExportManifest(manifest) {
-  if (!isSupportedPlatformExportFormat(manifest?.exportFormat)) return '';
+function routePathFromPrototypeManifest(manifest) {
   const routePath =
     String(manifest?.routePath || '')
       .split('/')
@@ -227,12 +225,12 @@ export async function scanHtmlPrototypePages(projectsRoot, { mounts = {} } = {})
         if (!HTML_EXTENSIONS.has(path.extname(absolutePath).toLowerCase())) continue;
         const relativePath = toWebPath(path.relative(prototypeSource.prototypeRoot, absolutePath));
         const source = await fs.readFile(absolutePath, 'utf8');
-        const exportManifest = readPlatformExportManifest(source);
+        const prototypeManifest = readPrototypeManifest(source);
         const isContentOnlyHtml = isHtmlPrototypeContentSource(source);
         const clientId = resolveClientId({
           prototype: item.manifest.prototype,
           sourceClientId: prototypeSource.clientId,
-          manifestClientId: exportManifest?.client,
+          manifestClientId: prototypeManifest?.client,
           relativePath,
           clients,
         });
@@ -242,18 +240,18 @@ export async function scanHtmlPrototypePages(projectsRoot, { mounts = {} } = {})
           ? relativePath
           : resolveSourceRelativePath(relativePath, clientId, clients);
         const explicitPath = isContentOnlyHtml
-          ? routePathFromPlatformExportManifest(exportManifest)
+          ? routePathFromPrototypeManifest(prototypeManifest)
           : readMetaValue(source, 'prototype-path');
         const pagePath = createRoutePath(sourcePath, explicitPath);
         const sourceIdentity = `${clientId}/${prototypeSource.sourceId || prototypeSource.configuredRoot || prototypeSource.root}/${relativePath}`;
         const manifestPageKey =
-          isContentOnlyHtml && exportManifest?.pageKey ? normalizeSlug(exportManifest.pageKey) : '';
+          isContentOnlyHtml && prototypeManifest?.pageKey ? normalizeSlug(prototypeManifest.pageKey) : '';
         const pageName = manifestPageKey
           ? `html-${manifestPageKey}-${shortHash(sourceIdentity)}`
           : `html-${shortHash(sourceIdentity)}`;
         const sectionCandidates = [
           readMetaValue(source, 'prototype-section'),
-          isContentOnlyHtml ? String(exportManifest?.menuSection || '').trim() : '',
+          isContentOnlyHtml ? String(prototypeManifest?.menuSection || '').trim() : '',
           prototypeSource.section,
           String(item.manifest.prototype.section || '').trim(),
         ];
@@ -268,7 +266,7 @@ export async function scanHtmlPrototypePages(projectsRoot, { mounts = {} } = {})
           path: pagePath,
           name: pageName,
           title: isContentOnlyHtml
-            ? exportManifest?.pageTitle || exportManifest?.menuTitle || readHtmlTitle(source, absolutePath)
+            ? prototypeManifest?.pageTitle || prototypeManifest?.menuTitle || readHtmlTitle(source, absolutePath)
             : readHtmlTitle(source, absolutePath),
           sourceType: 'html-direct',
           source: relativePath,
@@ -278,12 +276,12 @@ export async function scanHtmlPrototypePages(projectsRoot, { mounts = {} } = {})
           section,
           icon:
             readMetaValue(source, 'prototype-icon') ||
-            (isContentOnlyHtml ? exportManifest?.menuIcon : '') ||
+            (isContentOnlyHtml ? prototypeManifest?.menuIcon : '') ||
             prototypeSource.icon ||
             'Document',
           menu:
-            isContentOnlyHtml && typeof exportManifest?.menu === 'boolean'
-              ? exportManifest.menu
+            isContentOnlyHtml && typeof prototypeManifest?.menu === 'boolean'
+              ? prototypeManifest.menu
               : readMetaValue(source, 'prototype-menu') !== 'false',
         });
       }

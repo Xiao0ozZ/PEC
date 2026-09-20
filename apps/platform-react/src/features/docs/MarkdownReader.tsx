@@ -3,6 +3,16 @@ import { useEffect, useMemo, useRef, type MouseEvent } from 'react';
 import { Alert, Spin } from '@/ui/ant';
 import { renderMarkdown, type MarkdownHeading } from './markdown';
 
+let mermaidModulePromise: Promise<typeof import('mermaid')> | null = null;
+let mermaidRenderSequence = 0;
+
+function loadMermaid() {
+  return (mermaidModulePromise ??= import('mermaid').then((module) => {
+    module.default.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'default' });
+    return module;
+  }));
+}
+
 export function MarkdownReader({
   source,
   loading,
@@ -45,15 +55,17 @@ export function MarkdownReader({
     const blocks = Array.from(article?.querySelectorAll<HTMLElement>('pre > code.language-mermaid') ?? []);
     if (!blocks.length) return;
     let cancelled = false;
-    void import('mermaid').then(async ({ default: mermaid }) => {
-      mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'default' });
+    void loadMermaid().then(async ({ default: mermaid }) => {
       for (const [index, code] of blocks.entries()) {
         if (cancelled || !code.parentElement) return;
         const container = document.createElement('div');
         container.className = 'mermaid-diagram';
         code.parentElement.replaceWith(container);
         try {
-          const result = await mermaid.render(`react-prd-${Date.now()}-${index}`, code.textContent || '');
+          const result = await mermaid.render(
+            `react-prd-${++mermaidRenderSequence}-${index}`,
+            code.textContent || '',
+          );
           if (cancelled) return;
           container.innerHTML = result.svg;
           result.bindFunctions?.(container);

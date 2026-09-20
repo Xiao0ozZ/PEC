@@ -1,0 +1,45 @@
+      /* 深色映射层:仅 html[data-theme="dark"] 时接管 Tailwind 颜色类;浅色不受影响。 */
+      html[data-theme='dark'] {
+        --app-color-success: #34d399;
+        --app-color-warning: #fbbf24;
+        --app-color-danger: #f87171;
+        --app-color-primary-text: color-mix(in srgb, var(--app-color-primary) 55%, #ffffff);
+        --app-color-primary-light-3: color-mix(in srgb, var(--app-color-primary) 70%, #141414);
+        --app-color-primary-light-5: color-mix(in srgb, var(--app-color-primary) 50%, #141414);
+        --app-color-primary-light-7: color-mix(in srgb, var(--app-color-primary) 35%, #141414);
+        --app-color-primary-light-8: color-mix(in srgb, var(--app-color-primary) 25%, #141414);
+        --app-color-primary-light-9: color-mix(in srgb, var(--app-color-primary) 15%, #141414);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active {
+        color: var(--app-color-primary-text);
+      }
+
+      html[data-theme='dark'] .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary-text);
+      }
+      html[data-theme='dark'] .bg-amber-50 { background-color: color-mix(in srgb, var(--app-color-warning) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-blue-50 { background-color: color-mix(in srgb, var(--app-color-primary) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-gray-50 { background-color: var(--app-color-surface-subtle); }
+      html[data-theme='dark'] .bg-green-50 { background-color: color-mix(in srgb, var(--app-color-success) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-orange-50 { background-color: color-mix(in srgb, var(--app-color-warning) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .bg-yellow-50 { background-color: color-mix(in srgb, var(--app-color-warning) 12%, var(--app-color-surface)); }
+      html[data-theme='dark'] .border-amber-100 { border-color: color-mix(in srgb, var(--app-color-warning) 32%, transparent); }
+      html[data-theme='dark'] .border-blue-100 { border-color: color-mix(in srgb, var(--app-color-primary) 32%, transparent); }
+      html[data-theme='dark'] .border-gray-100 { border-color: var(--app-color-border-subtle); }
+      html[data-theme='dark'] .border-gray-200 { border-color: var(--app-color-border-light); }
+      html[data-theme='dark'] .border-yellow-100 { border-color: color-mix(in srgb, var(--app-color-warning) 32%, transparent); }
+      html[data-theme='dark'] .text-amber-500 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-amber-600 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-blue-600 { color: var(--app-color-primary); }
+      html[data-theme='dark'] .text-emerald-500 { color: var(--app-color-success); }
+      html[data-theme='dark'] .text-gray-400 { color: color-mix(in srgb, var(--app-color-text-muted) 80%, transparent); }
+      html[data-theme='dark'] .text-gray-500 { color: var(--app-color-text-muted); }
+      html[data-theme='dark'] .text-gray-700 { color: var(--app-color-text-secondary); }
+      html[data-theme='dark'] .text-gray-800 { color: var(--app-color-text-primary); }
+      html[data-theme='dark'] .text-green-600 { color: var(--app-color-success); }
+      html[data-theme='dark'] .text-orange-600 { color: var(--app-color-warning); }
+      html[data-theme='dark'] .text-red-400 { color: var(--app-color-danger); }
+      html[data-theme='dark'] .text-red-500 { color: var(--app-color-danger); }
+      html[data-theme='dark'] .text-slate-400 { color: color-mix(in srgb, var(--app-color-text-muted) 80%, transparent); }
+      html[data-theme='dark'] .text-yellow-700 { color: var(--app-color-warning); }

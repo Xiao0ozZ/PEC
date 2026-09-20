@@ -24,12 +24,13 @@
         "type": "array",
         "items": {
           "type": "object",
-          "required": ["path", "name", "title", "view", "section"],
+          "required": ["path", "name", "title", "sourceType", "source", "section"],
           "properties": {
             "path": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
             "name": { "type": "string", "minLength": 1 },
             "title": { "type": "string", "minLength": 1 },
-            "view": { "type": "string", "pattern": "^[^/\\\\].*\\.vue$" },
+            "sourceType": { "enum": ["html-direct", "html-template"] },
+            "source": { "type": "string", "pattern": "^[^/\\\\].*\\.html?$" },
             "section": { "type": "string" },
             "icon": { "type": "string" },
             "menu": { "type": "boolean" }

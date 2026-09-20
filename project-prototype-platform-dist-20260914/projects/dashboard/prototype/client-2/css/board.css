@@ -1,0 +1,439 @@
+/* ==========================================================================
+   看板承載層 — 12 欄固定規格 + 拖動排序
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → module-*.css
+
+   基準列高 64px、間距 12px；規格同時固定寬度與高度：
+     W  12 欄 × 2 列  = 140px
+     S   4 欄 × 4 列  = 292px
+     M   6 欄 × 4 列  = 292px
+     V   4 欄 × 8 列  = 596px
+     L  12 欄 × 6 列  = 444px
+
+   同規格模組的外框必須完全一致。內容超出時由模組內部滾動，圖表則填滿
+   容器剩餘空間，不允許內容反向撐高卡位。
+
+   編輯模式只提供拖動排序；換規格從模組選單挑另一個預設。
+   ========================================================================== */
+
+:root {
+    --board-gap: 12px;
+    --board-row-height: 64px;
+}
+
+/* ==========================================================================
+   展示模式的公共篩選條
+   --------------------------------------------------------------------------
+   四個條件靠左、期間靠右，一列裝完。只在展示模式出現 —— 編輯模式要看的是
+   版面與卡位，這一列只會佔掉高度。
+   ========================================================================== */
+
+.board-filterbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    flex: none;
+    margin-bottom: var(--sp-3);
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--fx-r-panel);
+    background: var(--fx-panel-bg, var(--sf-card));
+    border: 1px solid var(--ln-card);
+}
+
+.filterbar-fields {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+/* 標籤在左、控制在右並排 —— 參考圖是橫排而非上下堆疊，這樣一列就裝得下 */
+.filterbar-field {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.filterbar-field > span {
+    color: var(--ink-2);
+    font-size: var(--fs-note);
+    white-space: nowrap;
+}
+
+.filterbar-field select {
+    min-width: 116px;
+    height: 30px;
+    padding: 0 var(--sp-2);
+    border-radius: var(--fx-r-inner);
+    background: var(--sf-inset);
+    border: 1px solid var(--ln-card);
+    color: var(--ink-1);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    cursor: pointer;
+}
+
+.filterbar-field select:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+/* --- 期間 ---------------------------------------------------------------- */
+.filterbar-period {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    flex: none;
+}
+
+.filterbar-period-label { color: var(--ink-2); font-size: var(--fs-note); white-space: nowrap; }
+
+/* 分段控制：三格連成一體，選中格用品牌色實心 —— 比三顆獨立按鈕更能表達
+   「三者互斥、只能選一個」。 */
+.filterbar-seg {
+    display: inline-flex;
+    padding: 2px;
+    border-radius: var(--fx-r-inner);
+    background: var(--sf-inset);
+    border: 1px solid var(--ln-card);
+}
+
+.filterbar-seg button {
+    min-width: 38px;
+    height: 24px;
+    padding: 0 var(--sp-2);
+    border: 0;
+    border-radius: calc(var(--fx-r-inner) - 2px);
+    background: none;
+    color: var(--ink-2);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color var(--mo-fast) var(--ease), background var(--mo-fast) var(--ease);
+}
+
+.filterbar-seg button:hover { color: var(--ink-1); }
+
+.filterbar-seg button.is-on {
+    background: var(--brand);
+    color: var(--ink-on-brand);
+}
+
+.filterbar-seg button:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.filterbar-range {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    height: 30px;
+    padding: 0 var(--sp-3);
+    border-radius: var(--fx-r-inner);
+    background: var(--sf-inset);
+    border: 1px solid var(--ln-card);
+    color: var(--ink-1);
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-note);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.filterbar-range > svg, .filterbar-range > i { width: 14px; height: 14px; color: var(--ink-3); }
+
+@media (max-width: 1100px) {
+    .filterbar-field select { min-width: 96px; }
+}
+
+/* --- 畫布 ---------------------------------------------------------------- */
+.board-canvas {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-rows: var(--board-row-height);
+    grid-auto-flow: row;
+    gap: var(--board-gap);
+    align-content: start;
+    align-items: stretch;
+    padding: 0 0 var(--sp-3);
+}
+
+.board-canvas.is-empty-state {
+    display: block;
+    padding: 0;
+}
+
+.board-canvas.is-empty-state::before {
+    content: attr(data-empty-label);
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    border: 1px dashed var(--ln-card);
+    border-radius: var(--fx-r-card);
+    background: var(--sf-card);
+    color: var(--ink-3);
+    font-size: var(--fs-body);
+}
+
+/* --- 卡位 ---------------------------------------------------------------- */
+.board-slot {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.board-slot.is-W { grid-column: span 12; grid-row: span 2; }
+.board-slot.is-S { grid-column: span 4; grid-row: span 4; }
+.board-slot.is-M { grid-column: span 6; grid-row: span 4; }
+.board-slot.is-V { grid-column: span 4; grid-row: span 8; }
+.board-slot.is-L { grid-column: span 12; grid-row: span 6; }
+
+/* .card 只負責填滿固定卡位，不再自行決定尺寸。
+   同時把 .card 退化成純容器：底色、邊框、圓角、內距全部交給模組自己的
+   .ds-panel。舊 style.css 的 .card 帶 1.5rem 內距與白底，疊在 .ds-panel 上
+   就成了兩層卡片，24px 的外層內距把圖表往內擠，看起來就是圖表之間有大間距。
+   一個模組只該有一層卡。 */
+.board-slot > .card {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    background: none;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.board-slot > .card > .ds-panel {
+    height: 100%;
+    min-height: 0;
+}
+
+/* 編輯模式的可拖動邊界畫在卡位上（見下方 .board-slot::after）。
+   展示模式不畫任何邊界 —— 大屏上只有資料。 */
+
+@keyframes boardSlotIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* 窄螢幕只改欄跨度，桌面端的固定尺寸契約不變。 */
+@media (max-width: 1100px) {
+    .board-slot.is-S,
+    .board-slot.is-M,
+    .board-slot.is-V { grid-column: span 12; }
+    .board-slot.is-V { grid-row: span 6; }
+}
+
+/* --- 拖動把手 ------------------------------------------------------------
+   展示模式完全不佔位也不可見；編輯模式浮在卡片頂緣。
+   ------------------------------------------------------------------------ */
+.board-slot-grip {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 3px var(--sp-3);
+    border-radius: 999px;
+    background: var(--sf-chrome);
+    border: 1px solid var(--ln-card);
+    color: var(--ink-2);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: grab;
+    opacity: 0;
+    transform: translate(-50%, -6px);
+    pointer-events: none;
+    transition: opacity var(--mo-fast) var(--ease), transform var(--mo-fast) var(--ease);
+}
+
+.board-slot-grip svg,
+.board-slot-grip i {
+    width: 13px;
+    height: 13px;
+}
+
+.board-canvas.is-editing .board-slot-grip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+}
+
+.board-canvas.is-editing .board-slot-grip:hover {
+    color: var(--ink-on-brand);
+    background: var(--brand);
+    border-color: var(--brand);
+}
+
+.board-canvas.is-editing .board-slot-grip:active { cursor: grabbing; }
+
+/* 編輯模式：卡位描出可拖動的邊界，但不改變版面尺寸。
+   圓角跟著 .ds-panel 走，虛線框才會與模組本身的卡片同心。 */
+.board-canvas.is-editing .board-slot::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 1px dashed var(--brand-line);
+    border-radius: calc(var(--fx-r-panel) + 4px);
+    pointer-events: none;
+}
+
+/* 拖動中的三個狀態：原位留虛線佔位、被抓起的卡片浮起、跟隨指標的副本傾斜。 */
+.board-slot-ghost {
+    opacity: 1;
+}
+
+.board-slot-ghost > .card {
+    visibility: hidden;
+}
+
+.board-slot-ghost::after {
+    border-style: dashed;
+    border-color: var(--brand);
+    background: var(--brand-soft);
+}
+
+.board-slot-chosen > .card {
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .28), 0 0 0 1px var(--brand-line);
+}
+
+.board-slot-dragging > .card {
+    opacity: .92;
+}
+
+/* --- 模組選單：加入固定規格切換 ------------------------------------------ */
+.widget-action-group {
+    padding: var(--sp-2) var(--sp-3) var(--sp-1);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: .06em;
+}
+
+.widget-action-sep {
+    height: 1px;
+    margin: var(--sp-1) 0;
+    background: var(--ln-hair);
+}
+
+.widget-action-menu button[aria-current="true"] {
+    color: var(--brand);
+}
+
+.widget-action-menu button[aria-current="true"]::after {
+    content: "目前";
+    margin-left: auto;
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+}
+
+/* ==========================================================================
+   舊原型未定義的幾個類
+   --------------------------------------------------------------------------
+   下列類名在舊 script.js 裡是用 inline style 寫死的（釘選星星的顏色、
+   快捷區空提示、模組庫尺寸鍵）。inline style 不吃主題 token，換主題時會留下
+   固定色，所以改成正式規則。
+   ========================================================================== */
+
+/* 看板下拉的一列：看板名 + 星星 + 刪除 */
+.dropdown-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-right: var(--sp-2);
+}
+
+.dropdown-item-wrapper > .dropdown-item {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* 釘選星星：未釘選時壓暗，釘選後填滿品牌色 —— 狀態一眼可辨 */
+.pin-btn,
+.del-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    flex: none;
+    border-radius: 6px;
+    border: 0;
+    background: none;
+    color: var(--ink-3);
+    opacity: .45;
+    cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    transition: opacity var(--mo-fast) var(--ease), color var(--mo-fast) var(--ease),
+                background var(--mo-fast) var(--ease);
+}
+
+.pin-btn svg, .pin-btn i,
+.del-btn svg, .del-btn i { width: 14px; height: 14px; }
+
+.pin-btn:hover,
+.del-btn:hover { opacity: 1; background: var(--sf-hover); }
+
+.pin-btn.is-pinned {
+    color: var(--brand);
+    opacity: 1;
+}
+
+/* 已釘選用填色實心星，未釘選是空心 —— 不只靠顏色區分 */
+.pin-btn.is-pinned svg { fill: currentColor; }
+
+.del-btn:hover { color: var(--st-critical); }
+
+.dropdown-empty {
+    margin: 0;
+    padding: var(--sp-2) var(--sp-3);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    font-style: italic;
+}
+
+.quick-access-hint {
+    padding-left: var(--sp-2);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    white-space: nowrap;
+}
+
+/* 模組庫的尺寸鍵 */
+.size-selector { display: inline-flex; gap: 3px; flex: none; }
+
+.size-btn {
+    min-width: 26px;
+    height: 24px;
+    padding: 0 var(--sp-1);
+    border-radius: 6px;
+    border: 1px solid var(--ln-card);
+    background: var(--sf-inset);
+    color: var(--ink-2);
+    font-family: inherit;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color var(--mo-fast) var(--ease), background var(--mo-fast) var(--ease),
+                border-color var(--mo-fast) var(--ease);
+}
+
+.size-btn:hover {
+    color: var(--ink-on-brand);
+    background: var(--brand);
+    border-color: var(--brand);
+}
+
+.size-btn.selected {
+    color: var(--ink-on-brand);
+    background: var(--brand);
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 22%, transparent);
+}

@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>车机设定中心</title>
+    <link rel="icon" href="data:," />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+.tbox-management .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .tbox-management .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tbox-management .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .tbox-management .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 覆盖 Element UI 默认背景色以匹配 Tailwind bg-gray-50 */
+        .tbox-management .el-table th.el-table__cell {
+            background-color: #f9fafb !important;
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        .tbox-management [data-business-content] {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+            gap: 16px;
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "tbox-management",
+  "pageTitle": "车机设定中心",
+  "fileName": "tbox_management.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/tbox-management",
+  "menuSection": "assets",
+  "menuTitle": "车机设定中心",
+  "menuIcon": "Setting",
+  "menu": true,
+  "rootClass": "tbox-management",
+  "overlayRootClass": "tbox-management-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com",
+    "https://unpkg.com/dayjs@1.11.10/dayjs.min.js"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span data-shell-project-name>RIMO Rental</span>
+          <small data-shell-client-name>营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group">车辆资产</div>
+<a class="prototype-menu-item is-active" href="./tbox_management.html" aria-current="page" data-shell-page-title><span class="prototype-menu-icon" data-prototype-menu-icon="Setting" aria-hidden="true"></span><span>车机设定中心</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb>首页 / 营运端 / 车机设定中心</div>
+          <el-dropdown trigger="click">
+            <button class="prototype-user" type="button" aria-label="账号菜单">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-tbox-management tbox-management" data-page-content data-page-root="tbox-management" data-page-key="tbox-management">
+  <div data-business-content data-layout-type="legacy">
+<!-- 顶部操作栏 -->
+                <div class="flex justify-between items-end shrink-0">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">车机设定中心</h1>
+                        <p class="text-gray-500 text-sm mt-1">管理租户下所有车机设备，执行车辆换绑与授权验证操作。</p>
+                    </div>
+                </div>
+
+                <!-- 顶层统计大屏与筛选 -->
+                <div 
+                    class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 shrink-0 flex justify-between items-center gap-6 relative overflow-hidden">
+                    <div 
+                        class="absolute right-0 top-0 h-full w-64 bg-gradient-to-l from-blue-50 to-transparent pointer-events-none">
+                    </div>
+
+                    <div class="flex gap-3 z-10 flex-1 min-w-0 max-w-[680px]">
+                        <el-input v-model="searchQuery" placeholder="搜索 CID / SIM卡 / 绑定车牌" prefix-icon="Search"
+                            clearable class="w-full">
+                        </el-input>
+                        <el-select v-model="statusFilter" placeholder="状态筛选" style="width: 140px;">
+                            <el-option label="所有状态" value="ALL"></el-option>
+                            <el-option label="已绑定" value="BOUND"></el-option>
+                            <el-option label="未绑定 (闲置)" value="UNBOUND"></el-option>
+                        </el-select>
+                        <el-button type="primary" plain icon="Download" @click="handleExport">导出</el-button>
+                    </div>
+
+                    <div class="flex gap-8 z-10 shrink-0">
+                        <div>
+                            <div class="text-xs text-gray-500 font-medium mb-1">租户名下车机总数</div>
+                            <div class="text-2xl font-bold text-gray-800">{{ devices.length }} <span 
+                                    class="text-sm font-normal text-gray-400">台</span></div>
+                        </div>
+                        <div class="w-px bg-gray-200"></div>
+                        <div>
+                            <div class="text-xs text-gray-500 font-medium mb-1">已绑定车辆</div>
+                            <div class="text-2xl font-bold text-blue-600">{{ boundCount }} <span 
+                                    class="text-sm font-normal text-gray-400">台</span></div>
+                        </div>
+                        <div class="w-px bg-gray-200"></div>
+                        <div>
+                            <div class="text-xs text-gray-500 font-medium mb-1">在库闲置 (未绑定)</div>
+                            <div class="text-2xl font-bold text-orange-500">{{ unboundCount }} <span 
+                                    class="text-sm font-normal text-gray-400">台</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据清单 -->
+                <div class="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
+                    <el-table :data="filteredDevices" style="width: 100%; height: 100%;" stripe>
+                        <!-- 设备基础信息 -->
+                        <el-table-column label="硬件身份 (CID & SIM)" min-width="200" fixed="left">
+                            <template #default="{ row }">
+                                <div class="flex items-center gap-3">
+                                    <div 
+                                        class="w-8 h-8 rounded bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                                        <el-icon class="text-blue-500">
+                                            <Cpu></Cpu>
+                                        </el-icon>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-sm text-gray-800 font-mono">{{ row.cid }}</div>
+                                        <div class="text-xs text-gray-500 mt-0.5">SIM: <span class="font-mono">{{
+                                                row.sim }}</span></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- 型号与保固 -->
+                        <el-table-column label="型号与保固" min-width="140">
+                            <template #default="{ row }">
+                                <div class="text-sm text-gray-700">{{ row.model }}</div>
+                                <div class="text-xs mt-0.5"
+                                    :class="isExpiringSoon(row.warrantyDate) ? 'text-red-500 font-bold' : 'text-gray-400'">
+                                    过保: {{ row.warrantyDate }}
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- 软体版本 -->
+                        <el-table-column label="系统版本" min-width="120">
+                            <template #default="{ row }">
+                                <div class="text-xs text-gray-600 font-mono flex flex-col gap-0.5">
+                                    <span title="基带/核心版本号(V1)">V1: {{ row.version1 }}</span>
+                                    <span title="应用程序版本号(V2)">V2: {{ row.version2 }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- IButton -->
+                        <el-table-column label="电子钥匙 (iButton)" min-width="160">
+                            <template #default="{ row }">
+                                <div v-if="row.supportsIbutton" class="flex flex-col gap-0.5">
+                                    <el-tag size="small" type="success" effect="plain" class="w-max">支持</el-tag>
+                                    <span class="text-xs text-gray-500 font-mono mt-1" v-if="row.ibuttonCode">编码: {{
+                                        row.ibuttonCode }}</span>
+                                    <span class="text-xs text-gray-300 mt-1" v-else>未配对实体钥匙</span>
+                                </div>
+                                <div v-else>
+                                    <el-tag size="small" type="info" effect="plain">硬件不支持</el-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- 遥测联机状态 -->
+                        <el-table-column label="近期通讯" min-width="170">
+                            <template #default="{ row }">
+                                <div class="text-xs text-gray-600 flex flex-col gap-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">上电:</span>
+                                        <span>{{ row.powerOnTime || '-' }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">最后回传:</span>
+                                        <span 
+                                            :class="isOnline(row.lastReturnTime) ? 'text-emerald-600 font-medium' : 'text-red-500'">
+                                            {{ row.lastReturnTime || '设备未激活' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- 绑定车辆 -->
+                        <el-table-column label="目前绑定车辆" min-width="140" align="center" fixed="right">
+                            <template #default="{ row }">
+                                <div v-if="row.boundPlate" class="flex flex-col items-center gap-1">
+                                    <el-tag type="primary" effect="dark"
+                                        class="font-bold tracking-wider cursor-pointer shadow-sm hover:scale-105 transition-transform">{{
+                                        row.boundPlate }}</el-tag>
+                                    <span class="text-[10px] text-gray-400">{{ row.vehicleModel }}</span>
+                                </div>
+                                <div v-else>
+                                    <el-tag type="warning" effect="light" class="border-dashed cursor-not-allowed">
+                                        在库闲置
+                                    </el-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <!-- 操作列 -->
+                        <el-table-column label="操作" width="130" fixed="right" align="center">
+                            <template #default="{ row }">
+                                <div class="flex flex-col gap-2">
+                                    <!-- 未绑定时可以绑定 -->
+                                    <el-button v-if="!row.boundPlate" type="primary" size="small" plain
+                                        @click="openBindDialog(row)" class="!m-0">绑定车辆</el-button>
+
+                                    <!-- 已绑定时可以 换绑 或 解绑 -->
+                                    <template v-else>
+                                        <el-button type="primary" size="small" plain @click="openBindDialog(row, true)"
+                                            class="!m-0">更换车辆</el-button>
+                                        <el-button type="danger" size="small" text @click="unbindVehicle(row)"
+                                            class="!m-0">强制解绑</el-button>
+                                    </template>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- Pagination (Mock) -->
+                    <div class="p-4 border-t border-gray-100 flex justify-end bg-gray-50/50">
+                        <el-pagination background layout="total, prev, pager, next" :total="filteredDevices.length"
+                            :page-size="10" ></el-pagination>
+                    </div>
+                </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="tbox-management-overlay">
+<el-dialog v-model="bindDialogVisible" :title="isChanging ? '车机换绑操作' : '车机绑定操作'" width="500px" destroy-on-close class="tbox-management-overlay">
+            <div v-if="selectedDevice" class="pb-2">
+
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-start gap-3 mb-5">
+                    <el-icon class="text-blue-500 text-xl mt-0.5">
+                        <WarnTriangleFilled></WarnTriangleFilled>
+                    </el-icon>
+                    <div class="text-sm">
+                        <div class="text-blue-800 font-bold mb-1">目标操作车机：<span class="font-mono">{{ selectedDevice.cid
+                                }}</span></div>
+                        <div class="text-blue-600">请注意，换绑操作将使该车机取代目标车辆上原有的硬件授权信息。</div>
+                    </div>
+                </div>
+
+                <el-form label-position="top">
+                    <!-- 若是换绑，显示原车辆 -->
+                    <el-form-item label="目前绑定的车辆" v-if="isChanging">
+                        <el-input disabled
+                            :value="selectedDevice.boundPlate + ' (' + selectedDevice.vehicleModel + ')'"></el-input>
+                    </el-form-item>
+
+                    <el-form-item :label="isChanging ? '选择新目标车辆' : '选择载体车辆'">
+                        <el-select v-model="targetPlate" filterable placeholder="请搜索车牌号码 (如 RAB-1234)" class="w-full"
+                            no-match-text="未找到空缺车辆">
+                            <el-option v-for="v in unboundVehicles" :key="v.plate" :label="v.plate + ' - ' + v.model"
+                                :value="v.plate">
+                                <span class="float-left font-bold">{{ v.plate }}</span>
+                                <span class="float-right text-gray-400 text-xs">{{ v.model }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <template #footer>
+                <div class="flex justify-between items-center w-full">
+                    <div class="text-xs text-gray-400">
+                        请确保现场硬件安装完毕后再进行线上绑定
+                    </div>
+                    <div>
+                        <el-button @click="bindDialogVisible = false">取消</el-button>
+                        <el-button type="primary" :disabled="!targetPlate" @click="confirmBinding"
+                            :loading="isSubmitting">
+                            确认执行
+                        </el-button>
+                    </div>
+                </div>
+            </template>
+        </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, computed, reactive } = Vue;
+// Mock Devices DB (Taiwan specifics with Simplified Chinese)
+                const mockDevices = ref([
+                    {
+                        id: 1,
+                        cid: 'TBX-123456-A1',
+                        model: 'RIMO-TBOX-V3.2',
+                        sim: '8988601234567890123',
+                        warrantyDate: '2028-05-20',
+                        version1: 'B22.09.11',
+                        version2: 'APP_v4.5.1',
+                        supportsIbutton: true,
+                        ibuttonCode: 'IB-9908123A',
+                        powerOnTime: dayjs().subtract(5, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                        lastReturnTime: dayjs().subtract(2, 'minute').format('YYYY-MM-DD HH:mm:ss'),
+                        boundPlate: 'RAB-1234',
+                        vehicleModel: 'Model 3 长续航'
+                    },
+                    {
+                        id: 2,
+                        cid: 'TBX-654321-B2',
+                        model: 'RIMO-TBOX-V3.2',
+                        sim: '8988601234567890456',
+                        warrantyDate: '2027-11-15',
+                        version1: 'B22.09.11',
+                        version2: 'APP_v4.2.0',
+                        supportsIbutton: true,
+                        ibuttonCode: 'IB-7708333B',
+                        powerOnTime: dayjs().subtract(2, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                        lastReturnTime: dayjs().subtract(5, 'second').format('YYYY-MM-DD HH:mm:ss'),
+                        boundPlate: 'RDZ-5566',
+                        vehicleModel: 'Model 3 标准版'
+                    },
+                    {
+                        id: 3,
+                        cid: 'TBX-111111-C3',
+                        model: 'LITE-TBOX-V2.0',
+                        sim: '8988601234567890789',
+                        warrantyDate: '2025-01-10', // Expired or expiring soon
+                        version1: 'B18.01.01',
+                        version2: 'APP_v2.1.0',
+                        supportsIbutton: false,
+                        ibuttonCode: null,
+                        powerOnTime: dayjs().subtract(30, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                        lastReturnTime: dayjs().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                        boundPlate: 'TCD-9900',
+                        vehicleModel: 'Toyota Alphard'
+                    },
+                    {
+                        id: 4,
+                        cid: 'TBX-998877-K9',
+                        model: 'RIMO-TBOX-V4.MAX',
+                        sim: '8988609999999990111',
+                        warrantyDate: '2029-12-31',
+                        version1: 'B24.01.05',
+                        version2: 'APP_v5.0.0',
+                        supportsIbutton: true,
+                        ibuttonCode: null, // Supported but no key paired
+                        powerOnTime: null,
+                        lastReturnTime: null,
+                        boundPlate: null,
+                        vehicleModel: null
+                    },
+                    {
+                        id: 5,
+                        cid: 'TBX-333333-E5',
+                        model: 'RIMO-TBOX-V3.2',
+                        sim: '8988601234567890222',
+                        warrantyDate: '2028-06-01',
+                        version1: 'B22.09.11',
+                        version2: 'APP_v4.5.1',
+                        supportsIbutton: true,
+                        ibuttonCode: 'IB-5508111C',
+                        powerOnTime: dayjs().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                        lastReturnTime: dayjs().subtract(5, 'minute').format('YYYY-MM-DD HH:mm:ss'),
+                        boundPlate: 'EAB-1234',
+                        vehicleModel: 'Model Y'
+                    }
+                ]);
+
+                // Mock Vehicles without TBOX bounds
+                const allMockVehicles = [
+                    { plate: 'REN-8888', model: 'Porsche Macan' },
+                    { plate: 'AAA-0001', model: 'Tesla Model X' },
+                    { plate: 'BBB-0002', model: 'Toyota Camry' },
+                    { plate: 'CCC-0003', model: 'Honda CR-V' }
+                ];
+
+                // Keep only unbound ones for the selector
+                const unboundVehicles = computed(() => {
+                    const boundPlates = mockDevices.value.filter(d => d.boundPlate).map(d => d.boundPlate);
+                    return allMockVehicles.filter(v => !boundPlates.includes(v.plate));
+                });
+
+                // Filters
+                const searchQuery = ref('');
+                const statusFilter = ref('ALL');
+
+                const filteredDevices = computed(() => {
+                    let result = mockDevices.value;
+
+                    if (statusFilter.value === 'BOUND') {
+                        result = result.filter(d => !!d.boundPlate);
+                    } else if (statusFilter.value === 'UNBOUND') {
+                        result = result.filter(d => !d.boundPlate);
+                    }
+
+                    if (searchQuery.value) {
+                        const q = searchQuery.value.toLowerCase();
+                        result = result.filter(d =>
+                            d.cid.toLowerCase().includes(q) ||
+                            d.sim.includes(q) ||
+                            (d.boundPlate && d.boundPlate.toLowerCase().includes(q))
+                        );
+                    }
+                    return result;
+                });
+
+                // Stats
+                const boundCount = computed(() => mockDevices.value.filter(d => d.boundPlate).length);
+                const unboundCount = computed(() => mockDevices.value.filter(d => !d.boundPlate).length);
+
+                const handleExport = () => {
+                    ElementPlus.ElMessage.success('车机设备数据导出任务已提交，系统稍后将自动下载文件。');
+                };
+
+                // Utilities
+                const isExpiringSoon = (date) => {
+                    if (!date) return false;
+                    const diff = dayjs(date).diff(dayjs(), 'day');
+                    // Expiry within 30 days is "soon"
+                    return diff < 30;
+                };
+
+                const isOnline = (time) => {
+                    if (!time) return false;
+                    const diffMins = dayjs().diff(dayjs(time), 'minute');
+                    return diffMins < 10; // returned within 10 mins is online
+                };
+
+                // Dialog State
+                const bindDialogVisible = ref(false);
+                const isChanging = ref(false);
+                const selectedDevice = ref(null);
+                const targetPlate = ref('');
+                const isSubmitting = ref(false);
+
+                // Actions
+                const openBindDialog = (device, changeMode = false) => {
+                    selectedDevice.value = { ...device };
+                    isChanging.value = changeMode;
+                    targetPlate.value = ''; // Reset selection
+                    bindDialogVisible.value = true;
+                };
+
+                const unbindVehicle = (device) => {
+                    ElementPlus.ElMessageBox.confirm(
+                        `确认要将车机 ${device.cid} 与车辆 ${device.boundPlate} 解除绑定吗？解绑后将失去对该车辆的远程控制权限。`,
+                        '解除绑定确认',
+                        {
+                            confirmButtonText: '确认解绑',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }
+                    ).then(() => {
+                        const index = mockDevices.value.findIndex(d => d.id === device.id);
+                        if (index > -1) {
+                            mockDevices.value[index].boundPlate = null;
+                            mockDevices.value[index].vehicleModel = null;
+                            ElementPlus.ElMessage.success('已成功解除绑定');
+                        }
+                    }).catch(() => { });
+                };
+
+                const confirmBinding = () => {
+                    isSubmitting.value = true;
+                    // Mock API CALL
+                    setTimeout(() => {
+                        const index = mockDevices.value.findIndex(d => d.id === selectedDevice.value.id);
+                        if (index > -1) {
+                            const newVehicle = unboundVehicles.value.find(v => v.plate === targetPlate.value);
+                            mockDevices.value[index].boundPlate = newVehicle.plate;
+                            mockDevices.value[index].vehicleModel = newVehicle.model;
+                            // Reset telemetry mock for new bond
+                            mockDevices.value[index].powerOnTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
+                            mockDevices.value[index].lastReturnTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+                            ElementPlus.ElMessage.success(isChanging.value ? '车机换绑成功！' : '车机绑定成功！');
+                            bindDialogVisible.value = false;
+                        }
+                        isSubmitting.value = false;
+                    }, 800);
+                };
+
+                return {
+                    devices: mockDevices,
+                    filteredDevices,
+                    searchQuery, statusFilter,
+                    boundCount, unboundCount,
+                    handleExport,
+                    isExpiringSoon, isOnline,
+                    bindDialogVisible, isChanging, selectedDevice, targetPlate, unboundVehicles, isSubmitting,
+                    openBindDialog, confirmBinding, unbindVehicle
+                };
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component)
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

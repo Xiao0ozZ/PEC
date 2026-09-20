@@ -1,0 +1,327 @@
+/* ==========================================================================
+   動效層 — 讓看板「活起來」
+   --------------------------------------------------------------------------
+   載入順序：style.css → tokens.css → board.css → ds.css → motion.css → module-*.css
+
+   大屏是掛在牆上被長時間掃讀的。全靜態的畫面會讓人以為資料停了、系統掛了，
+   所以看板需要動；但動錯了就變成雜訊，讀不到重點。本檔把動效分成四類，
+   各有明確職責，不可互換：
+
+     1. 進場   一次性。卡片與資料依序點亮，讓人看出畫面剛剛重新載入。
+     2. 呼吸   持續循環，低強度。表達「這塊還活著、仍在更新」。
+     3. 告警   持續循環，高強度。表達「這個狀態還沒解除」，週期隨等級加快。
+     4. 更新   一次性，短。資料剛變過的地方閃一下，眼睛才追得上變化。
+
+   鐵則：
+     - 同一屏內「告警」類動效的對象要少。全都在閃等於沒有重點。
+     - 動效不承載語義。關掉動效後，狀態仍須由顏色、圖示與文字完整表達。
+     - 一律尊重系統「減少動態效果」偏好，見檔尾。
+   ========================================================================== */
+
+/* ==========================================================================
+   1. 進場：卡片依序點亮
+   --------------------------------------------------------------------------
+   看板切換或首次載入時，卡位由下往上淡入。逐張錯開，畫面像被依序點亮，
+   而不是整屏一起跳出來。延遲用 nth-child 給，最多排到第 12 張；再多就不排，
+   否則最後幾張要等太久才出現。
+   ========================================================================== */
+
+@keyframes mSlotIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+}
+
+.board-canvas > .board-slot {
+    animation: mSlotIn .42s var(--ease) both;
+}
+
+.board-canvas > .board-slot:nth-child(1) { animation-delay: 0ms; }
+.board-canvas > .board-slot:nth-child(2) { animation-delay: 55ms; }
+.board-canvas > .board-slot:nth-child(3) { animation-delay: 110ms; }
+.board-canvas > .board-slot:nth-child(4) { animation-delay: 165ms; }
+.board-canvas > .board-slot:nth-child(5) { animation-delay: 220ms; }
+.board-canvas > .board-slot:nth-child(6) { animation-delay: 275ms; }
+.board-canvas > .board-slot:nth-child(7) { animation-delay: 330ms; }
+.board-canvas > .board-slot:nth-child(8) { animation-delay: 385ms; }
+.board-canvas > .board-slot:nth-child(n+9) { animation-delay: 440ms; }
+
+/* 拖動排序時不要重播進場動畫，否則卡片會在手裡閃 */
+.board-canvas.is-editing > .board-slot { animation: none; }
+
+/* ==========================================================================
+   2. 呼吸：這塊還活著
+   --------------------------------------------------------------------------
+   .m-live      小圓點的呼吸，掛在「即時」標記上
+   .m-breathe   整塊的極輕呼吸，只給主指標，幅度小到不干擾讀數
+   兩者週期刻意不同（3.4s / 4.2s），避免整屏同頻脈動 —— 同頻會形成明顯的
+   集體閃爍，反而比靜止更難看。
+   ========================================================================== */
+
+@keyframes mLive {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .45; transform: scale(.82); }
+}
+
+/* 即時指示點：一顆小圓 + 外圈擴散。放在「即時」「監測中」這類標籤前面。 */
+.m-live {
+    position: relative;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 999px;
+    background: var(--lv, var(--st-normal));
+    animation: mLive 3.4s var(--ease) infinite;
+}
+
+.m-live::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 1px solid var(--lv, var(--st-normal));
+    opacity: 0;
+    animation: dsPing 3.4s ease-out infinite;
+}
+
+@keyframes mBreathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .86; }
+}
+
+.m-breathe { animation: mBreathe 4.2s var(--ease) infinite; }
+
+/* ==========================================================================
+   3. 告警：狀態還沒解除
+   --------------------------------------------------------------------------
+   沿用 ds.css 的 .ds-ping，但把週期綁到等級：越嚴重越快。
+   用節奏而不只是顏色編碼緊迫感 —— 灰階列印或色弱下仍能分辨。
+   ========================================================================== */
+
+.is-notice > .ds-ping, .is-notice .ds-ping { animation: dsPing var(--mo-ping-notice) ease-out infinite; }
+.is-warn > .ds-ping, .is-warn .ds-ping { animation: dsPing var(--mo-ping-warn) ease-out infinite; }
+/* .is-critical 的週期已在 ds.css 定義 */
+
+/* 嚴重項的邊框微微搏動，比單純的 Ping 更容易在餘光裡被注意到 */
+@keyframes mPulseEdge {
+    0%, 100% { border-color: var(--lv-line); }
+    50% { border-color: var(--lv); }
+}
+
+.m-pulse-edge { animation: mPulseEdge var(--mo-ping-critical) var(--ease) infinite; }
+
+/* ==========================================================================
+   4. 更新：這個數字剛剛變過
+   --------------------------------------------------------------------------
+   由 JS 在資料變化時加上 .m-bump，動畫結束後自行移除（見 motion.js）。
+   刻意不做位移，只做一次極短的高光掠過 —— 位移會讓等寬數字跳位，反而難讀。
+   ========================================================================== */
+
+@keyframes mBump {
+    0% { color: var(--brand); }
+    100% { color: inherit; }
+}
+
+.m-bump { animation: mBump .7s var(--ease) 1; }
+
+/* 表格列的更新提示：整列淡淡掠過一次 */
+@keyframes mRowFlash {
+    0% { background: var(--brand-soft); }
+    100% { background: transparent; }
+}
+
+.m-row-flash { animation: mRowFlash .9s var(--ease) 1; }
+
+/* ==========================================================================
+   5. 資料條的流動感
+   --------------------------------------------------------------------------
+   比例帶與長條在填充後，讓一道極淡的高光在條上緩慢掠過。這是「資料在流動」
+   的暗示，強度必須很低 —— 條的長度才是資訊，高光只是質感。
+   只在深色主題出現：淺色主題整體扁平，加高光會顯得廉價。
+   ========================================================================== */
+
+@keyframes mSheen {
+    0% { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(220%); }
+}
+
+body.theme-tech .ds-band > i::after,
+body.theme-tech .ds-bar > b::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 42%;
+    background: linear-gradient(90deg,
+        transparent,
+        color-mix(in srgb, var(--fx-sheen-tint) 22%, transparent),
+        transparent);
+    animation: mSheen 4.6s var(--ease) infinite;
+    pointer-events: none;
+}
+
+body.theme-tech .ds-band > i,
+body.theme-tech .ds-bar > b { position: relative; overflow: hidden; }
+
+/* 同一組帶內的分段錯開起始時間，否則三段一起亮會變成整條閃 */
+body.theme-tech .ds-band > i:nth-child(2)::after { animation-delay: .5s; }
+body.theme-tech .ds-band > i:nth-child(3)::after { animation-delay: 1s; }
+body.theme-tech .ds-band > i:nth-child(4)::after { animation-delay: 1.5s; }
+
+/* ==========================================================================
+   6. 同步中的狀態
+   --------------------------------------------------------------------------
+   手動同步時，看板列的同步時間與整個畫布給出「正在取數」的反饋。
+   畫布只降透明度，不做位移 —— 位移會讓人以為版面要變。
+   ========================================================================== */
+
+.board-canvas.is-syncing { opacity: .72; transition: opacity var(--mo-base) var(--ease); }
+
+@keyframes mSpin { to { transform: rotate(360deg); } }
+
+.header-inline-btn.is-syncing svg,
+.header-inline-btn.is-syncing i { animation: mSpin .9s linear infinite; }
+
+/* ==========================================================================
+   7. 通用動效基元 — 讓每個模組都活起來
+   --------------------------------------------------------------------------
+   舊原型 style.css 有 113 個 keyframes（掃光、脈衝、逐行入場、數字跳動），
+   異常通報看起來「活」是因為它的類名還命中那些舊規則；新寫的模組樣式檔各自
+   0 個 animation，所以顯得死板。
+
+   這一段把那套動效語彙提煉成可複用的基元。用法是在模組樣式或模板上掛 class，
+   不需要每個模組各寫一遍 keyframes。
+
+   四個基元：
+     m-rise    逐項入場   清單列、卡片、磁貼由下淡入，用 --i 錯開
+     m-scan    面板掃光   一道極淡的光從左掠過整張面板，週期長
+     m-grow    條長生長   資料條從左長出來，只在首次與資料變化時
+     m-beat    數字心跳   讀數每隔幾秒極輕地跳一下，暗示「還在收數」
+   ========================================================================== */
+
+/* --- m-rise：逐項入場 ----------------------------------------------------
+   在元素上給 --i（索引），延遲自動錯開。清單長也不會等太久：
+   延遲用 min() 收在 480ms 內。
+   ------------------------------------------------------------------------ */
+@keyframes mRise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+.m-rise {
+    animation: mRise .38s var(--ease) both;
+    animation-delay: min(calc(var(--i, 0) * 45ms), 480ms);
+}
+
+/* --- m-scan：面板掃光 ----------------------------------------------------
+   一道極淡的光掠過面板。週期刻意長（7.5s）且亮度低 —— 這是質感不是告警，
+   太頻繁會變成雜訊。只在深色主題出現，淺色主題整體扁平。
+   ------------------------------------------------------------------------ */
+@keyframes mScan {
+    0%, 30% { transform: translateX(-100%); }
+    76%, 100% { transform: translateX(100%); }
+}
+
+body.theme-tech .m-scan { position: relative; overflow: hidden; }
+
+body.theme-tech .m-scan::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 38%;
+    background: linear-gradient(90deg,
+        transparent,
+        color-mix(in srgb, var(--brand) 9%, transparent),
+        transparent);
+    animation: mScan 7.5s var(--ease) infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 掃光在最底層，內容必須浮在它上面 */
+body.theme-tech .m-scan > * { position: relative; z-index: 1; }
+
+/* --- m-grow：條長生長 ----------------------------------------------------
+   資料條從左長出。掛在條的填充元素上；transform 比 width 便宜，
+   一屏幾十根條同時生長也不掉幀。
+   ------------------------------------------------------------------------ */
+@keyframes mGrow {
+    from { transform: scaleX(.15); }
+    to { transform: scaleX(1); }
+}
+
+.m-grow {
+    transform-origin: left center;
+    animation: mGrow .62s var(--ease) both;
+    animation-delay: min(calc(var(--i, 0) * 45ms), 480ms);
+}
+
+/* --- m-beat：數字心跳 ----------------------------------------------------
+   讀數每隔幾秒極輕地跳一下。幅度只有 1px 且大部分時間靜止 ——
+   一直在動會讓人讀不了數字。
+   ------------------------------------------------------------------------ */
+@keyframes mBeat {
+    0%, 82%, 100% { transform: translateY(0); }
+    88% { transform: translateY(-1.5px); }
+}
+
+.m-beat { animation: mBeat 5.2s var(--ease) infinite; }
+
+/* 週期錯開，避免整屏數字同頻跳動 */
+.m-beat:nth-of-type(2) { animation-duration: 5.9s; }
+.m-beat:nth-of-type(3) { animation-duration: 6.4s; }
+.m-beat:nth-of-type(4) { animation-duration: 5.5s; }
+
+/* --- m-orbit：環上的掃描弧 -----------------------------------------------
+   ECharts 沒有「讓某個 series 持續旋轉」的能力，因此在圖表容器上轉。
+   容器裡只有那道細弧會被看出在動 —— 環本體是同心圓，旋轉後視覺不變，
+   所以整個 canvas 一起轉不會讓資料看起來在跑。
+
+   週期 9s：慢到不干擾讀數，又足以讓人察覺這塊在收數。
+   ------------------------------------------------------------------------ */
+@keyframes mOrbit {
+    to { transform: rotate(360deg); }
+}
+
+.m-orbit > .kcd-chart {
+    animation: mOrbit 9s linear infinite;
+}
+
+/* 環心讀數要疊在旋轉層之上。只給 z-index，不要碰 position ——
+   讀數本身是 position: absolute（見 module-*.css），而
+   `.m-orbit > *:not(.kcd-chart)` 的權重（20）高於 `.ops-donut-center`（10），
+   一旦在這裡寫 position: relative 就會把它從絕對定位打回文檔流，
+   讀數落到環下方、面板被撐破 56px。 */
+.m-orbit > *:not(.kcd-chart) { z-index: 2; }
+
+/* ==========================================================================
+   減少動態效果
+   --------------------------------------------------------------------------
+   系統偏好開啟時，關掉所有循環與進場動效。狀態資訊不依賴動畫傳達，
+   因此關掉不損失任何語義。ECharts canvas 內的動畫 CSS 管不到，
+   由 charts.js 在 option 層另外關閉。
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .board-canvas > .board-slot,
+    .m-live,
+    .m-live::after,
+    .m-breathe,
+    .m-pulse-edge,
+    .m-bump,
+    .m-row-flash,
+    .m-rise,
+    .m-grow,
+    .m-beat,
+    .m-orbit > .kcd-chart,
+    .ds-ping,
+    body.theme-tech .m-scan::after,
+    body.theme-tech .ds-band > i::after,
+    body.theme-tech .ds-bar > b::after {
+        animation: none !important;
+    }
+
+    /* 進場動畫關掉後要把 both 造成的初始隱藏還原 */
+    .board-canvas > .board-slot,
+    .m-rise { opacity: 1; transform: none; }
+    .m-grow { transform: none; }
+}

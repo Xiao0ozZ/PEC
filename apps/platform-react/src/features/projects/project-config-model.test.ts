@@ -32,7 +32,7 @@ const project = {
     clients: { operation: { root: 'prototype/operation', extra: 'keep-me' } },
   },
   mobile: { enabled: true, entry: 'mobile/index.html', mode: 'preview' },
-  features: { pageTransfer: true, designSystem: true, experimental: true },
+  features: { designSystem: true, experimental: true },
   compatibility: { legacyRoutes: true, customFlag: true },
 } as unknown as ProjectManifest;
 

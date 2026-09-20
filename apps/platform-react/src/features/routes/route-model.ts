@@ -10,7 +10,6 @@ export interface RoutePage {
   section: string;
   sourceType?: string;
   source?: string;
-  view?: string;
   icon?: string;
   menu?: boolean;
 }

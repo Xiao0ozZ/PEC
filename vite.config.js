@@ -3,10 +3,10 @@ import { defineConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 
 import { htmlPrototypePlugin } from './plugins/html-prototype-plugin.js';
-import { pageTransferPlugin } from './plugins/page-transfer-plugin.js';
 import { platformSettingsPlugin } from './plugins/platform-settings-plugin.js';
 import { prdContentPlugin } from './plugins/prd-content-plugin.js';
 import { projectPackagesPlugin } from './plugins/project-packages-plugin.js';
+import { projectRoutesPlugin } from './plugins/project-routes-plugin.js';
 import { loadProjectMounts } from './packages/project-core/src/index.js';
 import { manualChunks } from './apps/platform-react/vite.chunks.js';
 
@@ -26,7 +26,7 @@ export default defineConfig({
     projectPackagesPlugin({ projectsRoot, mountsPath: projectMountsPath, loadMounts }),
     htmlPrototypePlugin({ projectsRoot, mountsPath: projectMountsPath, loadMounts }),
     prdContentPlugin({ projectsRoot, mountsPath: projectMountsPath, loadMounts }),
-    pageTransferPlugin({ projectRoot: repositoryRoot, loadMounts }),
+    projectRoutesPlugin({ projectRoot: repositoryRoot, loadMounts }),
   ],
   resolve: {
     alias: {

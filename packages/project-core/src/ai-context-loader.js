@@ -53,22 +53,7 @@ async function readLegacyPageLinks(projectRoot) {
 }
 
 async function resolvePageSourceAvailability(projectRoot, manifest, client, page, htmlCatalog) {
-  const sourceType = page.sourceType || (page.view ? 'vue' : '');
-  if (sourceType === 'vue' && page.view) {
-    const packageView = await resolveExistingPathInsideRoot(path.resolve(projectRoot, 'views'), page.view, {
-      allowedExtensions: new Set(['.vue']),
-    });
-    if (packageView) return true;
-    const compatibilityRoot = manifest.compatibility?.legacyViewRoot
-      ? path.resolve(projectRoot, '..', '..', manifest.compatibility.legacyViewRoot)
-      : '';
-    const compatibilityView = compatibilityRoot
-      ? await resolveExistingPathInsideRoot(compatibilityRoot, page.view, {
-          allowedExtensions: new Set(['.vue']),
-        })
-      : null;
-    return Boolean(compatibilityView);
-  }
+  const sourceType = page.sourceType || '';
   const source = String(page.source || '').replaceAll('\\', '/');
   if (!source) return undefined;
   // HTML 来源目录与扫描器保持同一套解析：优先按页面登记的 sourceRoot 匹配，

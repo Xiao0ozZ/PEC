@@ -3,7 +3,7 @@ const sansFont = ['var(--app-font-family-sans)'];
 const monoFont = ['var(--app-font-family-mono)'];
 
 export default {
-  content: ['./index.html', './src/**/*.{vue,js}', './projects/**/*.{vue,js}'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './projects/**/*.{js,html}'],
   corePlugins: {
     preflight: false,
   },

@@ -1,0 +1,489 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="stylesheet" href="https://unpkg.com/element-plus@2.14.2/dist/index.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" />  <script src="https://cdn.tailwindcss.com"></script>  <script src="https://unpkg.com/vue@3.5.39/dist/vue.global.prod.js"></script>  <script src="https://unpkg.com/vue-router@4.6.4/dist/vue-router.global.prod.js"></script>  <script src="https://unpkg.com/vue-i18n@11.4.6/dist/vue-i18n.global.prod.js"></script>  <script src="https://unpkg.com/element-plus@2.14.2/dist/index.full.min.js"></script>  <script src="https://unpkg.com/@element-plus/icons-vue@2.3.2/dist/index.iife.min.js"></script>  <script>window.__PROJECT_EXPORT__={"schemaVersion":1,"type":"standalone-html","generatedAt":"2026-07-21T08:06:38.558Z","projectId":"rimo-rental","projectName":"RIMO Rental","clients":["operation"],"pages":[{"path":"/p/rimo-rental/operation/membership-plans","routePath":"/p/rimo-rental/operation/membership-plans","name":"operation-membership-plans","title":"客户等级方案","pageKey":"membership-plans","pageType":"vue-page","pageHeaderMode":null,"templateVersion":null,"client":"operation","menuSection":"customers","menuTitle":"客户等级方案","menuIcon":"Medal","source":"vue-page","file":"页面演示包-1784621198557-yb7ha3.html"}],"defaultPath":"/p/rimo-rental/operation/membership-plans"};if(!window.location.hash){window.location.hash='#/p/rimo-rental/operation/membership-plans';}</script>  <title>页面演示</title>  <script type="module">(function(e,C,B,j,z){"use strict";var U=typeof document<"u"?document.currentScript:null;function ae(a){const n=Object.create(null,{[Symbol.toStringTag]:{value:"Module"}});if(a){for(const r in a)if(r!=="default"){const t=Object.getOwnPropertyDescriptor(a,r);Object.defineProperty(n,r,t.get?t:{enumerable:!0,get:()=>a[r]})}}return n.default=a,Object.freeze(n)}const ie=ae(B),M=(a,n)=>{const r=a.__vccOpts||a;for(const[t,_]of n)r[t]=_;return r},se={};function ce(a,n){const r=e.resolveComponent("RouterView");return e.openBlock(),e.createBlock(r)}const de=M(se,[["render",ce],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/App.vue"]]),Ut=(function(){const n=typeof document<"u"&&document.createElement("link").relList;return n&&n.supports&&n.supports("modulepreload")?"modulepreload":"preload"})(),qt=function(a,n){return new URL(a,n).href},Ft={},me=function(n,r,t){let _=Promise.resolve();function k(f){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=f,window.dispatchEvent(c),!c.defaultPrevented)throw f}return _.then(f=>{for(const c of f||[])c.status==="rejected"&&k(c.reason);return n().catch(k)})},pe={},fe={class:"export-prd-association-placeholder","aria-hidden":"true"};function ge(a,n){return e.openBlock(),e.createElementBlock("span",fe)}const ye=M(pe,[["render",ge],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/PrdAssociationLayer.vue"]]),W=Object.freeze({id:"rimo-rental",name:"RIMO Rental",shortName:"RIMO",clients:[{id:"operation",name:"营运端",description:"门市租赁、车辆营运、客户与系统管理。",icon:"Van",defaultPage:"workbench",login:{account:"admin",tenantCode:"demo",background:"assets/auth/operation-login-bg.jpg"}},{id:"enterprise",name:"企业端",description:"公务用车、车辆合约、员工组织与账单管理。",icon:"OfficeBuilding",defaultPage:"dashboard",login:{account:"enterprise_admin",tenantCode:"demo",background:"assets/auth/enterprise-login-bg.jpg"}}]});function K(a){return a===W.id?W:null}const be={"zh-CN":{common:{home:"首页",operation:"营运端",enterprise:"企业端",logout:"退出登录"}}},X=z.createI18n({legacy:!1,locale:"zh-CN",fallbackLocale:"zh-CN",messages:be}),_e=[{label:"简中",value:"zh-CN"}];function G(a){X.global.locale.value=a}function q(a){return a}async function Q(){return!1}const he=!1,R=e.reactive({developerMode:!1,loaded:!0});function Y(){return Promise.resolve(R)}async function ue(){return R}const ke={__name:"ExportAppShell",props:{projectId:{type:String,required:!0},appName:{type:String,required:!0},client:{type:String,required:!0},clientName:{type:String,required:!0},menus:{type:Array,required:!0}},setup(a,{expose:n}){n();const r=a,t=j.useRoute(),_=j.useRouter(),{locale:k,t:f}=z.useI18n({useScope:"global"}),c=e.ref(r.client),s=typeof window<"u"&&window.__PROJECT_EXPORT__||null,N=e.computed({get:()=>k.value,set:l=>G(l)}),E=e.ref(!1),P=e.computed(()=>R.developerMode||E.value),x=e.ref(!1),y=e.ref(null),S=e.ref("split"),u=e.ref(!1),w=e.ref(!1),m=e.ref(!1),h=e.computed(()=>`platform-sidebar-collapsed:${r.projectId}`),D=e.computed(()=>({"sidebar-collapsed":u.value&&!m.value,"sidebar-drawer-open":w.value})),i=e.computed(()=>t.meta.title||t.name||"工作台");function g(l){const d=typeof l=="string"?l:(l==null?void 0:l.path)||(l==null?void 0:l.file)||"";if(!d)return null;const p=typeof l=="object"&&(l!=null&&l.title)?l.title:d.split("/").pop().replace(/\.md$/i,"");return{path:d,title:p}}const o=e.computed(()=>{const l=t.meta.prd;return(Array.isArray(l)?l:l?[l]:[]).map(g).filter(Boolean)}),b=e.computed(()=>{var l,d;return((l=y.value)==null?void 0:l.documentPath)||((d=o.value[0])==null?void 0:d.path)||""}),A=e.computed(()=>{var l;return((l=y.value)==null?void 0:l.anchor)||""}),v=e.computed(()=>typeof t.meta.source=="string"?t.meta.source:"");e.watch(()=>r.client,l=>{c.value=l}),e.watch(()=>t.query.__dev,l=>{E.value=l==="1"||l==="true"},{immediate:!0}),e.watch(()=>t.fullPath,()=>{y.value=null,I(),b.value||(x.value=!1)});const ee=e.computed(()=>K(r.projectId)),Nt=e.defineAsyncComponent(()=>me(()=>Promise.resolve().then(()=>Ct),void 0,U&&U.tagName.toUpperCase()==="SCRIPT"&&U.src||new URL("assets/index-CY2bHHIb.js",document.baseURI).href)),Et=e.computed(()=>{var d,p;const l=((d=ee.value)==null?void 0:d.clients)||[];return(p=s==null?void 0:s.clients)!=null&&p.length?l.filter(V=>s.clients.includes(V.id)):l}),Pt=e.computed(()=>q(r.clientName,N.value)),Bt=e.computed(()=>q(i.value,N.value)),St=e.computed(()=>{var d;if(!((d=s==null?void 0:s.pages)!=null&&d.length))return r.menus;const l=new Set(s.pages.map(p=>typeof p=="string"?p:p.path));return r.menus.map(p=>({...p,items:p.items.filter(V=>l.has(V.path))})).filter(p=>p.items.length>0)});function Dt(l){var d;if((d=s==null?void 0:s.pages)!=null&&d.length){const p=s.pages.find(V=>(typeof V=="string"?V:V.path).includes(`/${l}/`));p&&(window.location.href=J(typeof p=="string"?p:p.path));return}_.push(`/p/${r.projectId}/${l}/login`)}function Mt(){var l;if((l=s==null?void 0:s.pages)!=null&&l.length){const d=s.pages.find(p=>(typeof p=="string"?p:p.path).includes(`/${r.client}/`));d&&(window.location.href=J(typeof d=="string"?d:d.path));return}_.push(`/p/${r.projectId}/${r.client}/login`)}function At(){_.push({name:"home"})}async function te(l){}function jt(l){typeof window>"u"||window.open(l,"_blank","noopener,noreferrer")}function Lt(l){y.value=l,x.value=!0}function Ot(){x.value=!1,y.value=null}function ne(){try{u.value=window.localStorage.getItem(h.value)==="1"}catch{u.value=!1}}function oe(){try{window.localStorage.setItem(h.value,u.value?"1":"0")}catch{}}function T(){var d;const l=((d=window.matchMedia)==null?void 0:d.call(window,"(max-width: 760px)").matches)??window.innerWidth<=760;m.value=l,l||(w.value=!1)}function Rt(){if(m.value){w.value=!w.value;return}u.value=!u.value,oe()}function I(){m.value&&(w.value=!1)}function Tt(){I()}function F(l){l.key==="Escape"&&I()}async function It(){try{await Q(r.projectId,v.value)}catch(l){C.ElMessage.error(l.message||"源文件下载失败。")}}function le(){te(!P.value)}function H(l){l.ctrlKey&&l.shiftKey&&l.key.toLowerCase()==="m"&&(l.preventDefault(),le())}e.onMounted(()=>{Y(),ne(),T(),window.addEventListener("keydown",H),window.addEventListener("resize",T),document.addEventListener("keydown",F)}),e.onBeforeUnmount(()=>{window.removeEventListener("keydown",H),window.removeEventListener("resize",T),document.removeEventListener("keydown",F)});function J(l){var p;const d=(p=s==null?void 0:s.pages)==null?void 0:p.find(V=>(typeof V=="string"?V:V.path)===l);return typeof d=="object"&&d.file?`./${d.file}`:`#${l}`}const re={props:r,route:t,router:_,locale:k,t:f,selectedClient:c,exportConfig:s,currentLocale:N,developerModeOverride:E,developerMode:P,prdPanelOpen:x,prdTarget:y,prdLayoutMode:S,sidebarCollapsed:u,mobileSidebarOpen:w,isNarrowViewport:m,sidebarStorageKey:h,shellClasses:D,currentTitle:i,normalizePrdDocument:g,prdDocuments:o,prdDocumentPath:b,prdDocumentAnchor:A,sourcePath:v,project:ee,PrdReviewPanel:Nt,availableClients:Et,translatedClientName:Pt,translatedCurrentTitle:Bt,visibleMenus:St,switchClient:Dt,logout:Mt,goHome:At,setDeveloperMode:te,openDocumentWindow:jt,openPrdBinding:Lt,closePrdPanel:Ot,loadSidebarPreference:ne,saveSidebarPreference:oe,updateViewportMode:T,toggleSidebar:Rt,closeMobileSidebar:I,handleSidebarNavigate:Tt,handleSidebarEscape:F,handleSourceDownload:It,toggleDeveloperMode:le,handleDeveloperShortcut:H,exportFileFor:J,computed:e.computed,defineAsyncComponent:e.defineAsyncComponent,onBeforeUnmount:e.onBeforeUnmount,onMounted:e.onMounted,ref:e.ref,watch:e.watch,get Document(){return B.Document},get Download(){return B.Download},get Expand(){return B.Expand},get Fold(){return B.Fold},get Menu(){return B.Menu},get ElMessage(){return C.ElMessage},PrdAssociationLayer:ye,get useI18n(){return z.useI18n},get useRoute(){return j.useRoute},get useRouter(){return j.useRouter},get getProject(){return K},get localeOptions(){return _e},get setLocale(){return G},get translateStaticCopy(){return q},get downloadProjectSource(){return Q},get canPersistPlatformSettings(){return he},get loadPlatformSettings(){return Y},get platformSettings(){return R},get setPlatformDeveloperMode(){return ue}};return Object.defineProperty(re,"__isScriptSetup",{enumerable:!1,value:!0}),re}},xe={class:"app-sidebar"},we={class:"sidebar-brand"},Ve=["title"],Ce=["data-initial"],Ne={class:"side-section"},Ee={class:"side-section-title"},Pe=["href","title"],Be={class:"app-main"},Se={class:"topbar"},De=["aria-expanded","aria-label","title"],Me={class:"breadcrumb"},Ae={class:"topbar-actions"},je={class:"user-pill"},Le={class:"page-workspace"};function Oe(a,n,r,t,_,k){const f=e.resolveComponent("el-icon"),c=e.resolveComponent("RouterLink"),s=e.resolveComponent("el-option"),N=e.resolveComponent("el-select"),E=e.resolveComponent("el-tag"),P=e.resolveComponent("el-button"),x=e.resolveComponent("el-avatar"),y=e.resolveComponent("el-dropdown-item"),S=e.resolveComponent("el-dropdown-menu"),u=e.resolveComponent("el-dropdown"),w=e.resolveComponent("RouterView");return e.openBlock(),e.createElementBlock("div",{class:e.normalizeClass(["app-shell",t.shellClasses])},[e.createElementVNode("aside",xe,[e.createElementVNode("div",we,[e.createElementVNode("div",{class:"brand-box",title:r.appName},[e.createElementVNode("span",{"data-initial":r.appName.slice(0,1)},e.toDisplayString(r.appName),9,Ce),e.createElementVNode("small",null,e.toDisplayString(t.translatedClientName),1)],8,Ve)]),e.createElementVNode("nav",Ne,[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t.visibleMenus,m=>(e.openBlock(),e.createElementBlock(e.Fragment,{key:m.title},[e.createElementVNode("div",Ee,e.toDisplayString(t.translateStaticCopy(m.title,t.currentLocale)),1),(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(m.items,h=>(e.openBlock(),e.createElementBlock(e.Fragment,{key:h.path},[t.exportConfig?(e.openBlock(),e.createElementBlock("a",{key:0,href:t.exportFileFor(h.path),class:e.normalizeClass(["side-link",{"router-link-active":t.route.path===h.path}]),title:t.sidebarCollapsed?t.translateStaticCopy(h.label,t.currentLocale):void 0,onClick:t.handleSidebarNavigate},[e.createVNode(f,null,{default:e.withCtx(()=>[(e.openBlock(),e.createBlock(e.resolveDynamicComponent(h.icon)))]),_:2},1024),e.createElementVNode("span",null,e.toDisplayString(t.translateStaticCopy(h.label,t.currentLocale)),1)],10,Pe)):(e.openBlock(),e.createBlock(c,{key:1,to:h.path,class:"side-link",title:t.sidebarCollapsed?t.translateStaticCopy(h.label,t.currentLocale):void 0,onClick:t.handleSidebarNavigate},{default:e.withCtx(()=>[e.createVNode(f,null,{default:e.withCtx(()=>[(e.openBlock(),e.createBlock(e.resolveDynamicComponent(h.icon)))]),_:2},1024),e.createElementVNode("span",null,e.toDisplayString(t.translateStaticCopy(h.label,t.currentLocale)),1)]),_:2},1032,["to","title"]))],64))),128))],64))),128))])]),t.mobileSidebarOpen?(e.openBlock(),e.createElementBlock("button",{key:0,type:"button",class:"sidebar-scrim","aria-label":"关闭菜单",onClick:t.closeMobileSidebar})):e.createCommentVNode("v-if",!0),e.createElementVNode("div",Be,[e.createElementVNode("header",Se,[e.createElementVNode("button",{type:"button",class:"sidebar-toggle","aria-expanded":t.isNarrowViewport?t.mobileSidebarOpen:!t.sidebarCollapsed,"aria-label":t.isNarrowViewport?"打开菜单":t.sidebarCollapsed?"展开侧栏":"收缩侧栏",title:t.isNarrowViewport?"打开菜单":t.sidebarCollapsed?"展开侧栏":"收缩侧栏",onClick:t.toggleSidebar},[e.createVNode(f,null,{default:e.withCtx(()=>[(e.openBlock(),e.createBlock(e.resolveDynamicComponent(t.isNarrowViewport?t.Menu:t.sidebarCollapsed?t.Expand:t.Fold)))]),_:1})],8,De),e.createElementVNode("div",Me,e.toDisplayString(t.t("common.home"))+" / "+e.toDisplayString(t.translatedClientName)+" / "+e.toDisplayString(t.translatedCurrentTitle),1),e.createElementVNode("div",Ae,[e.createVNode(N,{modelValue:t.currentLocale,"onUpdate:modelValue":n[0]||(n[0]=m=>t.currentLocale=m),class:"locale-switch",size:"small"},{default:e.withCtx(()=>[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t.localeOptions,m=>(e.openBlock(),e.createBlock(s,{key:m.value,label:m.label,value:m.value},null,8,["label","value"]))),128))]),_:1},8,["modelValue"]),e.createVNode(N,{modelValue:t.selectedClient,"onUpdate:modelValue":n[1]||(n[1]=m=>t.selectedClient=m),class:"client-switch",size:"small",onChange:t.switchClient},{default:e.withCtx(()=>[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t.availableClients,m=>(e.openBlock(),e.createBlock(s,{key:m.id,label:m.name,value:m.id},null,8,["label","value"]))),128))]),_:1},8,["modelValue"]),t.developerMode?(e.openBlock(),e.createBlock(E,{key:0,class:"developer-mode-badge",type:"warning",size:"small"},{default:e.withCtx(()=>[...n[4]||(n[4]=[e.createTextVNode(" 开发模式 ",-1)])]),_:1})):e.createCommentVNode("v-if",!0),t.developerMode&&t.sourcePath?(e.openBlock(),e.createBlock(P,{key:1,class:"source-trigger",disabled:!!t.exportConfig,text:"",size:"small",onClick:t.handleSourceDownload},{default:e.withCtx(()=>[e.createVNode(f,null,{default:e.withCtx(()=>[e.createVNode(t.Download)]),_:1}),n[5]||(n[5]=e.createTextVNode(" 下载源文件 ",-1))]),_:1},8,["disabled"])):e.createCommentVNode("v-if",!0),t.developerMode&&t.prdDocumentPath?(e.openBlock(),e.createBlock(P,{key:2,class:"prd-trigger",disabled:!!t.exportConfig,text:"",size:"small",onClick:n[2]||(n[2]=m=>t.prdPanelOpen=!t.prdPanelOpen)},{default:e.withCtx(()=>[e.createVNode(f,null,{default:e.withCtx(()=>[e.createVNode(t.Document)]),_:1}),e.createTextVNode(" "+e.toDisplayString(t.prdPanelOpen?"关闭 PRD":"查看 PRD"),1)]),_:1},8,["disabled"])):e.createCommentVNode("v-if",!0),e.createVNode(u,{trigger:"click"},{dropdown:e.withCtx(()=>[e.createVNode(S,null,{default:e.withCtx(()=>[e.createVNode(y,{onClick:t.logout},{default:e.withCtx(()=>[e.createTextVNode(e.toDisplayString(t.t("common.logout")),1)]),_:1}),e.createVNode(y,{divided:"",onClick:t.goHome},{default:e.withCtx(()=>[...n[8]||(n[8]=[e.createTextVNode("回到首页",-1)])]),_:1})]),_:1})]),default:e.withCtx(()=>[e.createElementVNode("span",je,[e.createVNode(x,{size:32},{default:e.withCtx(()=>[...n[6]||(n[6]=[e.createTextVNode("A",-1)])]),_:1}),n[7]||(n[7]=e.createElementVNode("span",null,"Admin",-1))])]),_:1})])]),e.createElementVNode("div",Le,[e.createElementVNode("main",{class:e.normalizeClass(["page-container",{"legacy-page-container":t.route.meta.legacy}])},[e.createVNode(w)],2),t.prdPanelOpen&&t.prdDocumentPath&&!t.exportConfig?(e.openBlock(),e.createBlock(t.PrdReviewPanel,{key:0,"project-id":t.props.projectId,"document-path":t.prdDocumentPath,"document-paths":t.prdDocuments,"page-title":t.currentTitle,"document-anchor":t.prdDocumentAnchor,"layout-mode":t.prdLayoutMode,onClose:t.closePrdPanel,onOpenWindow:t.openDocumentWindow,"onUpdate:layoutMode":n[3]||(n[3]=m=>t.prdLayoutMode=m)},null,8,["project-id","document-path","document-paths","page-title","document-anchor","layout-mode"])):e.createCommentVNode("v-if",!0)])]),t.exportConfig?e.createCommentVNode("v-if",!0):(e.openBlock(),e.createBlock(t.PrdAssociationLayer,{key:1,"project-id":t.props.projectId,"page-path":t.route.path,enabled:!0,"can-edit":t.developerMode,onOpen:t.openPrdBinding},null,8,["project-id","page-path","can-edit"]))],2)}const Re=M(ke,[["render",Oe],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/ExportAppShell.vue"]]),Te={__name:"OperationExportLayout",setup(a,{expose:n}){n();const t={menus:[{title:"客户中心",items:[{label:"客户等级方案",path:"/p/rimo-rental/operation/membership-plans",icon:B.Medal}]}],AppShell:Re,get Medal(){return B.Medal}};return Object.defineProperty(t,"__isScriptSetup",{enumerable:!1,value:!0}),t}};function Ie(a,n,r,t,_,k){return e.openBlock(),e.createBlock(t.AppShell,{"project-id":"rimo-rental","app-name":"RIMO Rental",client:"operation","client-name":"营运端",menus:t.menus})}const ze=M(Te,[["render",Ie],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/OperationExportLayout.vue"]]),Ue={__name:"PageHeader",props:{title:{type:String,required:!0},description:{type:String,default:""},titleClass:{type:[String,Array,Object],default:""},descriptionClass:{type:[String,Array,Object],default:""},unstyled:{type:Boolean,default:!1}},setup(a,{expose:n}){n();const r={};return Object.defineProperty(r,"__isScriptSetup",{enumerable:!1,value:!0}),r}};function qe(a,n,r,t,_,k){return e.openBlock(),e.createElementBlock("header",{class:e.normalizeClass({"ui-page-header":!r.unstyled})},[e.createElementVNode("div",{class:e.normalizeClass({"ui-page-header__content":!r.unstyled})},[e.createElementVNode("h1",{class:e.normalizeClass(r.titleClass)},e.toDisplayString(r.title),3),r.description?(e.openBlock(),e.createElementBlock("p",{key:0,class:e.normalizeClass(r.descriptionClass)},e.toDisplayString(r.description),3)):e.createCommentVNode("v-if",!0)],2),a.$slots.actions?(e.openBlock(),e.createElementBlock("div",{key:0,class:e.normalizeClass({"ui-page-header__actions":!r.unstyled})},[e.renderSlot(a.$slots,"actions",{},void 0,!0)],2)):e.createCommentVNode("v-if",!0)],2)}const Fe=M(Ue,[["render",qe],["__scopeId","data-v-56e30ce3"],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/export-src/components/ui/PageHeader.vue"]]),He={__name:"MembershipPlansView",setup(a,{expose:n}){n();const r=e.ref([{id:"MP001",name:"普通会员",tier:1,type:"free",isDefault:!0,isRecommended:!1,showInApp:!0,pricing:{monthly:0,quarterly:0,semiAnnual:0,annual:0,monthlyEnabled:!1,quarterlyEnabled:!1,semiAnnualEnabled:!1,annualEnabled:!1},benefits:["基础租车服务","积分1倍累积"],memberCount:12580,status:"active"},{id:"MP002",name:"银牌会员",tier:2,type:"paid",isDefault:!1,isRecommended:!1,showInApp:!0,pricing:{monthly:99,quarterly:269,semiAnnual:0,annual:899,monthlyEnabled:!0,quarterlyEnabled:!0,semiAnnualEnabled:!1,annualEnabled:!0},benefits:["积分1.5倍累积","专属客服","生日特权"],memberCount:3200,status:"active"},{id:"MP003",name:"金牌会员",tier:3,type:"paid",isDefault:!1,isRecommended:!0,showInApp:!0,pricing:{monthly:199,quarterly:539,semiAnnual:999,annual:1799,monthlyEnabled:!0,quarterlyEnabled:!0,semiAnnualEnabled:!0,annualEnabled:!0},benefits:["积分2倍累积","免费升级车型","专属客服","VIP休息室","生日双倍积分"],memberCount:1520,status:"active"},{id:"MP004",name:"钻石会员",tier:4,type:"paid",isDefault:!1,isRecommended:!1,showInApp:!1,pricing:{monthly:399,quarterly:0,semiAnnual:0,annual:3599,monthlyEnabled:!0,quarterlyEnabled:!1,semiAnnualEnabled:!1,annualEnabled:!0},benefits:["积分3倍累积","优先预订","机场接送","专属车辆","VIP通道","24小时管家服务"],memberCount:280,status:"active"}]),t=[{key:"monthly",label:"月缴"},{key:"quarterly",label:"季缴"},{key:"semiAnnual",label:"半年缴"},{key:"annual",label:"年缴"}],_=e.ref(!1),k=e.ref(!1),f=e.ref(""),c=e.reactive({id:"",name:"",tier:1,type:"free",isDefault:!1,isRecommended:!1,showInApp:!0,pricing:{monthly:0,quarterly:0,semiAnnual:0,annual:0,monthlyEnabled:!1,quarterlyEnabled:!1,semiAnnualEnabled:!1,annualEnabled:!1},benefits:[],memberCount:0,status:"active"}),s=e.computed(()=>[...r.value].sort((i,g)=>i.tier-g.tier)),D={plans:r,pricingCycles:t,dialogVisible:_,isEdit:k,newBenefit:f,currentPlan:c,sortedPlans:s,formatNumber:i=>i>=1e4?(i/1e4).toFixed(1)+"万":i>=1e3?(i/1e3).toFixed(1)+"k":i.toString(),getLowestPrice:i=>{const g=t.filter(o=>i.pricing[o.key+"Enabled"]&&i.pricing[o.key]>0);return g.length===0?0:Math.min(...g.map(o=>i.pricing[o.key]))},getLowestPriceCycle:i=>{const g=t.filter(b=>i.pricing[b.key+"Enabled"]&&i.pricing[b.key]>0);return g.length===0?"月":g.reduce((b,A)=>i.pricing[b.key]<i.pricing[A.key]?b:A).label.replace("缴","")},getEnabledCyclesText:i=>t.filter(o=>i.pricing[o.key+"Enabled"]&&i.pricing[o.key]>0).map(o=>`${o.label.replace("缴","")}¥${i.pricing[o.key]}`).join(" | "),openDialog:()=>{k.value=!1,Object.assign(c,{id:"MP"+Date.now(),name:"",tier:r.value.length+1,type:"free",isDefault:!1,isRecommended:!1,showInApp:!0,pricing:{monthly:0,quarterly:0,semiAnnual:0,annual:0,monthlyEnabled:!1,quarterlyEnabled:!1,semiAnnualEnabled:!1,annualEnabled:!1},benefits:[],memberCount:0,status:"active"}),f.value="",_.value=!0},openEdit:i=>{k.value=!0,Object.assign(c,JSON.parse(JSON.stringify(i))),f.value="",_.value=!0},addBenefit:()=>{f.value.trim()&&(c.benefits.push(f.value.trim()),f.value="")},removeBenefit:i=>{c.benefits.splice(i,1)},savePlan:()=>{if(!c.name){C.ElMessage.warning("请输入方案名称");return}if(c.type==="paid"&&!t.some(g=>c.pricing[g.key+"Enabled"]&&c.pricing[g.key]>0)){C.ElMessage.warning("付费方案请至少设置一个缴费周期价格");return}if(c.isDefault&&r.value.forEach(i=>{i.id!==c.id&&(i.isDefault=!1)}),k.value){const i=r.value.findIndex(g=>g.id===c.id);i!==-1&&(r.value[i]=JSON.parse(JSON.stringify(c)))}else r.value.push(JSON.parse(JSON.stringify(c)));_.value=!1,C.ElMessage.success("保存成功")},deletePlan:i=>{if(i.memberCount>0){C.ElMessage.warning("该方案下还有会员，请先迁移后再删除");return}C.ElMessageBox.confirm(`确定要删除方案 "${i.name}" 吗?`,"警告",{type:"warning"}).then(()=>{const g=r.value.findIndex(o=>o.id===i.id);g!==-1&&r.value.splice(g,1),C.ElMessage.success("删除成功")})},computed:e.computed,reactive:e.reactive,ref:e.ref,get ElMessage(){return C.ElMessage},get ElMessageBox(){return C.ElMessageBox},get PageHeader(){return Fe}};return Object.defineProperty(D,"__isScriptSetup",{enumerable:!1,value:!0}),D}},Je={class:"membership-plans-page"},We={class:"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"},Ke={key:0,class:"absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs px-4 py-1 rounded-full font-bold shadow-md"},Xe={key:1,class:"absolute -top-3 right-4 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-md"},Ge={class:"flex justify-between items-start mb-4"},Qe={class:"tier-badge text-xs px-2 py-1 rounded-full"},Ye={class:"text-xl font-bold text-gray-800 mb-2"},Ze={class:"mb-4"},$e={key:0,class:"text-2xl font-bold text-green-600"},ve={key:1},et={class:"text-2xl font-bold text-theme-primary"},tt={class:"text-sm font-normal text-gray-500"},nt={class:"text-xs text-gray-400 mt-1"},ot={class:"flex-1 mb-4"},lt={class:"space-y-1.5"},rt={key:0,class:"text-xs text-gray-400"},at={class:"text-center py-3 bg-gray-50 rounded-lg mb-4"},it={class:"text-2xl font-bold text-gray-800"},st={class:"flex gap-2 border-t border-gray-100 pt-4"},ct={key:0,class:"col-span-full flex flex-col items-center justify-center py-20 text-gray-400"},dt={class:"grid grid-cols-2 gap-6"},mt={key:0,class:"col-span-2 bg-blue-50 p-4 rounded-lg border border-blue-100"},pt={class:"font-bold text-gray-800 mb-4 flex items-center"},ft={class:"grid grid-cols-2 gap-4"},gt={class:"col-span-2"},yt={class:"w-full"},bt={class:"flex gap-2 mb-3"},_t={class:"flex flex-wrap gap-2"},ht={key:0,class:"text-gray-400 text-sm"};function ut(a,n,r,t,_,k){const f=e.resolveComponent("Plus"),c=e.resolveComponent("el-icon"),s=e.resolveComponent("el-button"),N=e.resolveComponent("el-tag"),E=e.resolveComponent("Check"),P=e.resolveComponent("Medal"),x=e.resolveComponent("el-input"),y=e.resolveComponent("el-form-item"),S=e.resolveComponent("el-input-number"),u=e.resolveComponent("el-radio-button"),w=e.resolveComponent("el-radio-group"),m=e.resolveComponent("Money"),h=e.resolveComponent("el-checkbox"),D=e.resolveComponent("el-switch"),i=e.resolveComponent("el-form"),g=e.resolveComponent("el-dialog");return e.openBlock(),e.createElementBlock(e.Fragment,null,[e.createElementVNode("div",Je,[e.createElementVNode("main",null,[e.createVNode(t.PageHeader,{unstyled:"",class:"flex justify-between items-end mb-6",title:"客户等级方案",description:"管理会员等级方案，设置付费/免费模式及会员权益配置。","title-class":"text-2xl font-bold text-gray-800 tracking-tight","description-class":"text-gray-500 text-sm mt-1"},{actions:e.withCtx(()=>[e.createVNode(s,{type:"primary",size:"large",class:"shadow-md shadow-indigo-500/20",onClick:n[0]||(n[0]=o=>t.openDialog())},{default:e.withCtx(()=>[e.createVNode(c,{class:"mr-1"},{default:e.withCtx(()=>[e.createVNode(f)]),_:1}),n[10]||(n[10]=e.createTextVNode(" 新增方案 ",-1))]),_:1})]),_:1}),e.createElementVNode("div",We,[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t.sortedPlans,o=>(e.openBlock(),e.createElementBlock("div",{key:o.id,class:e.normalizeClass(["plan-card border-2 rounded-2xl p-6 bg-white flex flex-col relative",{"is-recommended":o.isRecommended,"border-gray-200":!o.isRecommended}])},[o.isRecommended?(e.openBlock(),e.createElementBlock("div",Ke," ⭐ 推荐 ")):e.createCommentVNode("v-if",!0),o.isDefault?(e.openBlock(),e.createElementBlock("div",Xe," 默认 ")):e.createCommentVNode("v-if",!0),e.createElementVNode("div",Ge,[e.createElementVNode("div",Qe," Lv."+e.toDisplayString(o.tier),1),o.showInApp?e.createCommentVNode("v-if",!0):(e.openBlock(),e.createBlock(N,{key:0,size:"small",type:"info",effect:"plain"},{default:e.withCtx(()=>[...n[11]||(n[11]=[e.createTextVNode(" APP隐藏 ",-1)])]),_:1}))]),e.createElementVNode("h3",Ye,e.toDisplayString(o.name),1),e.createElementVNode("div",Ze,[o.type==="free"?(e.openBlock(),e.createElementBlock("div",$e," 免费 ")):(e.openBlock(),e.createElementBlock("div",ve,[e.createElementVNode("div",et,[e.createTextVNode(" ¥"+e.toDisplayString(t.getLowestPrice(o)),1),e.createElementVNode("span",tt,"/"+e.toDisplayString(t.getLowestPriceCycle(o)),1)]),e.createElementVNode("div",nt,e.toDisplayString(t.getEnabledCyclesText(o)),1)]))]),e.createElementVNode("div",ot,[n[12]||(n[12]=e.createElementVNode("div",{class:"text-xs text-gray-500 font-bold mb-2 uppercase"},"权益",-1)),e.createElementVNode("ul",lt,[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(o.benefits.slice(0,4),(b,A)=>(e.openBlock(),e.createElementBlock("li",{key:A,class:"flex items-center text-sm text-gray-600"},[e.createVNode(c,{class:"mr-2 text-green-500"},{default:e.withCtx(()=>[e.createVNode(E)]),_:1}),e.createTextVNode(" "+e.toDisplayString(b),1)]))),128)),o.benefits.length>4?(e.openBlock(),e.createElementBlock("li",rt," + "+e.toDisplayString(o.benefits.length-4)+" 项更多权益... ",1)):e.createCommentVNode("v-if",!0)])]),e.createElementVNode("div",at,[e.createElementVNode("div",it,e.toDisplayString(t.formatNumber(o.memberCount)),1),n[13]||(n[13]=e.createElementVNode("div",{class:"text-xs text-gray-500"},"当前会员数",-1))]),e.createElementVNode("div",st,[e.createVNode(s,{class:"flex-1",type:"primary",plain:"",size:"small",onClick:b=>t.openEdit(o)},{default:e.withCtx(()=>[...n[14]||(n[14]=[e.createTextVNode("编辑",-1)])]),_:1},8,["onClick"]),e.createVNode(s,{type:"danger",plain:"",size:"small",icon:"Delete",circle:"",disabled:o.memberCount>0,onClick:b=>t.deletePlan(o)},null,8,["disabled","onClick"])])],2))),128)),t.plans.length===0?(e.openBlock(),e.createElementBlock("div",ct,[e.createVNode(c,{class:"text-5xl mb-3 opacity-20"},{default:e.withCtx(()=>[e.createVNode(P)]),_:1}),n[15]||(n[15]=e.createElementVNode("p",null,"暂无会员方案，点击右上角新增",-1))])):e.createCommentVNode("v-if",!0)])])]),e.createVNode(g,{modelValue:t.dialogVisible,"onUpdate:modelValue":n[9]||(n[9]=o=>t.dialogVisible=o),title:t.isEdit?"编辑会员方案":"新增会员方案",width:"700px"},{footer:e.withCtx(()=>[e.createVNode(s,{onClick:n[8]||(n[8]=o=>t.dialogVisible=!1)},{default:e.withCtx(()=>[...n[26]||(n[26]=[e.createTextVNode("取消",-1)])]),_:1}),e.createVNode(s,{type:"primary",onClick:t.savePlan},{default:e.withCtx(()=>[...n[27]||(n[27]=[e.createTextVNode("保存",-1)])]),_:1})]),default:e.withCtx(()=>[e.createVNode(i,{model:t.currentPlan,"label-position":"top"},{default:e.withCtx(()=>[e.createElementVNode("div",dt,[e.createVNode(y,{label:"方案名称",required:""},{default:e.withCtx(()=>[e.createVNode(x,{modelValue:t.currentPlan.name,"onUpdate:modelValue":n[1]||(n[1]=o=>t.currentPlan.name=o),placeholder:"例如: 金牌会员"},null,8,["modelValue"])]),_:1}),e.createVNode(y,{label:"等级层级",required:""},{default:e.withCtx(()=>[e.createVNode(S,{modelValue:t.currentPlan.tier,"onUpdate:modelValue":n[2]||(n[2]=o=>t.currentPlan.tier=o),min:1,max:10,class:"w-full"},null,8,["modelValue"]),n[16]||(n[16]=e.createElementVNode("div",{class:"text-xs text-gray-400 mt-1"},"数字越大等级越高，用于排序",-1))]),_:1}),e.createVNode(y,{label:"收费类型",class:"col-span-2"},{default:e.withCtx(()=>[e.createVNode(w,{modelValue:t.currentPlan.type,"onUpdate:modelValue":n[3]||(n[3]=o=>t.currentPlan.type=o)},{default:e.withCtx(()=>[e.createVNode(u,{value:"free"},{default:e.withCtx(()=>[...n[17]||(n[17]=[e.createTextVNode("免费方案",-1)])]),_:1}),e.createVNode(u,{value:"paid"},{default:e.withCtx(()=>[...n[18]||(n[18]=[e.createTextVNode("付费方案",-1)])]),_:1})]),_:1},8,["modelValue"])]),_:1}),t.currentPlan.type==="paid"?(e.openBlock(),e.createElementBlock("div",mt,[e.createElementVNode("div",pt,[e.createVNode(c,{class:"mr-2 text-blue-600"},{default:e.withCtx(()=>[e.createVNode(m)]),_:1}),n[19]||(n[19]=e.createTextVNode(" 缴费周期与价格 ",-1))]),n[21]||(n[21]=e.createElementVNode("div",{class:"text-xs text-gray-500 mb-4"},"勾选启用的缴费周期，并设置对应价格",-1)),e.createElementVNode("div",ft,[(e.openBlock(),e.createElementBlock(e.Fragment,null,e.renderList(t.pricingCycles,o=>e.createElementVNode("div",{key:o.key,class:"flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"},[e.createVNode(h,{modelValue:t.currentPlan.pricing[o.key+"Enabled"],"onUpdate:modelValue":b=>t.currentPlan.pricing[o.key+"Enabled"]=b},{default:e.withCtx(()=>[e.createTextVNode(e.toDisplayString(o.label),1)]),_:2},1032,["modelValue","onUpdate:modelValue"]),e.createVNode(S,{modelValue:t.currentPlan.pricing[o.key],"onUpdate:modelValue":b=>t.currentPlan.pricing[o.key]=b,min:0,step:10,disabled:!t.currentPlan.pricing[o.key+"Enabled"],size:"small",class:"flex-1"},null,8,["modelValue","onUpdate:modelValue","disabled"]),n[20]||(n[20]=e.createElementVNode("span",{class:"text-xs text-gray-400"},"元",-1))])),64))])])):e.createCommentVNode("v-if",!0),e.createElementVNode("div",gt,[e.createVNode(y,{label:"会员权益"},{default:e.withCtx(()=>[e.createElementVNode("div",yt,[e.createElementVNode("div",bt,[e.createVNode(x,{modelValue:t.newBenefit,"onUpdate:modelValue":n[4]||(n[4]=o=>t.newBenefit=o),placeholder:"输入权益内容",onKeyup:e.withKeys(t.addBenefit,["enter"])},null,8,["modelValue"]),e.createVNode(s,{type:"primary",onClick:t.addBenefit},{default:e.withCtx(()=>[...n[22]||(n[22]=[e.createTextVNode("添加",-1)])]),_:1})]),e.createElementVNode("div",_t,[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t.currentPlan.benefits,(o,b)=>(e.openBlock(),e.createBlock(N,{key:b,closable:"",onClose:A=>t.removeBenefit(b),size:"large"},{default:e.withCtx(()=>[e.createTextVNode(e.toDisplayString(o),1)]),_:2},1032,["onClose"]))),128)),t.currentPlan.benefits.length===0?(e.openBlock(),e.createElementBlock("div",ht," 暂无权益，请添加 ")):e.createCommentVNode("v-if",!0)])])]),_:1})]),e.createVNode(y,{label:"设为注册默认方案"},{default:e.withCtx(()=>[e.createVNode(D,{modelValue:t.currentPlan.isDefault,"onUpdate:modelValue":n[5]||(n[5]=o=>t.currentPlan.isDefault=o)},null,8,["modelValue"]),n[23]||(n[23]=e.createElementVNode("span",{class:"text-xs text-gray-500 ml-2"},"新用户注册后自动成为该方案会员",-1))]),_:1}),e.createVNode(y,{label:"设为推荐方案"},{default:e.withCtx(()=>[e.createVNode(D,{modelValue:t.currentPlan.isRecommended,"onUpdate:modelValue":n[6]||(n[6]=o=>t.currentPlan.isRecommended=o)},null,8,["modelValue"]),n[24]||(n[24]=e.createElementVNode("span",{class:"text-xs text-gray-500 ml-2"},"在APP首页突出显示",-1))]),_:1}),e.createVNode(y,{label:"APP显示",class:"col-span-2"},{default:e.withCtx(()=>[e.createVNode(D,{modelValue:t.currentPlan.showInApp,"onUpdate:modelValue":n[7]||(n[7]=o=>t.currentPlan.showInApp=o)},null,8,["modelValue"]),n[25]||(n[25]=e.createElementVNode("span",{class:"text-xs text-gray-500 ml-2"},"关闭后该方案不会在APP中展示给用户",-1))]),_:1})])]),_:1},8,["model"])]),_:1},8,["modelValue","title"])],64)}const kt=M(He,[["render",ut],["__scopeId","data-v-ad7f2dcc"],["__file","D:/工作文件/项目资料原型工程/projects/rimo-rental/views/operation/MembershipPlansView.vue"]]),Z=Object.freeze({name:"RIMO Rental",platformTitle:"项目页面演示"}),$=j.createRouter({history:j.createWebHashHistory(),routes:[{path:"/p/rimo-rental/operation",component:ze,children:[{path:"membership-plans",name:"export-operation-operation-membership-plans",component:kt,meta:{title:"客户等级方案",projectId:"rimo-rental",clientId:"operation"}}]},{path:"/operation/:legacyPath(.*)*",redirect:a=>({path:"/p/rimo-rental/operation/"+(Array.isArray(a.params.legacyPath)?a.params.legacyPath.join("/"):String(a.params.legacyPath||"")),query:a.query,hash:a.hash})},{path:"/:pathMatch(.*)*",redirect:"/p/rimo-rental/operation/membership-plans"}]});$.afterEach(a=>{document.title=`${a.meta.title||Z.platformTitle} - ${Z.name}`});const L={primary:"#00689e",primaryHover:"#005e8e",primaryActive:"#004e77",pageBackground:"#f5f7fb"};{document.documentElement.style.setProperty("--app-color-primary",L.primary);const a=L.primary.match(/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);a&&document.documentElement.style.setProperty("--app-color-primary-rgb",a.slice(1).map(n=>Number.parseInt(n,16)).join(" "))}document.documentElement.style.setProperty("--app-color-primary-hover",L.primaryHover),document.documentElement.style.setProperty("--app-color-primary-active",L.primaryActive),document.documentElement.style.setProperty("--app-color-page",L.pageBackground);const O=e.createApp(de);for(const[a,n]of Object.entries(ie))O.component(a,n);O.use(C),O.use(X),O.use($),O.mount("#app");const xt={},wt={class:"export-prd-placeholder","aria-hidden":"true"};function Vt(a,n){return e.openBlock(),e.createElementBlock("span",wt)}const Ct=Object.freeze(Object.defineProperty({__proto__:null,default:M(xt,[["render",Vt],["__file","D:/工作文件/项目资料原型工程/.page-transfer-work/1784621198557-yb7ha3/页面演示包-1784621198557-yb7ha3/PrdReviewPanel.vue"]])},Symbol.toStringTag,{value:"Module"}))})(Vue,ElementPlus,ElementPlusIconsVue,VueRouter,VueI18n);
+</script>  <style>.ui-page-header[data-v-56e30ce3]{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--app-space-5);margin-bottom:var(--app-space-6)}.ui-page-header__content[data-v-56e30ce3]{min-width:0}.ui-page-header h1[data-v-56e30ce3]{margin:0;color:var(--app-color-text-primary);font-size:var(--app-font-size-page-title);line-height:1.25}.ui-page-header p[data-v-56e30ce3]{margin:var(--app-space-1) 0 0;color:var(--app-color-text-muted);font-size:var(--app-font-size-base)}.ui-page-header__actions[data-v-56e30ce3]{display:flex;flex:0 0 auto;align-items:center;gap:var(--app-space-3)}.membership-plans-page[data-v-ad7f2dcc]{min-height:100%}.plan-card[data-v-ad7f2dcc]{transition:all .2s ease}.plan-card[data-v-ad7f2dcc]:hover{transform:translateY(-4px);box-shadow:0 12px 24px #0000001a}.plan-card.is-recommended[data-v-ad7f2dcc]{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)}.tier-badge[data-v-ad7f2dcc]{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:700}:root{--app-color-primary: #2563eb;--app-color-primary-rgb: 37 99 235;--app-color-primary-hover: #1d4ed8;--app-color-primary-active: #1e40af;--app-color-success: #16a34a;--app-color-warning: #f59e0b;--app-color-danger: #dc2626;--app-color-info: #64748b;--app-color-primary-soft: color-mix(in srgb, var(--app-color-primary) 10%, white);--app-color-success-soft: color-mix(in srgb, var(--app-color-success) 10%, white);--app-color-warning-soft: color-mix(in srgb, var(--app-color-warning) 14%, white);--app-color-danger-soft: color-mix(in srgb, var(--app-color-danger) 10%, white);--app-color-info-soft: color-mix(in srgb, var(--app-color-info) 9%, white);--app-color-primary-border: color-mix(in srgb, var(--app-color-primary) 25%, white);--app-color-success-border: color-mix(in srgb, var(--app-color-success) 25%, white);--app-color-warning-border: color-mix(in srgb, var(--app-color-warning) 32%, white);--app-color-danger-border: color-mix(in srgb, var(--app-color-danger) 25%, white);--app-color-info-border: color-mix(in srgb, var(--app-color-info) 22%, white);--app-color-primary-text: color-mix(in srgb, var(--app-color-primary) 82%, black);--app-color-success-text: color-mix(in srgb, var(--app-color-success) 78%, black);--app-color-warning-text: color-mix(in srgb, var(--app-color-warning) 72%, black);--app-color-danger-text: color-mix(in srgb, var(--app-color-danger) 80%, black);--app-color-info-text: var(--app-color-text-secondary);--app-color-text-primary: #0f172a;--app-color-text-secondary: #475569;--app-color-text-muted: #64748b;--app-color-border: #dbe3ec;--app-color-border-light: #e5e7eb;--app-color-border-subtle: #f3f4f6;--app-color-surface: #ffffff;--app-color-surface-subtle: #f8fafc;--app-color-surface-muted: #f9fafb;--app-color-page: #f5f7fb;--app-font-size-xs: 12px;--app-font-size-sm: 13px;--app-font-size-base: 14px;--app-font-size-md: 16px;--app-font-size-lg: 20px;--app-font-size-page-title: 24px;--app-space-1: 4px;--app-space-2: 8px;--app-space-3: 12px;--app-space-4: 16px;--app-space-5: 20px;--app-space-6: 24px;--app-space-8: 32px;--app-radius-control: 4px;--app-radius-panel: 8px;--app-radius-list-panel: 12px;--app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);--app-shadow-float: 0 12px 32px rgb(15 23 42 / 10%);--app-control-height: 36px;--app-table-row-height: 48px;--app-panel-header-height: 52px;--platform-content-max: 1200px;--platform-page-gutter: clamp(16px, 3vw, 40px);--platform-color-page: #f5f5f7;--platform-color-surface: #ffffff;--platform-color-surface-soft: #f2f2f7;--platform-color-text: #1d1d1f;--platform-color-text-secondary: #6e6e73;--platform-radius-control: 10px;--platform-radius-surface: 18px;--platform-shadow-surface: 0 4px 20px rgb(0 0 0 / 5%);--platform-shadow-float: 0 20px 56px rgb(0 0 0 / 16%);--platform-motion-fast: .12s;--platform-motion-base: .18s;--el-color-primary: var(--app-color-primary);--el-color-primary-light-3: color-mix(in srgb, var(--app-color-primary) 70%, white);--el-color-primary-light-5: color-mix(in srgb, var(--app-color-primary) 50%, white);--el-color-primary-light-7: color-mix(in srgb, var(--app-color-primary) 30%, white);--el-color-primary-light-8: color-mix(in srgb, var(--app-color-primary) 20%, white);--el-color-primary-light-9: color-mix(in srgb, var(--app-color-primary) 10%, white);--el-color-primary-dark-2: color-mix(in srgb, var(--app-color-primary) 80%, black)}:root{--page-bg: var(--app-color-page);--panel-bg: var(--app-color-surface);--line: var(--app-color-border);--text: var(--app-color-text-primary);--muted: var(--app-color-text-muted);--success: var(--app-color-success);--warning: var(--app-color-warning);--danger: var(--app-color-danger)}*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}svg{display:block;vertical-align:middle}h1,h2,h3,h4,h5,h6,p{margin:0}button,input,optgroup,select,textarea{margin:0;padding:0;color:inherit;font:inherit;line-height:inherit}button,select{text-transform:none}button{-webkit-appearance:button;-moz-appearance:button;appearance:button;background-color:transparent;background-image:none}button,[role=button]{cursor:pointer}:disabled{cursor:default}ol,ul,menu{margin:0;padding:0;list-style:none}table{border-color:inherit;border-collapse:collapse;text-indent:0}img,video{max-width:100%;height:auto}html,body,#app{width:100%;min-height:100%;margin:0}body{font-family:Noto Sans SC,-apple-system,BlinkMacSystemFont,Segoe UI,Microsoft YaHei,Arial,sans-serif;color:var(--text);background:var(--page-bg)}.platform-route-enter-active,.platform-route-leave-active{transition:opacity var(--platform-motion-base) cubic-bezier(.22,1,.36,1),transform var(--platform-motion-base) cubic-bezier(.22,1,.36,1)}.platform-route-enter-from{opacity:0;transform:translateY(8px)}.platform-route-leave-to{opacity:0;transform:translateY(-4px)}a{color:inherit;text-decoration:none}.app-shell{display:grid;grid-template-columns:256px minmax(0,1fr);height:100vh;min-height:0;overflow:hidden;background:var(--page-bg);transition:grid-template-columns .22s ease}.app-sidebar{display:flex;flex-direction:column;height:100vh;min-width:0;min-height:0;overflow:hidden;background:var(--app-color-primary);color:#fff;transition:transform .22s ease}.app-shell.sidebar-collapsed{grid-template-columns:76px minmax(0,1fr)}.app-shell.sidebar-collapsed .sidebar-brand{padding-right:10px;padding-left:10px}.app-shell.sidebar-collapsed .brand-box{justify-content:center}.app-shell.sidebar-collapsed .brand-box>span{display:grid;width:34px;height:34px;align-items:center;justify-content:center;border-radius:11px;background:#ffffff24;font-size:0}.app-shell.sidebar-collapsed .brand-box>span:before{color:#fff;content:attr(data-initial);font-size:16px;line-height:1}.app-shell.sidebar-collapsed .brand-box small,.app-shell.sidebar-collapsed .side-link>span{display:none}.app-shell.sidebar-collapsed .side-section{padding-right:8px;padding-left:8px}.app-shell.sidebar-collapsed .side-section-title{min-height:16px;padding:12px 0 4px;font-size:0}.app-shell.sidebar-collapsed .side-link{justify-content:center;gap:0;padding-right:0;padding-left:0}.sidebar-brand{padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08)}.brand-box{display:flex;align-items:center;justify-content:space-between;gap:12px;height:34px;padding:0;border:0;border-radius:0;background:transparent;font-weight:800}.brand-box>span{min-width:0;overflow:hidden;color:#fff;font-size:17px;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}.brand-box small{flex:0 0 auto;color:#ffffffad;font-size:12px;font-weight:600;white-space:nowrap}.side-section{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;padding:16px 12px 8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.26) transparent}.side-section::-webkit-scrollbar{width:6px}.side-section::-webkit-scrollbar-thumb{border-radius:999px;background:#ffffff42}.side-section-title{padding:8px 12px;color:#ffffff6b;font-size:12px;font-weight:700}.side-link{display:flex;align-items:center;gap:10px;min-height:42px;margin:4px 0;padding:0 12px;border-radius:9px;color:#ffffffb8;font-size:14px;font-weight:700;transition:color .16s ease,background-color .16s ease,transform .16s ease}.side-link:hover,.side-link.router-link-active{color:#fff;background:#fff3}.app-main{display:flex;height:100vh;min-width:0;min-height:0;flex-direction:column;overflow:hidden}.topbar{display:flex;align-items:center;justify-content:space-between;height:68px;flex:0 0 68px;padding:0 28px;border-bottom:1px solid var(--line);background:#fff}.sidebar-toggle{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:0;border-radius:10px;color:var(--muted);background:transparent;cursor:pointer;transition:color .16s ease,background-color .16s ease,transform .16s ease}.sidebar-toggle:hover{color:var(--text);background:var(--surface-muted)}.sidebar-toggle:active{transform:scale(.94)}.sidebar-toggle:focus-visible{outline:3px solid rgb(var(--app-color-primary-rgb) / 20%);outline-offset:2px}.breadcrumb{min-width:0;flex:1 1 auto;margin-left:12px;overflow:hidden;color:var(--muted);font-size:14px;text-overflow:ellipsis;white-space:nowrap}.topbar-actions{display:flex;align-items:center;gap:12px}.client-switch{min-width:128px}.locale-switch{width:96px}.user-pill{display:inline-flex;align-items:center;gap:8px;color:#1f2937;font-size:14px;font-weight:700;cursor:pointer}.developer-mode-badge,.source-trigger,.prd-trigger{flex:0 0 auto}.sidebar-scrim{display:none}.page-workspace{position:relative;display:flex;flex:1;height:100%;min-width:0;min-height:0;overflow:hidden}.page-workspace>.page-container{min-width:0}.page-container{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;padding:24px 28px 32px}.page-container.legacy-page-container{padding:0}.page-container.legacy-page-container>*{width:100%;min-width:0}.page-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px}.page-title-row h1{margin:0;font-size:24px;line-height:1.25}.page-title-row p{margin:7px 0 0;color:var(--muted);font-size:14px}.panel{border:1px solid var(--line);border-radius:8px;background:#fff}.panel-header{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 18px;border-bottom:1px solid var(--line);font-weight:800}.panel-body{padding:18px}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}.metric-card{min-height:104px;padding:16px;border:1px solid var(--line);border-radius:8px;background:#fff}.metric-card span{display:block;color:var(--muted);font-size:13px;font-weight:700}.metric-card strong{display:block;margin-top:12px;font-size:28px;line-height:1}.metric-card small{display:block;margin-top:10px;color:var(--muted);font-size:12px}.content-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(360px,.6fr);gap:16px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px 14px;border-bottom:1px solid #edf2f7;text-align:left;font-size:14px}.table th{color:#52627a;background:#f8fafc;font-size:13px;font-weight:800}.status{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:800}.status.success{color:#15803d;background:#dcfce7}.status.warning{color:#b45309;background:#fef3c7}.status.danger{color:#b91c1c;background:#fee2e2}.placeholder{padding:42px;border:1px dashed #b8c7d6;border-radius:8px;background:#fff;color:var(--muted)}.platform-page{color:var(--platform-color-text);font-family:-apple-system,BlinkMacSystemFont,SF Pro Text,PingFang SC,Microsoft YaHei,Segoe UI,sans-serif;font-optical-sizing:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;--el-border-radius-base: var(--platform-radius-control);--el-border-radius-small: 8px}body:has(.platform-page){background:var(--platform-color-page)}.platform-page ::-moz-selection{background:rgb(var(--app-color-primary-rgb) / 18%)}.platform-page ::selection{background:rgb(var(--app-color-primary-rgb) / 18%)}.platform-page :where(a,button,[role=button]){-webkit-tap-highlight-color:transparent}.platform-page :where(a,button,[role=button],input,select,textarea):focus-visible{outline:3px solid rgb(var(--app-color-primary-rgb) / 22%);outline-offset:2px}.platform-page :where(button,[role=button],.el-button):not(:disabled):active{transform:scale(.98);transition-duration:var(--platform-motion-fast)!important}.platform-page .el-button:not(.is-link){min-height:38px;border-radius:var(--platform-radius-control);font-weight:550}.platform-page .el-input__wrapper,.platform-page .el-select__wrapper,.platform-page .el-textarea__inner,.platform-page .el-input-number{border-radius:var(--platform-radius-control)}.platform-page .el-input__wrapper,.platform-page .el-select__wrapper{min-height:40px}.platform-page .el-input__wrapper.is-focus,.platform-page .el-select__wrapper.is-focused,.platform-page .el-input__wrapper:focus-within,.platform-page .el-textarea__inner:focus{box-shadow:0 0 0 3px rgb(var(--app-color-primary-rgb) / 16%)}.platform-page .el-alert{border:.5px solid rgb(0 0 0 / 8%);border-radius:12px}.platform-page .el-tag{border-radius:999px;font-weight:550}.platform-material{border:.5px solid rgb(255 255 255 / 58%);background:#ffffffc7;box-shadow:0 8px 28px #00000012;-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%)}.platform-popover{border:.5px solid rgb(0 0 0 / 10%);background:#ffffffe5;box-shadow:var(--platform-shadow-float);-webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%)}@media(max-width:1120px){.app-shell{grid-template-columns:220px minmax(0,1fr)}.metric-grid,.content-grid{grid-template-columns:1fr 1fr}}@media(max-width:760px){.app-shell{height:100vh;min-height:0;grid-template-columns:1fr;overflow:hidden}.app-sidebar{position:fixed;z-index:50;inset:0 auto 0 0;width:min(288px,calc(100vw - 48px));height:100vh;height:100dvh;box-shadow:18px 0 48px #00000038;transform:translate(-105%)}.app-shell.sidebar-drawer-open .app-sidebar{transform:translate(0)}.sidebar-scrim{position:fixed;z-index:40;top:0;right:0;bottom:0;left:0;display:block;border:0;background:#0000003d;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .22s ease;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}.app-shell.sidebar-drawer-open .sidebar-scrim{opacity:1;pointer-events:auto}.app-main{height:100vh;min-height:0;overflow:hidden}.topbar{height:60px;flex-basis:60px;gap:8px;padding:0 14px}.topbar>.breadcrumb{margin-left:0;font-size:12px}.topbar-actions{flex:0 1 auto;gap:6px;min-width:0}.topbar-actions .locale-switch{width:78px}.topbar-actions .client-switch{min-width:96px;max-width:112px}.topbar-actions .source-trigger,.topbar-actions .prd-trigger{width:34px;min-width:34px;padding:0;font-size:0}.topbar-actions .source-trigger .el-icon,.topbar-actions .prd-trigger .el-icon{margin:0;font-size:16px}.topbar-actions .developer-mode-badge,.topbar-actions .user-pill>span{display:none}.topbar-actions .user-pill{gap:0}.page-workspace{min-height:0;overflow:hidden}.page-container{padding:16px 14px 24px}.metric-grid,.content-grid{grid-template-columns:1fr}}@media(max-width:560px){.topbar-actions .locale-switch,.topbar-actions .client-switch,.topbar-actions .source-trigger,.topbar-actions .prd-trigger{display:none}}@media(prefers-reduced-motion:reduce){.app-shell,.app-sidebar,.sidebar-scrim,.side-link,.sidebar-toggle{transition:none}}.apple-tool-overlay{background:#0000003d;-webkit-backdrop-filter:blur(10px) saturate(115%);backdrop-filter:blur(10px) saturate(115%)}.apple-tool-dialog.el-dialog{max-width:calc(100vw - 32px);margin-top:5vh;overflow:hidden;border:.5px solid rgb(0 0 0 / 10%);border-radius:18px;background:#fff;box-shadow:0 28px 80px #00000038;transform-origin:center top;--el-border-radius-base: 10px}.apple-tool-dialog .el-dialog__header{min-height:66px;margin:0;padding:21px 64px 18px 24px;border-bottom:.5px solid rgb(0 0 0 / 8%);background:#ffffffeb}.apple-tool-dialog .el-dialog__title{color:#1d1d1f;font-size:20px;font-weight:650;letter-spacing:-.025em;line-height:1.35}.apple-tool-dialog .el-dialog__headerbtn{top:15px;right:16px;width:36px;height:36px;border-radius:50%;color:#6e6e73;transition:color .16s ease,background-color .16s ease}.apple-tool-dialog .el-dialog__headerbtn:hover{background:#f2f2f7;color:#1d1d1f}.apple-tool-dialog .el-dialog__body{max-height:calc(90vh - 140px);overflow-y:auto;padding:24px;color:#1d1d1f}.apple-tool-dialog .el-dialog__footer{min-height:66px;padding:14px 20px;border-top:.5px solid rgb(0 0 0 / 8%);background:#f8f8faeb;-webkit-backdrop-filter:blur(18px) saturate(135%);backdrop-filter:blur(18px) saturate(135%)}.apple-tool-dialog .el-dialog__footer .el-button{min-width:82px}.apple-tool-dialog .el-button{min-height:38px;border-radius:10px;font-weight:550;transition:border-color .16s ease,color .16s ease,background-color .16s ease,box-shadow .16s ease}.apple-tool-dialog .el-form-item__label{color:#3a3a3c;font-size:13px;font-weight:600}.apple-tool-dialog .el-input__wrapper,.apple-tool-dialog .el-select__wrapper,.apple-tool-dialog .el-textarea__inner,.apple-tool-dialog .el-input-number{border-radius:10px}.apple-tool-dialog .el-input__wrapper,.apple-tool-dialog .el-select__wrapper{min-height:40px;box-shadow:0 0 0 .5px #00000029 inset}.apple-tool-dialog .el-textarea__inner{box-shadow:0 0 0 .5px #00000029 inset}.apple-tool-dialog .el-input__wrapper.is-focus,.apple-tool-dialog .el-select__wrapper.is-focused,.apple-tool-dialog .el-input__wrapper:focus-within,.apple-tool-dialog .el-textarea__inner:focus{box-shadow:0 0 0 3px rgb(var(--app-color-primary-rgb) / 16%)}.apple-confirm-dialog.el-message-box{width:min(430px,calc(100vw - 32px));overflow:hidden;padding:0;border:.5px solid rgb(0 0 0 / 10%);border-radius:18px;background:#fff;box-shadow:0 28px 80px #0000003d}.apple-confirm-dialog .el-message-box__header{padding:22px 58px 8px 22px}.apple-confirm-dialog .el-message-box__title{color:#1d1d1f;font-size:19px;font-weight:650;letter-spacing:-.02em}.apple-confirm-dialog .el-message-box__headerbtn{top:14px;right:14px;width:34px;height:34px;border-radius:50%}.apple-confirm-dialog .el-message-box__headerbtn:hover{background:#f2f2f7}.apple-confirm-dialog .el-message-box__content{padding:10px 22px 24px;color:#515154;font-size:14px;line-height:1.65}.apple-confirm-dialog .el-message-box__btns{padding:14px 18px;border-top:.5px solid rgb(0 0 0 / 8%);background:#f8f8fa}.apple-confirm-dialog .el-message-box__btns .el-button{min-width:82px;min-height:38px;border-radius:10px;font-weight:550}.dialog-fade-enter-active .apple-tool-dialog,.dialog-fade-leave-active .apple-tool-dialog{transition:opacity .18s ease,transform .18s cubic-bezier(.22,1,.36,1),filter .18s ease}.dialog-fade-enter-from .apple-tool-dialog,.dialog-fade-leave-to .apple-tool-dialog{opacity:0;filter:blur(4px);transform:translateY(-8px) scale(.985)}@media(max-width:760px){.apple-tool-dialog.el-dialog{width:calc(100vw - 20px)!important;max-width:none;margin-top:10px}.apple-tool-dialog .el-dialog__body{max-height:calc(100svh - 150px);padding:18px}}@media(prefers-reduced-motion:reduce){.platform-route-enter-active,.platform-route-leave-active{transition:opacity 80ms linear}.platform-route-enter-from,.platform-route-leave-to{transform:none}.platform-page *,.platform-page *:before,.platform-page *:after,.apple-tool-dialog *,.apple-confirm-dialog *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.dialog-fade-enter-from .apple-tool-dialog,.dialog-fade-leave-to .apple-tool-dialog{filter:none;transform:none}}@media(prefers-reduced-transparency:reduce){.platform-material,.platform-popover,.apple-tool-dialog .el-dialog__header,.apple-tool-dialog .el-dialog__footer{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}.apple-tool-overlay{background:#00000057;-webkit-backdrop-filter:none;backdrop-filter:none}}@media(prefers-contrast:more){.platform-material,.platform-popover,.apple-tool-dialog.el-dialog,.apple-confirm-dialog.el-message-box{border:1px solid #6e6e73;background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}.platform-page .el-alert,.platform-page .el-input__wrapper,.platform-page .el-select__wrapper{border-color:currentColor}}
+</style> <script id="prototype-page-manifest" type="application/json">{"templateVersion":1,"exportFormat":"vue-sfc","pageKey":"membership-plans","pageTitle":"客户等级方案","pageType":"custom","pageHeaderMode":"standard","client":"operation","routePath":"/operation/membership-plans","menuSection":"customers","menuTitle":"客户等级方案","menuIcon":"Medal"}</script>
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head><body><div id="app"></div><script id="prototype-export-source" type="text/plain"><template>
+<div class="membership-plans-page">
+            
+            
+
+            
+            <main>
+                
+                <PageHeader unstyled class="flex justify-between items-end mb-6" title="客户等级方案" description="管理会员等级方案，设置付费/免费模式及会员权益配置。" title-class="text-2xl font-bold text-gray-800 tracking-tight" description-class="text-gray-500 text-sm mt-1">
+                    <template #actions>
+                        <el-button type="primary" size="large" class="shadow-md shadow-indigo-500/20" @click="openDialog()">
+                            <el-icon class="mr-1"><Plus></Plus></el-icon> 新增方案
+                        </el-button>
+                    </template>
+                </PageHeader><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div v-for="plan in sortedPlans" :key="plan.id"
+                        class="plan-card border-2 rounded-2xl p-6 bg-white flex flex-col relative"
+                        :class="{ 'is-recommended': plan.isRecommended, 'border-gray-200': !plan.isRecommended }">
+
+                        
+                        <div v-if="plan.isRecommended"
+                            class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs px-4 py-1 rounded-full font-bold shadow-md">
+                            ⭐ 推荐
+                        </div>
+
+                        
+                        <div v-if="plan.isDefault"
+                            class="absolute -top-3 right-4 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-md">
+                            默认
+                        </div>
+
+                        
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="tier-badge text-xs px-2 py-1 rounded-full">
+                                Lv.{{ plan.tier }}
+                            </div>
+                            <el-tag v-if="!plan.showInApp" size="small" type="info" effect="plain">
+                                APP隐藏
+                            </el-tag>
+                        </div>
+
+                        
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ plan.name }}</h3>
+
+                        
+                        <div class="mb-4">
+                            <div v-if="plan.type === 'free'" class="text-2xl font-bold text-green-600">
+                                免费
+                            </div>
+                            <div v-else>
+                                <div class="text-2xl font-bold text-theme-primary">
+                                    ¥{{ getLowestPrice(plan) }}<span class="text-sm font-normal text-gray-500">/{{
+                                        getLowestPriceCycle(plan) }}</span>
+                                </div>
+                                <div class="text-xs text-gray-400 mt-1">
+                                    {{ getEnabledCyclesText(plan) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="flex-1 mb-4">
+                            <div class="text-xs text-gray-500 font-bold mb-2 uppercase">权益</div>
+                            <ul class="space-y-1.5">
+                                <li v-for="(benefit, idx) in plan.benefits.slice(0, 4)" :key="idx"
+                                    class="flex items-center text-sm text-gray-600">
+                                    <el-icon class="mr-2 text-green-500">
+                                        <Check></Check>
+                                    </el-icon>
+                                    {{ benefit }}
+                                </li>
+                                <li v-if="plan.benefits.length > 4" class="text-xs text-gray-400">
+                                    + {{ plan.benefits.length - 4 }} 项更多权益...
+                                </li>
+                            </ul>
+                        </div>
+
+                        
+                        <div class="text-center py-3 bg-gray-50 rounded-lg mb-4">
+                            <div class="text-2xl font-bold text-gray-800">{{ formatNumber(plan.memberCount) }}</div>
+                            <div class="text-xs text-gray-500">当前会员数</div>
+                        </div>
+
+                        
+                        <div class="flex gap-2 border-t border-gray-100 pt-4">
+                            <el-button class="flex-1" type="primary" plain size="small"
+                                @click="openEdit(plan)">编辑</el-button>
+                            <el-button type="danger" plain size="small" icon="Delete" circle
+                                :disabled="plan.memberCount > 0" @click="deletePlan(plan)"></el-button>
+                        </div>
+                    </div>
+
+                    
+                    <div v-if="plans.length === 0"
+                        class="col-span-full flex flex-col items-center justify-center py-20 text-gray-400">
+                        <el-icon class="text-5xl mb-3 opacity-20">
+                            <Medal></Medal>
+                        </el-icon>
+                        <p>暂无会员方案，点击右上角新增</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        
+        <el-dialog v-model="dialogVisible" :title="isEdit ? '编辑会员方案' : '新增会员方案'" width="700px">
+            <el-form :model="currentPlan" label-position="top">
+                <div class="grid grid-cols-2 gap-6">
+                    
+                    <el-form-item label="方案名称" required>
+                        <el-input v-model="currentPlan.name" placeholder="例如: 金牌会员"></el-input>
+                    </el-form-item>
+                    <el-form-item label="等级层级" required>
+                        <el-input-number v-model="currentPlan.tier" :min="1" :max="10" class="w-full"></el-input-number>
+                        <div class="text-xs text-gray-400 mt-1">数字越大等级越高，用于排序</div>
+                    </el-form-item>
+
+                    
+                    <el-form-item label="收费类型" class="col-span-2">
+                        <el-radio-group v-model="currentPlan.type">
+                            <el-radio-button value="free">免费方案</el-radio-button>
+                            <el-radio-button value="paid">付费方案</el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+
+                    
+                    <div v-if="currentPlan.type === 'paid'"
+                        class="col-span-2 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="font-bold text-gray-800 mb-4 flex items-center">
+                            <el-icon class="mr-2 text-blue-600">
+                                <Money></Money>
+                            </el-icon>
+                            缴费周期与价格
+                        </div>
+                        <div class="text-xs text-gray-500 mb-4">勾选启用的缴费周期，并设置对应价格</div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div v-for="cycle in pricingCycles" :key="cycle.key"
+                                class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                                <el-checkbox v-model="currentPlan.pricing[cycle.key + 'Enabled']">
+                                    {{ cycle.label }}
+                                </el-checkbox>
+                                <el-input-number v-model="currentPlan.pricing[cycle.key]" :min="0" :step="10"
+                                    :disabled="!currentPlan.pricing[cycle.key + 'Enabled']" size="small"
+                                    class="flex-1"></el-input-number>
+                                <span class="text-xs text-gray-400">元</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-span-2">
+                        <el-form-item label="会员权益">
+                            <div class="w-full">
+                                <div class="flex gap-2 mb-3">
+                                    <el-input v-model="newBenefit" placeholder="输入权益内容"
+                                        @keyup.enter="addBenefit"></el-input>
+                                    <el-button type="primary" @click="addBenefit">添加</el-button>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <el-tag v-for="(benefit, idx) in currentPlan.benefits" :key="idx" closable
+                                        @close="removeBenefit(idx)" size="large">
+                                        {{ benefit }}
+                                    </el-tag>
+                                    <div v-if="currentPlan.benefits.length === 0" class="text-gray-400 text-sm">
+                                        暂无权益，请添加
+                                    </div>
+                                </div>
+                            </div>
+                        </el-form-item>
+                    </div>
+
+                    
+                    <el-form-item label="设为注册默认方案">
+                        <el-switch v-model="currentPlan.isDefault"></el-switch>
+                        <span class="text-xs text-gray-500 ml-2">新用户注册后自动成为该方案会员</span>
+                    </el-form-item>
+                    <el-form-item label="设为推荐方案">
+                        <el-switch v-model="currentPlan.isRecommended"></el-switch>
+                        <span class="text-xs text-gray-500 ml-2">在APP首页突出显示</span>
+                    </el-form-item>
+                    <el-form-item label="APP显示" class="col-span-2">
+                        <el-switch v-model="currentPlan.showInApp"></el-switch>
+                        <span class="text-xs text-gray-500 ml-2">关闭后该方案不会在APP中展示给用户</span>
+                    </el-form-item>
+                </div>
+            </el-form>
+            <template #footer>
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="savePlan">保存</el-button>
+            </template>
+        </el-dialog>
+</template>
+
+<script setup>
+import { computed, reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
+import { ElMessageBox } from "element-plus";
+import { PageHeader } from '@/components/ui';
+
+// --- Mock Data ---
+                const plans = ref([
+                    {
+                        id: 'MP001',
+                        name: '普通会员',
+                        tier: 1,
+                        type: 'free',
+                        isDefault: true,
+                        isRecommended: false,
+                        showInApp: true,
+                        pricing: { monthly: 0, quarterly: 0, semiAnnual: 0, annual: 0, monthlyEnabled: false, quarterlyEnabled: false, semiAnnualEnabled: false, annualEnabled: false },
+                        benefits: ['基础租车服务', '积分1倍累积'],
+                        memberCount: 12580,
+                        status: 'active'
+                    },
+                    {
+                        id: 'MP002',
+                        name: '银牌会员',
+                        tier: 2,
+                        type: 'paid',
+                        isDefault: false,
+                        isRecommended: false,
+                        showInApp: true,
+                        pricing: { monthly: 99, quarterly: 269, semiAnnual: 0, annual: 899, monthlyEnabled: true, quarterlyEnabled: true, semiAnnualEnabled: false, annualEnabled: true },
+                        benefits: ['积分1.5倍累积', '专属客服', '生日特权'],
+                        memberCount: 3200,
+                        status: 'active'
+                    },
+                    {
+                        id: 'MP003',
+                        name: '金牌会员',
+                        tier: 3,
+                        type: 'paid',
+                        isDefault: false,
+                        isRecommended: true,
+                        showInApp: true,
+                        pricing: { monthly: 199, quarterly: 539, semiAnnual: 999, annual: 1799, monthlyEnabled: true, quarterlyEnabled: true, semiAnnualEnabled: true, annualEnabled: true },
+                        benefits: ['积分2倍累积', '免费升级车型', '专属客服', 'VIP休息室', '生日双倍积分'],
+                        memberCount: 1520,
+                        status: 'active'
+                    },
+                    {
+                        id: 'MP004',
+                        name: '钻石会员',
+                        tier: 4,
+                        type: 'paid',
+                        isDefault: false,
+                        isRecommended: false,
+                        showInApp: false,
+                        pricing: { monthly: 399, quarterly: 0, semiAnnual: 0, annual: 3599, monthlyEnabled: true, quarterlyEnabled: false, semiAnnualEnabled: false, annualEnabled: true },
+                        benefits: ['积分3倍累积', '优先预订', '机场接送', '专属车辆', 'VIP通道', '24小时管家服务'],
+                        memberCount: 280,
+                        status: 'active'
+                    }
+                ]);
+
+                // Pricing cycle definitions
+                const pricingCycles = [
+                    { key: 'monthly', label: '月缴' },
+                    { key: 'quarterly', label: '季缴' },
+                    { key: 'semiAnnual', label: '半年缴' },
+                    { key: 'annual', label: '年缴' }
+                ];
+
+                // --- State ---
+                const dialogVisible = ref(false);
+                const isEdit = ref(false);
+                const newBenefit = ref('');
+
+                // Form State
+                const currentPlan = reactive({
+                    id: '',
+                    name: '',
+                    tier: 1,
+                    type: 'free',
+                    isDefault: false,
+                    isRecommended: false,
+                    showInApp: true,
+                    pricing: { monthly: 0, quarterly: 0, semiAnnual: 0, annual: 0, monthlyEnabled: false, quarterlyEnabled: false, semiAnnualEnabled: false, annualEnabled: false },
+                    benefits: [],
+                    memberCount: 0,
+                    status: 'active'
+                });
+
+                // --- Computed ---
+                // Auto-sort by tier (ascending)
+                const sortedPlans = computed(() => {
+                    return [...plans.value].sort((a, b) => a.tier - b.tier);
+                });
+
+                // --- Helpers ---
+                const formatNumber = (num) => {
+                    if (num >= 10000) return (num / 10000).toFixed(1) + '万';
+                    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+                    return num.toString();
+                };
+
+                const getLowestPrice = (plan) => {
+                    const enabled = pricingCycles.filter(c => plan.pricing[c.key + 'Enabled'] && plan.pricing[c.key] > 0);
+                    if (enabled.length === 0) return 0;
+                    return Math.min(...enabled.map(c => plan.pricing[c.key]));
+                };
+
+                const getLowestPriceCycle = (plan) => {
+                    const enabled = pricingCycles.filter(c => plan.pricing[c.key + 'Enabled'] && plan.pricing[c.key] > 0);
+                    if (enabled.length === 0) return '月';
+                    const lowest = enabled.reduce((a, b) => plan.pricing[a.key] < plan.pricing[b.key] ? a : b);
+                    return lowest.label.replace('缴', '');
+                };
+
+                const getEnabledCyclesText = (plan) => {
+                    const enabled = pricingCycles.filter(c => plan.pricing[c.key + 'Enabled'] && plan.pricing[c.key] > 0);
+                    return enabled.map(c => `${c.label.replace('缴', '')}¥${plan.pricing[c.key]}`).join(' | ');
+                };
+
+                // --- Actions ---
+                const openDialog = () => {
+                    isEdit.value = false;
+                    Object.assign(currentPlan, {
+                        id: 'MP' + Date.now(),
+                        name: '',
+                        tier: plans.value.length + 1,
+                        type: 'free',
+                        isDefault: false,
+                        isRecommended: false,
+                        showInApp: true,
+                        pricing: { monthly: 0, quarterly: 0, semiAnnual: 0, annual: 0, monthlyEnabled: false, quarterlyEnabled: false, semiAnnualEnabled: false, annualEnabled: false },
+                        benefits: [],
+                        memberCount: 0,
+                        status: 'active'
+                    });
+                    newBenefit.value = '';
+                    dialogVisible.value = true;
+                };
+
+                const openEdit = (plan) => {
+                    isEdit.value = true;
+                    Object.assign(currentPlan, JSON.parse(JSON.stringify(plan)));
+                    newBenefit.value = '';
+                    dialogVisible.value = true;
+                };
+
+                const addBenefit = () => {
+                    if (newBenefit.value.trim()) {
+                        currentPlan.benefits.push(newBenefit.value.trim());
+                        newBenefit.value = '';
+                    }
+                };
+
+                const removeBenefit = (index) => {
+                    currentPlan.benefits.splice(index, 1);
+                };
+
+                const savePlan = () => {
+                    if (!currentPlan.name) {
+                        ElMessage.warning('请输入方案名称');
+                        return;
+                    }
+
+                    // Validate paid plan has at least one enabled cycle with price
+                    if (currentPlan.type === 'paid') {
+                        const hasPrice = pricingCycles.some(c => currentPlan.pricing[c.key + 'Enabled'] && currentPlan.pricing[c.key] > 0);
+                        if (!hasPrice) {
+                            ElMessage.warning('付费方案请至少设置一个缴费周期价格');
+                            return;
+                        }
+                    }
+
+                    // Default uniqueness logic
+                    if (currentPlan.isDefault) {
+                        plans.value.forEach(p => {
+                            if (p.id !== currentPlan.id) p.isDefault = false;
+                        });
+                    }
+
+                    if (isEdit.value) {
+                        const idx = plans.value.findIndex(p => p.id === currentPlan.id);
+                        if (idx !== -1) plans.value[idx] = JSON.parse(JSON.stringify(currentPlan));
+                    } else {
+                        plans.value.push(JSON.parse(JSON.stringify(currentPlan)));
+                    }
+
+                    dialogVisible.value = false;
+                    ElMessage.success('保存成功');
+                };
+
+                const deletePlan = (plan) => {
+                    if (plan.memberCount > 0) {
+                        ElMessage.warning('该方案下还有会员，请先迁移后再删除');
+                        return;
+                    }
+                    ElMessageBox.confirm(`确定要删除方案 "${plan.name}" 吗?`, '警告', { type: 'warning' })
+                        .then(() => {
+                            const idx = plans.value.findIndex(p => p.id === plan.id);
+                            if (idx !== -1) plans.value.splice(idx, 1);
+                            ElMessage.success('删除成功');
+                        });
+                };
+<\/script>
+
+<style scoped>
+        .membership-plans-page {
+            min-height: 100%;
+        }
+
+        .plan-card {
+            transition: all 0.2s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .plan-card.is-recommended {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+</style>
+</script></body></html>

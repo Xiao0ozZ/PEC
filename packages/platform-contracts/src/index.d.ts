@@ -68,9 +68,9 @@ export interface ProjectManifest {
   mobile?: { enabled?: boolean; entry?: string };
   theme?: { primary?: string; primaryHover?: string; primaryActive?: string; pageBackground?: string };
   branding?: { logo?: string; favicon?: string };
-  compatibility?: { legacyRoutes?: boolean; legacyViewRoot?: string; [key: string]: unknown };
+  compatibility?: { legacyRoutes?: boolean; [key: string]: unknown };
   pageRuntime?: {
-    clients: Record<string, { htmlTemplate: number; vueSfc: number }>;
+    clients: Record<string, { htmlTemplate: number }>;
   };
   [key: string]: unknown;
 }

@@ -153,7 +153,7 @@ describe('project core', () => {
     const projectsRoot = await fs.mkdtemp(path.join(process.cwd(), '.project-core-test-'));
     const projectRoot = path.join(projectsRoot, 'sample');
     try {
-      await fs.mkdir(path.join(projectRoot, 'views', 'admin'), { recursive: true });
+      await fs.mkdir(path.join(projectRoot, 'html-pages', 'admin'), { recursive: true });
       await writeJsonAtomic(path.join(projectRoot, 'project.json'), {
         schemaVersion: 1,
         id: 'sample',
@@ -164,23 +164,23 @@ describe('project core', () => {
         docs: { enabled: false },
         mobile: { enabled: false },
         prototype: { enabled: false },
-        features: { pageTransfer: false },
+        features: { designSystem: true },
       });
       await fs.writeFile(
         path.join(projectRoot, 'page-definitions.js'),
-        `export const clientPageDefinitions = { admin: { sections: [{ id: 'work', title: 'Work' }], pages: [{ path: 'home', name: 'home', title: 'Home', view: 'admin/HomeView.vue', section: 'work' }] } };\n`,
+        `export const clientPageDefinitions = { admin: { sections: [{ id: 'work', title: 'Work' }], pages: [{ path: 'home', name: 'home', title: 'Home', sourceType: 'html-template', source: 'home.html', section: 'work' }] } };\n`,
         'utf8',
       );
       await fs.writeFile(
-        path.join(projectRoot, 'views', 'admin', 'HomeView.vue'),
-        '<template>Home</template>\n',
+        path.join(projectRoot, 'html-pages', 'admin', 'home.html'),
+        '<!doctype html><html><head><meta charset="UTF-8"><title>Home</title></head><body><main>Home</main></body></html>\n',
       );
 
       const result = await scanProjectPackages(projectsRoot);
       expect(result.invalidProjects).toEqual([]);
       expect(result.projects.map((project) => project.id)).toEqual(['sample']);
       expect(result.projects[0].pageRuntime).toEqual({
-        clients: { admin: { htmlTemplate: 0, vueSfc: 1 } },
+        clients: { admin: { htmlTemplate: 1 } },
       });
     } finally {
       await fs.rm(projectsRoot, { recursive: true, force: true });

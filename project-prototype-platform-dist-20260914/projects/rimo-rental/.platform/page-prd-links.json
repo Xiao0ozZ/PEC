@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "projectId": "rimo-rental",
+  "links": {
+    "operation": {
+      "html-workbench-1ukl8vb": "归档/工作台（营运端）.md",
+      "html-dashboard-141x8pc": "归档/Dashboard.md",
+      "html-new-order-1yrelhb": "门市租赁/订单/新建订单.md",
+      "html-store-orders-1hrqbob": "门市租赁/订单/门市租车订单列表.md",
+      "html-order-detail-130reaa": "门市租赁/订单/订单详情.md",
+      "html-dispatch-te4db8": "门市租赁/智能调度派车规则.md",
+      "html-vehicle-console-1pu0t5i": "车辆管理/车辆控制台与车机状态对接PRD.md",
+      "html-official-vehicle-contracts-1336bn0": "公务车/07_营运端公务车辆合约管理.md",
+      "html-stations-2hv7jd": "门市租赁/服务站点管理.md",
+      "html-service-products-1xhl88e": "门市租赁/基础产品定价（车组）.md",
+      "html-pricing-13mp4nu": "门市租赁/动态调价策略（牌价&费率）.md",
+      "html-services-gmgg96": "门市租赁/增值服务管理（保险&配件）.md",
+      "html-settings-sd0jc1": "门市租赁/租赁业务规则.md",
+      "html-marketing-1rruht8": "门市租赁/行销方案管理.md",
+      "html-channel-ticket-batches-1aj87br": "合作通路/合作渠道租车券（同站租还）.md",
+      "html-channel-ticket-applications-1i7dj2i": "合作通路/合作渠道租车券（同站租还）.md",
+      "html-channel-ticket-batch-detail-1prrlwn": "合作通路/合作渠道租车券（同站租还）.md",
+      "html-member-review-1vfhoth": "会员管理/会员资质认证审核.md",
+      "html-time-share-orders-15blbpp": "分时租赁/分时租赁订单列表标签与状态说明.md"
+    },
+    "enterprise": {
+      "html-dashboard-1bpqu8e": "公务车/01_Dashboard.md",
+      "html-official-order-kpgb2y": "公务车/02_公务订单管理.md",
+      "html-official-order-add-1jfc5pq": "公务车/03_新增公务订单.md",
+      "html-dispatch-schedule-efh0zw": "公务车/04_车辆调度排程.md",
+      "html-official-vehicles-1b9p2ef": "公务车/05_公务车辆管理.md",
+      "html-official-vehicle-add-z3i66": "公务车/05_公务车辆管理.md",
+      "html-official-vehicle-reminders-14d8suy": "公务车/18_清洁保养提醒.md",
+      "html-contract-quotas-rfq0zk": "公务车/08_合约配额管理.md",
+      "html-car-use-management-1f0o2a0": "公务车/09_用车管理.md",
+      "html-employee-management-c02bwk": "公务车/10_员工管理.md",
+      "html-employee-review-1uwibtp": "公务车/11_员工审核.md",
+      "html-branch-company-management-cwuh08": "公务车/12_分公司管理.md",
+      "html-department-management-1kj8u72": "公务车/13_部门管理.md",
+      "html-approval-setting-9u4e58": "公务车/14_审批设定.md",
+      "html-channel-ticket-batches-1t9w7yp": "合作通路/合作渠道租车券（同站租还）.md",
+      "html-channel-ticket-batch-detail-14br8y5": "合作通路/合作渠道租车券（同站租还）.md",
+      "html-official-car-bill-1y0hnza": "公务车/15_账单管理.md"
+    }
+  }
+}

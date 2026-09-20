@@ -1,0 +1,208 @@
+- generic [active] [ref=f35e1]:
+  - banner [ref=f35e2]:
+    - generic [ref=f35e3]:
+      - link "Rental OS 首页" [ref=f35e4] [cursor=pointer]:
+        - /url: "#top"
+        - img "Rental OS · Build a Rental World" [ref=f35e5]
+      - navigation "主导航" [ref=f35e6]:
+        - link "产品" [ref=f35e7] [cursor=pointer]:
+          - /url: "#product"
+        - link "解决方案" [ref=f35e8] [cursor=pointer]:
+          - /url: "#solution"
+        - link "行业场景" [ref=f35e9] [cursor=pointer]:
+          - /url: "#industry"
+        - link "关于我们" [ref=f35e10] [cursor=pointer]:
+          - /url: "#about"
+      - generic [ref=f35e11]:
+        - button "选择网站主题，当前跟随系统" [ref=f35e13] [cursor=pointer]
+        - link "预约演示" [ref=f35e18] [cursor=pointer]:
+          - /url: "#demo"
+  - main [ref=f35e20]:
+    - region "Rental OS 产品展示" [ref=f35e21]:
+      - generic [ref=f35e23]:
+        - paragraph [ref=f35e24]: 新一代租赁业务管理平台
+        - heading "让租赁增长， 更快发生。" [level=1] [ref=f35e25]: 让租赁增长，更快发生。
+        - paragraph [ref=f35e26]: Rental OS 是面向租赁企业的多品类一体化运营平台，帮助你打通资产、订单、定价、履约与财务管理，让复杂的租赁业务变得简单高效。
+        - generic [ref=f35e27]:
+          - link "预约演示" [ref=f35e28] [cursor=pointer]:
+            - /url: "#demo"
+          - link "查看方案" [ref=f35e30] [cursor=pointer]:
+            - /url: "#solution"
+        - generic [ref=f35e31]:
+          - generic [ref=f35e32]:
+            - generic [ref=f35e33]: ✓
+            - text: 快速上线
+          - generic [ref=f35e34]:
+            - generic [ref=f35e35]: ✓
+            - text: 专业实施
+          - generic [ref=f35e36]:
+            - generic [ref=f35e37]: ✓
+            - text: 持续迭代
+          - generic [ref=f35e38]:
+            - generic [ref=f35e39]: ✓
+            - text: 值得信赖
+      - generic "关键价值指标" [ref=f35e40]:
+        - generic [ref=f35e42]:
+          - generic [ref=f35e43]: 提升运营效率
+          - generic [ref=f35e44]:
+            - text: 平均提升
+            - emphasis [ref=f35e45]: 60%+
+        - generic [ref=f35e47]:
+          - generic [ref=f35e48]: 降低履约成本
+          - generic [ref=f35e49]:
+            - text: 平均降低
+            - emphasis [ref=f35e50]: 30%+
+        - generic [ref=f35e52]:
+          - generic [ref=f35e53]: 支持多品类经营
+          - generic [ref=f35e54]: 一个平台，管理所有租赁业务
+        - generic [ref=f35e56]:
+          - generic [ref=f35e57]: 已服务 500+ 租赁企业
+          - generic [ref=f35e58]: 覆盖全国，持续增长
+    - generic [ref=f35e60]:
+      - heading "为什么选择 Rental OS" [level=2] [ref=f35e61]
+      - paragraph [ref=f35e62]: 不只是一个系统，更是租赁企业的增长引擎
+      - generic [ref=f35e63]:
+        - article [ref=f35e64]:
+          - heading "多租户 / 多经营空间" [level=3] [ref=f35e65]
+          - paragraph [ref=f35e66]: 支持集团化、多品牌、多门店的灵活管理
+          - generic [aria-hidden] [ref=f35e67]: →
+        - article [ref=f35e68]:
+          - heading "多品类统一平台" [level=3] [ref=f35e69]
+          - paragraph [ref=f35e70]: 一个系统管理多种租赁品类，打破数据孤岛
+          - generic [aria-hidden] [ref=f35e71]: →
+        - article [ref=f35e72]:
+          - heading "资产、订单、定价、履约一体化" [level=3] [ref=f35e73]
+          - paragraph [ref=f35e74]: 从上架到归还，全链路数字化管理
+          - generic [aria-hidden] [ref=f35e75]: →
+        - article [ref=f35e76]:
+          - heading "管理后台 + 移动端协同" [level=3] [ref=f35e77]
+          - paragraph [ref=f35e78]: PC 管理后台 + 微信小程序，随时随地开展业务
+          - generic [aria-hidden] [ref=f35e79]: →
+        - article [ref=f35e80]:
+          - heading "灵活规则配置" [level=3] [ref=f35e81]
+          - paragraph [ref=f35e82]: 支持多种计费规则、押金策略和业务流程
+          - generic [aria-hidden] [ref=f35e83]: →
+        - article [ref=f35e84]:
+          - heading "数据驱动经营增长" [level=3] [ref=f35e85]
+          - paragraph [ref=f35e86]: 多维度经营分析报表，助力科学决策
+          - generic [aria-hidden] [ref=f35e87]: →
+    - generic [ref=f35e89]:
+      - generic [ref=f35e90]:
+        - generic [ref=f35e91]:
+          - heading "覆盖多种租赁行业场景" [level=2] [ref=f35e92]
+          - paragraph [ref=f35e93]: 无论你经营哪种租赁业务，Rental OS 都能提供专业的解决方案
+        - link "探索更多行业场景" [ref=f35e94] [cursor=pointer]:
+          - /url: "#"
+          - text: 探索更多行业场景
+          - generic [aria-hidden] [ref=f35e95]: →
+      - generic [ref=f35e96]:
+        - article [ref=f35e97]:
+          - img "摄影器材租赁" [ref=f35e98]
+          - generic [ref=f35e99]:
+            - heading "摄影器材租赁" [level=3] [ref=f35e100]
+            - paragraph [ref=f35e101]: 相机、镜头、灯光、航拍设备等专业器材的高效管理
+            - generic [aria-hidden] [ref=f35e102]: →
+        - article [ref=f35e103]:
+          - img "露营装备租赁" [ref=f35e104]
+          - generic [ref=f35e105]:
+            - heading "露营装备租赁" [level=3] [ref=f35e106]
+            - paragraph [ref=f35e107]: 帐篷、天幕、桌椅、户外电源等，让户外生活更简单
+            - generic [aria-hidden] [ref=f35e108]: →
+        - article [ref=f35e109]:
+          - img "车辆租赁" [ref=f35e110]
+          - generic [ref=f35e111]:
+            - heading "车辆租赁" [level=3] [ref=f35e112]
+            - paragraph [ref=f35e113]: 自驾租车、商务用车、车队管理，灵活的车辆租赁解决方案
+            - generic [aria-hidden] [ref=f35e114]: →
+        - article [ref=f35e115]:
+          - img "工程设备租赁" [ref=f35e116]
+          - generic [ref=f35e117]:
+            - heading "工程设备租赁" [level=3] [ref=f35e118]
+            - paragraph [ref=f35e119]: 工程机械、建筑设备、工具器械等重资产租赁的专业管理
+            - generic [aria-hidden] [ref=f35e120]: →
+    - generic [ref=f35e122]:
+      - generic [ref=f35e123]:
+        - heading "强大的产品能力 支撑你的租赁业务持续增长" [level=2] [ref=f35e124]: 强大的产品能力支撑你的租赁业务持续增长
+        - paragraph [ref=f35e125]: 从资产管理到经营分析，Rental OS 提供覆盖租赁全流程的数字化能力，帮助企业提升效率、降低成本、创造更多收入。
+        - link "预约演示" [ref=f35e126] [cursor=pointer]:
+          - /url: "#demo"
+      - img "Rental OS 订单与资产管理能力展示" [ref=f35e129]
+    - generic [ref=f35e131]:
+      - generic [ref=f35e132]:
+        - heading "一个系统，多端协同 随时随地管理你的租赁业务" [level=2] [ref=f35e133]: 一个系统，多端协同随时随地管理你的租赁业务
+        - paragraph [ref=f35e134]: Rental OS 提供专业的管理后台和微信小程序，打通线上线下业务，让团队、客户、资产高效连接。
+        - generic [ref=f35e135]:
+          - generic [ref=f35e136]:
+            - generic [ref=f35e137]: ✓
+            - generic [ref=f35e138]:
+              - strong [ref=f35e139]: PC 管理后台
+              - text: · 功能全面，适合团队协作
+          - generic [ref=f35e140]:
+            - generic [ref=f35e141]: ✓
+            - generic [ref=f35e142]:
+              - strong [ref=f35e143]: 微信小程序
+              - text: · 客户自助下单，提升体验
+          - generic [ref=f35e144]:
+            - generic [ref=f35e145]: ✓
+            - generic [ref=f35e146]:
+              - strong [ref=f35e147]: 数据实时同步
+              - text: · 多端数据一致，随时掌握业务动态
+      - img "Rental OS 管理后台与微信小程序多端协同" [ref=f35e149]
+    - region "客户案例" [ref=f35e150]:
+      - generic [ref=f35e152]:
+        - generic [ref=f35e153]:
+          - article "摄影器材租赁示例案例" [ref=f35e154]:
+            - generic [ref=f35e155]:
+              - img "摄影器材租赁示例客户陈先生" [ref=f35e157]
+              - generic [ref=f35e158]:
+                - text: “
+                - paragraph [ref=f35e159]: Rental OS 帮助我们将整体运营效率提升了 60% 以上，从多门店管理到订单履约都变得更加高效、透明。现在我们可以把更多精力放在业务拓展上。
+                - generic [ref=f35e160]:
+                  - strong [ref=f35e161]: 陈先生
+                  - text: 某知名摄影器材租赁品牌 · 示例客户
+              - generic [ref=f35e162]:
+                - generic [ref=f35e163]:
+                  - generic [ref=f35e164]: 60%+
+                  - generic [ref=f35e165]: 运营效率提升
+                - generic [ref=f35e166]:
+                  - generic [ref=f35e167]: 3 倍
+                  - generic [ref=f35e168]: 年营收增长
+          - text: “ “ “
+        - generic [ref=f35e169]:
+          - tablist "选择客户案例" [ref=f35e170]:
+            - tab "摄影器材租赁示例案例" [selected] [ref=f35e171] [cursor=pointer]
+            - tab "露营装备租赁示例案例" [ref=f35e172] [cursor=pointer]
+            - tab "车辆租赁示例案例" [ref=f35e173] [cursor=pointer]
+            - tab "工程设备租赁示例案例" [ref=f35e174] [cursor=pointer]
+          - generic [ref=f35e175]:
+            - button "上一个客户案例" [ref=f35e176] [cursor=pointer]
+            - button "下一个客户案例" [ref=f35e177] [cursor=pointer]
+    - generic [ref=f35e180]:
+      - generic [ref=f35e181]:
+        - heading "开始搭建你的下一代租赁平台" [level=2] [ref=f35e182]
+        - paragraph [ref=f35e183]: 让专业的 Rental OS，助力你的租赁业务更快增长。
+      - link "预约演示" [ref=f35e185] [cursor=pointer]:
+        - /url: mailto:demo@example.com
+  - contentinfo [ref=f35e187]:
+    - generic [ref=f35e188]:
+      - link [ref=f35e190] [cursor=pointer]:
+        - /url: "#top"
+        - img "Rental OS · Build a Rental World" [ref=f35e191]
+      - generic [ref=f35e192]:
+        - navigation [ref=f35e193]:
+          - link "产品" [ref=f35e194] [cursor=pointer]:
+            - /url: "#product"
+          - link "解决方案" [ref=f35e195] [cursor=pointer]:
+            - /url: "#solution"
+          - link "行业场景" [ref=f35e196] [cursor=pointer]:
+            - /url: "#industry"
+          - link "关于我们" [ref=f35e197] [cursor=pointer]:
+            - /url: "#about"
+          - link "帮助中心" [ref=f35e198] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f35e199]: © 2024 Rental OS. 保留所有权利.
+      - generic "社交媒体" [ref=f35e200]:
+        - generic [ref=f35e201]: ●
+        - generic [ref=f35e202]: ◎
+        - generic [ref=f35e203]: ▶
+      - generic [ref=f35e204]: 让好资产创造更大价值！

@@ -1,0 +1,2415 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="wXVCZwp0LbKYCbDzFvwkLA">
+  <head data-page-node-id="mobNMxMjH0sDrsxnT9aEsL">
+    <meta charset="UTF-8" data-page-node-id="F5aytkjErN3jdt7IGjjVza" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="IBjUFuubcyuETkyNUoDaf8" />
+    <!-- [AI-EDIT] 浏览器标题：与 manifest.pageTitle、页面 H1 和预览壳页面名称保持一致。 -->
+    <title>公务用车合约管理</title>
+    <link rel="icon" href="data:," data-page-node-id="RF6jAvBD6Wqct5EfrzSvM5" />
+
+    <!-- TEMPLATE-LOCK: 以下 AI 编写协议必须连同开始、结束标记和全部正文原样保留，不得删减、概括或改写。 -->
+    <!-- PROTOTYPE_AI_PROTOCOL_START -->
+    <!--
+      HTML 原型 AI 编写协议 v1.9（修改页面前必须完整阅读）
+
+      目标
+      - 本模板用于创建一份完整、可直接在浏览器打开的桌面端后台业务 HTML 页面。登录/认证页独立创建，仅复用适用的主题变量、字体和控件规范，不复用本模板锁定的后台外壳；已有页面优先在原文件中定向修改。
+      - 可将本模板复制为多个 HTML 文件组成多页面原型；每个文件都必须能够单独打开和运行。
+      - 复制本文件创建新页面，并以本模板作为唯一的结构与实现基准；不要另建或替换壳层、全局样式及启动代码。
+      - 交付物必须是 UTF-8 的完整有效 HTML；不要把解释、Markdown 代码围栏、占位 TODO 或无关 Prompt 写入文件。
+      - 统一运行依赖通过固定版本 CDN 加载；直接打开页面时需要能够访问这些 CDN 地址。
+
+      执行顺序
+      1. 先确认页面用途、信息层级、主要操作、必要状态和弹窗，再开始改代码。
+      2. 先更新页面身份和 SHELL_NAV，再依次修改 PAGE_STYLE、PAGE_CONTENT、PAGE_OVERLAYS、PAGE_LOGIC。
+      3. 完成后按“交付自检”逐项核对；不要只保证页面看起来能打开。
+
+      不可破坏的模板契约
+      - PROTOTYPE_AI_PROTOCOL_START/END 及其间的协议标题和全部正文必须完整保留；不得只保留版本标题，也不得压缩、摘要、改写或删除协议内容。
+      - [TEMPLATE-LOCK] 区域、所有 START/END 标记、#app、prototype-page-manifest 和启动代码不得删除、改名或移动。
+      - 只修改 [AI-EDIT] 区域和带 data-shell-* 的外壳文字；外壳骨架、统一依赖和基础样式保持不变。
+      - 如需更换页面主题，只修改 THEME_TOKENS 区域中的强调色与结构色变量，并同步更新全部主色派生变量；不要修改基础样式实现。
+      - 页面颜色必须使用 --app-color-* 或 --el-* 语义变量，不要在 PAGE_STYLE 中固定写死页面背景、面板背景、文字、边框和状态色。页面默认使用浅色；运行环境可以通过 html[data-theme="light"] 或 html[data-theme="dark"] 提供浅色或深色主题，页面不得删除主题桥接区。
+      - 除模板自带的结构演示分支外，本文件只承载一个桌面端后台业务页面；正式交付时不得保留多个页面结构或改造成登录页、移动端页面。
+      - 页面必须且只能有一个 data-page-content、一个 data-business-content；弹窗和抽屉统一放在 PAGE_OVERLAYS 区域。
+
+      页面身份必须同步
+      - prototype-page-manifest 是本文件内的页面身份 JSON；按字段用途更新值，不删除字段或改变 JSON 结构。
+      - pageKey、rootClass、data-page-root、data-page-key 与页面内容根类使用同一 kebab-case 值。
+      - 页面 CSS 以 .{rootClass} 开头；弹窗/抽屉 CSS 以 .{overlayRootClass} 开头，不写无作用域的页面样式。
+      - client 是页面所属端的标识；必须等于 routePath 第一段，routePath 使用 /{client}/{page-path}。
+      - <title>、manifest.pageTitle、manifest.menuTitle、正式页面实际保留的 H1 和 data-shell-page-title 文案保持一致。
+      - fileName 使用当前 HTML 文件名并保留 .html 后缀；同一组页面中的文件名不得重复。
+      - menuSection、menuTitle、menuIcon 和 menu 描述导航信息；不显示导航项时仅将 menu 设为 false。
+      - scriptMode、选择器、dependencies 和 assets 属于固定技术字段，没有明确要求时保持原值。
+      - pageHeaderMode 仅使用 standard、back-only 或 none；none 时删除整个 data-page-header。
+      - pageType 与 data-layout-type 使用同一套取值：list、detail、form、dashboard、console、config 或 custom；无法准确归类时用 custom。
+      - templateVersion 是当前模板结构协议的稳定版本号，必须保持为数字 1；协议标题中的 v1.9 是 AI 编写协议修订号，二者不要混用。创建页面时不修改。
+
+      页面结构选择
+      - 模板内容区提供“一级列表页、二级详情页、二级新增/编辑页”三种可切换结构示例；它们只用于说明结构，不代表一个文件应同时承载三个业务页面。
+      - 创建正式页面时只选择一种结构，删除模板演示切换器、其余示例分支以及不再使用的样式、状态和方法。
+      - 一级列表、配置、看板和控制台等独立功能页通常使用 standard；data-page-header 可放页面 H1、简短说明和页面级主操作。
+      - 独立打开的详情、新增和编辑等二级页面通常使用 back-only；data-page-header 只能保留返回入口，不放页面 H1、说明、状态或页面级主操作。
+      - 二级页面如需显示对象名称、编号、业务状态、表单标题或主要操作，应放在 data-business-content 的业务区块中；具体信息和布局由业务需求决定。
+      - 二级新增或编辑页在返回入口后直接进入表单或流程内容，不额外建立页面标题区；表单内部可按业务需要设置区块标题。
+      - 弹窗或抽屉中的新增、编辑不属于独立二级页面，应保留当前页面上下文，不额外生成返回区。
+
+      HTML、Vue 与交互规则
+      - data-page-header 只约定页面标题、说明和页面级操作的位置，不约定其后的业务内容结构。
+      - data-business-content 内的现有代码只是可运行示例，可按业务需求完整替换其结构、组件、信息层级和交互方式；替换时同步更新 PAGE_STYLE、PAGE_OVERLAYS 和 PAGE_LOGIC，并删除不再使用的示例代码。
+      - 页面状态、计算属性、方法和模拟数据只能写在 PAGE_LOGIC 中；使用 Vue 3 Composition API，不在 PAGE_LOGIC 中新增 window 全局变量。
+      - SHELL_NAV 默认只作为视觉导航示例，不得添加指向不存在文件的链接或虚构跳转路径。
+      - 只有确认目标 HTML 文件真实存在且确实需要跳转时，才使用标准相对链接，例如 <a href="./目标页面.html">；禁止使用 window.location 实现页面跳转。
+      - PAGE_LOGIC 中禁止 onclick 等内联事件、直接操作 DOM、jQuery、未声明依赖和重复初始化 Vue；外壳的菜单图标渲染是模板自带的锁定实现，不受此条约束，也不要改写。
+      - Element Plus 及自定义组件必须显式闭合；表单控件使用可见标签或 aria-label，图标按钮同时提供 Tooltip 和 aria-label。
+      - 紧凑工具操作可使用图标按钮；查看、编辑、删除、审核、停用等业务操作使用清晰文字，不只依赖图标或颜色。
+      - 异步操作必须处理校验失败、用户取消和 loading 复位；模拟数据应确定、可读，不调用真实接口或写入持久存储。
+
+      CSS 与视觉规则
+      - 页面专属样式只写在 PAGE_STYLE；优先使用 --app-* 与 --el-* 变量，间距和圆角走 --app-space-* 与 --app-radius-* 刻度，不新增全局样式、CDN、外部字体或外部图片。
+      - 默认使用浅色中性外壳与 Apple 风格交互蓝；项目需要其他主题时，可修改 THEME_TOKENS，但应保持结构背景克制，并让强调色主要服务于操作、焦点和选中状态。
+      - 内容区的页面背景、面板、文字、边框、悬浮层和成功/警告/危险状态必须引用语义变量；禁止在 PAGE_STYLE 中直接使用白色、黑色或固定灰色替代这些变量。独立打开时没有 data-theme 也必须正常显示浅色页面。
+      - 页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px；不依赖浏览器默认字号。
+      - 内容区的布局、组件和视觉组织由当前业务需求决定；统一使用模板主题变量，并保持信息层级、间距和交互状态清晰一致。
+      - 桌面端宽度约定：外壳自适应，不给文档设 min-width，也不产生整页横向滚动。1080px 以下侧边栏收成图标栏、内容区控件降级，1180px 以下两栏布局收成单栏；过宽的表格在自身面板内横向滚动。页面级主操作在任何宽度下都必须可见可点，不要改成移动端布局。
+
+      交付自检
+      - 协议块仍完整存在，见“不可破坏的模板契约”第一条。
+      - THEME_TOKENS 只包含完整的强调色、派生色和外壳结构色，没有把页面布局或业务样式写入其中。
+      - 主题桥接区仍完整存在；页面没有把内容区颜色硬编码为单一主题，设置 html[data-theme="dark"] 后文字、背景、面板、边框和状态色仍有足够对比度。
+      - HTML 可直接打开；控制台无错误；加载、空数据、校验、取消、确认和分页等已用状态均可操作。
+      - 多页面原型中的相对链接均指向实际存在的文件，当前页面导航项带 is-active 和 aria-current="page"。
+      - Manifest 是有效 JSON，页面身份字段一致，所有 Vue 模板表达式引用的状态和方法都在 pageSetup 返回。
+      - 没有修改锁定区、没有新增第二份壳层、没有重复 data-page-* 标记、没有遗留无用代码或未使用状态。
+    -->
+    <!-- PROTOTYPE_AI_PROTOCOL_END -->
+
+    <!-- TEMPLATE-LOCK: 页面基础样式依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_STYLE_DEPENDENCIES_START -->
+<link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" data-page-node-id="22VuxCR3MmLOukZjwAyDDp" />
+<!-- PROTOTYPE_STYLE_DEPENDENCIES_END -->
+
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 页面统一基础样式变量与外壳样式。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 内容选择器以 .business-page 开头；覆盖层选择器以 .business-page-dialog 开头。 -->
+<style data-page-style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+        .official-vehicle-contracts .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .official-vehicle-contracts .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .official-vehicle-contracts .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .official-vehicle-contracts .steps-container {
+            padding: 20px;
+        }
+
+        /* Adjust Element Plus Transfer styling to span better inside Drawer */
+        .official-vehicle-contracts .el-transfer-panel {
+            width: 45%;
+        }
+
+        .official-vehicle-contracts .el-transfer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .official-vehicle-contracts-overlay.transfer-dialog { max-width: calc(100vw - 48px); margin-top: 4vh; }
+        .official-vehicle-contracts-overlay .transfer-toolbar,
+        .official-vehicle-contracts-overlay .transfer-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .official-vehicle-contracts-overlay .transfer-toolbar { margin-bottom: 16px; }
+        .official-vehicle-contracts-overlay .transfer-push { margin-left: auto; }
+        .official-vehicle-contracts-overlay .transfer-muted { font-size: 13px; color: var(--app-color-text-muted); line-height: 1.6; overflow-wrap: anywhere; }
+        .official-vehicle-contracts-overlay .transfer-editor-body { max-height: 82vh; overflow-y: auto; padding-right: 4px; }
+        .official-vehicle-contracts-overlay .transfer-alert { margin-bottom: 16px; }
+        .official-vehicle-contracts-overlay .transfer-pagination { display: flex; justify-content: flex-end; padding-top: 16px; }
+        .official-vehicle-contracts-overlay .transfer-original-summary { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .official-vehicle-contracts-overlay .transfer-original-summary.is-readonly { grid-template-columns: 2fr 1fr; }
+        .official-vehicle-contracts-overlay .transfer-metric { padding: 10px 12px; border: 1px solid var(--app-color-border); border-radius: 6px; background: var(--app-color-surface-subtle); font-size: 13px; }
+        .official-vehicle-contracts-overlay .transfer-metric strong { display: block; font-size: 18px; line-height: 1.5; margin-top: 4px; overflow-wrap: anywhere; }
+        .official-vehicle-contracts-overlay .transfer-source-summary strong { font-size: 14px; }
+        .official-vehicle-contracts-overlay .transfer-quota-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; color: var(--app-color-text-secondary); font-size: 13px; line-height: 1.6; }
+        .official-vehicle-contracts-overlay .transfer-quota-line strong { font-size: 14px; font-weight: 600; color: var(--app-color-text-primary); }
+        .official-vehicle-contracts-overlay .transfer-target-quota { margin: -8px 0 20px; }
+        .official-vehicle-contracts-overlay .transfer-inline-summary { padding-top: 12px; }
+        .official-vehicle-contracts-overlay .transfer-original-timing { border-top: 1px solid var(--app-color-border-light); padding-top: 16px; margin-top: 16px; }
+        .official-vehicle-contracts-overlay .transfer-original-timing > strong { display: block; margin-bottom: 12px; font-size: 14px; }
+        .official-vehicle-contracts-overlay .transfer-original-timing > p { margin: 8px 0 16px; }
+        @media (max-width: 760px) {
+            .official-vehicle-contracts-overlay .transfer-original-summary { gap: 8px; }
+        }
+    
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+    </style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_MANIFEST_START: 页面身份与导航元数据，必须与页面内容保持一致。 -->
+<script id="prototype-page-manifest" type="application/json">
+{
+  "templateVersion": 1,
+  "scriptMode": "composition-api",
+  "pageKey": "official-vehicle-contracts",
+  "pageTitle": "公务用车合约管理",
+  "fileName": "official_vehicle_contracts.html",
+  "pageType": "custom",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/official-vehicle-contracts",
+  "menuSection": "official-vehicles",
+  "menuTitle": "公务用车合约管理",
+  "menuIcon": "Document",
+  "menu": true,
+  "rootClass": "official-vehicle-contracts",
+  "overlayRootClass": "official-vehicle-contracts-overlay",
+  "contentSelector": "[data-page-content]",
+  "businessContentSelector": "[data-business-content]",
+  "overlaySelector": "[data-page-overlay]",
+  "styleSelector": "[data-page-style]",
+  "dependencies": [
+    "vue",
+    "element-plus",
+    "element-plus/locale/zh-cn",
+    "@element-plus/icons-vue",
+    "https://cdn.tailwindcss.com"
+  ],
+  "assets": []
+}
+    </script>
+<!-- PAGE_MANIFEST_END -->
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+
+  <body data-page-node-id="0KEwn2smBwqWnrEl72ZRg6">
+    <div id="app" class="prototype-app" v-cloak data-page-node-id="A6UVdiZvnH9saf583EsDHI">
+      <!-- TEMPLATE-LOCK: 页面统一外壳，不得修改结构或在页面内重复创建。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar" data-page-node-id="hHUal4kOCtopuQZ5AHHi98">
+        <div class="prototype-brand" data-page-node-id="XiG8f0oKMESBFFwTd8LkCp">
+          <span data-shell-project-name data-page-node-id="AGCpZCXMGFPjXR7hBJPyAW">RIMO Rental</span>
+          <small data-shell-client-name data-page-node-id="gFhjI7LYQL9hO13NXa33yj">营运端</small>
+        </div>
+        <nav class="prototype-menu" data-prototype-shell="navigation" aria-label="页面导航" data-page-node-id="jCcEowYCcHkrBC5PFHWgcg">
+          <!-- [AI-EDIT] SHELL_NAV_START: 默认只更新菜单文案和当前项状态；确认目标文件存在后再使用链接。 -->
+<div class="prototype-menu-group" data-page-node-id="7PklGvj72CnCnSlZ5QmYq0">公务车管理</div>
+<a class="prototype-menu-item is-active" href="./official_vehicle_contracts.html" aria-current="page" data-shell-page-title data-page-node-id="5sbSn2ic1lwWZZAzGL1t0T"><span class="prototype-menu-icon" data-prototype-menu-icon="Document" aria-hidden="true" data-page-node-id="GVr90DovySqR3gLeGhDlbw"></span><span data-page-node-id="GT3YPFjXWoNTPdg0bCDSQx">公务用车合约管理</span></a>
+<!-- SHELL_NAV_END -->
+        </nav>
+      </aside>
+
+      <div class="prototype-workspace" data-page-node-id="JQaOqbKg6pnvL4nIgOVpbm">
+        <header class="prototype-topbar" data-prototype-shell="topbar" data-page-node-id="wJ93ODM7VkmlBtzbTEwqAo">
+          <div class="prototype-breadcrumb" data-shell-breadcrumb data-page-node-id="bdtfV1sYiDUG0knW8RtMnw">首页 / 营运端 / 公务用车合约管理</div>
+          <el-dropdown trigger="click" data-page-node-id="WEKmYZBRoJ0PN8pCo7jnmB">
+            <button class="prototype-user" type="button" aria-label="账号菜单" data-page-node-id="cP4wgIjGVbEsugEb8AEvm0">
+              <span class="prototype-avatar" data-page-node-id="Nv0WoZyS2KlbYGmJDOVDAX">A</span>
+              <span data-page-node-id="keBeFbjhNR7sNthQBKTnSx">Admin</span>
+            </button>
+            <template #dropdown data-page-node-id="4LNJZDKwmB3SBVpKFfB9BU">
+              <el-dropdown-menu data-page-node-id="CC5rIiKeNgfLBM8xEeB1IX">
+                <el-dropdown-item data-page-node-id="g2D07y8k1RqtvxuQuosnH3">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main" data-page-node-id="CD0gfG2yAtDbz59tDFkMoX">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面的唯一主内容根节点。只能有一个 data-page-content。 -->
+<section class="legacy-page legacy-official-vehicle-contracts official-vehicle-contracts" data-page-content data-page-root="official-vehicle-contracts" data-page-key="official-vehicle-contracts" data-page-node-id="kAbOwYFJpeT6CmG2coxKeL">
+  <div data-business-content data-layout-type="legacy" data-page-node-id="Wo4JAGnftOUuCNWq4Bih04">
+<!-- Header -->
+            <!-- Scrollable Content -->
+             <div class="flex-1 overflow-y-auto space-y-6 custom-scroll" data-page-node-id="wyZdVARCvEIcIc9xvT7ypt">
+                <!-- 顶部操作栏 -->
+                <div class="flex justify-between items-end mb-2" data-page-node-id="J25bAuNOpg8wmvld3dh4yF">
+                    <div data-page-node-id="u1BENxvDSZFXwn5hWXa2oY">
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight" data-page-node-id="Hpn0VTaAVHzZRjN7dGWvUv">公务车辆合约管理</h1>
+                        <p class="text-gray-500 text-sm mt-1" data-page-node-id="ImyNaI8Q2Pj7aNRr5csavA">资产分配与财务核算，基于承租方建立合约结构，锁定底层车辆池资产。</p>
+                    </div>
+                    <div class="flex gap-3" data-page-node-id="A1alCxkKXdc3HUrkzhkPaA">
+                        <el-button size="large" @click="openTransferTasks()" data-page-node-id="nXakxP0tsErFFQdCrSN3bo">合約轉移任務</el-button>
+                        <el-button type="primary" size="large" class="shadow-md shadow-[color:var(--app-color-primary-shadow)]"
+                            @click="openWizard" data-page-node-id="BJp8ROJS7u417AtdmT3hy3">
+                            <el-icon class="mr-1" data-page-node-id="ytUcfqRwpbbNCnAs4p0yXM">
+                                <Plus data-page-node-id="Mhp3Z9HMZ8opGLWiZkFIW5"></Plus>
+                            </el-icon> 新签合约
+                        </el-button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-page-node-id="WmPH8wMPdwCdh8KW2tKS2j">
+                    <!-- Card 1 -->
+                    <div 
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow" data-page-node-id="zETOeaF9joIfaOWdlDH9zc">
+                        <div 
+                            class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" data-page-node-id="li5YibO5iuebxEtZ1nED4P">
+                        </div>
+                        <span class="text-sm text-gray-500 font-medium mb-1 relative z-10" data-page-node-id="MjqpgYC22LUPPNXsBBtxMU">生效中合约</span>
+                        <div class="flex items-center gap-2 relative z-10" data-page-node-id="8WeukTcjn4DEvSG0G6RIpn">
+                            <span class="card-value text-emerald-600" data-page-node-id="ieiNLlFuZaTBjQRExur76n">{{ dashboardStats.active }}</span>
+                            <span class="text-xs text-gray-400" data-page-node-id="ZD8aSDabPZrRFOq2ev8vpM">份</span>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div 
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow" data-page-node-id="G0p9UDEpvoI46KTz8npIz1">
+                        <div 
+                            class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" data-page-node-id="yQ8a9rLw7IptbHkZoG8EPV">
+                        </div>
+                        <span class="text-sm text-gray-500 font-medium mb-1 relative z-10 text-gray-600" data-page-node-id="tjZLlFlyGovxIrab8nbfj3">已终止合约</span>
+                        <div class="flex items-center gap-2 relative z-10" data-page-node-id="Kq23tBImQyi1avzPeam2si">
+                            <span class="card-value text-gray-600" data-page-node-id="4zAU2jzau9J7YViPicSnY4">{{ dashboardStats.terminated }}</span>
+                            <span class="text-xs text-gray-400" data-page-node-id="0WMAV0LbL8jAuernmgsjo7">强制关停</span>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div 
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow" data-page-node-id="EhH26NWaN3LX8LAFgTOGGB">
+                        <div 
+                            class="absolute right-0 top-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" data-page-node-id="oGsbEIRXZkl84uXJ2sZ1qd">
+                        </div>
+                        <span 
+                            class="text-sm text-gray-500 font-medium mb-1 relative z-10 text-amber-600" data-page-node-id="BKNXloXd3DHfMWBSb67nvu">临近/已过期合约</span>
+                        <div class="flex items-center gap-2 relative z-10" data-page-node-id="1q7hIhqDsFYS364sGUTK2G">
+                            <span class="card-value text-amber-500" data-page-node-id="ZKoDZniP7BnrmG0bDJRDQf">{{ dashboardStats.expiringOrExpired }}</span>
+                            <span class="text-xs text-gray-400" data-page-node-id="giuPnej996jI6QPFR7cyFo">存在业务风险</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Table Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col" data-page-node-id="5AuQOuz0vIrdockX7Qxr18">
+                    <!-- Filters -->
+                    <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-wrap gap-4 items-center" data-page-node-id="scuiJGD2M8xuTI2iMIQXqq">
+                        <el-input v-model="filters.query" placeholder="搜索合约编号 / 合约名称" prefix-icon="Search" clearable
+                            style="width: 240px" data-page-node-id="ntHTsx9kjRr4YPWQHsODvG"></el-input>
+
+                        <el-select v-model="filters.tenant" placeholder="实际用车企业" clearable style="width: 160px" data-page-node-id="WESbmQb0zpXPA6aKj6gHh7">
+                            <el-option v-for="t in tenantOptions" :key="t" :label="t" :value="t" data-page-node-id="TGInB231GUOsyI2cOc5Yfk"></el-option>
+                        </el-select>
+
+                        <el-select v-model="filters.payer" placeholder="结算代付方" clearable style="width: 160px" data-page-node-id="igtKBYYMSsdk6b5TmeSkfN">
+                            <el-option v-for="p in payerOptions" :key="p.name" :label="p.name"
+                                :value="p.name" data-page-node-id="os6nDZdyGQgbhoYNyprqlR"></el-option>
+                        </el-select>
+
+                        <el-select v-model="filters.type" placeholder="合约类型" clearable style="width: 130px" data-page-node-id="xSHDCOUoSeJOHssurTgMzA">
+                            <el-option label="试用" value="TRIAL" data-page-node-id="3zeMDhUEaQZWDGkC1Yu2Wv"></el-option>
+                            <el-option label="正式" value="OFFICIAL" data-page-node-id="UjkmiOpoXbh7FTXvLgH8Of"></el-option>
+                        </el-select>
+
+                        <el-select v-model="filters.status" placeholder="状态" clearable style="width: 140px" data-page-node-id="rSlMTrCqeY27izcGSNAgKM">
+                            <el-option label="草稿" value="DRAFT" data-page-node-id="p5q1FaFpFWBgBBqmjbd3OA"></el-option>
+                            <el-option label="待客户支付" value="PENDING_PAYMENT" data-page-node-id="H99iCBM0lL84z6KGHUoXkk"></el-option>
+                            <el-option label="待调整" value="PENDING_ADJUSTMENT" data-page-node-id="pMpwko7wlFOjR7nJiyFCH2"></el-option>
+                            <el-option label="待生效" value="PENDING_EFFECTIVE" data-page-node-id="F859xaJWTRBZQvzVd2Y0Go"></el-option>
+                            <el-option label="生效中" value="ACTIVE" data-page-node-id="H8Etc1iGWAPkirvHBVq0n9"></el-option>
+                            <el-option label="即将到期" value="EXPIRING" data-page-node-id="WoX5wg7ho8HSGFNwMGkP6s"></el-option>
+                            <el-option label="已终止" value="TERMINATED" data-page-node-id="iRDaQpcp8fJF4fxBxOakJ7"></el-option>
+                            <el-option label="已过期" value="EXPIRED" data-page-node-id="0VdwQPe7WojB06gBqedy33"></el-option>
+                            <el-option label="已作废" value="VOID" data-page-node-id="jJtexb3BoTR0lJzh6eGTB8"></el-option>
+                        </el-select>
+                    </div>
+
+                    <!-- Table -->
+                    <el-table :data="pagedTableData" style="width: 100%" class="custom-table" data-page-node-id="MoRlqmgkAVFOVp4feckQQ0">
+                        <el-table-column label="合约编号与名称" min-width="220" data-page-node-id="IAKuG0ryg6YsyDGHGMcCDk">
+                            <template #default="{ row }" data-page-node-id="b31tt1kECulgiRzg6o2l3l">
+                                <div class="font-mono text-gray-800 text-sm font-semibold" data-page-node-id="lO8xH6lL8BV19AE3yymakE">{{ row.id }}</div>
+                                <div class="text-xs text-gray-500 mt-1 truncate" :title="row.name" data-page-node-id="AjRxQawIiYTxFeVrPYB4Kw">{{ row.name }}</div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="用车与结算方" min-width="240" data-page-node-id="UfBTkiYXaRyrjgVC2nVhBp">
+                            <template #default="{ row }" data-page-node-id="i4LNJH9BQNGswWU92HjvmY">
+                                <div class="text-sm text-gray-800" data-page-node-id="uJhsNmS4GZxZdHGlAOlmQV">{{ row.tenant }}</div>
+                                <div v-if="row.tenant !== row.payer"
+                                    class="text-xs text-gray-500 mt-1 flex items-center gap-1" data-page-node-id="q9Y2qgqjy3lv18Z5e7hBc8">
+                                    <span 
+                                        class="bg-gray-100 text-gray-500 px-1 py-0.5 rounded text-[10px] ring-1 ring-inset ring-gray-200" data-page-node-id="DuKUHpeIISfHdI8oPAgGRP">[第三方代付]</span>
+                                    <span class="truncate" :title="row.payer" data-page-node-id="zIkBJUbCO4At5fD7Et0KEE">{{ row.payer }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="属性" width="140" data-page-node-id="hChOfLhe2eYdq5xf75CVEg">
+                            <template #default="{ row }" data-page-node-id="vGFnjWk74Hfe736aMREn7g">
+                                <div class="flex flex-col gap-1 items-start" data-page-node-id="KKfUmDpZdQc1DFZMaQmb8Z">
+                                    <el-tag v-if="row.type === 'TRIAL'" type="info" size="small" effect="plain"
+                                        class="border-blue-200 text-blue-600 bg-blue-50" data-page-node-id="N9M6afNcWm2wKy1377pS5r">试用</el-tag>
+                                    <el-tag v-if="row.type === 'OFFICIAL'" type="success" size="small" effect="light"
+                                        class="text-emerald-600 bg-emerald-50 border-emerald-200" data-page-node-id="u3hIrTeWwEHVkn8kAeiA91">正式</el-tag>
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded" data-page-node-id="WajWbZXFRy9ucwe0qxdiss">{{
+                                        renderBillingType(row.billing) }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="配额资产" width="100" align="center" data-page-node-id="upyee1zPANlUkZ7qiO7iHY">
+                            <template #default="{ row }" data-page-node-id="MrlFE7Sw3yOujnUXpzsOO3">
+                                <div class="text-lg font-bold text-gray-800" data-page-node-id="17fDs1GhNCLBUvCH5BmpJh">{{ row.vehicleCount }} <span 
+                                        class="text-xs font-normal text-gray-500" data-page-node-id="ySnDfH4RyYNVh57nR8UOuj">台</span></div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="合约金额" width="140" align="right" data-page-node-id="4r3G75x0Ey3rR4IulBvEfG">
+                            <template #default="{ row }" data-page-node-id="BHklHbjfYd6A6HV1FGbCdk">
+                                <div class="text-sm font-semibold text-gray-800" data-page-node-id="V90sRE6HiB3WxS68OwdkFg">{{ formatCurrency(row.totalAmount, false) }}
+                                    <span class="text-xs text-gray-500 font-normal ml-0.5" data-page-node-id="IvSDh8N6WxSmjAOlAdyfE0">/ {{ row.billing ===
+                                        'ANNUALLY' ? '年' : (row.billing === 'MONTHLY' ? '月' : '次') }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="合约期限" min-width="200" data-page-node-id="3yEF6d0zLs1UAwoxVXzLtU">
+                            <template #default="{ row }" data-page-node-id="lpj2n7x0OTaJU0XjRCPuCr">
+                                <div class="text-xs text-gray-600 font-mono tracking-tight flex flex-col gap-1" data-page-node-id="lXSmYf5eXILWB8rYMWLHUP">
+                                    <span data-page-node-id="OhWZk1yCFvpNVS1wanBNL0">{{ row.startDate }} <span class="text-gray-400 font-sans mx-0.5" data-page-node-id="DIV4jMbdjUmXpv0o7VPXnB">至</span> {{
+                                        row.endDate }}</span>
+                                    <div v-if="(row.status === 'ACTIVE' || row.status === 'EXPIRING') && getDaysRemaining(row.endDate) >= 0 && getDaysRemaining(row.endDate) < 15"
+                                        class="inline-block self-start text-amber-500 font-semibold bg-amber-50 px-1.5 py-0.5 rounded ring-1 ring-inset ring-amber-100 text-[10px]">
+                                        临近到期</div>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="状态" width="120" data-page-node-id="WJHDFsFDD5QTY8dnC097z8">
+                            <template #default="{ row }" data-page-node-id="AmiuUNA5jEg6H6OtiFAQHT">
+                                <div class="flex items-center gap-1.5" data-page-node-id="BG7x0ZQk1GCGIzrnklHGGw">
+                                    <div :class="getStatusDotClass(row.status)" data-page-node-id="WGwLFDu54GckTwPFNmwd8v"></div>
+                                    <span :class="getStatusTextClass(row.status)" data-page-node-id="jDdVR9CK0If7CV8I2TMnI5">{{ getStatusLabel(row.status)
+                                        }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="操作" width="180" fixed="right" align="right" header-align="right" data-page-node-id="Plg6CyUT04tpmUcYv70TAI">
+                            <template #default="{ row }" data-page-node-id="TXvZ9JLT3iCj9eanzlBfI6">
+                                <div class="flex items-center justify-end gap-1.5 whitespace-nowrap" data-page-node-id="V2DWPhXcZpfp9q5N13bBKt">
+                                    <el-button v-if="canEditContract(row)" link type="primary" size="small"
+                                        @click="openEditContract(row)" data-page-node-id="Uo4RxBsQp53BtoQ37VnlaO">编辑</el-button>
+
+                                    <el-tooltip v-else-if="row.type === 'TRIAL' && row.successorContractId"
+                                        :content="`正式合同：${row.successorContractId}`" placement="top" data-page-node-id="E3AAUse7PpPY32ZGCIxikL">
+                                        <el-tag type="success" size="small" effect="plain" data-page-node-id="bGySx0jIJ94amqs7UW8SE4">已转正式</el-tag>
+                                    </el-tooltip>
+
+                                    <el-dropdown v-if="hasMoreActions(row)" trigger="click"
+                                        @command="handleContractAction($event, row)" data-page-node-id="Go7MV5nnqju6V2zFuIqqvq">
+                                        <el-button link type="primary" size="small" data-page-node-id="bujfMidA7goCxa9dLctVd7">
+                                            更多<el-icon class="ml-1" data-page-node-id="L3524ySG4wh8sCOmdkJo0L"><ArrowDown data-page-node-id="iiAZGSQqezL8WlPc1oZ6OP"></ArrowDown></el-icon>
+                                        </el-button>
+                                        <template #dropdown data-page-node-id="3uPeAuxeHhxiAD8o7stk3a">
+                                            <el-dropdown-menu data-page-node-id="DTDzdrSn5ZD68g9AE5m7Oz">
+                                                <el-dropdown-item v-if="canTransferContract(row)" command="transfer" data-page-node-id="RqhFyiY72aqlKcJQzqXTFp">
+                                                    轉移至其他合約
+                                                </el-dropdown-item>
+                                                <el-dropdown-item v-if="!hasRelatedTransferTask(row.id) && ['ACTIVE', 'EXPIRING', 'PENDING_EFFECTIVE'].includes(row.status)"
+                                                    command="terminate" data-page-node-id="HYUih5deHkpba33Yv5AEEb">中止合约</el-dropdown-item>
+                                                <el-dropdown-item v-if="canDeleteContract(row)" command="delete"
+                                                    :divided="hasNonDeleteMoreAction(row)" style="color: #ef4444;" data-page-node-id="TrR4Qa8th256QhslVfA2Sx">删除合约</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </template>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="生效时间" width="170" data-page-node-id="NRZd5VH5K3sBV5LPFfOzuM">
+                            <template #default="{ row }" data-page-node-id="BWSK82FSEjNaGJN9opd4AK">
+                                <div class="text-xs text-gray-700 font-mono" data-page-node-id="5DqnqPGKTVucUHYpjqrC2Q">{{ getEffectiveDisplay(row) }}</div>
+                                <el-tag v-if="getGiftDays(row) > 0" type="success" size="small" effect="plain"
+                                    class="mt-1">赠送 {{ getGiftDays(row) }} 天</el-tag>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <!-- 分页 -->
+                    <div class="p-4 border-t border-gray-100 flex justify-end bg-gray-50">
+                        <el-pagination v-model:current-page="contractPage" v-model:page-size="contractPageSize"
+                            :page-sizes="[10, 20, 50, 100]" :total="filteredTableData.length" background
+                            layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+                    </div>
+                </div>
+            </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层" class="official-vehicle-contracts-overlay" data-page-node-id="mxFk0RE8bIm41m1dGduH9j">
+<el-dialog v-model="transferListOpen" title="合約轉移任務" width="1120px" class="official-vehicle-contracts-overlay transfer-dialog" :close-on-click-modal="false" data-page-node-id="WHI9ecAmXI9TyPEYb91N11">
+    <div class="transfer-toolbar" data-page-node-id="2N1O0IgADoNmCfRZOvUUxr">
+        <el-input v-model="transferFilters.query" placeholder="搜尋合約編號或名稱" aria-label="搜尋合約" clearable style="width: 260px" data-page-node-id="4JE5bWaRa0haUI77UiyfAJ"></el-input>
+        <el-select v-model="transferFilters.status" placeholder="全部狀態" aria-label="任務狀態" clearable style="width: 150px" data-page-node-id="A9r3E8u8xuex8KGrhCcPKb">
+            <el-option v-for="(item, key) in transferStatuses" :key="key" :label="item.label" :value="key" data-page-node-id="ScSfwjfGlR5kIayVgJABME"></el-option>
+        </el-select>
+        <el-tag v-if="transferFilters.contractId" closable @close="clearTransferScope" data-page-node-id="rvzDL0BG1UlohKSxs95hC9">{{ transferFilters.contractId }} {{ transferFilters.direction === 'out' ? '轉出' : transferFilters.direction === 'in' ? '轉入' : '相關' }}</el-tag>
+        <el-button class="transfer-push" type="primary" @click="openTransferEditor()" data-page-node-id="T3LZXkKCs9B41wfIKqyEMq">新增轉移任務</el-button>
+    </div>
+    <el-table :data="pagedTransferTasks" max-height="420" empty-text="暫無符合條件的轉移任務" data-page-node-id="iGECKvjBYqEEYQb74r1T4Q">
+        <el-table-column label="來源合約" min-width="210" data-page-node-id="7tS0iCubCS0YjSYHL9q9BD">
+            <template #default="{ row }" data-page-node-id="JqGlOkHVxzGYBhUqoBmN39"><div data-page-node-id="Z6ugXsXT5PHZPEPEMlSzUk">{{ row.sourceId }}</div><div class="transfer-muted" data-page-node-id="6AdTBI5TlYbJmezWdsXH0L">{{ row.sourceName }}</div></template>
+        </el-table-column>
+        <el-table-column label="目標合約" min-width="210" data-page-node-id="HWbuizQjg1ocI6i1q5M1Gt">
+            <template #default="{ row }" data-page-node-id="wv3dbM6np4uSbr7KJl3C9g"><div data-page-node-id="NByAkRbffs4j7Jglk5ZhNF">{{ row.targetId }}</div><div class="transfer-muted" data-page-node-id="W0BXmrhlranxiotOEmHGGC">{{ row.targetName }}</div></template>
+        </el-table-column>
+        <el-table-column label="車輛數" width="80" align="right" data-page-node-id="LcMtnoJWifdjSpgG4NiCPo"><template #default="{ row }" data-page-node-id="bcyHhHxnJlJSPFWhLx2dks">{{ row.vehicles.length }} 輛</template></el-table-column>
+        <el-table-column label="執行時間" width="170" data-page-node-id="NovudAIJJ7RvoVjMyZg7Q6">
+            <template #default="{ row }" data-page-node-id="SeYxFz5LhBEOM0tH9FOlHL"><div data-page-node-id="tIgbpFcw6XnjJDh6S1T6UL">{{ transferTime(row.executedAt || row.scheduledAt) }}</div><div class="transfer-muted" data-page-node-id="yCd89V1DEpTbQt0wx1C6FP">{{ row.executedAt ? '實際執行' : row.mode === 'IMMEDIATE' ? '立即轉移' : '到期轉移（預計）' }}</div></template>
+        </el-table-column>
+        <el-table-column label="狀態" width="112" data-page-node-id="4tHatr5NCifSBV8cYFyFed"><template #default="{ row }" data-page-node-id="lyjpmcAhMnlwdlIeSkrbSK"><el-tag :type="transferStatuses[row.status].type" effect="light" data-page-node-id="AyEeXfy3F6b0rsbyDrMa7a">{{ transferStatuses[row.status].label }}</el-tag></template></el-table-column>
+        <el-table-column label="操作" width="140" fixed="right" align="right" data-page-node-id="wB7duqjVru91AF3Qn89CrU">
+            <template #default="{ row }" data-page-node-id="dx1PHn5iXmJUikalGzCVlS">
+                <el-button link type="primary" @click="openTransferEditor(null, row)" data-page-node-id="WuOAnHl8ZxBCYRV11oUfAa">{{ row.status === 'PENDING' ? '編輯' : row.status === 'FAILED' ? '處理' : '查看' }}</el-button>
+                <el-button v-if="['PENDING', 'FAILED'].includes(row.status)" link type="danger" @click="cancelTransferTask(row)" data-page-node-id="BEiOJyXRX8GGYmlVJExqoM">取消</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="transfer-pagination" data-page-node-id="SShFpydMYVIAX8NsSPYpnr"><el-pagination v-model:current-page="transferPage" :page-size="5" :total="filteredTransferTasks.length" layout="total, prev, pager, next" data-page-node-id="3istHZ7XAGMPLBPAQsUY0E"></el-pagination></div>
+    <template #footer data-page-node-id="f4EGQpZ9yCyamAOl8vfyAa"><el-button @click="transferListOpen = false" data-page-node-id="HmPOqZAoyG0t3ztHOC3B9c">關閉</el-button></template>
+</el-dialog>
+
+<el-dialog v-model="transferEditorOpen" :title="transferReadonly ? '轉移任務詳情' : '車輛轉移至其他合約'" width="900px" class="official-vehicle-contracts-overlay transfer-dialog" :close-on-click-modal="false" data-page-node-id="4cfJXDqtuzV78tFltJ5G4U">
+    <div class="transfer-editor-body" data-page-node-id="olfl6pGEMVCfxNWIaYO43N">
+        <el-alert v-if="currentTransferTask && currentTransferTask.failureReason" :title="currentTransferTask.failureReason" type="error" :closable="false" show-icon class="transfer-alert" data-page-node-id="GDtxSiye601Df1wtFqHXV3"></el-alert>
+        <div v-if="transferReadonly" class="transfer-toolbar" data-page-node-id="9ML9HnS9fj251eTFSPpUq2">
+            <el-tag :type="transferStatuses[currentTransferTask.status].type" data-page-node-id="yKEQ4e6ug8uoTs2RN6fZiL">{{ transferStatuses[currentTransferTask.status].label }}</el-tag>
+            <span data-page-node-id="2ie33tqTWdhIGYU6abeZQA">{{ currentTransferTask.id }} · {{ transferTime(currentTransferTask.executedAt || currentTransferTask.updatedAt) }}</span>
+        </div>
+        <el-form v-if="transferSourceSelectable && !transferReadonly" label-position="top" :disabled="transferSaving" data-page-node-id="LLoVFIFSK8nQLOslA8GvwC">
+            <el-form-item label="來源合約" required data-page-node-id="ubhJ9BUmRBLtbOsokKxQYW">
+                <el-select v-model="transferDraft.sourceId" filterable :disabled="!!transferDraft.id" placeholder="請選擇來源合約" @change="changeTransferSource" data-page-node-id="0hoBdHKjiyPp9jOsUrFBLu">
+                    <el-option v-for="row in transferSourceOptions" :key="row.id" :label="row.id + ' · ' + row.name" :value="row.id" data-page-node-id="KKJ2vhxDfgF37w1zAV9zWo"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div v-if="transferDraft.sourceId" class="transfer-original-summary" :class="{ 'is-readonly': transferReadonly }" data-page-node-id="m5HSR0CHyg2T7h9J0wSoI5">
+            <div class="transfer-metric transfer-source-summary" data-page-node-id="ZZY2DkmotLVcaETiOU5PqL">
+                <div class="transfer-muted" data-page-node-id="Hg1TOoGT948A5nIOKA4dOQ">來源合約</div>
+                <strong data-page-node-id="oFmCNjEGFgXKG6hz2iKzS4">{{ transferDraft.sourceId }} · {{ transferSourceName }}</strong>
+                <div v-if="!transferReadonly && transferSourceQuotaInfo" class="transfer-muted" data-page-node-id="kMylARwc7VYWcIN1AUk2Bt">總配額 {{ transferSourceQuotaInfo.total }} 台</div>
+            </div>
+            <div v-if="!transferReadonly && transferSourceQuotaInfo" class="transfer-metric" data-page-node-id="zYsMyuO3AxbHJDB4cP8ml8">
+                <div class="transfer-muted" data-page-node-id="SAOn25GQLN2WidYrALc88k">來源已分配配額</div>
+                <strong data-page-node-id="ORnrgKAiiH4hkvYOP9g2ds">{{ transferSourceQuotaInfo.allocated }} 台</strong>
+            </div>
+            <div class="transfer-metric" data-page-node-id="EUuP3Uor6vJP7XYVy9aOWM">
+                <div class="transfer-muted" data-page-node-id="TTjOMCcD8nA2Ug6tvCwIAg">{{ transferReadonly ? '本次轉移車輛' : '來源已綁車輛' }}</div>
+                <strong data-page-node-id="xtCLhovVgoG2bUNf2vqdFF">{{ transferReadonly ? currentTransferTask.vehicles.length : transferVehicles.length }} 台</strong>
+            </div>
+        </div>
+        <el-form label-position="top" :disabled="transferReadonly || transferSaving" data-page-node-id="mLQdBXYrTQ7XhpwvufknUl">
+            <el-form-item label="目標合約" required data-page-node-id="BbWQCpDFMsDytm3YYJjLMt">
+                <el-select v-model="transferDraft.targetId" filterable placeholder="請選擇同一企業的目標合約" @change="changeTransferTarget" data-page-node-id="lActkmUFykrHk0XsIB9JMB">
+                    <el-option v-for="row in transferTargetOptions" :key="row.id" :label="transferTargetOptionLabel(row)" :value="row.id" data-page-node-id="yhTjXDaV3lJGB6NdHkZ8fz"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div v-if="!transferReadonly && transferTargetQuotaInfo" class="transfer-quota-line transfer-target-quota" data-page-node-id="oKtBjoLmPOcaJp8oFSTAcz">
+            <span data-page-node-id="YKfyaU53N5zJ6jqkVUiD1B">目標總配額 <strong data-page-node-id="hoCWD73ljDztF8kJl1z1GF">{{ transferTargetQuotaInfo.total }}</strong> 台</span>
+            <span data-page-node-id="15ih3HF3GTjH6uFIDQxnvT">已分配 <strong data-page-node-id="zABGjm1MSpVFURVY6WC7TO">{{ transferTargetQuotaInfo.allocated }}</strong> 台</span>
+            <span data-page-node-id="uPdWErzECgJAQRQSA9cf1y">待分配可用 <strong data-page-node-id="FY9sxaSv799xbos8fh8DQe">{{ transferTargetQuotaInfo.available }}</strong> 台</span>
+            <span v-if="transferTargetQuotaInfo.reserved" data-page-node-id="EQOwJmmFMfYqZtSBisp7Ip">其他任務預留 <strong data-page-node-id="FW7lbmXCjOkz35QoqTWOAw">{{ transferTargetQuotaInfo.reserved }}</strong> 台</span>
+        </div>
+        <el-alert v-if="transferDraft.sourceId && !transferTargetOptions.length && !transferReadonly" title="目前沒有可承接的目標合約，請先建立同一企業的有效合約。" type="warning" :closable="false" show-icon class="transfer-alert" data-page-node-id="Gm0XYJGo6sdYOnLafGAFHq"></el-alert>
+        <template v-if="transferDraft.targetId" data-page-node-id="nybV6Eaf9EoGp5kzzVgFpG">
+        <div class="transfer-toolbar" data-page-node-id="Pp6yaG3yEfMJJficGdnUO1">
+            <strong data-page-node-id="uRIhI3yRi0b2hrLmlA0tJq">選擇需要轉移的車輛</strong>
+            <span v-if="!transferReadonly" class="transfer-push transfer-muted" data-page-node-id="VfxmAG44sPiVdMuWFpsWce">系統自動在目標合約為所選車輛補充分公司配額</span>
+        </div>
+        <el-table :data="transferBranchRows" border size="small" max-height="320" empty-text="暫無可轉移車輛" data-page-node-id="ILrk0AP7MahRVqo2WsMRVo">
+            <el-table-column label="選擇" width="64" align="center" data-page-node-id="71Pa3pewZzGqCcx6X8A1dA">
+                <template #default="{ row }" data-page-node-id="cACTSKMd7flLtILqFEWdDf"><el-checkbox :model-value="row.selectedCount > 0" :indeterminate="row.selectedCount > 0 && row.selectedCount < row.vehicles.length" :disabled="transferReadonly || transferSaving" :aria-label="'選取 ' + row.name" @change="toggleTransferBranch(row, $event)"></el-checkbox></template>
+            </el-table-column>
+            <el-table-column prop="name" label="分公司" min-width="150" data-page-node-id="ZUI4PpHMrhayDKAcKq5sXB"></el-table-column>
+            <el-table-column v-if="!transferReadonly" label="來源配額" width="90" align="center" data-page-node-id="y5tinv9YCTJmoAATOSGFh2"><template #default="{ row }" data-page-node-id="fiq4KmMvHH161OriMCqHJ4">{{ row.sourceQuota }} 台</template></el-table-column>
+            <el-table-column :label="transferReadonly ? '原選車輛' : '來源已綁車輛'" width="110" align="center" data-page-node-id="9QEo57W0AJBR74phV3gbCd"><template #default="{ row }" data-page-node-id="wct2qN9bcclceTq9CU4ys2">{{ row.vehicles.length }} 台</template></el-table-column>
+            <el-table-column label="轉移車輛" width="120" align="center" data-page-node-id="8840TT1r0KY3AfPXokxJ2L">
+                <template #default="{ row }" data-page-node-id="uwTL9W5PDA3JG7Us2SUqQ4"><el-button link type="primary" size="small" :disabled="transferSaving" @click="openTransferVehiclePicker(row)" data-page-node-id="TUSlGN7YbQEDp8WJ8oWEmE">已選 {{ row.selectedCount }} 台</el-button></template>
+            </el-table-column>
+            <el-table-column v-if="!transferReadonly" label="轉移後來源剩餘車輛" width="165" align="center" data-page-node-id="L8m9RdhMaNFGXrjarLNuyZ"><template #default="{ row }" data-page-node-id="eroCbuOBnL7B3i3qNg2KIh">{{ row.vehicles.length - row.selectedCount }} 台</template></el-table-column>
+        </el-table>
+        <div v-if="!transferReadonly" class="transfer-quota-line transfer-inline-summary" data-page-node-id="dIZdW9A1AITG37b2nwDKaY">
+            <span data-page-node-id="lEFewyvBxAgT3XKjC5cfie">本次轉移 <strong data-page-node-id="cmLu1EByXFYDDqUlf98Gnh">{{ transferDraft.vehicleIds.length }}</strong> 輛</span>
+            <span data-page-node-id="XP9hQuM9liCQm2CLiBmGKj">使用既有配額 <strong data-page-node-id="toGFzxajFTkrUOttY7Wa4N">{{ transferPreview.reused }}</strong> 台</span>
+            <span data-page-node-id="SkFcqoXZhOJloJlfiopyBf">需新增配額 <strong data-page-node-id="H0X3ebFhPzsDqsFBRLERIq">{{ transferPreview.extra }}</strong> 台</span>
+        </div>
+        <div class="transfer-original-timing" data-page-node-id="vh4RaGuHDfLaxef32Kn5hK">
+            <strong data-page-node-id="4nH8GSyt7QXr5AjCvMnLJo">轉移時間</strong>
+            <el-radio-group v-model="transferDraft.mode" :disabled="transferReadonly || transferSaving" data-page-node-id="DKT0FxNTX8CU7qoAeUCZmH">
+                <el-radio-button value="IMMEDIATE" :disabled="!transferReadonly && !transferCanRunNow" data-page-node-id="Y4ICcXlJzCuKD1kJuq0RzB">立即轉移</el-radio-button>
+                <el-radio-button value="SOURCE_EXPIRE" :disabled="!transferReadonly && !transferCanSchedule" data-page-node-id="tifFN8qgwWEubeiHLhCTln">來源合約到期時轉移</el-radio-button>
+            </el-radio-group>
+            <p class="transfer-muted" data-page-node-id="FKUYRM914Q1T2G1xiSUwo0">{{ transferReadonly ? '執行時間：' + transferTime(currentTransferTask.executedAt || currentTransferTask.scheduledAt) : transferDraft.mode === 'IMMEDIATE' ? '確認後立即將所選車輛改綁到目標合約，來源合約配額保持不變。' : '計畫執行時間：' + transferTime(transferPreview.scheduledAt) + '；目標合約將立即按車輛數預留可用額度。' }}</p>
+        </div>
+        <el-alert v-if="!transferReadonly && transferPreview.hasGap" title="目標合約較晚生效，中間空窗期間車輛無法依來源合約繼續上架；換約不會自動恢復上架。" type="warning" :closable="false" class="transfer-alert" data-page-node-id="CxczwkzMMuGpCCeYhT1Ghw"></el-alert>
+        </template>
+        <el-alert v-if="!transferReadonly && transferPreview.error" :title="transferPreview.error" type="warning" :closable="false" show-icon class="transfer-alert" data-page-node-id="KW8CnQcD9ExRGiXhBLNMTH"></el-alert>
+    </div>
+    <template #footer data-page-node-id="JcyK7Ei0rHHglXOYJhtsgb">
+        <div class="transfer-footer" data-page-node-id="WlrdPBYqmjRCzVEBGuZgKV">
+            <el-button v-if="currentTransferTask && !transferReadonly" type="danger" plain :disabled="transferSaving" @click="cancelTransferTask(currentTransferTask)" data-page-node-id="8nFwGD7adiffLvftKL9H5S">取消轉移任務</el-button>
+            <span class="transfer-push" data-page-node-id="sOcyf9fUzV34nb6jRtFQRK"></span>
+            <el-button :disabled="transferSaving" @click="transferEditorOpen = false" data-page-node-id="JgvgbMmkHBH8FPsAhDrJVd">{{ transferReadonly ? '關閉' : '返回' }}</el-button>
+            <el-button v-if="!transferReadonly" type="primary" :loading="transferSaving" :disabled="!!transferPreview.error" @click="saveTransferTask" data-page-node-id="VP0YMgh5AklIgeBTC9UsZC">{{ transferDraft.mode === 'IMMEDIATE' ? '確認立即轉移' : '儲存轉移任務' }}</el-button>
+        </div>
+    </template>
+</el-dialog>
+<el-dialog v-model="transferVehiclePickerOpen" :title="'選擇轉移車輛 · ' + transferActiveBranchName" width="640px" append-to-body class="official-vehicle-contracts-overlay transfer-dialog" :close-on-click-modal="false" data-page-node-id="KYhnLIbGxvgljCyDoOmYnt">
+    <div class="transfer-toolbar" data-page-node-id="68nZYXDqtIez2Y5CXZQ6PL"><el-input v-model="transferPickerQuery" placeholder="搜尋車牌" aria-label="搜尋車牌" clearable style="width: 240px" data-page-node-id="CHf7V10DWCALPbramGDGaG"></el-input><span class="transfer-push" data-page-node-id="q7X4WOl2Y1y7el2RbqtiZB">已選 {{ transferPickerIds.length }} 台</span></div>
+    <el-table :data="transferPickerVehicles" border max-height="350" data-page-node-id="zGywLGVyxYk1E5yuvmtInt">
+        <el-table-column width="52" align="center" data-page-node-id="rEIz7Takcl4acXvRQXL1yN">
+            <template #header data-page-node-id="HuR50TdLjFj1SKaDsTMZTn"><el-checkbox :model-value="transferPickerAll" :indeterminate="transferPickerSome && !transferPickerAll" :disabled="transferReadonly || !transferPickerVehicles.length" aria-label="選取搜尋結果車輛" @change="toggleTransferPickerAll" data-page-node-id="xnHHZpZAPSUJie4oIZHAv8"></el-checkbox></template>
+            <template #default="{ row }" data-page-node-id="kzAF46oIyiTpVyx9ROHHAD"><el-checkbox :model-value="transferPickerIds.includes(row.id)" :disabled="transferReadonly" :aria-label="'選取 ' + row.plate" @change="toggleTransferPickerVehicle(row.id, $event)" data-page-node-id="3oIGEOtvyDtSBTgWiC5NcA"></el-checkbox></template>
+        </el-table-column>
+        <el-table-column prop="plate" label="車牌號碼" min-width="140" data-page-node-id="dckRXhROw32obHCj4HuHuG"></el-table-column>
+        <el-table-column prop="model" label="車款" min-width="200" data-page-node-id="LJGnVWZs61JemycMtttER8"></el-table-column>
+    </el-table>
+    <template #footer data-page-node-id="Ad7q3eOF9AG8aDlDEHxLqe"><el-button @click="transferVehiclePickerOpen = false" data-page-node-id="l1F9tGigWMi0ZWRI9xyxk4">{{ transferReadonly ? '關閉' : '取消' }}</el-button><el-button v-if="!transferReadonly" type="primary" @click="confirmTransferPicker" data-page-node-id="pKj0sQAhzyqoEkTvtOeNE6">確認選擇</el-button></template>
+</el-dialog>
+<el-dialog v-model="showWizardDrawer" :title="wizardTitle" width="760px" :destroy-on-close="true" :before-close="handleWizardClose" class="official-vehicle-contracts-overlay" data-page-node-id="NFvbIVvQIO6yCXNAuWTpjw">
+            <div class="p-2" data-page-node-id="vD1dxjAENx9dTQMYzqw20M">
+                <el-form :model="wizardForm" :rules="wizardRules" ref="wizardFormRef" label-position="top" data-page-node-id="do7eu1w8PpE0WieA0pEcDD">
+
+                    <div v-if="wizardMode === 'convert' && sourceTrialContract"
+                        class="mb-4 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3" data-page-node-id="wAEA4BMTwbX1yArIaueIaS">
+                        <div class="text-sm font-semibold text-blue-800" data-page-node-id="e2PfE1sUGmCIMHBtwRrOcK">承接试用合同：{{ sourceTrialContract.id }}</div>
+                        <div class="mt-1 text-xs text-blue-700" data-page-node-id="VFpVCbcU2AZxF2eyXXFq18">
+                            {{ sourceTrialContract.name }} · {{ sourceTrialContract.tenant }} ·
+                            {{ sourceTrialContract.endDate }} 到期
+                        </div>
+                    </div>
+
+                    <div v-if="wizardMode === 'edit'"
+                        class="mb-4 rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-800" data-page-node-id="PJ8AQV3O7MR3G95GUlx65V">
+                        可修改全部合约资料。合约编号、实际生效时间、承接结果及操作记录不会随本次编辑改写；
+                        已产生的订单与账单继续保留原始快照。
+                    </div>
+
+                    <div class="bg-gray-50/50 p-5 rounded-xl border border-gray-100 mb-5 relative overflow-hidden" data-page-node-id="YHtVmSdJy2BRgRZBMRmRo1">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-blue-50/50 rounded-bl-full -mr-4 -mt-4" data-page-node-id="fhmmjjSzvGQUGrUnwESgKU"></div>
+                        <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2 relative z-10" data-page-node-id="eqrucIGqDisuNWVwGqHHur">
+                            <div class="w-1 h-3 bg-[color:var(--app-color-primary)] rounded" data-page-node-id="UTNKWex7T6KFn5cwtZ4Gg7"></div> 基本信息
+                        </h3>
+
+                        <el-form-item label="合约名称" prop="name" data-page-node-id="nCwpFlSWKlgfP7rl07xVep">
+                            <el-input v-model="wizardForm.name" placeholder="请输入合约名称" data-page-node-id="nn1x0253DQZc1FpsbOyMPC"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="实际用车企业 (Tenant)" prop="tenant" data-page-node-id="vI9yVzeTTi6YG2IqelODEe">
+                            <el-select v-model="wizardForm.tenant" placeholder="请选择实际用车企业" filterable class="w-full"
+                                :disabled="wizardMode === 'convert'" data-page-node-id="0Cj36uGtohKTkS4eIaxkvE">
+                                <el-option v-for="t in tenantOptions" :key="t" :label="t" :value="t" data-page-node-id="IBqO9OKVEgHr778WvRTgvX"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="结算代付方 (Payer)" prop="payer" data-page-node-id="TclJL46azq6HITBf43RxFh">
+                            <div class="flex items-center gap-2 w-full" data-page-node-id="yZmhRUVk4QxNw8MIByvnpD">
+                                <el-select v-model="wizardForm.payer" placeholder="选择第三方代付企业" filterable class="flex-1"
+                                    :disabled="wizardForm.sameAsTenant" data-page-node-id="RiFEagbiVstltmybaeDo0c">
+                                    <el-option v-for="p in payerOptions" :key="p.name" :label="p.name" :value="p.name" data-page-node-id="DUrlvCRpulz8BHjxAQQzU0">
+                                        <div class="flex items-center justify-between w-full" data-page-node-id="pCPunpCCiO6BtKMUc8szcm">
+                                            <span data-page-node-id="QkO7qePxwJocEtoXJ1AHNG">{{ p.name }}</span>
+                                            <span class="text-xs text-gray-400" data-page-node-id="qLIB8X0EFnjaOcXmUJT9hW">统编: {{ p.taxId }}</span>
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                                <el-button type="primary" plain @click="openPayerManageDialog"
+                                    :disabled="wizardForm.sameAsTenant" data-page-node-id="2yVATVCoUGrkIqvXHE51w8">管理</el-button>
+                            </div>
+                            <div class="mt-2 text-sm text-gray-500 flex items-center gap-2" data-page-node-id="vMavQgOMojCg6C7hEfClzV">
+                                <el-checkbox v-model="wizardForm.sameAsTenant" @change="handleSameAsTenantChange"
+                                    label="同实际用车企业 (内部直拨归账)" data-page-node-id="MfHt3SrmDrV2bCwqmwyfLx"></el-checkbox>
+                            </div>
+                        </el-form-item>
+                    </div>
+
+                    <div class="bg-gray-50/50 p-5 rounded-xl border border-gray-100 relative overflow-hidden" data-page-node-id="T0TaeYwz3HEoq3ZF0OqBfX">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-emerald-50/50 rounded-bl-full -mr-4 -mt-4" data-page-node-id="3fFlbh0OJEQUsaTFcwFXSt">
+                        </div>
+                        <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2 relative z-10" data-page-node-id="cg4D5rbcVk4HvaBqSJx0Qq">
+                            <div class="w-1 h-3 bg-emerald-500 rounded" data-page-node-id="CAaezIIxRvw3fFMNuVW4xS"></div> 核心参数
+                        </h3>
+
+                        <el-form-item label="合约属性" prop="type" data-page-node-id="pBZflPgPlAEnB3JkDXDLWn">
+                            <el-radio-group v-model="wizardForm.type" size="default" :disabled="wizardMode === 'convert'" data-page-node-id="dlzkHHXSwqDHt5KarZRW7F">
+                                <el-radio-button label="OFFICIAL" data-page-node-id="GTkmBc6bUbk5jm4ru8BvxB">正式运营</el-radio-button>
+                                <el-radio-button label="TRIAL" data-page-node-id="RaLToePOAi3vXcWIiuuclv">试用保障</el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+
+                        <el-form-item label="计费结算规模与方式" data-page-node-id="CVOqUTvuur5P1miRaSY1fu">
+                            <div class="flex gap-3 w-full items-center" data-page-node-id="wXFjyHS5T4bAHB1ZB3KGKp">
+                                <el-input-number v-model="wizardForm.quota" :min="minimumQuota" :step="1" placeholder="台数"
+                                    class="flex-1" controls-position="right" data-page-node-id="NO8vLvUreP1zUKzUhcefwS"></el-input-number>
+                                <div class="text-xs text-gray-500 shrink-0 pl-1" style="width: 56px;" data-page-node-id="CVcOaXFanz7knF9hEEEVNN">台</div>
+                                <el-select v-model="wizardForm.billing" class="flex-1 w-full shrink-0" data-page-node-id="t363i0tdeRmSlmyQZVpssn">
+                                    <el-option label="按月结付" value="MONTHLY" data-page-node-id="Z3BDxKaA4I9MkHduoPmJrf"></el-option>
+                                    <el-option label="年度统付" value="ANNUALLY" data-page-node-id="6CVsEHvit2sadqi2lIqB1M"></el-option>
+                                </el-select>
+                            </div>
+                        </el-form-item>
+
+                        
+                        <el-form-item label="合约期数与开始时间" data-page-node-id="k5RAOK4ezpAIncCFpqsPAS">
+                            <div class="flex gap-3 w-full items-center" data-page-node-id="EV2i8yBCSrSJvnQ7C1tBpQ">
+                                <el-input-number v-model="wizardForm.durationMonths" :min="1" :step="1"
+                                    placeholder="期数" class="flex-1" controls-position="right" data-page-node-id="Tg6ON6eyN1YmEnD4P8SfGv"></el-input-number>
+                                <div class="text-xs text-gray-500 shrink-0 pl-1" style="width: 56px;" data-page-node-id="b9FZIUuTTpYHtOHEAoJY7X">期({{ wizardForm.billing === 'ANNUALLY' ? '年' : '月' }})</div>
+                                <el-date-picker v-model="wizardForm.startDate" type="date" placeholder="选择合约开始日期"
+                                    class="flex-1 w-full shrink-0" value-format="YYYY-MM-DD" data-page-node-id="1kGuYtIbwlJN9EHFMbxPep"></el-date-picker>
+                            </div>
+                        </el-form-item>
+
+                        <el-form-item v-if="wizardForm.type === 'OFFICIAL'" label="生效方式" class="mb-0" data-page-node-id="H0WB25ubeq58zcMZ0V06Tr">
+                            <div class="w-full" data-page-node-id="LUnbcm37WOSq32P9nyfW8h">
+                                <el-radio-group v-model="wizardForm.effectMode" data-page-node-id="NFjdCWDKVuJi1H0BEJHePT">
+                                    <el-radio-button label="IMMEDIATE" data-page-node-id="Fh1BQp8ZDKKFPTJ1hDOK5E">立即生效</el-radio-button>
+                                    <el-radio-button label="CONTRACT_START" data-page-node-id="aG9USrWrldQGSmGaXpWZt8">合约期生效</el-radio-button>
+                                </el-radio-group>
+                                <div class="mt-2 rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-700" data-page-node-id="fcQyieLEhSXFYErZlTGweU">
+                                    <div data-page-node-id="4AMxcVHmGVXxCJQkdwQNWr">{{ isActiveContractEdit ? '实际生效时间' : '预计生效时间' }}：{{ computedEffectiveAt }}</div>
+                                    <div v-if="giftPeriodDays > 0" class="mt-1">
+                                        生效日至合约开始日前共 {{ giftPeriodDays }} 天，作为赠送期，不计入合约费用。
+                                    </div>
+                                    <div v-else-if="wizardForm.effectMode === 'CONTRACT_START'" class="mt-1" data-page-node-id="NDqYJQ7eB1l394FlGJf0fg">
+                                        合约开始日生效，不产生赠送期。
+                                    </div>
+                                </div>
+                            </div>
+                        </el-form-item>
+                    </div>
+
+                    <div v-if="wizardMode === 'convert' && sourceTrialContract"
+                        class="mt-4 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3" data-page-node-id="s8OE3Pj8XHLXrqE4AvxdBH">
+                        <div class="text-sm font-semibold text-emerald-800" data-page-node-id="Cn8A3sSaBZtmcXT9AmOOaf">承接范围</div>
+                        <div class="mt-2 grid grid-cols-3 gap-3 text-center" data-page-node-id="ApBTAdE1IvQpaP876y3OVL">
+                            <div data-page-node-id="hBo5qFBBaoxN95z3TlP1qY"><div class="text-lg font-bold text-gray-800" data-page-node-id="yd5zlTpCefvT4Zu8Z073nx">{{ sourceTrialContract.branchCount }}</div><div class="text-xs text-gray-500" data-page-node-id="uFWTxzNlVMaFx2Mf3xgyJG">分公司</div></div>
+                            <div data-page-node-id="I4jFfZFanY5hdZMlQCwhsJ"><div class="text-lg font-bold text-gray-800" data-page-node-id="2YA5KfkVsMupB8H4xynwlc">{{ sourceTrialContract.allocatedQuota }}</div><div class="text-xs text-gray-500" data-page-node-id="UdjvV7Kv7HJuGZEKcdobq4">已分配配额</div></div>
+                            <div data-page-node-id="1ahTwpdm9hGCBuQcTN8m2E"><div class="text-lg font-bold text-gray-800" data-page-node-id="viWjVyjBga5AMkBi47LRJn">{{ sourceTrialContract.vehicleCount }}</div><div class="text-xs text-gray-500" data-page-node-id="3MJYtTE8eXynp3YGkOSRez">已绑车辆</div></div>
+                        </div>
+                        <div class="mt-2 text-xs text-emerald-700" data-page-node-id="DB1WBYw7npymPIP7iYGazY">
+                            <template v-if="conversionQuotaGap > 0">
+                                正式配额较试用阶段少 {{ conversionQuotaGap }} 台；生效前需将原配额和绑定车辆调整至不超过 {{ wizardForm.quota }} 台。
+                            </template>
+                            <template v-else data-page-node-id="DbcXKe9vtmHjg0LGa4biOx">
+                                正式合同生效时自动承接原分公司配额和车辆绑定。
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Calculation Result Container -->
+                    <div 
+                        class="mt-4 bg-orange-50/50 border border-orange-100 p-4 rounded-xl flex items-center justify-between" data-page-node-id="cBZUUaeTB8YmRdz7EpdlDS">
+                        <div data-page-node-id="RrH7NwaVeRBmQBXdeOWfSF">
+                            <div class="text-xs text-orange-600 font-medium mb-1" data-page-node-id="Qe9aGCDXqgy93bkkXF920V">合约金额</div>
+                        </div>
+                        <div class="text-right" data-page-node-id="1AcXXRKw7H5XCieXCM2uDB">
+                            <span class="text-2xl font-bold text-orange-600 font-mono" data-page-node-id="sLsDrhSZVxo2uazdNtpSSy">{{
+                                calculatedReferencePrice.amount }}</span>
+                            <span class="text-sm text-orange-500 ml-1" data-page-node-id="aCgsk09HnJ4NuepW1CrpQx">{{ calculatedReferencePrice.suffix }}</span>
+                        </div>
+                    </div>
+
+                </el-form>
+            </div>
+
+            <template #footer data-page-node-id="ML6iXScFBhbTFuA8iyTSjs">
+                <span class="dialog-footer" data-page-node-id="VaC1wq0vRXBGOE2HES3sEq">
+                    <el-button @click="showWizardDrawer = false" data-page-node-id="w4tWdZzKUkHspZEopknGSD">取消</el-button>
+                    <el-button type="primary" @click="submitWizard" :loading="submitLoading" data-page-node-id="U2bFQjo6Tw2hkqey32Pbu2">
+                        {{ wizardSubmitLabel }}
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
+<el-dialog v-model="showPayerManageDialog" title="结算代付方管理" width="700px" append-to-body class="official-vehicle-contracts-overlay" data-page-node-id="nbEr1rG537R2zrJLT4zGNH">
+            <div class="px-2 pb-4" data-page-node-id="SasxtLrTzbRJE2K0NEByOa">
+                <div class="flex justify-between items-center mb-4" data-page-node-id="GfnNntDhMFDNVs6WgJvs0A">
+                    <div class="text-sm text-gray-500" data-page-node-id="apyLK7hsGyTiipp4B8Rxm4">管理所有的系统结算代付企业档案</div>
+                    <el-button type="primary" @click="openAddPayerDialog" data-page-node-id="oksGqNChGBGOrnk5H1j6wG">
+                        <el-icon class="mr-1" data-page-node-id="mtd4BvRM9yYHW9bQrdCvdU">
+                            <Plus data-page-node-id="2uv23CbnvO1rjHVld4R03b"></Plus>
+                        </el-icon> 新增结算方
+                    </el-button>
+                </div>
+
+                <el-table :data="payerOptions" style="width: 100%" border size="small" highlight-current-row data-page-node-id="8G3ABqXSErUPVZ9KRrdA5G">
+                    <el-table-column prop="name" label="企业名称" min-width="150" data-page-node-id="5ykgJE5zxHsNNBLLvHQFCc"></el-table-column>
+                    <el-table-column prop="taxId" label="统编" width="100" data-page-node-id="7JAOEDmfLiAucknXekUw0a"></el-table-column>
+                    <el-table-column prop="contact" label="企业联系人" width="100" data-page-node-id="kz6BZD7uFEcZRi6Wsjm2mP"></el-table-column>
+                    <el-table-column prop="phone" label="联系方式" width="130" data-page-node-id="UiNQ1ipTdLpBLoncH9H0qJ"></el-table-column>
+                    <el-table-column label="操作" width="120" fixed="right" align="center" data-page-node-id="YW4Uv75HAXd9CLoxLx4M3d">
+                        <template #default="{ row, $index }" data-page-node-id="8KGcKKJj77FdAWlyDAklk1">
+                            <el-button link type="primary" size="small"
+                                @click="openEditPayerDialog(row, $index)" data-page-node-id="8GFcBBDdvSIliNtR5MKJJC">编辑</el-button>
+                            <el-button link type="danger" size="small" @click="deletePayer($index)" data-page-node-id="bnrKs2XwbSdqZX2iLISc93">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </el-dialog>
+<el-dialog v-model="showPayerFormDialog" :title="payerFormMode === 'add' ? '新增结算代付企业' : '编辑结算代付企业'" width="450px" append-to-body class="official-vehicle-contracts-overlay" data-page-node-id="xfggYpdATkkUGZkwagJrqn">
+            <div class="px-2" data-page-node-id="HPDJaFkUeJHyEJaEcZjxnb">
+                <el-form :model="payerForm" :rules="payerRules" ref="payerFormRef" label-position="top" data-page-node-id="f3guz8FCcg43EOXaryIOfA">
+                    <el-form-item label="企业名称" prop="name" data-page-node-id="HBr2RV1EXOqWMiVvmriCi4">
+                        <el-input v-model="payerForm.name" placeholder="请输入完整的企业名称" data-page-node-id="Eu2oSfCnNbcUxJ4BFzXvKZ"></el-input>
+                    </el-form-item>
+                    <el-row :gutter="20" data-page-node-id="EIaxYsSwMUcClzWgYOfoT1">
+                        <el-col :span="12" data-page-node-id="uM7b6PfbaJfufLyqoRJsFU">
+                            <el-form-item label="统一代码/统编" prop="taxId" data-page-node-id="8C56gjO1bg9cFnWm9625W5">
+                                <el-input v-model="payerForm.taxId" placeholder="统编号码" data-page-node-id="AGXSOCiAbxuJGjgHFhPs2g"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12" data-page-node-id="bY9GfxEKpHZ16Rkj2mBM96">
+                            <el-form-item label="企业联系人" prop="contact" data-page-node-id="2GGfQER0D3vekqLexBo5v4">
+                                <el-input v-model="payerForm.contact" placeholder="联系人姓名" data-page-node-id="IikkONXFztSZ8EPlSXzuWM"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-form-item label="联系方式 (电话/邮箱)" prop="phone" data-page-node-id="gmO6bOzOqCr6Xf5Nq9CgyY">
+                        <el-input v-model="payerForm.phone" placeholder="请输入有效联系方式" data-page-node-id="cVevBgzdLBns14y55t0oJT"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div v-if="payerFormMode === 'add'"
+                    class="mt-4 bg-blue-50 text-blue-800 text-xs p-3 rounded flex items-start gap-2 border border-blue-100" data-page-node-id="cCUHESM7UdyvAt7tzryUgd">
+                    <el-icon class="mt-0.5 text-blue-600" data-page-node-id="k6hTvfdxZJ0v5Q5ZxCUfkl">
+                        <InfoFilled data-page-node-id="aMcJIMuuIexhIb0NjFAyw8"></InfoFilled>
+                    </el-icon>
+                    <div data-page-node-id="ObKkiKdCDnbRKEHubxK0wE">新增后的结算方信息将自动保存，并在表单可用。</div>
+                </div>
+            </div>
+            <template #footer data-page-node-id="wHC4UK11Cc0bphATIFETto">
+                <span class="dialog-footer" data-page-node-id="9bHEYwEfr6CF96prnjot73">
+                    <el-button @click="showPayerFormDialog = false" data-page-node-id="oSaxLZNqD9dq5NvCOPel4y">取消</el-button>
+                    <el-button type="primary" @click="submitPayerForm" data-page-node-id="mMLsbKcPUG3q1xvgRYEpQB">
+                        {{ payerFormMode === 'add' ? '确认添加' : '保存修改' }}
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 页面运行依赖，不得修改、删除或重复引入。 -->
+    <!-- PROTOTYPE_SCRIPT_DEPENDENCIES_START -->
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+<script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script data-prototype-menu-icon-renderer>
+      (() => {
+        const renderMenuIcons = () => {
+          if (!window.Vue || !window.ElementPlusIconsVue) return;
+          document.querySelectorAll('[data-prototype-menu-icon]').forEach((host) => {
+            if (host.dataset.prototypeMenuIconReady === 'true') return;
+            const iconName = host.getAttribute('data-prototype-menu-icon') || 'Document';
+            const icon = window.ElementPlusIconsVue[iconName] || window.ElementPlusIconsVue.Document;
+            if (!icon) return;
+            window.Vue.render(window.Vue.h(icon), host);
+            host.dataset.prototypeMenuIconReady = 'true';
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(renderMenuIcons), {
+            once: true,
+          });
+        } else {
+          requestAnimationFrame(renderMenuIcons);
+        }
+      })();
+    </script>
+<!-- PROTOTYPE_SCRIPT_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 页面状态、计算属性、方法和模拟数据。 */
+function pageSetup() {
+const { createApp, ref, reactive, computed, watch } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+
+// Mock Option Data
+                const tenantOptions = ref([
+                    '睿騰科技股份有限公司', '北辰電子股份有限公司', '安和醫療集團',
+                    '新竹智造股份有限公司', '南港商務服務股份有限公司', '高雄港勤股份有限公司'
+                ]);
+                // 原型模拟：正式开发时由企业价格配置接口返回，不在合约表单中维护。
+                const enterpriseRateMap = {
+                    '睿騰科技股份有限公司': { monthly: 6500, annually: 72000 },
+                    '北辰電子股份有限公司': { monthly: 6500, annually: 72000 },
+                    '安和醫療集團': { monthly: 6500, annually: 72000 },
+                    '新竹智造股份有限公司': { monthly: 6500, annually: 72000 },
+                    '南港商務服務股份有限公司': { monthly: 6500, annually: 72000 },
+                    '高雄港勤股份有限公司': { monthly: 6500, annually: 72000 }
+                };
+                const getEnterpriseRate = (tenant) => enterpriseRateMap[tenant] || null;
+                const payerOptions = ref([
+                    { name: '格上租車', taxId: '12208883', contact: '王怡君', phone: '02-2502-1388' },
+                    { name: '和運租車', taxId: '70364778', contact: '陳志宏', phone: '02-2504-6298' },
+                    { name: '中租租車', taxId: '27998128', contact: '林雅雯', phone: '02-8752-6388' },
+                    { name: '企業自行結算', taxId: '83529106', contact: '財務窗口', phone: '02-2658-7712' },
+                    { name: '艾維士租車', taxId: '53723009', contact: '黃柏勳', phone: '02-6620-6620' }
+                ]);
+
+                const TODAY = new Date();
+                const getFutureDateStr = (days) => {
+                    const d = new Date(TODAY);
+                    d.setDate(d.getDate() + days);
+                    return d.toISOString().split('T')[0];
+                };
+                const getPastDateStr = (days) => {
+                    const d = new Date(TODAY);
+                    d.setDate(d.getDate() - days);
+                    return d.toISOString().split('T')[0];
+                };
+                const getNowDateTimeStr = () => {
+                    const d = new Date();
+                    const pad = value => String(value).padStart(2, '0');
+                    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                };
+
+                // Generate Mock Available Vehicles for Transfer component
+                const generateMockVehicles = () => {
+                    const brands = ['Toyota Corolla Cross', 'Lexus ES 250', 'Toyota Camry', 'Volkswagen Caddy', 'Mercedes-Benz Vito', 'Ford Kuga'];
+                    const platePrefixes = ['KDA', 'RDX', 'BPK', 'QAE', 'TDC'];
+                    const data = [];
+                    for (let i = 1; i <= 25; i++) {
+                        const brand = brands[(i - 1) % brands.length];
+                        const prefix = platePrefixes[(i - 1) % platePrefixes.length];
+                        const number = String(1200 + i * 137).padStart(4, '0');
+                        data.push({
+                            key: `V-2026-${i.toString().padStart(4, '0')}`,
+                            label: `${prefix}-${number} (${brand})`,
+                            disabled: i % 10 === 0
+                        });
+                    }
+                    return data;
+                };
+
+                const availableVehicles = ref(generateMockVehicles());
+
+                // Mock List Data
+                const contractsData = ref([
+                    {
+                        id: 'OC-2026-0001', name: '睿騰科技年度公務車合約', tenant: '睿騰科技股份有限公司', payer: '睿騰科技股份有限公司', type: 'OFFICIAL', billing: 'ANNUALLY',
+                        quota: 20, vehicleCount: 12, allocatedQuota: 16, branchCount: 3, totalAmount: 288000.00, startDate: getPastDateStr(30), endDate: getFutureDateStr(335), effectMode: 'IMMEDIATE', effectiveAt: `${getPastDateStr(45)} 09:00`, status: 'ACTIVE'
+                    },
+                    {
+                        id: 'OC-2026-0005', name: '北辰電子公務車試用方案', tenant: '北辰電子股份有限公司', payer: '和運租車', type: 'TRIAL', billing: 'MONTHLY',
+                        quota: 8, vehicleCount: 5, allocatedQuota: 6, branchCount: 2, totalAmount: 32000.00, startDate: getPastDateStr(5), endDate: getFutureDateStr(5), effectMode: 'CONTRACT_START', effectiveAt: `${getPastDateStr(5)} 00:00`, status: 'EXPIRING', successorContractId: ''
+                    },
+                    {
+                        id: 'OC-2026-0012', name: '安和醫療主管接駁合約', tenant: '安和醫療集團', payer: '艾維士租車', type: 'OFFICIAL', billing: 'MONTHLY',
+                        quota: 10, vehicleCount: 6, allocatedQuota: 8, branchCount: 2, totalAmount: 48000.00, startDate: getPastDateStr(120), endDate: getPastDateStr(30), effectMode: 'CONTRACT_START', effectiveAt: `${getPastDateStr(120)} 00:00`, status: 'TERMINATED'
+                    },
+                    {
+                        id: 'OC-2025-T092', name: '新竹智造短期試用合約', tenant: '新竹智造股份有限公司', payer: '新竹智造股份有限公司', type: 'TRIAL', billing: 'MONTHLY',
+                        quota: 3, vehicleCount: 2, allocatedQuota: 3, branchCount: 1, totalAmount: 16000.00, startDate: getPastDateStr(100), endDate: getPastDateStr(10), effectMode: 'CONTRACT_START', effectiveAt: `${getPastDateStr(100)} 00:00`, status: 'EXPIRED', successorContractId: ''
+                    },
+                    {
+                        id: 'OC-2025-F811', name: '南港商務服務年度合約', tenant: '南港商務服務股份有限公司', payer: '中租租車', type: 'OFFICIAL', billing: 'ANNUALLY',
+                        quota: 6, vehicleCount: 4, allocatedQuota: 5, branchCount: 2, totalAmount: 192000.00, startDate: getPastDateStr(200), endDate: getFutureDateStr(165), effectMode: 'CONTRACT_START', effectiveAt: `${getPastDateStr(200)} 00:00`, status: 'TERMINATED'
+                    },
+                    {
+                        id: 'OC-2026-0020', name: '高雄港勤公務車正式合約', tenant: '高雄港勤股份有限公司', payer: '格上租車', type: 'OFFICIAL', billing: 'MONTHLY',
+                        quota: 6, vehicleCount: 4, allocatedQuota: 5, branchCount: 2, totalAmount: 36000.00, startDate: getFutureDateStr(15), endDate: getFutureDateStr(45), effectMode: 'CONTRACT_START', scheduledEffectiveAt: `${getFutureDateStr(15)} 00:00`, effectiveAt: '', status: 'PENDING_EFFECTIVE'
+                    }
+                ]);
+
+                // CONTRACT_TRANSFER_LOGIC_START
+                // 开发接入：任务列表/详情、车辆绑定及分公司配额由接口读取；模拟数据仅保留在当前页面内存。
+                const transferTools = (() => {
+                    const clone = value => JSON.parse(JSON.stringify(value));
+                    const transferStatuses = {
+                        PENDING: { label: '待執行', type: 'warning' },
+                        COMPLETED: { label: '已完成', type: 'success' },
+                        FAILED: { label: '執行失敗', type: 'danger' },
+                        CANCELLED: { label: '已取消', type: 'info' }
+                    };
+                    const stamp = value => new Date(String(value || '').replace(' ', 'T')).getTime();
+                    const endAt = row => stamp(row.endDate + 'T00:00:00') + 86400000;
+                    const effectiveAt = row => stamp(row.effectiveAt || row.scheduledEffectiveAt || row.startDate + 'T00:00:00');
+                    const transferTime = value => {
+                        if (!value) return '—';
+                        const d = new Date(value), pad = n => String(n).padStart(2, '0');
+                        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                    };
+                    const branches = ['台北分公司', '台中分公司', '台南分公司', '高雄分公司'];
+                    const syncCounts = row => {
+                        row.allocatedQuota = row.transferBranches.reduce((n, b) => n + b.quota, 0);
+                        row.vehicleCount = row.transferBranches.reduce((n, b) => n + b.vehicles.length, 0);
+                        row.branchCount = row.transferBranches.length;
+                    };
+                    const ensureBranches = row => {
+                        if (row.transferBranches) return;
+                        const count = row.branchCount || (row.vehicleCount ? 1 : 0);
+                        row.transferBranches = Array.from({ length: count }, (_, i) => ({
+                            id: `ENT-${tenantOptions.value.indexOf(row.tenant) + 1}-B${i + 1}`,
+                            name: branches[i % branches.length], quota: 0, vehicles: []
+                        }));
+                        for (let i = 0; i < (row.allocatedQuota || row.vehicleCount || 0); i++) row.transferBranches[i % count].quota++;
+                        for (let i = 0; i < row.vehicleCount; i++) {
+                            const b = row.transferBranches[i % count];
+                            b.vehicles.push({ id: `${row.id}-V${i + 1}`, plate: `${['RDX', 'KDA', 'BPK', 'TDC'][tenantOptions.value.indexOf(row.tenant) % 4]}-${1200 + i * 137}`, model: ['Toyota Corolla Cross', 'Toyota Camry', 'Ford Kuga'][i % 3], branchId: b.id, branchName: b.name });
+                        }
+                    };
+                    contractsData.value.forEach(ensureBranches);
+                    // 同一企业的续约合约：演示已生效目标、待生效目标及既有分公司空闲配额。
+                    [0, 1, 3].map(index => contractsData.value[index]).forEach((source, index) => {
+                        ensureBranches(source);
+                        const boundVehicles = source.transferBranches.flatMap(b => b.vehicles).slice(0, 3).map(v => ({ ...clone(v), branchId: `${source.transferBranches[0].id}-R`, branchName: source.transferBranches[0].name }));
+                        const target = {
+                            ...clone(source), id: `OC-2026-R00${index + 1}`, name: source.tenant.replace('股份有限公司', '') + '續約公務車合約',
+                            type: 'OFFICIAL', quota: 12, vehicleCount: boundVehicles.length, allocatedQuota: boundVehicles.length + 1, branchCount: 1,
+                            startDate: getFutureDateStr(index === 0 ? 336 : -1), endDate: getFutureDateStr(index === 0 ? 700 : 365),
+                            status: index === 0 ? 'PENDING_EFFECTIVE' : 'ACTIVE', effectMode: 'CONTRACT_START',
+                            effectiveAt: index === 0 ? '' : getPastDateStr(1) + ' 00:00', scheduledEffectiveAt: getFutureDateStr(index === 0 ? 336 : -1) + ' 00:00',
+                            transferBranches: [{ ...clone(source.transferBranches[0]), quota: boundVehicles.length + 1, vehicles: boundVehicles }], totalAmount: 24000
+                        };
+                        target.billing = 'MONTHLY';
+                        contractsData.value.push(target);
+                    });
+                    const transferTasks = ref([]);
+                    const pending = excludeId => transferTasks.value.filter(t => t.status === 'PENDING' && t.id !== excludeId);
+                    const contract = (id, rows = contractsData.value) => rows.find(r => r.id === id && !r.deleted);
+                    const vehiclesOf = row => row ? (ensureBranches(row), row.transferBranches.flatMap(b => b.vehicles)) : [];
+                    const hasRelatedTransferTask = id => pending().some(t => t.sourceId === id || t.targetId === id);
+                    const hasTransferNotice = (id, direction) => pending().some(t => t[direction === 'out' ? 'sourceId' : 'targetId'] === id);
+                    const hasTransferFailure = id => transferTasks.value.some(t => t.status === 'FAILED' && (t.sourceId === id || t.targetId === id));
+                    const canTransferContract = row => !!row && !row.deleted && ['ACTIVE', 'EXPIRING', 'EXPIRED'].includes(row.status);
+                    const availableTargets = sourceId => {
+                        const source = contract(sourceId);
+                        return contractsData.value.filter(r => !r.deleted && source && r.id !== source.id && r.tenant === source.tenant && ['ACTIVE', 'EXPIRING', 'PENDING_EFFECTIVE'].includes(r.status));
+                    };
+                    // 服务端必须按分公司 ID 计算容量，并排除正在编辑任务自身的预留；不能先释放旧任务再校验。
+                    const evaluateTransfer = (draft, rows = contractsData.value, now = Date.now(), executing = false) => {
+                        const source = contract(draft.sourceId, rows), target = contract(draft.targetId, rows);
+                        const result = { error: '', extra: 0, reused: 0, available: 0, details: [], vehicles: [], scheduledAt: null, hasGap: false };
+                        const fail = error => ({ ...result, error });
+                        if (!source || !target) return fail('請選擇來源及同一企業的目標合約。');
+                        if (!canTransferContract(source)) return fail('來源合約須為生效中、即將到期或已過期。');
+                        if (source.id === target.id || source.tenant !== target.tenant) return fail('來源與目標須為同一企業的不同合約。');
+                        if (!['ACTIVE', 'EXPIRING', 'PENDING_EFFECTIVE'].includes(target.status)) return fail('目標合約目前不允許接收車輛。');
+                        ensureBranches(target);
+                        if (!['IMMEDIATE', 'SOURCE_EXPIRE'].includes(draft.mode)) return fail('請選擇轉移時間。');
+                        result.scheduledAt = draft.mode === 'IMMEDIATE' ? now : Math.max(endAt(source), effectiveAt(target));
+                        result.hasGap = effectiveAt(target) > endAt(source);
+                        if (!Number.isFinite(result.scheduledAt) || !Number.isFinite(endAt(target))) return fail('合約日期資料不完整。');
+                        if (draft.mode === 'SOURCE_EXPIRE' && !executing && result.scheduledAt <= now) return fail('到期轉移時間已到，請改用立即轉移。');
+                        const executionAt = executing ? now : result.scheduledAt;
+                        if ((draft.mode === 'IMMEDIATE' || executing) && (effectiveAt(target) > now || (!target.effectiveAt && target.status !== 'PENDING_EFFECTIVE'))) return fail('目標合約尚未生效，不能立即轉移。');
+                        if (executionAt >= endAt(target)) return fail('執行時目標合約已過期，請選擇其他合約。');
+                        const otherTasks = pending(draft.id);
+                        if (otherTasks.some(t => t.sourceId === source.id)) return fail('來源合約已有待執行任務，請編輯或取消原任務。');
+                        const ids = draft.vehicleIds || [];
+                        if (!ids.length) return fail('請至少選擇一輛車。');
+                        if (new Set(ids).size !== ids.length) return fail('車輛不可重複選取。');
+                        result.vehicles = ids.map(id => vehiclesOf(source).find(v => v.id === id));
+                        if (result.vehicles.some(v => !v)) return fail('部分車輛已不再綁定來源合約，請重新選擇。');
+                        if (draft.vehicles && draft.vehicles.some(v => result.vehicles.find(x => x.id === v.id)?.branchId !== v.branchId)) return fail('車輛所屬分公司已變更，請重新確認。');
+                        const reservations = otherTasks.filter(t => t.targetId === target.id);
+                        result.available = target.quota - target.transferBranches.reduce((n, b) => n + b.quota, 0) - reservations.reduce((n, t) => n + t.details.reduce((sum, d) => sum + d.extra, 0), 0);
+                        for (const b of source.transferBranches) {
+                            const selected = result.vehicles.filter(v => v.branchId === b.id);
+                            if (!selected.length) continue;
+                            const targetBranch = target.transferBranches.find(x => x.id === b.id);
+                            const reserved = reservations.reduce((n, t) => n + (t.details.find(d => d.branchId === b.id)?.reused || 0), 0);
+                            const free = Math.max(0, (targetBranch?.quota || 0) - (targetBranch?.vehicles.length || 0) - reserved);
+                            const reused = Math.min(free, selected.length), extra = selected.length - reused;
+                            result.details.push({ branchId: b.id, branchName: b.name, reused, extra });
+                            result.reused += reused; result.extra += extra;
+                        }
+                        if (result.available < result.extra) return fail(`目標待分配配額 ${Math.max(0, result.available)} 台，本次需新增 ${result.extra} 台；請減少車輛或調整目標合約。`);
+                        return result;
+                    };
+                    const makeTask = (draft, preview, id) => ({
+                        id, sourceId: draft.sourceId, targetId: draft.targetId,
+                        sourceName: contract(draft.sourceId).name, targetName: contract(draft.targetId).name,
+                        mode: draft.mode, status: 'PENDING', vehicleIds: [...draft.vehicleIds], vehicles: clone(preview.vehicles),
+                        details: clone(preview.details), scheduledAt: preview.scheduledAt, executedAt: null,
+                        createdAt: Date.now(), updatedAt: Date.now(), failureReason: '', events: []
+                    });
+                    const executeTask = (task, now = Date.now()) => {
+                        if (task.status !== 'PENDING') return task.status === 'COMPLETED';
+                        const preview = evaluateTransfer(task, contractsData.value, now, true);
+                        if (preview.error) {
+                            task.status = 'FAILED'; task.failureReason = preview.error; task.updatedAt = now;
+                            task.events.push({ at: now, action: 'FAILED', reason: preview.error });
+                            return false;
+                        }
+                        const source = contract(task.sourceId), target = contract(task.targetId);
+                        const sourceBranches = clone(source.transferBranches), targetBranches = clone(target.transferBranches);
+                        for (const d of preview.details) {
+                            let b = targetBranches.find(item => item.id === d.branchId);
+                            if (!b) { b = { id: d.branchId, name: d.branchName, quota: 0, vehicles: [] }; targetBranches.push(b); }
+                            b.quota += d.extra;
+                            b.vehicles.push(...clone(preview.vehicles.filter(v => v.branchId === b.id)));
+                        }
+                        sourceBranches.forEach(b => { b.vehicles = b.vehicles.filter(v => !task.vehicleIds.includes(v.id)); });
+                        // Java 后端在同一事务内锁定任务、合约、分公司配额及车辆，幂等提交后直接返回 COMPLETED。
+                        source.transferBranches = sourceBranches; target.transferBranches = targetBranches;
+                        syncCounts(source); syncCounts(target);
+                        if (target.status === 'PENDING_EFFECTIVE') { target.status = 'ACTIVE'; target.effectiveAt = transferTime(effectiveAt(target)); }
+                        task.details = clone(preview.details); task.status = 'COMPLETED'; task.executedAt = now; task.updatedAt = now; task.failureReason = '';
+                        task.events.push({ at: now, action: 'COMPLETED' });
+                        return true;
+                    };
+                    const first = contractsData.value[0], second = contractsData.value[1];
+                    const seed = (source, targetId, ids, id) => {
+                        const draft = { sourceId: source.id, targetId, mode: 'SOURCE_EXPIRE', vehicleIds: ids };
+                        return makeTask(draft, evaluateTransfer(draft), id);
+                    };
+                    transferTasks.value.push(seed(first, 'OC-2026-R001', vehiclesOf(first).slice(0, 2).map(v => v.id), 'TR-2026-0001'));
+                    const failed = seed(second, 'OC-2026-R002', vehiclesOf(second).map(v => v.id), 'TR-2026-0002');
+                    failed.status = 'FAILED'; failed.scheduledAt = Date.now() - 86400000; failed.failureReason = '執行時目標容量不足；未轉移任何車輛。請調整後重新提交。';
+                    transferTasks.value.push(failed);
+                    const cancelled = clone(failed);
+                    Object.assign(cancelled, { id: 'TR-2026-0003', status: 'CANCELLED', failureReason: '', updatedAt: Date.now() - 172800000 });
+                    transferTasks.value.push(cancelled);
+                    const completed = clone(cancelled);
+                    // 历史快照对应已完成的旧合约，不以当前绑定数据重新生成历史记录。
+                    Object.assign(completed, { id: 'TR-2026-0004', sourceId: 'OC-2025-0910', sourceName: '北辰電子前期公務車合約', targetId: second.id, targetName: second.name, mode: 'IMMEDIATE', status: 'COMPLETED', scheduledAt: Date.now() - 259200000, executedAt: Date.now() - 259200000 });
+                    transferTasks.value.push(completed);
+
+                    const transferListOpen = ref(false), transferEditorOpen = ref(false), transferSaving = ref(false), transferPage = ref(1);
+                    const transferSourceSelectable = ref(false), transferVehiclePickerOpen = ref(false), transferActiveBranchId = ref(''), transferPickerQuery = ref(''), transferPickerIds = ref([]);
+                    const transferFilters = reactive({ query: '', status: '', contractId: '', direction: '' });
+                    const transferDraft = reactive({ id: '', sourceId: '', targetId: '', mode: 'IMMEDIATE', vehicleIds: [] });
+                    const currentTransferTask = computed(() => transferTasks.value.find(t => t.id === transferDraft.id));
+                    const transferReadonly = computed(() => ['COMPLETED', 'CANCELLED'].includes(currentTransferTask.value?.status));
+                    const transferPreview = computed(() => evaluateTransfer(transferDraft));
+                    const transferSourceOptions = computed(() => transferReadonly.value ? [{ id: currentTransferTask.value.sourceId, name: currentTransferTask.value.sourceName }] : contractsData.value.filter(r => canTransferContract(r) || r.id === transferDraft.sourceId));
+                    const transferTargetOptions = computed(() => transferReadonly.value ? [{ id: currentTransferTask.value.targetId, name: currentTransferTask.value.targetName }] : availableTargets(transferDraft.sourceId));
+                    const transferVehicles = computed(() => transferReadonly.value ? currentTransferTask.value.vehicles : vehiclesOf(contract(transferDraft.sourceId)));
+                    const transferBranchOptions = computed(() => [...new Map(transferVehicles.value.map(v => [v.branchId, { id: v.branchId, name: v.branchName }])).values()]);
+                    const transferSourceName = computed(() => transferReadonly.value ? currentTransferTask.value.sourceName : contract(transferDraft.sourceId)?.name || '');
+                    const transferSourceQuotaInfo = computed(() => {
+                        const row = contract(transferDraft.sourceId);
+                        return row ? { total: row.quota, allocated: row.allocatedQuota || 0 } : null;
+                    });
+                    const transferTargetQuotaInfo = computed(() => {
+                        const row = contract(transferDraft.targetId);
+                        if (!row) return null;
+                        ensureBranches(row);
+                        const allocated = row.transferBranches.reduce((n, b) => n + b.quota, 0);
+                        const reserved = pending(transferDraft.id).filter(t => t.targetId === row.id).reduce((n, t) => n + t.details.reduce((s, d) => s + d.extra, 0), 0);
+                        return { total: row.quota, allocated, reserved, available: Math.max(0, row.quota - allocated - reserved) };
+                    });
+                    // 下拉选项显式带出目标合约的待分配可用配额（只读模式下退回「编号 · 名称」）。
+                    const transferTargetOptionLabel = row => {
+                        if (!row || row.quota == null) return `${row.id} · ${row.name}`;
+                        ensureBranches(row);
+                        const allocated = row.transferBranches.reduce((n, b) => n + b.quota, 0);
+                        const reserved = pending(transferDraft.id).filter(t => t.targetId === row.id).reduce((n, t) => n + t.details.reduce((s, d) => s + d.extra, 0), 0);
+                        const available = Math.max(0, row.quota - allocated - reserved);
+                        return `${row.id} · ${row.name}（待分配 ${available} 台）`;
+                    };
+                    const transferBranchRows = computed(() => transferBranchOptions.value.map(b => ({
+                        ...b, vehicles: transferVehicles.value.filter(v => v.branchId === b.id),
+                        sourceQuota: contract(transferDraft.sourceId)?.transferBranches?.find(item => item.id === b.id)?.quota || 0,
+                        selectedCount: transferVehicles.value.filter(v => v.branchId === b.id && transferDraft.vehicleIds.includes(v.id)).length
+                    })));
+                    const toggleTransferBranch = (row, selected) => row.vehicles.forEach(v => toggleTransferVehicle(v.id, selected));
+                    const transferCanRunNow = computed(() => {
+                        const row = contract(transferDraft.targetId);
+                        return !!row && ['ACTIVE', 'EXPIRING'].includes(row.status) && effectiveAt(row) <= Date.now() && endAt(row) > Date.now();
+                    });
+                    const transferCanSchedule = computed(() => {
+                        const source = contract(transferDraft.sourceId), target = contract(transferDraft.targetId);
+                        const at = source && target && Math.max(endAt(source), effectiveAt(target));
+                        return !!at && at > Date.now() && at < endAt(target);
+                    });
+                    const changeTransferTarget = () => {
+                        if (transferDraft.mode === 'IMMEDIATE' && !transferCanRunNow.value && transferCanSchedule.value) transferDraft.mode = 'SOURCE_EXPIRE';
+                        else if (transferDraft.mode === 'SOURCE_EXPIRE' && !transferCanSchedule.value && transferCanRunNow.value) transferDraft.mode = 'IMMEDIATE';
+                    };
+                    const transferActiveBranchName = computed(() => transferBranchOptions.value.find(b => b.id === transferActiveBranchId.value)?.name || '');
+                    const transferPickerVehicles = computed(() => transferVehicles.value.filter(v => v.branchId === transferActiveBranchId.value && v.plate.toLowerCase().includes(transferPickerQuery.value.toLowerCase())));
+                    const transferPickerAll = computed(() => !!transferPickerVehicles.value.length && transferPickerVehicles.value.every(v => transferPickerIds.value.includes(v.id)));
+                    const transferPickerSome = computed(() => transferPickerVehicles.value.some(v => transferPickerIds.value.includes(v.id)));
+                    const openTransferVehiclePicker = row => {
+                        transferActiveBranchId.value = row.id; transferPickerQuery.value = '';
+                        transferPickerIds.value = row.vehicles.filter(v => transferDraft.vehicleIds.includes(v.id)).map(v => v.id);
+                        transferVehiclePickerOpen.value = true;
+                    };
+                    const toggleTransferPickerVehicle = (id, selected) => {
+                        if (transferReadonly.value) return;
+                        transferPickerIds.value = selected ? [...new Set([...transferPickerIds.value, id])] : transferPickerIds.value.filter(x => x !== id);
+                    };
+                    const toggleTransferPickerAll = selected => transferPickerVehicles.value.forEach(v => toggleTransferPickerVehicle(v.id, selected));
+                    const confirmTransferPicker = () => {
+                        if (transferReadonly.value || transferSaving.value) return;
+                        const ids = transferVehicles.value.filter(v => v.branchId === transferActiveBranchId.value).map(v => v.id);
+                        transferDraft.vehicleIds = [...transferDraft.vehicleIds.filter(id => !ids.includes(id)), ...transferPickerIds.value.filter(id => ids.includes(id))];
+                        transferVehiclePickerOpen.value = false;
+                    };
+                    const toggleTransferVehicle = (id, selected) => {
+                        if (transferReadonly.value || transferSaving.value) return;
+                        transferDraft.vehicleIds = selected ? [...new Set([...transferDraft.vehicleIds, id])] : transferDraft.vehicleIds.filter(x => x !== id);
+                    };
+                    const filteredTransferTasks = computed(() => transferTasks.value.filter(t => {
+                        const f = transferFilters;
+                        return (!f.status || f.status === t.status) && `${t.sourceId} ${t.sourceName} ${t.targetId} ${t.targetName}`.toLowerCase().includes(f.query.toLowerCase())
+                            && (!f.contractId || (f.direction === 'out' ? t.sourceId === f.contractId : f.direction === 'in' ? t.targetId === f.contractId : [t.sourceId, t.targetId].includes(f.contractId)));
+                    }).sort((a, b) => b.updatedAt - a.updatedAt));
+                    const pagedTransferTasks = computed(() => filteredTransferTasks.value.slice((transferPage.value - 1) * 5, transferPage.value * 5));
+                    watch(transferFilters, () => { transferPage.value = 1; });
+                    watch(() => filteredTransferTasks.value.length, n => { transferPage.value = Math.min(transferPage.value, Math.max(1, Math.ceil(n / 5))); });
+                    const clearTransferScope = () => { transferFilters.contractId = ''; transferFilters.direction = ''; };
+                    const openTransferTasks = (id = '', direction = '', status = '') => {
+                        Object.assign(transferFilters, { query: '', contractId: id, direction, status }); transferPage.value = 1; transferListOpen.value = true;
+                    };
+                    const changeTransferSource = () => {
+                        transferDraft.targetId = ''; transferDraft.vehicleIds = vehiclesOf(contract(transferDraft.sourceId)).map(v => v.id);
+                    };
+                    const openTransferEditor = (source = null, task = null) => {
+                        if (source) task = pending().find(t => t.sourceId === source.id) || null;
+                        transferSourceSelectable.value = !source && !task;
+                        transferVehiclePickerOpen.value = false;
+                        Object.assign(transferDraft, task ? { id: task.id, sourceId: task.sourceId, targetId: task.targetId, mode: task.mode, vehicleIds: [...task.vehicleIds] } : { id: '', sourceId: source?.id || '', targetId: '', mode: 'IMMEDIATE', vehicleIds: vehiclesOf(source).map(v => v.id) });
+                        if (task?.status === 'FAILED') {
+                            const available = vehiclesOf(contract(task.sourceId));
+                            transferDraft.vehicleIds = transferDraft.vehicleIds.filter(id => available.some(v => v.id === id));
+                            if (transferDraft.vehicleIds.length !== task.vehicleIds.length) ElMessage.warning('已移除不再綁定來源合約的車輛，請重新確認轉移範圍。');
+                        }
+                        transferEditorOpen.value = true;
+                    };
+                    const cancelTransferTask = async task => {
+                        if (!['PENDING', 'FAILED'].includes(task.status) || transferSaving.value) return;
+                        try { await ElMessageBox.confirm('取消後釋放目標預留容量，來源配額及車輛綁定不變。', '取消轉移任務', { confirmButtonText: '確認取消', cancelButtonText: '返回', type: 'warning' }); } catch { return; }
+                        if (!['PENDING', 'FAILED'].includes(task.status)) return ElMessage.warning('任務狀態已變更，請重新查看。');
+                        task.status = 'CANCELLED'; task.updatedAt = Date.now(); task.events.push({ action: 'CANCELLED', at: task.updatedAt });
+                        if (transferDraft.id === task.id) transferEditorOpen.value = false;
+                        ElMessage.success('已取消轉移任務');
+                    };
+                    let sequence = 5;
+                    // 接入 POST/PUT 任务接口时携带 requestId 与 version；确认前后都校验，修改与预留替换须原子提交。
+                    const saveTransferTask = async () => {
+                        if (transferSaving.value || transferReadonly.value) return;
+                        const draft = clone(transferDraft), previous = currentTransferTask.value;
+                        const previousVersion = previous?.updatedAt;
+                        let preview = evaluateTransfer(draft);
+                        if (preview.error) return ElMessage.warning(preview.error);
+                        transferSaving.value = true;
+                        try {
+                            await ElMessageBox.confirm(draft.mode === 'IMMEDIATE' ? `立即將 ${draft.vehicleIds.length} 輛車轉移至 ${draft.targetId}？來源分公司配額保留。` : `儲存 ${draft.vehicleIds.length} 輛車的到期轉移任務，並預留目標容量？`, '確認轉移', { confirmButtonText: '確認', cancelButtonText: '返回', type: 'warning' });
+                            if (previous && (!['PENDING', 'FAILED'].includes(previous.status) || previous.updatedAt !== previousVersion)) return ElMessage.warning('任務已更新，請關閉後重新開啟。');
+                            preview = evaluateTransfer(draft);
+                            if (preview.error) return ElMessage.warning(preview.error);
+                            const next = makeTask(draft, preview, previous?.id || `TR-2026-${String(sequence++).padStart(4, '0')}`);
+                            if (previous) { next.createdAt = previous.createdAt; next.events = [...previous.events, { at: Date.now(), action: 'EDITED', before: clone(previous) }]; }
+                            else next.events.push({ at: Date.now(), action: 'CREATED' });
+                            if (draft.mode === 'IMMEDIATE' && !executeTask(next)) return ElMessage.error(next.failureReason);
+                            if (previous) Object.assign(previous, next); else transferTasks.value.unshift(next);
+                            transferEditorOpen.value = false;
+                            ElMessage.success(draft.mode === 'IMMEDIATE' ? '轉移已完成' : '轉移任務已儲存');
+                        } catch (error) {
+                            if (error !== 'cancel' && error !== 'close') ElMessage.error('未能儲存轉移任務，原任務保持不變。');
+                        } finally { transferSaving.value = false; }
+                    };
+                    // 真正的定时执行由后端负责，关闭原型页面不会继续运行此内存演示。
+                    const runDueTransferTasks = (now = Date.now()) => {
+                        pending().filter(t => t.scheduledAt <= now).forEach(t => {
+                            if (!executeTask(t, now)) ElMessage.error(`${t.id} 轉移失敗，請在合約轉移任務中處理。`);
+                        });
+                    };
+                    let timer;
+                    Vue.onMounted(() => { runDueTransferTasks(); timer = setInterval(runDueTransferTasks, 30000); });
+                    Vue.onUnmounted(() => clearInterval(timer));
+                    const guardTransferContractChange = (row, patch = null) => {
+                        if (!hasRelatedTransferTask(row.id)) return '';
+                        if (!patch) return '此合約有待執行轉移任務，請先取消相關任務。';
+                        if (patch.tenant !== row.tenant) return '此合約有待執行轉移任務，不可變更企業。';
+                        const reserved = pending().filter(t => t.targetId === row.id).reduce((n, t) => n + t.details.reduce((s, d) => s + d.extra, 0), 0);
+                        if (patch.quota < row.allocatedQuota + reserved) return `合約總配額不得少於已分配及預留配額合計 ${row.allocatedQuota + reserved} 台。`;
+                        const candidates = contractsData.value.map(r => r.id === row.id ? { ...r, ...patch } : r);
+                        for (const task of pending().filter(t => [t.sourceId, t.targetId].includes(row.id))) {
+                            const check = evaluateTransfer(task, candidates);
+                            if (check.error) return `影響 ${task.id}：${check.error}`;
+                        }
+                        return '';
+                    };
+                    const refreshTransferSchedules = () => pending().forEach(t => {
+                        const check = evaluateTransfer(t);
+                        if (!check.error) { t.scheduledAt = check.scheduledAt; t.details = clone(check.details); t.updatedAt = Date.now(); }
+                    });
+                    return { transferStatuses, transferTime, transferTasks, transferListOpen, transferEditorOpen, transferSaving, transferPage, transferFilters, transferDraft,
+                        transferSourceSelectable, transferSourceName, transferSourceQuotaInfo, transferTargetQuotaInfo, transferTargetOptionLabel, transferVehicles, transferBranchRows, toggleTransferBranch, transferCanRunNow, transferCanSchedule, changeTransferTarget,
+                        transferVehiclePickerOpen, transferActiveBranchName, transferPickerQuery, transferPickerIds, transferPickerVehicles, transferPickerAll, transferPickerSome,
+                        openTransferVehiclePicker, toggleTransferPickerVehicle, toggleTransferPickerAll, confirmTransferPicker,
+                        currentTransferTask, transferReadonly, transferPreview, transferSourceOptions, transferTargetOptions, transferBranchOptions,
+                        toggleTransferVehicle, filteredTransferTasks, pagedTransferTasks,
+                        clearTransferScope, openTransferTasks, changeTransferSource, openTransferEditor, cancelTransferTask, saveTransferTask, hasRelatedTransferTask, hasTransferNotice, hasTransferFailure,
+                        canTransferContract, guardTransferContractChange, refreshTransferSchedules, runDueTransferTasks, evaluateTransfer };
+                })();
+                // CONTRACT_TRANSFER_LOGIC_END
+
+                // Filter logic
+                const filters = reactive({
+                    query: '',
+                    tenant: '',
+                    payer: '',
+                    type: '',
+                    status: ''
+                });
+
+                const visibleContracts = computed(() => contractsData.value.filter(item => !item.deleted));
+
+                const filteredTableData = computed(() => {
+                    return visibleContracts.value.filter(item => {
+                        const matchQuery = !filters.query || item.id.includes(filters.query) || item.name.includes(filters.query);
+                        const matchTenant = !filters.tenant || item.tenant === filters.tenant;
+                        const matchPayer = !filters.payer || item.payer === filters.payer;
+                        const matchType = !filters.type || item.type === filters.type;
+                        const matchStatus = !filters.status || item.status === filters.status;
+                        return matchQuery && matchTenant && matchPayer && matchType && matchStatus;
+                    });
+                });
+
+                // 合约列表分页：翻页只影响展示，筛选条件变化时回到第一页。
+                const contractPage = ref(1);
+                const contractPageSize = ref(10);
+                const pagedTableData = computed(() => {
+                    const start = (contractPage.value - 1) * contractPageSize.value;
+                    return filteredTableData.value.slice(start, start + contractPageSize.value);
+                });
+                watch(() => [filters.query, filters.tenant, filters.payer, filters.type, filters.status], () => { contractPage.value = 1; });
+                watch(() => filteredTableData.value.length, n => { contractPage.value = Math.min(contractPage.value, Math.max(1, Math.ceil(n / contractPageSize.value))); });
+
+                // Dashboard stats
+                const dashboardStats = computed(() => {
+                    return {
+                        active: visibleContracts.value.filter(c => c.status === 'ACTIVE').length,
+                        terminated: visibleContracts.value.filter(c => c.status === 'TERMINATED').length,
+                        expiringOrExpired: visibleContracts.value.filter(c => {
+                            if (c.status === 'EXPIRED' || c.status === 'EXPIRING') return true;
+                            if (c.status !== 'ACTIVE') return false;
+                            const d = getDaysRemaining(c.endDate);
+                            return d >= 0 && d < 15;
+                        }).length
+                    };
+                });
+
+                // Wizard State
+                const showWizardDrawer = ref(false);
+                const wizardStep = ref(0);
+                const submitLoading = ref(false);
+                const wizardFormRef = ref(null);
+                const wizardMode = ref('create');
+                const editingContract = ref(null);
+                const sourceTrialContract = ref(null);
+
+                                const wizardForm = reactive({
+                    tenant: '',
+                    sameAsTenant: false,
+                    payer: '',
+                    name: '',
+                    type: 'OFFICIAL',
+                    quota: 1,
+                    billing: 'MONTHLY',
+                    durationMonths: 1,
+                    startDate: '',
+                    effectMode: 'CONTRACT_START',
+                    pickupLocation: '',
+                    billingReminder: '',
+                    billingContact: '',
+                    billingEmail: '',
+                });
+
+                const wizardRules = {
+                    name: [{ required: true, message: '请输入合约名称', trigger: 'blur' }],
+                    tenant: [{ required: true, message: '承租方必须存在', trigger: 'blur' }],
+                    payer: [{ required: true, message: '请选择或输入结算代付企业', trigger: 'change' }],
+                    durationMonths: [{ required: true, message: '请输入合约期数', trigger: 'blur' }],
+                    startDate: [{ required: true, message: '请选择开始时间', trigger: 'change' }]
+                };
+
+                const wizardTitle = computed(() => {
+                    if (wizardMode.value === 'edit') return '编辑公务车合约';
+                    if (wizardMode.value === 'convert') return '试用合同转正式合同';
+                    return '新建公务车合约';
+                });
+
+                const wizardSubmitLabel = computed(() => {
+                    if (wizardMode.value === 'edit') return '保存修改';
+                    if (wizardMode.value === 'convert') return '建立正式合同';
+                    return '确认建档';
+                });
+
+                const isActiveContractEdit = computed(() => wizardMode.value === 'edit'
+                    && editingContract.value
+                    && ['ACTIVE', 'EXPIRING'].includes(editingContract.value.status));
+                const minimumQuota = computed(() => {
+                    if (wizardMode.value === 'edit' && editingContract.value) {
+                        if (editingContract.value.status === 'PENDING_ADJUSTMENT') return 1;
+                        return Math.max(1, editingContract.value.vehicleCount || 0, editingContract.value.allocatedQuota || 0);
+                    }
+                    return 1;
+                });
+                const conversionQuotaGap = computed(() => {
+                    let source = sourceTrialContract.value;
+                    if (wizardMode.value === 'edit' && editingContract.value?.predecessorContractId) {
+                        source = contractsData.value.find(item => item.id === editingContract.value.predecessorContractId);
+                    }
+                    if (!source) return 0;
+                    const currentScale = Math.max(
+                        source.allocatedQuota || 0,
+                        source.vehicleCount || 0
+                    );
+                    return Math.max(0, currentScale - Number(wizardForm.quota || 0));
+                });
+
+                // Payer Management Logic
+                const handleSameAsTenantChange = (val) => {
+                    if (val) {
+                        wizardForm.payer = wizardForm.tenant;
+                    } else if (wizardForm.payer === wizardForm.tenant) {
+                        wizardForm.payer = ''; // Clear if they uncheck and it was still the tenant
+                    }
+                };
+
+                watch(() => wizardForm.tenant, (tenant) => {
+                    if (wizardForm.sameAsTenant) wizardForm.payer = tenant;
+                });
+
+                const showPayerManageDialog = ref(false);
+                const openPayerManageDialog = () => {
+                    showPayerManageDialog.value = true;
+                };
+
+                const deletePayer = (index) => {
+                    ElMessageBox.confirm('确定要删除此结算方吗？', '提示', { type: 'warning' }).then(() => {
+                        const deleted = payerOptions.value.splice(index, 1)[0];
+                        if (wizardForm.payer === deleted.name) {
+                            wizardForm.payer = ''; // clear if selected is deleted
+                        }
+                        ElMessage.success('结算方已删除');
+                    }).catch(() => { });
+                };
+
+                // Add/Edit Payer Form Logic
+                const showPayerFormDialog = ref(false);
+                const payerFormMode = ref('add');
+                const editingPayerIndex = ref(-1);
+
+                const payerFormRef = ref(null);
+                const payerForm = reactive({ name: '', taxId: '', contact: '', phone: '' });
+                const payerRules = {
+                    name: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+                    taxId: [{ required: true, message: '请输入统编号码', trigger: 'blur' }],
+                    contact: [{ required: true, message: '请输入联系人', trigger: 'blur' }]
+                };
+
+                const openAddPayerDialog = () => {
+                    payerFormMode.value = 'add';
+                    payerForm.name = '';
+                    payerForm.taxId = '';
+                    payerForm.contact = '';
+                    payerForm.phone = '';
+                    if (payerFormRef.value) payerFormRef.value.clearValidate();
+                    showPayerFormDialog.value = true;
+                };
+
+                const openEditPayerDialog = (row, index) => {
+                    payerFormMode.value = 'edit';
+                    editingPayerIndex.value = index;
+                    payerForm.name = row.name;
+                    payerForm.taxId = row.taxId;
+                    payerForm.contact = row.contact;
+                    payerForm.phone = row.phone;
+                    if (payerFormRef.value) payerFormRef.value.clearValidate();
+                    showPayerFormDialog.value = true;
+                };
+
+                const submitPayerForm = () => {
+                    payerFormRef.value.validate().then(valid => {
+                        if (valid) {
+                            if (payerFormMode.value === 'add') {
+                                payerOptions.value.unshift({ ...payerForm });
+                                wizardForm.payer = payerForm.name; // auto select if created from wizard
+                                ElMessage.success('结算方企业添加成功！');
+                            } else {
+                                const oldName = payerOptions.value[editingPayerIndex.value].name;
+                                payerOptions.value[editingPayerIndex.value] = { ...payerForm };
+                                if (wizardForm.payer === oldName) {
+                                    wizardForm.payer = payerForm.name; // stay selected if name changed
+                                }
+                                ElMessage.success('结算方企业修改成功！');
+                            }
+                            showPayerFormDialog.value = false;
+                        }
+                    }).catch(() => { });
+                };
+
+                const calculatedReferencePrice = computed(() => {
+                    const enterpriseRate = getEnterpriseRate(wizardForm.tenant);
+                    if (!enterpriseRate) {
+                        return { amount: '-', suffix: '未配置企业单价' };
+                    }
+                    let displayAmount = 0;
+                    let displaySuffix = '';
+
+                    if (wizardForm.billing === 'MONTHLY') {
+                        displayAmount = wizardForm.quota * enterpriseRate.monthly;
+                        displaySuffix = '/ 月';
+                    } else {
+                        displayAmount = wizardForm.quota * enterpriseRate.annually;
+                        displaySuffix = '/ 年';
+                    }
+
+                    return {
+                        amount: formatCurrency(displayAmount, false),
+                        suffix: displaySuffix
+                    };
+                });
+
+                const getContractDuration = (row) => {
+                    const start = new Date(`${row.startDate}T00:00:00`);
+                    const end = new Date(`${row.endDate}T00:00:00`);
+                    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 1;
+                    end.setDate(end.getDate() + 1);
+                    if (row.billing === 'ANNUALLY') {
+                        return Math.max(1, Math.round((end.getFullYear() - start.getFullYear())
+                            + (end.getMonth() - start.getMonth()) / 12));
+                    }
+                    return Math.max(1, Math.round((end.getFullYear() - start.getFullYear()) * 12
+                        + end.getMonth() - start.getMonth()));
+                };
+
+                const getContractEndDate = () => {
+                    const d = new Date(`${wizardForm.startDate}T00:00:00`);
+                    if (wizardForm.billing === 'ANNUALLY') {
+                        d.setFullYear(d.getFullYear() + wizardForm.durationMonths);
+                    } else {
+                        d.setMonth(d.getMonth() + wizardForm.durationMonths);
+                    }
+                    d.setDate(d.getDate() - 1);
+                    return d.toISOString().split('T')[0];
+                };
+
+                const getDefaultConvertStartDate = (row) => {
+                    const nextDay = new Date(`${row.endDate}T00:00:00`);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    const today = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+                    const result = nextDay > today ? nextDay : today;
+                    return result.toISOString().split('T')[0];
+                };
+
+                const getPlannedEffectiveAt = () => {
+                    if (!wizardForm.startDate) return '-';
+                    if (isActiveContractEdit.value && editingContract.value?.effectiveAt) {
+                        return editingContract.value.effectiveAt;
+                    }
+                    if (wizardForm.type !== 'OFFICIAL') return `${wizardForm.startDate} 00:00`;
+                    if (wizardForm.effectMode === 'IMMEDIATE') return getNowDateTimeStr();
+                    const contractStart = new Date(`${wizardForm.startDate}T00:00:00`);
+                    if (contractStart <= new Date()) return getNowDateTimeStr();
+                    return `${wizardForm.startDate} 00:00`;
+                };
+
+                const getGiftDaysByValue = (effectiveAt, startDate) => {
+                    if (!effectiveAt || !startDate || effectiveAt === '-') return 0;
+                    const effectiveDate = new Date(`${effectiveAt.slice(0, 10)}T00:00:00`);
+                    const contractStartDate = new Date(`${startDate}T00:00:00`);
+                    if (Number.isNaN(effectiveDate.getTime()) || Number.isNaN(contractStartDate.getTime())) return 0;
+                    return Math.max(0, Math.round((contractStartDate - effectiveDate) / (1000 * 60 * 60 * 24)));
+                };
+
+                const computedEffectiveAt = computed(() => getPlannedEffectiveAt());
+                const giftPeriodDays = computed(() => getGiftDaysByValue(computedEffectiveAt.value, wizardForm.startDate));
+
+                const getFormalContractStatus = () => {
+                    if (wizardForm.type !== 'OFFICIAL') return 'PENDING_PAYMENT';
+                    if (wizardForm.effectMode === 'IMMEDIATE') return 'ACTIVE';
+                    const planned = new Date(`${wizardForm.startDate}T00:00:00`);
+                    return planned <= new Date() ? 'ACTIVE' : 'PENDING_EFFECTIVE';
+                };
+
+                const resetWizardState = () => {
+                    editingContract.value = null;
+                    sourceTrialContract.value = null;
+                    wizardForm.tenant = '睿騰科技股份有限公司';
+                    wizardForm.sameAsTenant = false;
+                    wizardForm.payer = '';
+                    wizardForm.name = '';
+                    wizardForm.type = 'OFFICIAL';
+                    wizardForm.quota = 1;
+                    wizardForm.billing = 'MONTHLY';
+                    wizardForm.durationMonths = 1;
+                    wizardForm.startDate = '';
+                    wizardForm.effectMode = 'CONTRACT_START';
+                    if (wizardFormRef.value) wizardFormRef.value.clearValidate();
+                };
+
+                const openWizard = () => {
+                    wizardMode.value = 'create';
+                    resetWizardState();
+                    showWizardDrawer.value = true;
+                };
+
+                const canEditContract = (row) => ['DRAFT', 'PENDING_PAYMENT', 'PENDING_ADJUSTMENT', 'PENDING_EFFECTIVE', 'ACTIVE', 'EXPIRING'].includes(row.status);
+                const canConvertTrial = (row) => row.type === 'TRIAL'
+                    && ['ACTIVE', 'EXPIRING', 'EXPIRED'].includes(row.status)
+                    && !row.successorContractId;
+                const canDeleteContract = (row) => !transferTools.hasRelatedTransferTask(row.id) && ['TERMINATED', 'EXPIRED'].includes(row.status);
+                const hasLifecycleAction = (row) => !transferTools.hasRelatedTransferTask(row.id) && ['ACTIVE', 'EXPIRING', 'DRAFT', 'PENDING_PAYMENT', 'PENDING_ADJUSTMENT', 'PENDING_EFFECTIVE'].includes(row.status);
+                const hasNonDeleteMoreAction = (row) => transferTools.canTransferContract(row) || hasLifecycleAction(row);
+                const hasMoreActions = (row) => hasNonDeleteMoreAction(row) || canDeleteContract(row) || transferTools.hasRelatedTransferTask(row.id);
+
+                const handleContractAction = (command, row) => {
+                    if (command === 'transfer') transferTools.openTransferEditor(row);
+                    if (command === 'terminate') terminateContract(row);
+                    if (command === 'delete') deleteContract(row);
+                };
+
+                const openEditContract = (row) => {
+                    wizardMode.value = 'edit';
+                    resetWizardState();
+                    editingContract.value = row;
+                    wizardForm.tenant = row.tenant;
+                    wizardForm.payer = row.payer;
+                    wizardForm.sameAsTenant = row.payer === row.tenant;
+                    wizardForm.name = row.name;
+                    wizardForm.type = row.type;
+                    wizardForm.quota = Math.max(row.quota || 1, row.allocatedQuota || 0, row.vehicleCount || 0);
+                    wizardForm.billing = row.billing;
+                    wizardForm.durationMonths = getContractDuration(row);
+                    wizardForm.startDate = row.startDate;
+                    wizardForm.effectMode = row.effectMode || 'CONTRACT_START';
+                    showWizardDrawer.value = true;
+                };
+
+                const openConvertContract = (row) => {
+                    if (!canConvertTrial(row)) {
+                        ElMessage.warning('当前试用合同不允许重复转为正式合同');
+                        return;
+                    }
+                    wizardMode.value = 'convert';
+                    resetWizardState();
+                    sourceTrialContract.value = row;
+                    wizardForm.tenant = row.tenant;
+                    wizardForm.payer = row.payer;
+                    wizardForm.sameAsTenant = row.payer === row.tenant;
+                    wizardForm.name = `${row.tenant}正式公务车合约`;
+                    wizardForm.type = 'OFFICIAL';
+                    wizardForm.quota = Math.max(1, row.allocatedQuota || row.vehicleCount || 0);
+                    wizardForm.billing = row.billing;
+                    wizardForm.durationMonths = row.billing === 'ANNUALLY' ? 1 : 12;
+                    wizardForm.startDate = getDefaultConvertStartDate(row);
+                    wizardForm.effectMode = 'CONTRACT_START';
+                    showWizardDrawer.value = true;
+                };
+
+                const submitWizard = () => {
+                    wizardFormRef.value.validate().then(valid => {
+                        if (valid) {
+                            if (wizardForm.quota < minimumQuota.value) {
+                                ElMessage.error(`合约总配额不得少于 ${minimumQuota.value} 台`);
+                                return;
+                            }
+                            if (wizardMode.value === 'convert' && (!sourceTrialContract.value || sourceTrialContract.value.successorContractId)) {
+                                ElMessage.error('该试用合同已建立承接关系，不允许重复转换');
+                                return;
+                            }
+                            if (!getEnterpriseRate(wizardForm.tenant)) {
+                                ElMessage.error('该企业尚未配置对应单价，请先完成企业价格配置');
+                                return;
+                            }
+                            const nextEndDate = getContractEndDate();
+                            if (isActiveContractEdit.value && new Date(`${nextEndDate}T23:59:59`) < new Date()) {
+                                ElMessage.error('生效中或即将到期的合约，调整后的结束日期不得早于当前日期');
+                                return;
+                            }
+
+                            const persistWizard = () => {
+                                submitLoading.value = true;
+                                setTimeout(() => {
+                                submitLoading.value = false;
+                                showWizardDrawer.value = false;
+                                const enterpriseRate = getEnterpriseRate(wizardForm.tenant);
+                                const unitRate = wizardForm.billing === 'ANNUALLY'
+                                    ? enterpriseRate.annually
+                                    : enterpriseRate.monthly;
+                                const totalAmount = wizardForm.quota * unitRate;
+                                const plannedEffectiveAt = getPlannedEffectiveAt();
+
+                                if (wizardMode.value === 'edit' && editingContract.value) {
+                                    const row = editingContract.value;
+                                    const taskError = transferTools.guardTransferContractChange(row, {
+                                        tenant: wizardForm.tenant, quota: wizardForm.quota, startDate: wizardForm.startDate,
+                                        endDate: nextEndDate, scheduledEffectiveAt: plannedEffectiveAt
+                                    });
+                                    if (taskError) { showWizardDrawer.value = true; ElMessage.error(taskError); return; }
+                                    row.name = wizardForm.name;
+                                    row.tenant = wizardForm.tenant;
+                                    row.payer = wizardForm.payer;
+                                    row.type = wizardForm.type;
+                                    row.quota = wizardForm.quota;
+                                    row.billing = wizardForm.billing;
+                                    row.totalAmount = totalAmount;
+                                    row.startDate = wizardForm.startDate;
+                                    row.endDate = nextEndDate;
+                                    row.effectMode = wizardForm.type === 'OFFICIAL' ? wizardForm.effectMode : 'CONTRACT_START';
+                                    if (!row.effectiveAt) {
+                                        row.scheduledEffectiveAt = plannedEffectiveAt;
+                                        row.status = conversionQuotaGap.value > 0 ? 'PENDING_ADJUSTMENT' : getFormalContractStatus();
+                                        row.effectiveAt = row.status === 'ACTIVE' ? plannedEffectiveAt : '';
+                                        if (row.status === 'ACTIVE' && row.predecessorContractId) {
+                                            const source = contractsData.value.find(item => item.id === row.predecessorContractId);
+                                            if (source) {
+                                                row.vehicleCount = source.vehicleCount;
+                                                row.allocatedQuota = source.allocatedQuota;
+                                                row.branchCount = source.branchCount;
+                                            }
+                                        }
+                                    }
+                                    transferTools.refreshTransferSchedules();
+                                    ElMessage.success('合约资料已更新');
+                                    return;
+                                }
+
+                                const source = sourceTrialContract.value;
+                                const targetStatus = wizardMode.value === 'convert' && conversionQuotaGap.value > 0
+                                    ? 'PENDING_ADJUSTMENT'
+                                    : getFormalContractStatus();
+                                const newRow = {
+                                    id: 'OC-2026-NEW' + Math.floor(Math.random() * 100),
+                                    name: wizardForm.name,
+                                    tenant: wizardForm.tenant,
+                                    payer: wizardForm.payer,
+                                    type: wizardForm.type,
+                                    billing: wizardForm.billing,
+                                    quota: wizardForm.quota,
+                                    vehicleCount: wizardMode.value === 'convert' && targetStatus === 'ACTIVE' ? source.vehicleCount : 0,
+                                    allocatedQuota: wizardMode.value === 'convert' && targetStatus === 'ACTIVE' ? source.allocatedQuota : 0,
+                                    branchCount: wizardMode.value === 'convert' && targetStatus === 'ACTIVE' ? source.branchCount : 0,
+                                    totalAmount,
+                                    startDate: wizardForm.startDate,
+                                    endDate: nextEndDate,
+                                    effectMode: wizardForm.effectMode,
+                                    scheduledEffectiveAt: plannedEffectiveAt,
+                                    effectiveAt: targetStatus === 'ACTIVE' ? plannedEffectiveAt : '',
+                                    status: targetStatus,
+                                    predecessorContractId: wizardMode.value === 'convert' ? source.id : ''
+                                };
+                                contractsData.value.unshift(newRow);
+                                if (wizardMode.value === 'convert') {
+                                    source.successorContractId = newRow.id;
+                                    if (newRow.status === 'PENDING_ADJUSTMENT') {
+                                        ElMessage.warning(`正式合同已建立，需先缩减 ${conversionQuotaGap.value} 台配额或车辆后再承接`);
+                                    } else if (newRow.status === 'ACTIVE') {
+                                        ElMessage.success(`正式合同已立即生效，并承接 ${source.branchCount} 个分公司配额和 ${source.vehicleCount} 辆车辆`);
+                                    } else {
+                                        ElMessage.success(`正式合同已建立，将于 ${newRow.scheduledEffectiveAt} 承接分公司配额和车辆`);
+                                    }
+                                } else {
+                                    ElMessage.success('核算建档成功！新商务合约已锁定记录！');
+                                }
+                                }, 500);
+                            };
+
+                            if (wizardMode.value === 'edit' && editingContract.value) {
+                                const impactMessage = isActiveContractEdit.value
+                                    ? '该合约已生效。保存后，新资料将用于后续业务；既有订单、账单、实际生效时间及历史记录不会改写。确认保存？'
+                                    : '保存后将按最新资料重新计算计划生效时间与合约期间；历史操作记录仍会保留。确认保存？';
+                                ElMessageBox.confirm(impactMessage, '确认修改合约', {
+                                    confirmButtonText: '确认保存',
+                                    cancelButtonText: '取消',
+                                    type: 'warning'
+                                }).then(persistWizard).catch(() => { });
+                                return;
+                            }
+
+                            persistWizard();
+                        }
+                    }).catch(() => { });
+                };
+
+                const handleWizardClose = (done) => {
+                    done();
+                };
+
+                // Table Actions
+                const terminateContract = (row) => {
+                    const taskError = transferTools.guardTransferContractChange(row);
+                    if (taskError) return ElMessage.warning(taskError);
+                    ElMessageBox.confirm(`即将强制提前终止此公务车合约，下挂的 ${row.vehicleCount} 台资产将即刻释放回公共资源池。此操作不可撤销，确认终止？`, '生命周期阻断', {
+                        confirmButtonText: '确定终止释放',
+                        cancelButtonText: '手滑了',
+                        type: 'warning'
+                    }).then(() => {
+                        const taskError = transferTools.guardTransferContractChange(row);
+                        if (taskError) return ElMessage.warning(taskError);
+                        row.status = 'TERMINATED';
+                        row.vehicleCount = 0; // Release cars conceptually
+                        row.transferBranches = [];
+                        row.allocatedQuota = 0;
+                        ElMessage.success('合约链路已被系统阻断，资源已回退池中！');
+                    }).catch(() => { });
+                };
+
+                const deleteContract = (row) => {
+                    const taskError = transferTools.guardTransferContractChange(row);
+                    if (taskError) return ElMessage.warning(taskError);
+                    ElMessageBox.confirm(
+                        `确认删除合约 ${row.id}？删除后该合约在营运端列表及企业端均不可见；历史订单、账单和操作记录仍会保留。`,
+                        '删除合约',
+                        {
+                            confirmButtonText: '确认删除',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            distinguishCancelAndClose: true
+                        }
+                    ).then(() => {
+                        const taskError = transferTools.guardTransferContractChange(row);
+                        if (taskError) return ElMessage.warning(taskError);
+                        row.deleted = true;
+                        if (row.predecessorContractId) {
+                            const source = contractsData.value.find(item => item.id === row.predecessorContractId);
+                            if (source && source.successorContractId === row.id) source.successorContractId = '';
+                        }
+                        ElMessage.success('合约已删除，企业端将不再显示该合约');
+                    }).catch(() => { });
+                };
+
+
+                // Formatting Helpers
+                const getDaysRemaining = (endDate) => {
+                    const end = new Date(endDate);
+                    const diffTime = end - TODAY;
+                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                };
+
+                const formatCurrency = (val, symbol = true) => {
+                    if (val == null) return '-';
+                    const num = Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    return symbol ? `￥ ${num}` : num;
+                };
+
+                const getEffectiveDisplay = (row) => {
+                    if (row.effectiveAt) return row.effectiveAt;
+                    if (row.scheduledEffectiveAt) return `${row.scheduledEffectiveAt}（预计）`;
+                    return '-';
+                };
+                const getGiftDays = (row) => row.type === 'OFFICIAL'
+                    ? getGiftDaysByValue(row.effectiveAt || row.scheduledEffectiveAt, row.startDate)
+                    : 0;
+
+                const renderBillingType = (b) => {
+                    const map = { MONTHLY: '月缴', ANNUALLY: '年缴', ONE_TIME: '一次性' };
+                    return map[b] || b;
+                };
+
+                const getStatusLabel = (s) => {
+                    const map = {
+                        DRAFT: '草稿件', PENDING_PAYMENT: '待客户支付', TERMINATED: '已终止',
+                        PENDING_ADJUSTMENT: '待调整', PENDING_EFFECTIVE: '待生效', ACTIVE: '生效中', EXPIRED: '已过期',
+                        VOID: '已作废退回', EXPIRING: '即将到期'
+                    };
+                    return map[s] || s;
+                };
+
+                const getStatusDotClass = (s) => {
+                    let c = 'w-2 h-2 rounded-full ';
+                    if (s === 'ACTIVE') c += 'bg-emerald-500';
+                    else if (s === 'TERMINATED') c += 'bg-gray-600';
+                    else if (s === 'PENDING_PAYMENT') c += 'bg-amber-400';
+                    else if (s === 'PENDING_ADJUSTMENT') c += 'bg-orange-500';
+                    else if (s === 'PENDING_EFFECTIVE') c += 'bg-blue-500';
+                    else if (s === 'EXPIRED') c += 'bg-red-500';
+                    else if (s === 'VOID') c += 'bg-gray-400';
+                    else if (s === 'EXPIRING') c += 'bg-amber-500';
+                    else c += 'bg-gray-300'; // DRAFT
+                    return c;
+                };
+
+                const getStatusTextClass = (s) => {
+                    let c = 'text-sm font-medium ';
+                    if (s === 'ACTIVE') c += 'text-emerald-700';
+                    else if (s === 'TERMINATED') c += 'text-gray-700 line-through decoration-gray-400';
+                    else if (s === 'PENDING_PAYMENT') c += 'text-amber-600';
+                    else if (s === 'PENDING_ADJUSTMENT') c += 'text-orange-600';
+                    else if (s === 'PENDING_EFFECTIVE') c += 'text-blue-600';
+                    else if (s === 'EXPIRED') c += 'text-red-600';
+                    else if (s === 'VOID') c += 'text-gray-500 line-through';
+                    else if (s === 'EXPIRING') c += 'text-amber-500';
+                    else c += 'text-gray-600';
+                    return c;
+                };
+
+                return {
+                    ...transferTools,
+                    tenantOptions, payerOptions, contractsData, availableVehicles,
+                    filters, filteredTableData, pagedTableData, contractPage, contractPageSize, dashboardStats,
+                    showWizardDrawer, submitLoading, wizardFormRef, wizardForm, wizardRules, calculatedReferencePrice,
+                    wizardMode, wizardTitle, wizardSubmitLabel, sourceTrialContract,
+                    isActiveContractEdit, minimumQuota, conversionQuotaGap,
+                    computedEffectiveAt, giftPeriodDays,
+                    openWizard, openEditContract, openConvertContract,
+                    canEditContract, canConvertTrial, canDeleteContract,
+                    hasLifecycleAction, hasNonDeleteMoreAction, hasMoreActions, handleContractAction,
+                    submitWizard, handleWizardClose,
+                    handleSameAsTenantChange, showPayerManageDialog, openPayerManageDialog, deletePayer,
+                    showPayerFormDialog, payerFormMode, payerFormRef, payerForm, payerRules,
+                    openAddPayerDialog, openEditPayerDialog, submitPayerForm,
+                    terminateContract, deleteContract,
+                    formatCurrency, getEffectiveDisplay, getGiftDays, getDaysRemaining,
+                    renderBillingType, getStatusLabel, getStatusDotClass, getStatusTextClass
+                };
+
+}
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。页面启动代码，不得放入业务逻辑。 */
+const app = Vue.createApp({ setup: pageSetup });
+const icons = ElementPlusIconsVue;
+  function registerLegacyComponents(app) {
+// Register All Icons
+        for (const [key, component] of Object.entries(icons)) {
+            app.component(key, component);
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

@@ -1,0 +1,277 @@
+/* ==========================================================================
+   駕駛行為評分 — 模組版面
+   --------------------------------------------------------------------------
+   卡片質感一律來自 ds.css 的 .ds-panel；本檔只寫模組內部排列。
+   全檔零字面色值。
+   ========================================================================== */
+
+/* --- 評分等級映射 --------------------------------------------------------
+   五個等級對應狀態標尺。集中在這五行，調整區間配色只動一處。
+   ------------------------------------------------------------------------ */
+.is-band-st-normal { --lv: var(--st-normal); --lv-soft: var(--st-normal-soft); --lv-line: var(--st-normal-line); }
+.is-band-st-info { --lv: var(--st-info); --lv-soft: var(--st-info-soft); --lv-line: var(--st-info-line); }
+.is-band-st-notice { --lv: var(--st-notice); --lv-soft: var(--st-notice-soft); --lv-line: var(--st-notice-line); }
+.is-band-st-warn { --lv: var(--st-warn); --lv-soft: var(--st-warn-soft); --lv-line: var(--st-warn-line); }
+.is-band-st-critical { --lv: var(--st-critical); --lv-soft: var(--st-critical-soft); --lv-line: var(--st-critical-line); }
+
+/* ==========================================================================
+   M03-1 車隊評分總覽（W）
+   ========================================================================== */
+
+.score-kpi { justify-content: center; }
+
+.score-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.score-kpi-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border-left: 1px solid var(--ln-hair);
+}
+
+.score-kpi-cell:first-child { border-left: 0; padding-left: 0; }
+
+.score-kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.score-kpi-label > svg, .score-kpi-label > i { width: 13px; height: 13px; color: var(--lv, var(--ink-3)); }
+
+.score-kpi-val { display: flex; align-items: baseline; gap: 2px; min-width: 0; }
+
+.score-kpi-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--lv, var(--ink-1));
+}
+
+/* 對象名稱是文字不是數字，改用界面字體並允許截斷 */
+.score-kpi-val.is-object > strong {
+    font-family: var(--fx-font-ui);
+    font-size: var(--fs-lead);
+    letter-spacing: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.score-kpi-val > em { font-style: normal; font-size: var(--fs-note); color: var(--ink-3); }
+
+.score-kpi-foot { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 1100px) {
+    .score-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .score-kpi-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+/* ==========================================================================
+   M03-2 評分等級儀表（S）
+   ========================================================================== */
+
+.score-gauge-body { position: relative; flex: 1 1 auto; min-height: 132px; }
+
+/* 讀數壓在儀表下半的空心處 */
+.score-gauge-read {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6%;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    pointer-events: none;
+}
+
+.score-gauge-read > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink-1);
+}
+
+.score-gauge-scale {
+    list-style: none;
+    margin: var(--sp-2) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-2);
+    flex: none;
+}
+
+.score-gauge-scale > li {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    white-space: nowrap;
+}
+
+.score-gauge-scale > li > i { width: 6px; height: 6px; border-radius: 999px; flex: none; }
+
+/* ==========================================================================
+   M03-3 分數與名次變化（啞鈴）
+   ========================================================================== */
+
+.score-move-legend > span.is-prev::before { background: var(--ink-3); }
+.score-move-legend > span.is-now::before { background: var(--brand); }
+
+/* ==========================================================================
+   M03-4／M03-5 進步與退步（S）
+   ========================================================================== */
+
+.score-movers-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.score-movers-list > li + li { border-top: 1px solid var(--ln-hair); }
+
+.score-movers-list button {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    border-radius: var(--fx-r-inner);
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.score-movers-list button:hover { background: var(--sf-hover); }
+.score-movers-list button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+.score-movers-list > li.is-spot button {
+    background: var(--lv-soft);
+    box-shadow: inset 2px 0 0 var(--lv);
+}
+
+/* 名次與升降上下疊放，寬度固定，多列之間才對得齊 */
+.score-mover-rank { display: grid; justify-items: center; gap: 1px; }
+
+.score-mover-rank > em {
+    font-style: normal;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+}
+
+.score-mover-move { font-family: var(--fx-font-num); font-size: var(--fs-micro); }
+.score-mover-move.is-up { color: var(--st-normal); }
+.score-mover-move.is-down { color: var(--st-critical); }
+
+.score-mover-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.score-mover-name {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.score-mover-meta { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+.score-mover-score { display: grid; justify-items: end; gap: 1px; white-space: nowrap; }
+
+.score-mover-score > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-s);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--lv);
+}
+
+.score-mover-score > span { font-family: var(--fx-font-num); font-size: var(--fs-micro); }
+.score-mover-score > span.is-up { color: var(--st-normal); }
+.score-mover-score > span.is-down { color: var(--st-critical); }
+
+/* ==========================================================================
+   M03-6 風險行為構成（S）
+   ========================================================================== */
+
+.score-factor-legend > span::before { background: var(--lv); }
+
+/* ==========================================================================
+   M03-7 車隊分數趨勢（S）
+   ========================================================================== */
+
+.score-trend .ds-panel-sub { display: flex; align-items: center; gap: var(--sp-1); }
+.score-trend .is-up { color: var(--st-normal); font-weight: 600; }
+.score-trend .is-down { color: var(--st-critical); font-weight: 600; }
+
+/* ==========================================================================
+   M03-8 評分明細（L）
+   ========================================================================== */
+
+.score-table-wrap { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+.score-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-width: 100px;
+}
+
+.score-cell > .ds-bar { flex: 1 1 auto; min-width: 44px; }
+
+.score-cell > em {
+    font-style: normal;
+    font-family: var(--fx-font-num);
+    font-weight: 700;
+    color: var(--ink-1);
+}
+
+.score-table .is-up { color: var(--st-normal); }
+.score-table .is-down { color: var(--st-critical); }
+
+.score-table-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    cursor: pointer;
+}
+
+.score-table-link:hover { text-decoration: underline; }
+
+.score-table-note {
+    flex: none;
+    margin: var(--sp-2) 0 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    text-align: center;
+}

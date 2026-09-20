@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台登录</title>
+    <link rel="icon" href="data:," />
+
+    <!--
+      HTML 原型模板规范（AI 创建页面前必须先读完）
+
+      1. 本文件用于需求阶段原型。复制本文件后再修改，不要从历史 HTML 复制代码。
+      2. 可参考旧页面的视觉，但只复刻布局、间距、字体、颜色和组件效果。
+      3. 只修改标记为 [AI-EDIT] 的区域；[TEMPLATE-LOCK] 区域保持结构和标记不变。
+      4. 登录页或其他不使用后台壳的终端是唯一例外：可替换独立预览壳，但必须保留依赖、基础主题和全部导入边界。
+      5. 页面标题区不是强制结构：一级列表、配置和看板通常使用 standard；二级详情页可使用 back-only 或 none。
+         使用 none 时删除整个 data-page-header，页面直接从 data-business-content 开始。
+      6. data-page-content 是完整页面；标题和子标题下方必须保留唯一 data-business-content 自由业务区。
+         默认的筛选和表格只是示例，可按实际业务整体替换为统计卡、表单、详情、看板、控制台、地图或其他布局。
+         只保留 data-business-content 外层标记，不得要求所有页面都使用列表结构。
+         弹窗和抽屉必须放进 data-page-overlay。
+      7. 页面状态、方法和模拟数据只能写在 PAGE_LOGIC_START/END 之间。
+      8. 页面专属样式只能写在 PAGE_STYLE_START/END 之间，并以页面根类名开头。
+      9. 禁止 onclick、直接操作 DOM、window.location、.html 跳转、jQuery 和未登记依赖。
+      10. Element Plus 和其他自定义组件必须显式闭合，不能使用自闭合写法。
+      11. 不新增全局样式、CDN、外部字体和外部图片；独立预览依赖由模板统一提供。
+      12. 字号统一使用模板变量：页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px。
+          不允许依赖浏览器默认字号，也不得把详情字段放大到与区块标题相同的层级。
+      13. 查询、重置、刷新等紧凑工具操作使用图标按钮，并提供 Tooltip 与 aria-label；
+          编辑、删除、查看、审核、停用等业务操作使用文字按钮，不得改成只有图标的按钮。
+      14. 页面定案后不再修改 HTML，由导入器提取内容、覆盖层、逻辑和样式生成 Vue 页面。
+    -->
+
+    <!-- TEMPLATE-LOCK: 原型独立预览依赖。正式导入时整段移除。 -->
+    <!-- PROTOTYPE_DEPENDENCIES_START -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <!-- PROTOTYPE_DEPENDENCIES_END -->
+    <!-- [AI-EDIT] THEME_TOKENS_START: 仅在需要更换主题时修改这一组强调色、派生色与外壳结构色。 -->
+<style data-theme-tokens>
+      :root {
+        --app-color-primary: #00689E;
+        --app-color-primary-hover: #005B8A;
+        --app-color-primary-active: #004F78;
+        --app-color-primary-shadow: rgb(0 104 158 / 18%);
+        --app-color-primary-light-3: #4D95BB;
+        --app-color-primary-light-5: #80B4CF;
+        --app-color-primary-light-7: #B3D2E2;
+        --app-color-primary-light-8: #CCE1EC;
+        --app-color-primary-light-9: #E6F0F5;
+        --app-color-sidebar: rgb(246 247 249 / 94%);
+        --app-color-sidebar-border: rgb(60 60 67 / 12%);
+        --app-color-sidebar-text: #3a3a3c;
+        --app-color-sidebar-muted: #8e8e93;
+        --app-color-sidebar-hover: rgb(60 60 67 / 7%);
+      }
+    </style>
+<!-- THEME_TOKENS_END -->
+    <!-- TEMPLATE-LOCK: 主题桥接区用于让独立页面在不同宿主主题下保持语义颜色一致，不得删除或改名。 -->
+    <!-- PROTOTYPE_THEME_BRIDGE_START -->
+    <style data-theme-bridge>
+      /* 未设置 data-theme 时保持浅色默认值。 */
+      html[data-theme='light'] {
+        --app-color-sidebar: rgb(255 255 255 / 72%);
+        --app-color-sidebar-border: rgb(5 5 5 / 10%);
+        --app-color-sidebar-text: rgb(0 0 0 / 88%);
+        --app-color-sidebar-muted: rgb(0 0 0 / 45%);
+        --app-color-sidebar-hover: rgb(0 0 0 / 4%);
+        --app-color-text-primary: rgb(0 0 0 / 88%);
+        --app-color-text-secondary: rgb(0 0 0 / 65%);
+        --app-color-text-muted: rgb(0 0 0 / 45%);
+        --app-color-border: rgb(5 5 5 / 12%);
+        --app-color-border-light: rgb(5 5 5 / 8%);
+        --app-color-border-subtle: rgb(5 5 5 / 6%);
+        --app-color-surface: rgb(255 255 255 / 68%);
+        --app-color-surface-subtle: rgb(255 255 255 / 54%);
+        --app-color-surface-muted: rgb(255 255 255 / 62%);
+        --app-color-avatar-surface: #8c8c8c;
+        --app-color-host-page: #f5f7fa;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --app-color-sidebar: #141414;
+        --app-color-sidebar-border: #303030;
+        --app-color-sidebar-text: rgb(255 255 255 / 88%);
+        --app-color-sidebar-muted: rgb(255 255 255 / 45%);
+        --app-color-sidebar-hover: rgb(255 255 255 / 8%);
+        --app-color-text-primary: rgb(255 255 255 / 88%);
+        --app-color-text-secondary: rgb(255 255 255 / 65%);
+        --app-color-text-muted: rgb(255 255 255 / 45%);
+        --app-color-border: #434343;
+        --app-color-border-light: #303030;
+        --app-color-border-subtle: #262626;
+        --app-color-surface: #141414;
+        --app-color-surface-subtle: #1f1f1f;
+        --app-color-surface-muted: #1f1f1f;
+        --app-color-avatar-surface: #595959;
+        --app-color-host-page: #000;
+        color-scheme: dark;
+      }
+
+      /* 顶栏在深色主题下仍保留轻量半透明材质，不与内容区混成一块纯黑面板。 */
+      html[data-theme='light'] .prototype-topbar,
+      html[data-theme='dark'] .prototype-topbar {
+        border-color: color-mix(in srgb, var(--app-color-border-light) 80%, transparent);
+        background: color-mix(in srgb, var(--app-color-surface) 78%, transparent);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        backdrop-filter: blur(22px) saturate(145%);
+        -webkit-backdrop-filter: blur(22px) saturate(145%);
+      }
+
+      html[data-theme='dark'] .prototype-topbar {
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 8%),
+          0 10px 30px rgb(0 0 0 / 34%);
+      }
+
+      @media (prefers-reduced-transparency: reduce) {
+        html[data-theme='light'] .prototype-topbar,
+        html[data-theme='dark'] .prototype-topbar {
+          background: var(--app-color-surface);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_THEME_BRIDGE_END -->
+
+    <!-- TEMPLATE-LOCK: 与 Vue 工程一致的基础主题变量。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-project-page: #f5f5f7;
+        --app-color-host-page: var(--app-color-project-page);
+        --app-color-page: var(--app-color-host-page, var(--app-color-project-page));
+        --app-color-avatar-text: #ffffff;
+        --app-color-avatar-surface: #94a3b8;
+        --app-font-family-sans:
+          Arial, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+          'Source Han Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-color-primary-light-3: var(--app-color-primary-light-3);
+        --el-color-primary-light-5: var(--app-color-primary-light-5);
+        --el-color-primary-light-7: var(--app-color-primary-light-7);
+        --el-color-primary-light-8: var(--app-color-primary-light-8);
+        --el-color-primary-light-9: var(--app-color-primary-light-9);
+        --el-color-primary-dark-2: var(--app-color-primary-active);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        display: flex;
+        flex: 0 0 256px;
+        flex-direction: column;
+        width: 256px;
+        min-height: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar);
+        border-right: 1px solid var(--app-color-sidebar-border);
+        backdrop-filter: blur(24px) saturate(160%);
+      }
+
+      .prototype-brand {
+        flex: 0 0 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 64px;
+        padding: 0 24px;
+        margin: 0;
+        border-bottom: 1px solid var(--app-color-sidebar-border);
+        border-radius: 0;
+        background: transparent;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--app-color-sidebar-text);
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--app-color-sidebar-muted);
+        white-space: nowrap;
+      }
+
+      .prototype-menu {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 12px;
+        overflow-y: auto;
+        scrollbar-color: rgb(60 60 67 / 22%) transparent;
+        scrollbar-width: thin;
+      }
+
+      .prototype-menu::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .prototype-menu::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .prototype-menu::-webkit-scrollbar-thumb {
+        background: rgb(60 60 67 / 22%);
+        border-radius: 999px;
+      }
+
+      .prototype-menu-group {
+        position: relative;
+        margin: 0 12px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(--app-color-sidebar-muted);
+      }
+
+      .prototype-menu-item + .prototype-menu-group {
+        padding-top: 24px;
+        margin-top: 12px;
+      }
+
+      .prototype-menu-item + .prototype-menu-group::before {
+        position: absolute;
+        top: 0;
+        right: -12px;
+        left: -12px;
+        height: 1px;
+        content: '';
+        background: var(--app-color-sidebar-border);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        min-height: 40px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        color: var(--app-color-sidebar-text);
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .prototype-menu-icon {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--app-color-sidebar-muted);
+        font-size: 20px;
+      }
+
+      .prototype-menu-item > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-menu-item:hover {
+        color: var(--app-color-sidebar-text);
+        background: var(--app-color-sidebar-hover);
+      }
+
+      .prototype-menu-item.is-active {
+        color: var(--app-color-primary);
+        background: var(--app-color-primary-light-9);
+        font-weight: 600;
+      }
+
+      .prototype-menu-item:hover .prototype-menu-icon {
+        color: var(--app-color-sidebar-text);
+      }
+
+      .prototype-menu-item.is-active .prototype-menu-icon {
+        color: var(--app-color-primary);
+      }
+
+      .prototype-menu-item:focus-visible {
+        outline: 2px solid var(--app-color-primary);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prototype-menu-item {
+          transition: none;
+        }
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: var(--app-color-surface);
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: var(--app-color-avatar-text);
+        background: var(--app-color-avatar-surface);
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+
+      /*
+        窄屏外壳降级：侧边栏收成 64px 图标栏，让出宽度给内容区。
+        菜单文字用裁剪方式隐藏而不是 display:none，读屏器仍可读到。
+      */
+      @media (max-width: 1080px) {
+        .prototype-sidebar {
+          flex: 0 0 64px;
+          width: 64px;
+        }
+
+        .prototype-brand {
+          justify-content: center;
+          padding: 0;
+        }
+
+        .prototype-menu {
+          padding: 12px 8px;
+        }
+
+        .prototype-menu-item {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .prototype-brand > span,
+        .prototype-brand small,
+        .prototype-menu-group,
+        .prototype-menu-item > span:last-child {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          white-space: nowrap;
+          clip-path: inset(50%);
+        }
+
+        .prototype-menu-item + .prototype-menu-group {
+          position: static;
+          width: auto;
+          height: 1px;
+          padding: 0;
+          margin: 12px 0;
+          overflow: visible;
+          clip-path: none;
+          background: var(--app-color-sidebar-border);
+          font-size: 0;
+        }
+
+        .prototype-menu-item + .prototype-menu-group::before {
+          display: none;
+        }
+
+        .prototype-topbar {
+          padding: 0 16px;
+        }
+
+        .prototype-main {
+          padding: 16px;
+        }
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 保留旧页面视觉样式；后续维护时逐步收敛到页面根类。 -->
+<style data-page-style>
+/* LEGACY_PAGE_STYLE_START: 原历史页面样式，未覆盖原文件；请按页面根类逐步整理。 */
+html {
+            overflow-y: scroll;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--app-font-family-sans);
+            background-color: #f3f4f6;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .login-brand {
+            background-image:
+                linear-gradient(135deg, color-mix(in srgb, var(--app-color-primary) 92%, transparent) 0%, rgba(2, 132, 199, 0.75) 100%),
+                url('login_bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+/* LEGACY_PAGE_STYLE_END */
+
+      /* 窄屏内容降级：分页收起跳页输入；宽表格由 el-table 在面板内自行横向滚动。 */
+      @media (max-width: 1080px) {
+        .el-pagination .el-pagination__jump {
+          display: none;
+        }
+      }
+</style>
+<!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] 页面元数据。由历史 HTML 转换生成，可继续手动维护。 -->
+    <script id="prototype-page-manifest" type="application/json">{
+  "templateVersion": 1,
+  "fileName": "login.html",
+  "scriptMode": "composition-api",
+  "pageKey": "login",
+  "pageTitle": "后台登录",
+  "pageType": "login",
+  "pageHeaderMode": "none",
+  "client": "operation",
+  "routePath": "/operation/login",
+  "menuSection": null,
+  "menuTitle": "后台登录",
+  "menuIcon": "Document",
+  "menu": false,
+  "sourceFile": "营运端/login.html",
+  "legacySource": true
+}</script>
+  
+<style id="platform-html-content-only">
+  html,
+  body,
+  #app {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .app-sidebar,
+  .topbar,
+  .sidebar-scrim,
+  .prototype-sidebar,
+  .prototype-topbar {
+    display: none !important;
+  }
+  .page-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .page-container {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+  .prototype-app {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .prototype-workspace {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .prototype-main {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 24px 28px 32px !important;
+    overflow: visible !important;
+  }
+</style></head>
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- PROTOTYPE_SHELL_START -->
+      <div class="prototype-workspace legacy-login-workspace">
+  <header class="prototype-topbar" data-prototype-shell="topbar">
+    <div class="prototype-breadcrumb">营运端 / 登录</div>
+    <div class="prototype-user"><span class="prototype-avatar">A</span><span>Admin</span></div>
+  </header>
+      <main class="prototype-main legacy-login-main">
+<!-- [AI-EDIT] PAGE_CONTENT_START: 当前页面业务内容；模板化副本由历史 HTML 转换生成。 -->
+<section class="legacy-page legacy-login" data-page-content data-page-root="legacy-login" data-page-key="login">
+  <div data-business-content data-layout-type="legacy">
+<div class="min-h-screen flex items-center justify-center px-4 py-8">
+            <div 
+                class="max-w-5xl w-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col lg:flex-row lg:min-h-[620px]">
+                <!-- 左侧品牌区 -->
+                <div class="login-brand hidden lg:flex lg:w-1/2 text-white flex-col justify-between p-8">
+                    <div>
+                        <div class="space-y-4">
+                            <h2 class="text-3xl font-semibold leading-tight">
+                                {{ texts.brandTitle }}
+                            </h2>
+                            <p class="text-white/80 text-sm leading-relaxed">
+                                {{ texts.brandSubtitle }}
+                            </p>
+                            <ul class="mt-4 space-y-2 text-sm text-white/85">
+                                <li class="flex items-center">
+                                    <span 
+                                        class="w-1.5 h-1.5 rounded-full bg-emerald-300 mr-2 shadow-sm shadow-emerald-900/40"></span>
+                                    {{ texts.brandBullet1 }}
+                                </li>
+                                <li class="flex items-center">
+                                    <span 
+                                        class="w-1.5 h-1.5 rounded-full bg-amber-300 mr-2 shadow-sm shadow-amber-900/40"></span>
+                                    {{ texts.brandBullet2 }}
+                                </li>
+                                <li class="flex items-center">
+                                    <span 
+                                        class="w-1.5 h-1.5 rounded-full bg-sky-300 mr-2 shadow-sm shadow-sky-900/40"></span>
+                                    {{ texts.brandBullet3 }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="text-xs text-white/60 mt-8">
+                        © {{ new Date().getFullYear() }} RIMO Rental. All rights reserved.
+                    </div>
+                </div>
+
+                <!-- 右侧表单区 -->
+                <div class="w-full lg:w-1/2 px-6 py-8 sm:px-10 sm:py-10 flex flex-col bg-white">
+                    <!-- 顶部标识与语言切换 -->
+                    <div class="flex items-center justify-between mb-8">
+                        <img src="logo.png" alt="RIMO Logo" class="h-8 w-auto">
+                        <el-segmented v-model="currentLang" size="small" :options="langOptions"></el-segmented>
+                    </div>
+
+                    <!-- 标题与说明 -->
+                    <div class="mb-8 min-h-[92px]">
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                            {{ texts.title }}
+                        </h1>
+                        <p class="mt-2 text-sm text-gray-500 leading-relaxed">
+                            {{ texts.subtitle }}
+                        </p>
+                    </div>
+
+                    <!-- 登录表单 -->
+                    <el-form :model="form" ref="formRef" size="large" label-position="top" class="space-y-4">
+                        <!-- 群组代码 / 租户编码 -->
+                        <el-form-item :label="texts.tenantLabel" prop="tenantCode"
+                            :rules="[{ required: true, message: texts.tenantRequired, trigger: 'blur' }]">
+                            <el-input v-model="form.tenantCode" :placeholder="texts.tenantPlaceholder"
+                                autocomplete="organization">
+                                <template #prefix>
+                                    <el-icon>
+                                        <Tickets></Tickets>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="texts.accountLabel" prop="account"
+                            :rules="[{ required: true, message: texts.accountRequired, trigger: 'blur' }]">
+                            <el-input v-model="form.account" :placeholder="texts.accountPlaceholder"
+                                autocomplete="username">
+                                <template #prefix>
+                                    <el-icon>
+                                        <User></User>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="texts.passwordLabel" prop="password"
+                            :rules="[{ required: true, message: texts.passwordRequired, trigger: 'blur' }, { min: 6, message: texts.passwordMin, trigger: 'blur' }]">
+                            <el-input v-model="form.password" :placeholder="texts.passwordPlaceholder" show-password
+                                type="password" autocomplete="current-password">
+                                <template #prefix>
+                                    <el-icon>
+                                        <Lock></Lock>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <!-- 验证码 -->
+                        <div class="grid grid-cols-3 gap-3">
+                            <el-form-item class="col-span-2" :label="texts.captchaLabel" prop="captcha"
+                                :rules="[{ required: true, message: texts.captchaRequired, trigger: 'blur' }]">
+                                <el-input v-model="form.captcha" :placeholder="texts.captchaPlaceholder"
+                                    autocomplete="off">
+                                    <template #prefix>
+                                        <el-icon>
+                                            <Key></Key>
+                                        </el-icon>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <div class="flex flex-col justify-end">
+                                <div class="h-[42px] w-full flex items-center justify-center rounded-lg border text-sm cursor-pointer select-none
+                                    bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-600"
+                                    @click="refreshCaptcha">
+                                    <span v-if="captchaUrl">{{ texts.captchaImageText }}</span>
+                                    <span v-else>{{ texts.captchaPlaceholderImage }}</span>
+                                </div>
+                                <button type="button" class="mt-1 text-xs text-gray-400 hover:text-gray-500 text-right"
+                                    @click="refreshCaptcha">
+                                    {{ texts.captchaRefresh }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 记住我 + 忘记密码 -->
+                        <div class="flex items-center justify-between mt-1 mb-2">
+                            <el-checkbox v-model="form.rememberMe">
+                                {{ texts.rememberMe }}
+                            </el-checkbox>
+                            <a href="#" class="text-xs text-[color:var(--app-color-primary)] hover:text-[color:var(--app-color-primary-hover)]">
+                                {{ texts.forgotPassword }}
+                            </a>
+                        </div>
+
+                        <!-- 登录按钮 -->
+                        <el-button type="primary" :loading="loading" :disabled="loading"
+                            class="w-full h-11 mt-3 text-base font-semibold" @click="handleLogin">
+                            {{ texts.loginButton }}
+                        </el-button>
+                    </el-form>
+
+                    <div class="mt-8 text-xs text-gray-400 text-center">
+                        {{ texts.footerNote }}
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</section>
+<!-- PAGE_CONTENT_END -->
+      </main>
+      </div>
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 页面弹窗与抽屉统一放在这里。 -->
+<div data-page-overlay="overlay" data-block-id="legacy-overlays" data-block-name="历史页面覆盖层">
+<!-- 当前页面没有独立覆盖层。 -->
+</div>
+<!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- PROTOTYPE_DEPENDENCIES_START -->
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+    <!-- PROTOTYPE_DEPENDENCIES_END -->
+
+<!-- [AI-EDIT] PAGE_LOGIC_START: 保留历史页面逻辑；维护时优先整理为 Vue 组件逻辑。 -->
+<script data-page-script>
+/* [AI-EDIT] PAGE_LOGIC_START */
+function pageSetup() {
+const { createApp, ref, reactive, computed } = Vue;
+        const { ElMessage } = ElementPlus;
+const currentLang = ref('zh-CN');
+                const formRef = ref(null);
+                const loading = ref(false);
+
+                const form = reactive({
+                    tenantCode: 'demo',
+                    account: 'admin',
+                    password: '123456',
+                    captcha: '8888',
+                    rememberMe: true
+                });
+
+                const captchaUrl = ref('');
+
+                const langOptions = [
+                    { label: '简', value: 'zh-CN' },
+                    { label: '繁', value: 'zh-TW' },
+                    { label: 'EN', value: 'en-US' }
+                ];
+
+                const i18nTexts = {
+                    'zh-CN': {
+                        brandTitle: 'RIMO Rental Solution',
+                        brandSubtitle: '统一管理车辆资产、订单租赁、会员与企业客户，支撑多场景的用车业务运营。',
+                        brandBullet1: '实时掌握车辆状态与调度排程',
+                        brandBullet2: '多维度会员与企业客户管理',
+                        brandBullet3: '支持门市租赁、分时租赁等多业务模式',
+                        title: '营运后台登录',
+                        subtitle: '请使用分配的后台账号登录 RIMO Rental 管理系统。',
+                        tenantLabel: '群组代码 / 租户编码',
+                        tenantPlaceholder: '请输入所属租户的群组代码',
+                        tenantRequired: '请输入群组代码 / 租户编码',
+                        accountLabel: '账号',
+                        accountPlaceholder: '邮箱 / 手机号 / 工号',
+                        accountRequired: '请输入账号',
+                        passwordLabel: '密码',
+                        passwordPlaceholder: '请输入密码',
+                        passwordRequired: '请输入密码',
+                        passwordMin: '密码长度至少 6 位',
+                        captchaLabel: '验证码',
+                        captchaPlaceholder: '请输入右侧验证码',
+                        captchaRequired: '请输入验证码',
+                        captchaImageText: '图形验证码区域',
+                        captchaPlaceholderImage: '点击获取验证码',
+                        captchaRefresh: '看不清？换一张',
+                        rememberMe: '记住我（7 天内免登录）',
+                        forgotPassword: '忘记密码？',
+                        loginButton: '登录',
+                        footerNote: '如需开通后台账号，请联系系统管理员。'
+                    },
+                    'zh-TW': {
+                        brandTitle: 'RIMO Rental Solution',
+                        brandSubtitle: '統一管理車輛資產、訂單租賃、會員與企業客戶，支援多場景的用車業務營運。',
+                        brandBullet1: '即時掌握車輛狀態與調度排程',
+                        brandBullet2: '多維度會員與企業客戶管理',
+                        brandBullet3: '支援門市租賃、分時租賃等多業務模式',
+                        title: '後台登入',
+                        subtitle: '請使用分配的後台帳號登入 RIMO Rental 管理系統。',
+                        tenantLabel: '群組代碼 / 租戶編碼',
+                        tenantPlaceholder: '請輸入所屬租戶的群組代碼',
+                        tenantRequired: '請輸入群組代碼 / 租戶編碼',
+                        accountLabel: '帳號',
+                        accountPlaceholder: 'Email / 手機號 / 工號',
+                        accountRequired: '請輸入帳號',
+                        passwordLabel: '密碼',
+                        passwordPlaceholder: '請輸入密碼',
+                        passwordRequired: '請輸入密碼',
+                        passwordMin: '密碼長度至少 6 位',
+                        captchaLabel: '驗證碼',
+                        captchaPlaceholder: '請輸入右側驗證碼',
+                        captchaRequired: '請輸入驗證碼',
+                        captchaImageText: '圖形驗證碼區域',
+                        captchaPlaceholderImage: '點擊取得驗證碼',
+                        captchaRefresh: '看不清？換一張',
+                        rememberMe: '記住我（7 天內免登入）',
+                        forgotPassword: '忘記密碼？',
+                        loginButton: '登入',
+                        footerNote: '如需開通後台帳號，請聯絡系統管理員。'
+                    },
+                    'en-US': {
+                        brandTitle: 'RIMO Rental Solution',
+                        brandSubtitle: 'Manage vehicles, rentals, and customers in one place to support multi-scenario fleet operations.',
+                        brandBullet1: 'Real-time vehicle status & dispatch scheduling',
+                        brandBullet2: 'Unified member and enterprise customer management',
+                        brandBullet3: 'Supports counter rental and time-share business models',
+                        title: 'Admin Sign In',
+                        subtitle: 'Use your assigned admin account to sign in to the RIMO Rental console.',
+                        tenantLabel: 'Tenant / Group Code',
+                        tenantPlaceholder: 'Enter your tenant/group code',
+                        tenantRequired: 'Please enter tenant/group code',
+                        accountLabel: 'Account',
+                        accountPlaceholder: 'Email / Phone / Employee ID',
+                        accountRequired: 'Please enter account',
+                        passwordLabel: 'Password',
+                        passwordPlaceholder: 'Enter your password',
+                        passwordRequired: 'Please enter password',
+                        passwordMin: 'Password must be at least 6 characters',
+                        captchaLabel: 'Captcha',
+                        captchaPlaceholder: 'Enter the code on the right',
+                        captchaRequired: 'Please enter captcha',
+                        captchaImageText: 'Captcha image area',
+                        captchaPlaceholderImage: 'Click to load captcha',
+                        captchaRefresh: 'Can’t see clearly? Refresh',
+                        rememberMe: 'Remember me (7 days)',
+                        forgotPassword: 'Forgot password?',
+                        loginButton: 'Sign In',
+                        footerNote: 'Contact your system administrator if you need an admin account.',
+                        loginSuccess: 'Signed in successfully, redirecting...'
+                    }
+                };
+
+                const texts = computed(() => i18nTexts[currentLang.value] || i18nTexts['zh-CN']);
+
+                const refreshCaptcha = () => {
+                    // TODO: 接入后端验证码图片接口，更新 captchaUrl
+                    captchaUrl.value = String(Date.now());
+                    console.log('刷新验证码占位，captchaUrl:', captchaUrl.value);
+                };
+
+                const handleLogin = () => {
+                    if (!formRef.value) return;
+                    formRef.value.validate((valid) => {
+                        if (!valid) return;
+
+                        loading.value = true;
+
+                        // TODO: 调用后端登录 API，传入 tenantCode/account/password/captcha/rememberMe
+                        const payload = {
+                            tenantCode: form.tenantCode,
+                            account: form.account,
+                            password: form.password,
+                            captcha: form.captcha,
+                            rememberMe: form.rememberMe
+                        };
+                        console.log('模拟登录提交: ', payload);
+
+                        setTimeout(() => {
+                            loading.value = false;
+                            ElMessage.success(texts.value.loginSuccess || '登录成功，正在跳转...');
+                            window.location.href = 'workbench.html';
+                        }, 800);
+                    });
+                };
+
+                return {
+                    currentLang,
+                    form,
+                    formRef,
+                    loading,
+                    captchaUrl,
+                    langOptions,
+                    texts,
+                    refreshCaptcha,
+                    handleLogin
+                };
+}
+/* PAGE_LOGIC_END */
+</script>
+<script data-page-bootstrap>
+  const app = Vue.createApp({ setup: pageSetup });
+  function registerLegacyComponents(app) {
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component);
+        }
+  }
+  registerLegacyComponents(app);
+  app.use(ElementPlus);
+  if (typeof ElementPlusIconsVue !== 'undefined') {
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+  }
+  app.mount('#app');
+</script>
+
+  </body>
+</html>

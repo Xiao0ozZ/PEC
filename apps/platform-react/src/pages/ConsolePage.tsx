@@ -2,12 +2,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { platformApi } from '@/data/platform-api';
-import { Alert, Button, Flex, List, Switch, Tag, Typography } from '@/ui/ant';
+import { Alert, Button, Flex, Switch, Tag, Typography } from '@/ui/ant';
 import {
   AppstoreOutlined,
   ArrowRightOutlined,
   DatabaseOutlined,
-  FileTextOutlined,
   FolderOpenOutlined,
   OrderedListOutlined,
 } from '@/ui/ant/icons';
@@ -29,12 +28,6 @@ const tools = [
     description: '维护菜单分组、页面顺序、PRD 关联与备份。',
     to: '/tools/project-routes',
     icon: <OrderedListOutlined />,
-  },
-  {
-    title: '页面导入导出',
-    description: '检查、导入、替换或导出规范 HTML 页面。',
-    to: '/tools/page-transfer',
-    icon: <FileTextOutlined />,
   },
   {
     title: 'AI 上下文中心',
@@ -67,7 +60,7 @@ export function ConsolePage() {
   return (
     <PlatformPage
       title="控制台"
-      description="管理平台级项目资料、页面路由、导入导出和交付上下文。"
+      description="管理平台级项目资料、页面路由和交付上下文。"
       actions={
         <Tag color={canPersist ? 'processing' : 'default'}>{canPersist ? '本机开发服务' : '静态只读'}</Tag>
       }
@@ -114,29 +107,24 @@ export function ConsolePage() {
           </div>
           <Text type="secondary">{tools.length} 个入口</Text>
         </header>
-        <List
-          dataSource={tools}
-          renderItem={(tool) => (
-            <List.Item
-              actions={[
-                <Button
-                  key="open"
-                  type="text"
-                  icon={<ArrowRightOutlined />}
-                  onClick={() => navigate(tool.to)}
-                >
-                  打开
-                </Button>,
-              ]}
-            >
-              <List.Item.Meta
-                avatar={<span className="console-tool-list__icon">{tool.icon}</span>}
-                title={tool.title}
-                description={tool.description}
-              />
-            </List.Item>
-          )}
-        />
+        <ul className="console-tool-list__items">
+          {tools.map((tool) => (
+            <li className="console-tool-list__item" key={tool.to}>
+              <div className="console-tool-list__meta">
+                <span className="console-tool-list__icon" aria-hidden="true">
+                  {tool.icon}
+                </span>
+                <div className="console-tool-list__content">
+                  <strong>{tool.title}</strong>
+                  <Text type="secondary">{tool.description}</Text>
+                </div>
+              </div>
+              <Button type="text" icon={<ArrowRightOutlined />} onClick={() => navigate(tool.to)}>
+                打开
+              </Button>
+            </li>
+          ))}
+        </ul>
       </Surface>
     </PlatformPage>
   );

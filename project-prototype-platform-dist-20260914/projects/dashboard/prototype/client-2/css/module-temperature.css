@@ -1,0 +1,398 @@
+/* ==========================================================================
+   溫度管理 — 模組版面
+   --------------------------------------------------------------------------
+   卡片質感一律來自 ds.css 的 .ds-panel；本檔只寫模組內部排列。
+   全檔零字面色值。
+   ========================================================================== */
+
+/* ==========================================================================
+   溫度總覽（W）
+   主數 + 三個場域格。場域格可點，進該場域的明細。
+   ========================================================================== */
+
+.tmp-kpi { justify-content: center; }
+
+.tmp-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.tmp-kpi-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border: 0;
+    border-left: 1px solid var(--ln-hair);
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+}
+
+.tmp-kpi-cell:first-child { border-left: 0; padding-left: 0; }
+
+.tmp-kpi-cell.is-clickable {
+    cursor: pointer;
+    border-radius: var(--fx-r-inner);
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.tmp-kpi-cell.is-clickable:hover { background: var(--lv-soft); }
+.tmp-kpi-cell.is-clickable:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.tmp-kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.tmp-kpi-label > svg, .tmp-kpi-label > i { width: 13px; height: 13px; color: var(--lv, var(--ink-3)); }
+
+.tmp-kpi-val { display: flex; align-items: baseline; gap: 3px; min-width: 0; }
+
+.tmp-kpi-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--lv, var(--ink-1));
+}
+
+.tmp-kpi-val > em {
+    font-style: normal;
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    white-space: nowrap;
+}
+
+.tmp-kpi-foot { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+@media (max-width: 1100px) {
+    .tmp-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tmp-kpi-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+/* ==========================================================================
+   場域狀態環圖（S）
+   ========================================================================== */
+
+.tmp-status-body {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    gap: var(--sp-2);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.tmp-status-chart { position: relative; min-height: 104px; }
+
+.tmp-status-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    pointer-events: none;
+}
+
+.tmp-status-center > span { font-size: var(--fs-micro); color: var(--ink-3); }
+
+.tmp-status-center > strong {
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-s);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink-1);
+}
+
+.tmp-status-center > strong > em {
+    font-style: normal;
+    font-size: var(--fs-note);
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+.tmp-status-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+
+.tmp-status-list > li {
+    display: grid;
+    grid-template-columns: 7px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+}
+
+.tmp-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lv); }
+
+.tmp-status-list > li > b {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+}
+
+.tmp-status-list > li > em { font-style: normal; font-size: var(--fs-micro); color: var(--ink-3); }
+
+.tmp-status-note { margin: 0; color: var(--ink-3); font-size: var(--fs-micro); }
+
+/* ==========================================================================
+   異常累計分析（L）
+   --------------------------------------------------------------------------
+   左右兩欄：左是各溫度計的堆疊佔比，右是壓縮機運行區間。
+   兩者並排才能看出「異常是不是落在壓縮機沒開的時段」。
+   ========================================================================== */
+
+.tmp-top-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--sp-3);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.tmp-top-chart, .tmp-top-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+.tmp-top-cap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+    flex: none;
+    margin-bottom: var(--sp-1);
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+}
+
+.tmp-sensor-legend > span::before { background: var(--lv); }
+
+/* --- 壓縮機區間軌 --------------------------------------------------------
+   一天 24 小時映射到軌道全寬，區間條的位置即起訖時間。
+   ------------------------------------------------------------------------ */
+.tmp-rail-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.tmp-rail-list > li + li { border-top: 1px solid var(--ln-hair); }
+
+.tmp-rail-list button {
+    display: grid;
+    gap: 3px;
+    width: 100%;
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    border-radius: var(--fx-r-inner);
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.tmp-rail-list button:hover { background: var(--sf-hover); }
+.tmp-rail-list button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+.tmp-rail-list > li.is-spot button {
+    background: var(--brand-soft);
+    box-shadow: inset 2px 0 0 var(--brand);
+}
+
+.tmp-rail-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); min-width: 0; }
+
+.tmp-rail-head > strong {
+    font-size: var(--fs-note);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tmp-rail-dev { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+.tmp-rail-track {
+    position: relative;
+    display: block;
+    height: var(--mk-bar-h-sm);
+    border-radius: 999px;
+    background: var(--sf-inset);
+    box-shadow: var(--fx-track-inset);
+    overflow: hidden;
+}
+
+/* 壓縮機運行區間。用 info 色而非狀態色 —— 這是「設備在運轉」的事實，
+   不是好或壞的判斷。 */
+.tmp-rail-comp {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 999px;
+    background: var(--st-info);
+    opacity: .85;
+}
+
+.tmp-rail-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.tmp-rail-meta > b { color: var(--st-critical); font-weight: 600; }
+
+.tmp-top-note {
+    flex: none;
+    margin: var(--sp-2) 0 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .tmp-top-body { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   無線溫度設備健康（M）
+   ========================================================================== */
+
+.tmp-dev-tally { display: inline-flex; gap: var(--sp-1); flex-wrap: wrap; }
+
+.tmp-dev-table { flex: none; }
+
+.tmp-dev-table tr.is-clickable { cursor: pointer; }
+.tmp-dev-table tr.is-clickable:hover { background: var(--sf-hover); }
+
+.tmp-dev-band { min-width: 100px; height: var(--mk-bar-h-sm); }
+
+.tmp-devices .is-notice-text { color: var(--st-notice); font-weight: 600; }
+.tmp-devices .is-offline-text { color: var(--st-offline); font-weight: 600; }
+
+/* ==========================================================================
+   溫度合規率趨勢（S）
+   ========================================================================== */
+
+.tmp-trend .ds-panel-sub { display: flex; align-items: center; gap: var(--sp-1); }
+.tmp-trend .is-up { color: var(--st-normal); font-weight: 600; }
+.tmp-trend .is-down { color: var(--st-critical); font-weight: 600; }
+
+/* ==========================================================================
+   M06-5 溫控最佳與預警（W）
+   --------------------------------------------------------------------------
+   V7 第 13 頁第 2、3 點是兩個獨立指標，因此並排兩張對象卡，第三格放公式。
+   客戶明確寫了公式，讀者需要知道這個數字是怎麼算出來的。
+   ========================================================================== */
+
+.tmp-best { justify-content: center; }
+
+.tmp-best-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.tmp-best-cell,
+.tmp-best-formula {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border: 0;
+    border-left: 1px solid var(--ln-hair);
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+}
+
+.tmp-best-cell:first-child { border-left: 0; padding-left: 0; }
+
+.tmp-best-cell {
+    cursor: pointer;
+    border-radius: var(--fx-r-inner);
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.tmp-best-cell:hover { background: var(--lv-soft); }
+.tmp-best-cell:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.tmp-best-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.tmp-best-label > svg, .tmp-best-label > i { width: 13px; height: 13px; color: var(--lv, var(--ink-3)); }
+
+/* 對象名稱用界面字體：它是文字不是數字 */
+.tmp-best-obj {
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    color: var(--ink-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tmp-best-val { display: flex; align-items: baseline; gap: 3px; }
+
+.tmp-best-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-s);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--lv, var(--ink-1));
+}
+
+.tmp-best-val > em { font-style: normal; font-size: var(--fs-micro); color: var(--ink-3); }
+
+.tmp-best-foot { font-size: var(--fs-micro); color: var(--ink-3); white-space: nowrap; }
+
+/* 公式用等寬字體：它是式子不是句子 */
+.tmp-best-formula > code {
+    font-family: var(--fx-font-mono);
+    font-size: var(--fs-note);
+    color: var(--ink-1);
+    background: var(--sf-inset);
+    border: 1px solid var(--ln-hair);
+    border-radius: var(--fx-r-inner);
+    padding: 3px var(--sp-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1100px) {
+    .tmp-best-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tmp-best-formula { grid-column: 1 / -1; border-left: 0; padding-left: 0; }
+}

@@ -230,7 +230,11 @@ export function ProjectPackagesPage() {
             title="异常项目"
             value={invalidProjects.length}
             suffix="个"
-            styles={invalidProjects.length ? { content: { color: '#d46b08' } } : undefined}
+            styles={
+              invalidProjects.length
+                ? { content: { color: 'var(--ant-color-warning)' } }
+                : undefined
+            }
           />
           <Statistic title="当前权限" value={canManageProjects ? '可管理' : '只读'} />
         </Flex>

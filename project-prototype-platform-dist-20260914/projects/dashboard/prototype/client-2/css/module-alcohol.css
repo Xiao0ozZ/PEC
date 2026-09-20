@@ -1,0 +1,331 @@
+/* ==========================================================================
+   酒測管理 — 模組版面
+   --------------------------------------------------------------------------
+   卡片質感一律來自 ds.css 的 .ds-panel；本檔只寫模組內部排列。
+   全檔零字面色值。
+   ========================================================================== */
+
+/* ==========================================================================
+   M05-1 酒測總覽（W）
+   四格等寬。不通過與未吹是「要追的人」，因此那兩格可點，並帶入口提示。
+   ========================================================================== */
+
+.alc-kpi { justify-content: center; }
+
+.alc-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    min-width: 0;
+}
+
+.alc-kpi-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 0 var(--sp-3);
+    border-left: 1px solid var(--ln-hair);
+    /* 可點格用的是 button，要抹掉原生外觀才能與 div 格對齊 */
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+}
+
+.alc-kpi-cell:first-child { border-left: 0; padding-left: 0; }
+
+/* 可點的格：整格是入口，因此給 hover 與焦點態 */
+.alc-kpi-cell.is-clickable {
+    cursor: pointer;
+    border-radius: var(--fx-r-inner);
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.alc-kpi-cell.is-clickable:hover { background: var(--lv-soft); }
+.alc-kpi-cell.is-clickable:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.alc-kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    font-size: var(--fs-note);
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.alc-kpi-label > svg, .alc-kpi-label > i { width: 13px; height: 13px; color: var(--lv, var(--ink-3)); }
+
+.alc-kpi-val { display: flex; align-items: baseline; gap: 2px; min-width: 0; }
+
+.alc-kpi-val > strong {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--lv, var(--ink-1));
+}
+
+/* 對象名稱是文字不是數字 */
+.alc-kpi-val.is-object > strong {
+    font-family: var(--fx-font-ui);
+    font-size: var(--fs-lead);
+    letter-spacing: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.alc-kpi-val > em { font-style: normal; font-size: var(--fs-note); color: var(--ink-3); }
+
+.alc-kpi-foot {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1100px) {
+    .alc-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alc-kpi-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+/* ==========================================================================
+   M05-2 酒測結果構成（環圖）
+   ========================================================================== */
+
+.alc-donut-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    /* 同 ops-donut：stretch 才能給圖表欄確定高度，見該檔註解。 */
+    align-items: stretch;
+    gap: var(--sp-2);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.alc-donut-chart { position: relative; min-width: 0; min-height: 126px; }
+
+.alc-donut-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    pointer-events: none;
+}
+
+.alc-donut-center > span { font-size: var(--fs-micro); color: var(--ink-3); }
+
+.alc-donut-center > strong {
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-num-m);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink-1);
+}
+
+.alc-donut-center > strong > em {
+    font-style: normal;
+    font-size: var(--fs-note);
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+.alc-donut-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-1);
+}
+
+.alc-donut-list > li {
+    display: grid;
+    grid-template-columns: 7px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: 22px;
+}
+
+.alc-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lv); }
+
+.alc-donut-name { font-size: var(--fs-note); color: var(--ink-2); white-space: nowrap; }
+
+.alc-donut-list > li > b {
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+}
+
+.alc-donut-unit { font-size: var(--fs-micro); color: var(--ink-3); }
+
+/* ==========================================================================
+   M05-3 站所酒測構成
+   ========================================================================== */
+
+.alc-legend > span::before { background: var(--lv); }
+.alc-seg { min-width: 96px; height: var(--mk-bar-h-sm); }
+
+/* ==========================================================================
+   M05-4／M05-5 人員排行
+   --------------------------------------------------------------------------
+   兩個排行共用同一種列版面：左邊人＋所屬，中間量值條，右邊連續天數。
+   使用者不必學兩種排行。
+   ========================================================================== */
+
+.alc-people-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.alc-people-list > li + li { border-top: 1px solid var(--ln-hair); }
+
+.alc-people-list button {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(64px, 1.1fr) auto;
+    align-items: center;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-2) var(--sp-1);
+    border: 0;
+    border-radius: var(--fx-r-inner);
+    background: none;
+    color: var(--ink-1);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mo-fast) var(--ease);
+}
+
+.alc-people-list button:hover { background: var(--sf-hover); }
+.alc-people-list button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+/* 輪播高亮：位置不動，只有標記在走 */
+.alc-people-list > li.is-spot button {
+    background: var(--lv-soft);
+    box-shadow: inset 2px 0 0 var(--lv);
+}
+
+.alc-person { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.alc-person-name {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.alc-person-meta {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- 酒測值刻度條 --------------------------------------------------------
+   條長是酒測值，刻痕是法定標準。只給數字看不出 0.17 與 0.42 的嚴重度差異，
+   有了標準線就一眼知道超出多少。
+   ------------------------------------------------------------------------ */
+.alc-gauge { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+
+.alc-gauge-track {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 40px;
+    height: var(--mk-bar-h-sm);
+    border-radius: 999px;
+    background: var(--sf-inset);
+    box-shadow: var(--fx-track-inset);
+    overflow: hidden;
+}
+
+.alc-gauge-track > b {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--lv);
+    transition: width var(--mo-slow) var(--ease);
+}
+
+/* 標準線：一道跨越條高的細刻痕。overflow:hidden 會裁掉超出的部分，
+   因此刻痕畫在條內而不是條外。 */
+.alc-gauge-limit {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    width: 2px;
+    background: var(--ink-1);
+    opacity: .6;
+    transform: translateX(-1px);
+}
+
+.alc-gauge > em {
+    font-style: normal;
+    font-family: var(--fx-font-num);
+    font-size: var(--fs-note);
+    font-weight: 700;
+    color: var(--lv);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.alc-days { min-width: 40px; }
+
+/* ==========================================================================
+   M05-6 通過率趨勢
+   ========================================================================== */
+
+.alc-trend .ds-panel-sub { display: flex; align-items: center; gap: var(--sp-1); }
+.alc-trend .is-up { color: var(--st-normal); font-weight: 600; }
+.alc-trend .is-down { color: var(--st-critical); font-weight: 600; }
+
+/* ==========================================================================
+   M05-7 站所酒測明細（L）
+   ========================================================================== */
+
+.alc-table-wrap { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+.alc-table .is-down { color: var(--st-critical); font-weight: 600; }
+.alc-table .is-warnish { color: var(--st-warn); font-weight: 600; }
+
+.alc-table-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand);
+    font-family: inherit;
+    font-size: var(--fs-note);
+    cursor: pointer;
+}
+
+.alc-table-link:hover { text-decoration: underline; }
+
+.alc-table-note {
+    flex: none;
+    margin: var(--sp-2) 0 0;
+    color: var(--ink-3);
+    font-size: var(--fs-micro);
+    text-align: center;
+}

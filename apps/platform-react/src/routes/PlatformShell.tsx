@@ -11,9 +11,9 @@ import {
   OrderedListOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
-  UploadOutlined,
 } from '@/ui/ant/icons';
 import { AppSidebar } from '@/ui/platform/AppSidebar';
+import { PlatformBrand } from '@/ui/platform/PlatformBrand';
 import { ThemeControl } from '@/ui/platform/ThemeControl';
 
 const { Content } = Layout;
@@ -45,11 +45,8 @@ const navigationSections = [
   {
     key: 'pages',
     label: '页面与需求',
-    icon: <UploadOutlined />,
-    items: [
-      { key: '/tools/page-transfer', label: '页面导入导出', icon: <UploadOutlined /> },
-      { key: '/tools/ai-context', label: 'AI 上下文中心', icon: <DatabaseOutlined /> },
-    ],
+    icon: <DatabaseOutlined />,
+    items: [{ key: '/tools/ai-context', label: 'AI 上下文中心', icon: <DatabaseOutlined /> }],
   },
   {
     key: 'reference',
@@ -98,7 +95,8 @@ export function PlatformShell() {
         <AppSidebar
           collapsed={collapsed}
           onToggleCollapsed={toggleCollapsed}
-          brandMark={<AppstoreOutlined />}
+          brandMark={<PlatformBrand variant="mark" alt="" />}
+          brandLogo={<PlatformBrand variant="full" />}
           brandTitle="产品功能体验中心"
           onBrandClick={() => navigate('/')}
           routeKey={location.pathname}
