@@ -3,14 +3,40 @@ import { useEffect, useMemo, useRef, type MouseEvent } from 'react';
 import { Alert, Spin } from '@/ui/ant';
 import { renderMarkdown, type MarkdownHeading } from './markdown';
 
-let mermaidModulePromise: Promise<typeof import('mermaid')> | null = null;
+type MermaidInstance = (typeof import('mermaid'))['default'];
+
+let mermaidModulePromise: Promise<MermaidInstance> | null = null;
 let mermaidRenderSequence = 0;
 
 function loadMermaid() {
   return (mermaidModulePromise ??= import('mermaid').then((module) => {
-    module.default.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'default' });
-    return module;
+    // Vite production builds may unwrap a package's default export during
+    // dynamic import, while development keeps the module namespace object.
+    // Normalize both shapes before using Mermaid so the production bundle does
+    // not fail before the diagram container is created.
+    const candidate = (module as { default?: unknown }).default;
+    const mermaid =
+      candidate && typeof candidate === 'object' && 'initialize' in candidate
+        ? (candidate as MermaidInstance)
+        : (module as unknown as MermaidInstance);
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'default' });
+    return mermaid;
   }));
+}
+
+function replaceMermaidBlockWithError(block: HTMLElement, message: string) {
+  const parent = block.parentElement;
+  if (!parent) return;
+  const container = document.createElement('div');
+  container.className = 'mermaid-error';
+  container.textContent = `图表渲染失败：${message}`;
+  parent.replaceWith(container);
+}
+
+function findMermaidBlocks(article: HTMLElement | null) {
+  return Array.from(article?.querySelectorAll<HTMLElement>('pre > code') ?? []).filter((code) =>
+    code.classList.contains('language-mermaid'),
+  );
 }
 
 export function MarkdownReader({
@@ -51,30 +77,40 @@ export function MarkdownReader({
   useEffect(() => onHeadings?.(rendered.headings), [onHeadings, rendered.headings]);
 
   useEffect(() => {
-    const article = articleRef.current;
-    const blocks = Array.from(article?.querySelectorAll<HTMLElement>('pre > code.language-mermaid') ?? []);
-    if (!blocks.length) return;
+    if (!findMermaidBlocks(articleRef.current).length) return;
     let cancelled = false;
-    void loadMermaid().then(async ({ default: mermaid }) => {
-      for (const [index, code] of blocks.entries()) {
-        if (cancelled || !code.parentElement) return;
-        const container = document.createElement('div');
-        container.className = 'mermaid-diagram';
-        code.parentElement.replaceWith(container);
-        try {
-          const result = await mermaid.render(
-            `react-prd-${++mermaidRenderSequence}-${index}`,
-            code.textContent || '',
-          );
-          if (cancelled) return;
-          container.innerHTML = result.svg;
-          result.bindFunctions?.(container);
-        } catch (renderError) {
-          container.className = 'mermaid-error';
-          container.textContent = `图表渲染失败：${renderError instanceof Error ? renderError.message : '未知错误'}`;
+    void loadMermaid()
+      .then(async (mermaid) => {
+        // The outline callback can update the parent while Mermaid is loading,
+        // which may replace the article's children. Query the live DOM again
+        // instead of retaining detached code-block nodes from the first pass.
+        const blocks = findMermaidBlocks(articleRef.current);
+        for (const [index, code] of blocks.entries()) {
+          if (cancelled || !code.parentElement) return;
+          const container = document.createElement('div');
+          container.className = 'mermaid-diagram';
+          code.parentElement.replaceWith(container);
+          try {
+            const result = await mermaid.render(
+              `react-prd-${++mermaidRenderSequence}-${index}`,
+              code.textContent || '',
+            );
+            if (cancelled) return;
+            container.innerHTML = result.svg;
+            result.bindFunctions?.(container);
+          } catch (renderError) {
+            container.className = 'mermaid-error';
+            container.textContent = `图表渲染失败：${renderError instanceof Error ? renderError.message : '未知错误'}`;
+          }
         }
-      }
-    });
+      })
+      .catch((loadError) => {
+        if (cancelled) return;
+        const message = loadError instanceof Error ? loadError.message : 'Mermaid 模块加载失败';
+        findMermaidBlocks(articleRef.current).forEach((block) =>
+          replaceMermaidBlockWithError(block, message),
+        );
+      });
     return () => {
       cancelled = true;
     };

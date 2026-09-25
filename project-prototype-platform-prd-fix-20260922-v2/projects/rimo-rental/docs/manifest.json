@@ -1,0 +1,790 @@
+{
+  "generatedAt": "2026-09-22T05:22:09.410Z",
+  "documents": [
+    {
+      "path": "车辆管理/车辆控制台与车机状态对接PRD.md",
+      "title": "车辆控制台与车机状态对接PRD",
+      "fileName": "车辆控制台与车机状态对接PRD",
+      "folders": [
+        "车辆管理"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-26T05:39:13.622Z",
+      "size": 26999
+    },
+    {
+      "path": "分时租赁/分时租赁订单列表标签与状态说明.md",
+      "title": "分时租赁订单列表标签与状态说明",
+      "fileName": "分时租赁订单列表标签与状态说明",
+      "folders": [
+        "分时租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-17T06:57:45.869Z",
+      "size": 6805
+    },
+    {
+      "path": "公务车/00_全局口径与角色权限.md",
+      "title": "全局口径与角色权限",
+      "fileName": "00_全局口径与角色权限",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.501Z",
+      "size": 5345
+    },
+    {
+      "path": "公务车/01_Dashboard.md",
+      "title": "Dashboard",
+      "fileName": "01_Dashboard",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.501Z",
+      "size": 7051
+    },
+    {
+      "path": "公务车/02_公务订单管理.md",
+      "title": "公务订单管理",
+      "fileName": "02_公务订单管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.503Z",
+      "size": 2829
+    },
+    {
+      "path": "公务车/03_新增公务订单.md",
+      "title": "新增公务订单",
+      "fileName": "03_新增公务订单",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.503Z",
+      "size": 3823
+    },
+    {
+      "path": "公务车/04_车辆调度排程.md",
+      "title": "车辆调度排程",
+      "fileName": "04_车辆调度排程",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.503Z",
+      "size": 1992
+    },
+    {
+      "path": "公务车/05_公务车辆管理.md",
+      "title": "公务车辆管理",
+      "fileName": "05_公务车辆管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.505Z",
+      "size": 3597
+    },
+    {
+      "path": "公务车/07_营运端公务车辆合约管理.md",
+      "title": "营运端公务车辆合约管理",
+      "fileName": "07_营运端公务车辆合约管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-09-20T03:12:57.450Z",
+      "size": 28085
+    },
+    {
+      "path": "公务车/08_合约配额管理.md",
+      "title": "合约配额管理",
+      "fileName": "08_合约配额管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-09-14T07:33:39.098Z",
+      "size": 7168
+    },
+    {
+      "path": "公务车/09_用车管理.md",
+      "title": "用车管理",
+      "fileName": "09_用车管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.505Z",
+      "size": 2440
+    },
+    {
+      "path": "公务车/10_员工管理.md",
+      "title": "员工管理",
+      "fileName": "10_员工管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.507Z",
+      "size": 2011
+    },
+    {
+      "path": "公务车/11_员工审核.md",
+      "title": "员工审核",
+      "fileName": "11_员工审核",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.507Z",
+      "size": 1701
+    },
+    {
+      "path": "公务车/12_分公司管理.md",
+      "title": "分公司管理",
+      "fileName": "12_分公司管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.508Z",
+      "size": 2978
+    },
+    {
+      "path": "公务车/13_部门管理.md",
+      "title": "部门管理",
+      "fileName": "13_部门管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.508Z",
+      "size": 1669
+    },
+    {
+      "path": "公务车/14_审批设定.md",
+      "title": "审批设定",
+      "fileName": "14_审批设定",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.508Z",
+      "size": 1902
+    },
+    {
+      "path": "公务车/15_账单管理.md",
+      "title": "账单管理",
+      "fileName": "15_账单管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.508Z",
+      "size": 2265
+    },
+    {
+      "path": "公务车/16_数据快照与验收标准.md",
+      "title": "数据快照与验收标准",
+      "fileName": "16_数据快照与验收标准",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.510Z",
+      "size": 3380
+    },
+    {
+      "path": "公务车/17_公务车据点管理.md",
+      "title": "公务车据点管理",
+      "fileName": "17_公务车据点管理",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.511Z",
+      "size": 15890
+    },
+    {
+      "path": "公务车/18_清洁保养提醒.md",
+      "title": "清洁保养提醒",
+      "fileName": "18_清洁保养提醒",
+      "folders": [
+        "公务车"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.511Z",
+      "size": 30050
+    },
+    {
+      "path": "归档/工作台（营运端）.md",
+      "title": "工作台（营运端）",
+      "fileName": "工作台（营运端）",
+      "folders": [
+        "归档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.759Z",
+      "size": 42215
+    },
+    {
+      "path": "归档/国际化地址模型与地址组件规则.md",
+      "title": "国际化地址模型与地址组件规则",
+      "fileName": "国际化地址模型与地址组件规则",
+      "folders": [
+        "归档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.758Z",
+      "size": 19082
+    },
+    {
+      "path": "归档/Dashboard.md",
+      "title": "Dashboard",
+      "fileName": "Dashboard",
+      "folders": [
+        "归档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.757Z",
+      "size": 4899
+    },
+    {
+      "path": "合作通路/测试与验收/01_自动化测试接入资料填写表.md",
+      "title": "自动化测试接入资料填写表",
+      "fileName": "01_自动化测试接入资料填写表",
+      "folders": [
+        "合作通路",
+        "测试与验收"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-03T05:12:21.560Z",
+      "size": 5720
+    },
+    {
+      "path": "合作通路/测试与验收/02_自动化测试执行方案.md",
+      "title": "自动化测试执行方案",
+      "fileName": "02_自动化测试执行方案",
+      "folders": [
+        "合作通路",
+        "测试与验收"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-13T09:37:37.120Z",
+      "size": 21401
+    },
+    {
+      "path": "合作通路/测试与验收/04_测试状态与交接记录.md",
+      "title": "测试状态与交接记录",
+      "fileName": "04_测试状态与交接记录",
+      "folders": [
+        "合作通路",
+        "测试与验收"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-18T03:02:02.752Z",
+      "size": 8826
+    },
+    {
+      "path": "合作通路/测试与验收/05_完整测试用例库.md",
+      "title": "完整测试用例库",
+      "fileName": "05_完整测试用例库",
+      "folders": [
+        "合作通路",
+        "测试与验收"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-03T04:24:44.002Z",
+      "size": 15370
+    },
+    {
+      "path": "合作通路/测试与验收/automation/README.md",
+      "title": "README",
+      "fileName": "README",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-14T08:19:43.565Z",
+      "size": 8515
+    },
+    {
+      "path": "合作通路/测试与验收/automation/reports/bugs/20260803/bug.md",
+      "title": "bug",
+      "fileName": "bug",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation",
+        "reports",
+        "bugs",
+        "20260803"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-03T07:26:59.968Z",
+      "size": 491
+    },
+    {
+      "path": "合作通路/测试与验收/automation/reports/bugs/20260804/bug.md",
+      "title": "bug",
+      "fileName": "bug",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation",
+        "reports",
+        "bugs",
+        "20260804"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-04T03:18:39.885Z",
+      "size": 1366
+    },
+    {
+      "path": "合作通路/测试与验收/automation/reports/bugs/20260805/bug.md",
+      "title": "bug",
+      "fileName": "bug",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation",
+        "reports",
+        "bugs",
+        "20260805"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-05T05:47:46.991Z",
+      "size": 2289
+    },
+    {
+      "path": "合作通路/测试与验收/automation/reports/bugs/20260814/bug.md",
+      "title": "bug",
+      "fileName": "bug",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation",
+        "reports",
+        "bugs",
+        "20260814"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-14T08:19:43.561Z",
+      "size": 423
+    },
+    {
+      "path": "合作通路/测试与验收/automation/templates/bug-report.md",
+      "title": "bug-report",
+      "fileName": "bug-report",
+      "folders": [
+        "合作通路",
+        "测试与验收",
+        "automation",
+        "templates"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-03T05:13:06.416Z",
+      "size": 746
+    },
+    {
+      "path": "合作通路/合作渠道租车券（同站租还）.md",
+      "title": "合作渠道租车券（同站租还）",
+      "fileName": "合作渠道租车券（同站租还）",
+      "folders": [
+        "合作通路"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-14T09:04:16.567Z",
+      "size": 82133
+    },
+    {
+      "path": "合作通路/RIMO_车辆与车机状态资料字段整理_微电车.md",
+      "title": "RIMO_车辆与车机状态资料字段整理_微电车",
+      "fileName": "RIMO_车辆与车机状态资料字段整理_微电车",
+      "folders": [
+        "合作通路"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-20T07:15:40.505Z",
+      "size": 10546
+    },
+    {
+      "path": "会员管理/会员资质认证审核.md",
+      "title": "会员资质认证审核",
+      "fileName": "会员资质认证审核",
+      "folders": [
+        "会员管理"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-10T05:15:29.414Z",
+      "size": 9360
+    },
+    {
+      "path": "接口文档/RIMO Rental 管理後台車輛控車 API 說明.md",
+      "title": "RIMO Rental 管理後台車輛控車 API 說明",
+      "fileName": "RIMO Rental 管理後台車輛控車 API 說明",
+      "folders": [
+        "接口文档"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-06T05:08:01.853Z",
+      "size": 12145
+    },
+    {
+      "path": "接口文档/RIMO Rental APP 第三方控車 API 說明.md",
+      "title": "RIMO Rental APP 第三方控車 API 說明",
+      "fileName": "RIMO Rental APP 第三方控車 API 說明",
+      "folders": [
+        "接口文档"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-06T05:03:06.793Z",
+      "size": 13407
+    },
+    {
+      "path": "门市租赁/车行与门市管理.md",
+      "title": "车行与门市管理",
+      "fileName": "车行与门市管理",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-11T10:16:59.820Z",
+      "size": 8968
+    },
+    {
+      "path": "门市租赁/订单/订单改派.md",
+      "title": "订单改派",
+      "fileName": "订单改派",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 14957
+    },
+    {
+      "path": "门市租赁/订单/订单还车.md",
+      "title": "订单还车",
+      "fileName": "订单还车",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 32071
+    },
+    {
+      "path": "门市租赁/订单/订单取车.md",
+      "title": "订单取车",
+      "fileName": "订单取车",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 31359
+    },
+    {
+      "path": "门市租赁/订单/订单详情.md",
+      "title": "订单详情",
+      "fileName": "订单详情",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 31875
+    },
+    {
+      "path": "门市租赁/订单/费用管理.md",
+      "title": "费用管理",
+      "fileName": "费用管理",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 32378
+    },
+    {
+      "path": "门市租赁/订单/门市租车订单列表.md",
+      "title": "门市租车订单列表",
+      "fileName": "门市租车订单列表",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 24045
+    },
+    {
+      "path": "门市租赁/订单/门市租车订单状态.md",
+      "title": "门市租车订单状态",
+      "fileName": "门市租车订单状态",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 20924
+    },
+    {
+      "path": "门市租赁/订单/门市租车订单总索引.md",
+      "title": "门市租车订单总索引",
+      "fileName": "门市租车订单总索引",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 12202
+    },
+    {
+      "path": "门市租赁/订单/取消与关闭订单.md",
+      "title": "取消与关闭订单",
+      "fileName": "取消与关闭订单",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 16333
+    },
+    {
+      "path": "门市租赁/订单/事故出险处理.md",
+      "title": "事故出险处理",
+      "fileName": "事故出险处理",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 11030
+    },
+    {
+      "path": "门市租赁/订单/新建订单.md",
+      "title": "新建订单",
+      "fileName": "新建订单",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 28760
+    },
+    {
+      "path": "门市租赁/订单/延长用车.md",
+      "title": "延长用车",
+      "fileName": "延长用车",
+      "folders": [
+        "门市租赁",
+        "订单"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 15598
+    },
+    {
+      "path": "门市租赁/动态调价策略（牌价&费率）.md",
+      "title": "动态调价策略（牌价&费率）",
+      "fileName": "动态调价策略（牌价&费率）",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.542Z",
+      "size": 7996
+    },
+    {
+      "path": "门市租赁/服务站点管理.md",
+      "title": "服务站点管理",
+      "fileName": "服务站点管理",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-11T14:06:54.942Z",
+      "size": 34909
+    },
+    {
+      "path": "门市租赁/基础产品定价（车组）.md",
+      "title": "基础产品定价（车组）",
+      "fileName": "基础产品定价（车组）",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.556Z",
+      "size": 9165
+    },
+    {
+      "path": "门市租赁/门市租赁调度边界与履约规则.md",
+      "title": "门市租赁调度边界与履约规则",
+      "fileName": "门市租赁调度边界与履约规则",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.572Z",
+      "size": 13240
+    },
+    {
+      "path": "门市租赁/门市租赁端到端业务流程.md",
+      "title": "门市租赁端到端业务流程",
+      "fileName": "门市租赁端到端业务流程",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 48654
+    },
+    {
+      "path": "门市租赁/门市租赁业务总索引.md",
+      "title": "门市租赁业务总索引",
+      "fileName": "门市租赁业务总索引",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-08-11T09:45:48.355Z",
+      "size": 12625
+    },
+    {
+      "path": "门市租赁/行销方案管理.md",
+      "title": "行销方案管理",
+      "fileName": "行销方案管理",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 9083
+    },
+    {
+      "path": "门市租赁/业务介绍/存档/门市租赁客户投屏说明稿.md",
+      "title": "门市租赁客户投屏说明稿",
+      "fileName": "门市租赁客户投屏说明稿",
+      "folders": [
+        "门市租赁",
+        "业务介绍",
+        "存档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.765Z",
+      "size": 8707
+    },
+    {
+      "path": "门市租赁/业务介绍/存档/门市租赁客户与业务沟通提纲.md",
+      "title": "门市租赁客户与业务沟通提纲",
+      "fileName": "门市租赁客户与业务沟通提纲",
+      "folders": [
+        "门市租赁",
+        "业务介绍",
+        "存档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.764Z",
+      "size": 12767
+    },
+    {
+      "path": "门市租赁/业务介绍/存档/门市租赁业务方案概览.md",
+      "title": "门市租赁业务方案概览",
+      "fileName": "门市租赁业务方案概览",
+      "folders": [
+        "门市租赁",
+        "业务介绍",
+        "存档"
+      ],
+      "archived": true,
+      "updatedAt": "2026-07-10T16:10:44.760Z",
+      "size": 12956
+    },
+    {
+      "path": "门市租赁/业务介绍/门市租赁业务方案说明-逐页说明稿.md",
+      "title": "门市租赁业务方案说明-逐页说明稿",
+      "fileName": "门市租赁业务方案说明-逐页说明稿",
+      "folders": [
+        "门市租赁",
+        "业务介绍"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-10T16:10:44.765Z",
+      "size": 11563
+    },
+    {
+      "path": "门市租赁/增值服务管理（保险&配件）.md",
+      "title": "增值服务管理（保险&配件）",
+      "fileName": "增值服务管理（保险&配件）",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.557Z",
+      "size": 7765
+    },
+    {
+      "path": "门市租赁/智能调度派车规则.md",
+      "title": "智能调度派车规则",
+      "fileName": "智能调度派车规则",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 29322
+    },
+    {
+      "path": "门市租赁/智能调度派车算法.md",
+      "title": "智能调度派车算法",
+      "fileName": "智能调度派车算法",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.558Z",
+      "size": 13060
+    },
+    {
+      "path": "门市租赁/租赁业务规则.md",
+      "title": "租赁业务规则",
+      "fileName": "租赁业务规则",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.559Z",
+      "size": 21808
+    },
+    {
+      "path": "门市租赁/AI智能调度分析Agent.md",
+      "title": "AI智能调度分析Agent",
+      "fileName": "AI智能调度分析Agent",
+      "folders": [
+        "门市租赁"
+      ],
+      "archived": false,
+      "updatedAt": "2026-07-16T05:56:22.542Z",
+      "size": 39991
+    }
+  ]
+}
